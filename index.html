@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solarone — Precision LED Lighting Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:           #08080B;
+    --bg-soft:      #0F0F14;
+    --bg-raised:    #141820;
+    --ink:          #FFFFFF;
+    --ink-soft:     #D9D9E3;
+    --ink-mute:     #8A8A95;
+    --ink-subtle:   #5A5A65;
+    --accent:       #0077ED;
+    --accent-soft:  rgba(0, 119, 237, 0.10);
+    --accent-glow:  rgba(0, 119, 237, 0.22);
+    --line:         rgba(255, 255, 255, 0.07);
+    --line-strong:  rgba(255, 255, 255, 0.14);
+
+    --ff-display:   'Space Grotesk', system-ui, sans-serif;
+    --ff-body:      'Inter', system-ui, sans-serif;
+    --ff-mono:      'IBM Plex Mono', ui-monospace, monospace;
+
+    --sp-1: 8px;
+    --sp-2: 16px;
+    --sp-3: 24px;
+    --sp-4: 48px;
+    --sp-5: 96px;
+    --sp-6: 160px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: var(--ff-body);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    background: var(--bg);
+    overflow-x: hidden;
+    letter-spacing: -0.005em;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+  /* ============ NAV ============ */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    background: rgba(8, 8, 11, 0.65);
+    backdrop-filter: saturate(140%) blur(24px);
+    -webkit-backdrop-filter: saturate(140%) blur(24px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .nav-brand {
+    font-family: var(--ff-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-brand img { height: 32px; width: auto; }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-links a {
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    padding: 10px 16px;
+    border: 1px solid var(--line-strong);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 140px 0 80px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 40% 45%, rgba(0,0,0,1), transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 40% 45%, rgba(0,0,0,1), transparent 85%);
+  }
+  .hero-noise {
+    position: absolute; inset: 0;
+    opacity: 0.04;
+    background-image:
+      radial-gradient(circle at 1px 1px, #fff 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  .hero-corner-marks {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .hero-corner-marks::before,
+  .hero-corner-marks::after {
+    content: ''; position: absolute;
+    width: 60px; height: 60px;
+    border: 1px solid var(--accent);
+    opacity: 0.6;
+  }
+  .hero-corner-marks::before {
+    top: 100px; left: 32px;
+    border-right: none; border-bottom: none;
+  }
+  .hero-corner-marks::after {
+    bottom: 60px; right: 32px;
+    border-left: none; border-top: none;
+  }
+  .hero-layout {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 72px;
+    align-items: center;
+  }
+
+  .hero-meta {
+    display: flex; align-items: center; gap: 24px;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  .hero-meta .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .hero-meta .divider {
+    flex: 0 0 24px;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .hero-title {
+    font-family: var(--ff-display);
+    font-size: clamp(52px, 8vw, 132px);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    color: var(--ink);
+    margin-bottom: 40px;
+  }
+  .hero-title .line { display: block; }
+  .hero-title .line.accent {
+    background: linear-gradient(90deg, var(--accent) 0%, #4D9BFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+  .hero-title .bracket {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .hero-lede {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 520px;
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+    align-items: center;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 18px 28px;
+    background: var(--accent);
+    color: #fff;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover {
+    background: #0088FF;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 32px -16px rgba(0, 119, 237, 0.5);
+  }
+  .btn-primary::after {
+    content: '→';
+    transition: transform 0.2s;
+  }
+  .btn-primary:hover::after { transform: translateX(3px); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 18px 24px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--line-strong);
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  .hero-specs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-spec {
+    padding: 24px 20px;
+    border-right: 1px solid var(--line);
+  }
+  .hero-spec:last-child { border-right: none; }
+  .hero-spec-num {
+    font-family: var(--ff-display);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .hero-spec-num .unit {
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: 400;
+    margin-left: 4px;
+    font-family: var(--ff-mono);
+  }
+  .hero-spec-label {
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+  }
+  .hero-visual-frame {
+    position: absolute; inset: 0;
+    border: 1px solid var(--line-strong);
+    background: linear-gradient(135deg, var(--bg-soft) 0%, var(--bg) 100%);
+  }
+  .hero-visual-frame::before {
+    content: '';
+    position: absolute; inset: 20px;
+    border: 1px solid var(--line);
+  }
+  .hero-visual-tic {
+    position: absolute;
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.1em;
+  }
+  .tic-tl { top: 10px; left: 10px; }
+  .tic-tr { top: 10px; right: 10px; }
+  .tic-bl { bottom: 10px; left: 10px; }
+  .tic-br { bottom: 10px; right: 10px; text-align: right; }
+  .hero-visual img {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,0.6));
+  }
+  .hero-visual-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(0, 119, 237, 0.20) 0%, transparent 55%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  @media (max-width: 960px) {
+    .hero-layout { grid-template-columns: 1fr; gap: 48px; }
+    .hero-title { font-size: clamp(40px, 10vw, 64px); }
+    .hero-specs { grid-template-columns: repeat(2, 1fr); }
+    .hero-spec:nth-child(2) { border-right: none; }
+    .hero-spec:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    .hero-corner-marks::before, .hero-corner-marks::after { display: none; }
+  }
+
+  /* ============ SECTION GENERIC ============ */
+  section { position: relative; padding: 140px 0; }
+  .section-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label .num {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .section-label::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--line-strong);
+  }
+  .section-title {
+    font-family: var(--ff-display);
+    font-size: clamp(34px, 5vw, 64px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    max-width: 1000px;
+    margin-bottom: 24px;
+  }
+  .section-body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 560px;
+  }
+
+  /* ============ PRODUCTS ============ */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 80px;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  .product-card {
+    background: transparent;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 48px 36px 56px;
+    transition: background 0.3s;
+    position: relative;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover { background: var(--bg-soft); }
+  .product-card:hover .product-card-img img {
+    transform: scale(1.06);
+  }
+  .product-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 48px;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .product-card-top .index { color: var(--accent); font-weight: 500; }
+  .product-card-img {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    min-height: 200px;
+  }
+  .product-card-img img {
+    max-width: 85%;
+    max-height: 220px;
+    transition: transform 0.4s ease;
+    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.4));
+  }
+  .product-card-title {
+    font-family: var(--ff-display);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .product-card-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    margin-bottom: 32px;
+    flex: 0 0 auto;
+  }
+  .product-card-specs {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    margin-top: auto;
+  }
+  .product-spec {
+    flex: 1;
+    padding-right: 16px;
+    border-right: 1px solid var(--line);
+  }
+  .product-spec:last-child { border-right: none; }
+  .product-spec-value {
+    font-family: var(--ff-display);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .product-spec-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 960px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .product-card { min-height: auto; padding: 40px 24px 48px; }
+  }
+
+  /* ============ FEATURES ============ */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    margin-top: 80px;
+  }
+  .feature-card {
+    padding: 40px 28px 56px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.3s;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+  .feature-card:hover { background: var(--bg-soft); }
+  .feature-icon {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--line-strong);
+    color: var(--accent);
+    margin-bottom: 32px;
+  }
+  .feature-icon svg { width: 20px; height: 20px; }
+  .feature-title {
+    font-family: var(--ff-display);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+  }
+  .feature-body {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-mute);
+    flex: 1;
+  }
+  .feature-num {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.2em;
+    margin-top: 28px;
+  }
+
+  @media (max-width: 960px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .feature-card { padding: 32px 24px 40px; min-height: auto; }
+  }
+  @media (max-width: 560px) {
+    .features-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============ SHOWCASE ============ */
+  .showcase-wrap {
+    position: relative;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    padding: 80px 0;
+    overflow: hidden;
+  }
+  .showcase-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .showcase-img {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, var(--bg-raised) 0%, var(--bg-soft) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+  }
+  .showcase-img img {
+    max-width: 80%;
+    max-height: 85%;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+  }
+  .showcase-img-corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border: 1px solid var(--accent);
+    opacity: 0.7;
+  }
+  .showcase-img .c1 { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .showcase-img .c2 { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+  .showcase-img .c3 { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+  .showcase-img .c4 { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+  .showcase-spec-list {
+    list-style: none;
+    margin-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .showcase-spec-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 24px;
+  }
+  .showcase-spec-list .label {
+    font-family: var(--ff-display);
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .showcase-spec-list .sub {
+    font-size: 13px;
+    color: var(--ink-mute);
+    display: block;
+    margin-top: 4px;
+    font-family: var(--ff-body);
+    font-weight: 400;
+  }
+  .showcase-spec-list .value {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  .showcase-actions {
+    margin-top: 48px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 960px) {
+    .showcase-inner { grid-template-columns: 1fr; gap: 48px; }
+    .showcase-wrap { padding: 56px 0; }
+  }
+
+  /* ============ SPECS TABLE ============ */
+  .specs-table {
+    border: 1px solid var(--line);
+    margin-top: 80px;
+    background: var(--bg);
+  }
+  .specs-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+    gap: 0;
+  }
+  .specs-row.head {
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--line);
+  }
+  .specs-cell {
+    padding: 22px 28px;
+    border-right: 1px solid var(--line);
+  }
+  .specs-row .specs-cell:last-child { border-right: none; }
+  .specs-row:not(.head) { border-bottom: 1px solid var(--line); transition: background 0.2s; }
+  .specs-row:not(.head):last-child { border-bottom: none; }
+  .specs-row:not(.head):hover { background: var(--bg-soft); }
+  .specs-cell.label-col {
+    font-family: var(--ff-display);
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .specs-head-cell {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .specs-cell .value {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .specs-cell .value .sub {
+    display: block;
+    font-size: 11px;
+    color: var(--ink-subtle);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  @media (max-width: 960px) {
+    .specs-row { grid-template-columns: 1.2fr 1fr 1fr; }
+    .specs-row .specs-cell:nth-child(n+4) { display: none; }
+    .specs-cell { padding: 16px 20px; }
+  }
+  @media (max-width: 560px) {
+    .specs-row { grid-template-columns: 1.2fr 1fr; }
+    .specs-row .specs-cell:nth-child(n+3) { display: none; }
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+    border-top: 1px solid var(--line);
+    padding: 140px 0;
+  }
+  .cta-inner {
+    text-align: center;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .cta-inner .section-label {
+    display: inline-flex;
+    justify-content: center;
+  }
+  .cta-title {
+    font-family: var(--ff-display);
+    font-size: clamp(36px, 6vw, 80px);
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .cta-title .accent {
+    background: linear-gradient(90deg, var(--accent) 0%, #4D9BFF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+  .cta-body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 560px;
+    margin: 0 auto 48px;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 80px;
+  }
+  .cta-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    max-width: 680px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+  .cta-meta-cell {
+    padding: 32px 24px;
+    border-right: 1px solid var(--line);
+  }
+  .cta-meta-cell:last-child { border-right: none; }
+  .cta-meta-label {
+    font-family: var(--ff-mono);
+    font-size: 10.5px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .cta-meta-value {
+    font-family: var(--ff-display);
+    font-size: 20px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  .cta-meta-value a { color: inherit; transition: color 0.2s; }
+  .cta-meta-value a:hover { color: var(--accent); }
+
+  @media (max-width: 720px) {
+    .cta-meta { grid-template-columns: 1fr; }
+    .cta-meta-cell { border-right: none; border-bottom: 1px solid var(--line); padding: 24px; }
+    .cta-meta-cell:last-child { border-bottom: none; }
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    padding: 80px 0 40px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+  .footer-brand-name {
+    font-family: var(--ff-display);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .footer-brand-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    max-width: 320px;
+  }
+  .footer-col-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .footer-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-list a {
+    font-size: 14px;
+    color: var(--ink-mute);
+    transition: color 0.2s;
+  }
+  .footer-list a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-copy {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.05em;
+  }
+  .footer-certs {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 960px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-brand-block { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============ REVEAL ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-brand">
+      <img src="images/logo.png" alt="Solarone" onerror="this.style.display='none'">
+    </a>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#engineering">Engineering</a>
+      <a href="#specs">Specifications</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-corner-marks"></div>
+  <div class="container hero-layout">
+    <div>
+      <div class="hero-meta">
+        <span class="dot"></span>
+        <span>Model RT200FL-M</span>
+        <span class="divider"></span>
+        <span>Serial 2026 — Batch 004</span>
+      </div>
+      <h1 class="hero-title">
+        <span class="line">Engineered light.</span>
+        <span class="line accent">Built to outlast.</span>
+      </h1>
+      <p class="hero-lede">Precision LED luminaires for stadium, port, and industrial environments. Machined aluminum housings, field-replaceable drivers, 80,000+ hour rated life. Every unit calibrated to ±2 SDCM.</p>
+      <div class="hero-actions">
+        <a href="#products" class="btn-primary">Explore Models</a>
+        <a href="#engineering" class="btn-ghost">Read the spec</a>
+      </div>
+      <div class="hero-specs">
+        <div class="hero-spec">
+          <span class="hero-stat-num">420<span class="unit">W</span></span>
+          <span class="hero-stat-label">Standard Model</span>
+        </div>
+        <div class="hero-spec">
+          <span class="hero-stat-num">140<span class="unit">lm/W</span></span>
+          <span class="hero-stat-label">Efficacy Rated</span>
+        </div>
+        <div class="hero-spec">
+          <span class="hero-stat-num">IP67</span>
+          <span class="hero-stat-label">Ingress Protection</span>
+        </div>
+        <div class="hero-spec">
+          <span class="hero-stat-num">80k<span class="unit">hrs</span></span>
+          <span class="hero-stat-label">Rated Life L70</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-visual-frame"></div>
+      <div class="hero-visual-glow"></div>
+      <div class="hero-visual-tic tic-tl">LAT 31.2304</div>
+      <div class="hero-visual-tic tic-tr">LONG 121.4737</div>
+      <div class="hero-visual-tic tic-bl">VIEW 01 / FRONT</div>
+      <div class="hero-visual-tic tic-br">SCALE 1:4</div>
+      <img src="images/hero-main.fw.png" alt="Solarone RT200FL-M LED luminaire">
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section id="products">
+  <div class="container">
+    <span class="section-label"><span class="num">/01</span> PRODUCT LINE</span>
+    <h2 class="section-title">Three tiers of illumination — engineered for every scale.</h2>
+    <p class="section-body">From compact flood lights to stadium-grade high masts. Same precision optics, same thermal architecture, same rigor of calibration. Just different output classes.</p>
+
+    <div class="products-grid">
+      <div class="product-card reveal">
+        <div class="product-card-top"><span class="index">/01</span><span>FLOOD · STD</span></div>
+        <div class="product-card-img"><img src="images/rt200-m.fw.png" alt="RT200FL-M"></div>
+        <h3 class="product-card-title">RT200FL-M · 420W</h3>
+        <p class="product-card-desc">Entry-line flood light for yards, parking structures, and training fields. Standard beam pattern, field-replaceable driver.</p>
+        <div class="product-card-specs">
+          <div class="product-spec"><span class="product-spec-value">420W</span><span class="product-spec-label">Input</span></div>
+          <div class="product-spec"><span class="product-spec-value">58,800lm</span><span class="product-spec-label">Output</span></div>
+          <div class="product-spec"><span class="product-spec-value">140lm/W</span><span class="product-spec-label">Efficacy</span></div>
+        </div>
+      </div>
+
+      <div class="product-card reveal">
+        <div class="product-card-top"><span class="index">/02</span><span>ARENA · PRO</span></div>
+        <div class="product-card-img"><img src="images/floodlight.fw.png" alt="Arena Series"></div>
+        <h3 class="product-card-title">Arena Series · 630–840W</h3>
+        <p class="product-card-desc">Mid-venue directional arrays for arenas and sports fields. Flicker-free drivers. HD broadcast calibrated when configured.</p>
+        <div class="product-card-specs">
+          <div class="product-spec"><span class="product-spec-value">840W</span><span class="product-spec-label">Input</span></div>
+          <div class="product-spec"><span class="product-spec-value">117,600lm</span><span class="product-spec-label">Output</span></div>
+          <div class="product-spec"><span class="product-spec-value">140lm/W</span><span class="product-spec-label">Efficacy</span></div>
+        </div>
+      </div>
+
+      <div class="product-card reveal">
+        <div class="product-card-top"><span class="index">/03</span><span>MAST · STADIUM</span></div>
+        <div class="product-card-img"><img src="images/products.fw.png" alt="Stadium High Mast"></div>
+        <h3 class="product-card-title">High Mast · 1200W</h3>
+        <p class="product-card-desc">Stadium-grade multi-module systems. Professional broadcast uniformity, zero glare, and HDTV-ready strobe compliance.</p>
+        <div class="product-card-specs">
+          <div class="product-spec"><span class="product-spec-value">1,200W</span><span class="product-spec-label">Input</span></div>
+          <div class="product-spec"><span class="product-spec-value">168,000lm</span><span class="product-spec-label">Output</span></div>
+          <div class="product-spec"><span class="product-spec-value">140lm/W</span><span class="product-spec-label">Efficacy</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES / ENGINEERING ============ -->
+<section id="engineering" style="background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <span class="section-label"><span class="num">/02</span> ENGINEERING</span>
+    <h2 class="section-title">Every subsystem tested to the point of failure — then spec'd below it.</h2>
+    <p class="section-body">Thermal, electrical, optical. Three engineering disciplines running in parallel on every fixture we ship. Here's what that actually means on a unit level.</p>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="3" y1="12" x2="7" y2="12"/><line x1="17" y1="12" x2="21" y2="12"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Precision Optics</h3>
+        <p class="feature-body">Tunable beam angles 18° / 30° / 50° in a single housing. UV-stabilized lenses with zero yellowing throughout rated life.</p>
+        <span class="feature-num">OPTIC / 01</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 20h16"/><path d="M6 20v-8"/><path d="M9 20v-12"/><path d="M12 20v-16"/><path d="M15 20v-12"/><path d="M18 20v-8"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Thermal Architecture</h3>
+        <p class="feature-body">Fin-structured aluminum heat sink with passive airflow channels. Board-level temperature monitoring. Automatic brightness throttling at threshold.</p>
+        <span class="feature-num">THERMAL / 02</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="16"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="11" y1="6" x2="11" y2="18"/><line x1="15" y1="9" x2="15" y2="15"/><line x1="19" y1="11" x2="19" y2="13"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Smart Drivers</h3>
+        <p class="feature-body">DALI-2 and DMX512 configurable. Surge protection to 20 kV. Power factor corrected to 0.95+. Flicker-free below 1% ripple.</p>
+        <span class="feature-num">ELECTRICAL / 03</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 16l4-4 4 4 8-8"/><path d="M4 20h16"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">L70 Rated Life</h3>
+        <p class="feature-body">80,000 hours lumen maintenance. Backed by a 10-year warranty covering driver failure, lumen depreciation, and ingress defects.</p>
+        <span class="feature-num">DURATION / 04</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">IP67 Sealed</h3>
+        <p class="feature-body">Silicone-gasketed hermetic sealing. Submersible to 1 meter. Dust-tight. Rated for operation from -40°C to +55°C ambient.</p>
+        <span class="feature-num">SEALING / 05</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 12h3l2-8 4 16 2-8h7"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Broadcast Ready</h3>
+        <p class="feature-body">EN 61547 strobe-metric compliant. Verified for HDTV and 4K broadcast at up to 1000 fps without visible banding artifacts.</p>
+        <span class="feature-num">BROADCAST / 06</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18"/><line x1="7" y1="3" x2="7" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Modular Servicing</h3>
+        <p class="feature-body">Field-replaceable drivers, LED boards, and optics. Tool-less access. On-site swap in under 10 minutes, no full unit replacement needed.</p>
+        <span class="feature-num">SERVICE / 07</span>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Photometric Study</h3>
+        <p class="feature-body">Every project receives a full photometric analysis — pole height, luminaire placement, beam overlap, uniformity target, and spill control — before shipping.</p>
+        <span class="feature-num">DESIGN / 08</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE ============ -->
+<section id="specs">
+  <div class="container">
+    <span class="section-label"><span class="num">/03</span> CLOSER LOOK</span>
+    <h2 class="section-title">Inside the RT200FL-M — a platform, not a product.</h2>
+
+    <div class="showcase-wrap" style="margin-top: 64px;">
+      <div class="container">
+        <div class="showcase-inner">
+          <div class="showcase-img reveal">
+            <span class="showcase-img-corner c1"></span>
+            <span class="showcase-img-corner c2"></span>
+            <span class="showcase-img-corner c3"></span>
+            <span class="showcase-img-corner c4"></span>
+            <img src="images/rt200-m.fw.png" alt="RT200FL-M cutaway">
+          </div>
+          <div class="showcase-copy">
+            <span class="section-label" style="font-size: 11px;"><span class="num">UNIT</span> RT200FL-M</span>
+            <h3 class="section-title" style="font-size: clamp(28px, 3.5vw, 42px); margin-bottom: 20px;">Built to the same spec as our stadium units.</h3>
+            <p class="section-body">A 420W package with the same thermal backbone, driver platform, and optical array as our 1200W stadium systems. Scalable — not re-engineered.</p>
+
+            <ul class="showcase-spec-list">
+              <li>
+                <div><span class="label">LED Board</span><span class="sub">High-flux binning at ±2 SDCM. Ceramic substrate for uniform thermal dissipation.</span></div>
+                <span class="value">CREE · 3030</span>
+              </li>
+              <li>
+                <div><span class="label">Driver</span><span class="sub">Constant current, PFC 0.95. DALI-2 and DMX512 available.</span></div>
+                <span class="value">MEAN WELL</span>
+              </li>
+              <li>
+                <div><span class="label">Housing</span><span class="sub">Die-cast aluminum body, powder-coated finish. UV-stabilized powder coat.</span></div>
+                <span class="value">ALUMINUM</span>
+              </li>
+              <li>
+                <div><span class="label">Sealing</span><span class="sub">Silicone gasket seams. IP67-tested: 1m immersion, 30 minutes.</span></div>
+                <span class="value">IP67</span>
+              </li>
+              <li>
+                <div><span class="label">Mount Bracket</span><span class="sub">Galvanized steel, corrosion-resistant. Fits 60-90mm poles.</span></div>
+                <span class="value">GALVANIZED</span>
+              </li>
+              <li>
+                <div><span class="label">Beam Patterns</span><span class="sub">Field-replaceable lenses — no tools required.</span></div>
+                <span class="value">18° / 30° / 50°</span>
+              </li>
+            </ul>
+            <div class="showcase-actions">
+              <a href="#contact" class="btn-primary">Request Data Sheet</a>
+              <a href="#products" class="btn-ghost">Browse All Models</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical comparison -->
+    <div class="specs-table reveal">
+      <div class="specs-row head">
+        <div class="specs-head-cell specs-cell">Model</div>
+        <div class="specs-head-cell specs-cell">Input Power</div>
+        <div class="specs-head-cell specs-cell">Luminous Flux</div>
+        <div class="specs-head-cell specs-cell">Efficacy</div>
+        <div class="specs-head-cell specs-cell">Beam Angle</div>
+      </div>
+      <div class="specs-row">
+        <div class="specs-cell label-col">RT200FL-M 420W</div>
+        <div class="specs-cell"><span class="value">420 W<span class="sub">100-277VAC</span></span></div>
+        <div class="specs-cell"><span class="value">58,800 lm<span class="sub">± 5%</span></span></div>
+        <div class="specs-cell"><span class="value">140 lm/W</span></div>
+        <div class="specs-cell"><span class="value">18 / 30 / 50</span></div>
+      </div>
+      <div class="specs-row">
+        <div class="specs-cell label-col">Arena Series 630W</div>
+        <div class="specs-cell"><span class="value">630 W<span class="sub">200-480VAC</span></span></div>
+        <div class="specs-cell"><span class="value">88,200 lm<span class="sub">± 5%</span></span></div>
+        <div class="specs-cell"><span class="value">140 lm/W</span></div>
+        <div class="specs-cell"><span class="value">18 / 30 / 50</span></div>
+      </div>
+      <div class="specs-row">
+        <div class="specs-cell label-col">Arena Series 840W</div>
+        <div class="specs-cell"><span class="value">840 W<span class="sub">200-480VAC</span></span></div>
+        <div class="specs-cell"><span class="value">117,600 lm<span class="sub">± 5%</span></span></div>
+        <div class="specs-cell"><span class="value">140 lm/W</span></div>
+        <div class="specs-cell"><span class="value">18 / 30 / 50</span></div>
+      </div>
+      <div class="specs-row">
+        <div class="specs-cell label-col">High Mast 1200W</div>
+        <div class="specs-cell"><span class="value">1,200 W<span class="sub">200-480VAC</span></span></div>
+        <div class="specs-cell"><span class="value">168,000 lm<span class="sub">± 5%</span></span></div>
+        <div class="specs-cell"><span class="value">140 lm/W</span></div>
+        <div class="specs-cell"><span class="value">12 / 18 / 30</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-inner">
+      <span class="section-label"><span class="num">/04</span> GET IN TOUCH</span>
+      <h2 class="cta-title">Spec your lighting with a <span class="accent">Solarone engineer</span>.</h2>
+      <p class="cta-body">Send us your site geometry, pole height budget, target light levels, and any broadcast requirements. You'll get a full photometric study back — within 48 hours, no sales call required.</p>
+      <div class="cta-actions">
+        <a href="mailto:sales@solarone.com" class="btn-primary">Request Photometric Study</a>
+        <a href="#" class="btn-ghost">Download Brochure (PDF)</a>
+      </div>
+      <div class="cta-meta">
+        <div class="cta-meta-cell">
+          <span class="cta-meta-label">Email</span>
+          <span class="cta-meta-value"><a href="mailto:sales@solarone.com">sales@solarone.com</a></span>
+        </div>
+        <div class="cta-meta-cell">
+          <span class="cta-meta-label">Phone · Global</span>
+          <span class="cta-meta-value">+86 400 0000 0000</span>
+        </div>
+        <div class="cta-meta-cell">
+          <span class="cta-meta-label">Manufacturing</span>
+          <span class="cta-meta-value">Shanghai · CN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand-block">
+        <div class="footer-brand-name">Solarone</div>
+        <p class="footer-brand-text">Precision LED lighting engineered for broadcast-grade stadiums, ports, and industrial environments. Designed and manufactured since 2008.</p>
+      </div>
+      <div>
+        <div class="footer-col-label">Products</div>
+        <ul class="footer-list">
+          <li><a href="#products">RT200FL-M · 420W</a></li>
+          <li><a href="#products">Arena Series · 630–840W</a></li>
+          <li><a href="#products">High Mast · 1,200W</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-label">Services</div>
+        <ul class="footer-list">
+          <li><a href="#contact">Photometric Design</a></li>
+          <li><a href="#contact">Project Engineering</a></li>
+          <li><a href="#contact">Field Servicing</a></li>
+          <li><a href="#contact">Distributor Program</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-label">Company</div>
+        <ul class="footer-list">
+          <li><a href="#engineering">Engineering</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Certifications</a></li>
+          <li><a href="#">Manufacturing</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2008 — 2026 Solarone Lighting Co., Ltd. All rights reserved.</span>
+      <span class="footer-certs">CE · UL · FCC · RoHS · DLC · ISO 9001</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Stagger hero text appearance
+  document.querySelectorAll('.hero-title .line, .hero-lede, .hero-actions, .hero-meta, .hero-specs > *').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.8s ease ${0.08 + i * 0.07}s, transform 0.8s ease ${0.08 + i * 0.07}s`;
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+</script>
+
+</body>
+</html>
