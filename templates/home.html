@@ -1059,7 +1059,7 @@
 <nav class="nav" id="mainNav">
   <div class="container nav-inner">
     <a href="#" class="nav-brand">
-      <img src="{% if config.logo %}{{ config.logo.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="{{ config.brand_name }}" onerror="this.style.display='none'">
+      <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none'">
     </a>
     <div class="nav-links">
       <a href="#products">Products</a>
@@ -1076,7 +1076,7 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-bg">
-    <img src="{% if config.hero_background %}{{ config.hero_background.url }}{% else %}{% static 'images/hero-main.fw.png' %}{% endif %}" alt="">
+    <img src="{{ config.hero_bg_url }}" alt="">
   </div>
   <div class="hero-grid"></div>
   <div class="hero-noise"></div>
@@ -1129,7 +1129,7 @@
       <div class="product-card reveal">
         <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category }}</span></div>
         {% if product.image %}
-        <div class="product-card-img"><img src="{{ product.image.url }}" alt="{{ product.name }}"></div>
+        <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name }}"></div>
         {% endif %}
         <h3 class="product-card-title">{{ product.name }}</h3>
         <p class="product-card-desc">{{ product.description }}</p>
@@ -1157,8 +1157,8 @@
       {% for project in projects %}
       <div class="project-card reveal">
         <div class="project-card-img">
-          {% if project.image %}
-          <img src="{{ project.image.url }}" alt="{{ project.title }}">
+          {% if project.image_url %}
+          <img src="{{ project.image_url }}" alt="{{ project.title }}">
           {% else %}
           <div class="project-card-img-placeholder stadium">
             <span class="field-label">Project Image</span>
