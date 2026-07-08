@@ -24,3 +24,11 @@ venv/
 
 # External references (not project code)
 awesome-design-md-main/
+
+# Django
+db.sqlite3
+*.pyc
+__pycache__/
+media/
+static/
+!static/images/
