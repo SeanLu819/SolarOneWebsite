@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SolarOne — Precision LED Lighting Systems</title>
+<title>{{ config.meta_title }}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1058,7 +1059,7 @@
 <nav class="nav" id="mainNav">
   <div class="container nav-inner">
     <a href="#" class="nav-brand">
-      <img src="images/logo.png" alt="SolarOne" onerror="this.style.display='none'">
+      <img src="{% if config.logo %}{{ config.logo.url }}{% else %}{% static 'images/logo.png' %}{% endif %}" alt="{{ config.brand_name }}" onerror="this.style.display='none'">
     </a>
     <div class="nav-links">
       <a href="#products">Products</a>
@@ -1075,7 +1076,7 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-bg">
-    <img src="images/hero-main.fw.png" alt="">
+    <img src="{% if config.hero_background %}{{ config.hero_background.url }}{% else %}{% static 'images/hero-main.fw.png' %}{% endif %}" alt="">
   </div>
   <div class="hero-grid"></div>
   <div class="hero-noise"></div>
@@ -1089,31 +1090,28 @@
       <span class="divider"></span>
       <span>Since 2007</span>
     </div>
-    <h1 class="hero-title">
-      <span class="line">Precision LED systems</span>
-      <span class="line">for <span class="accent">every arena.</span></span>
-    </h1>
-    <p class="hero-lede">Professional sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.</p>
+    <h1 class="hero-title">{{ config.hero_title|safe }}</h1>
+    <p class="hero-lede">{{ config.hero_subtitle }}</p>
     <div class="hero-actions">
       <a href="#products" class="btn-primary">View Products</a>
       <a href="#contact" class="btn-ghost">Contact Us</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <span class="hero-stat-num">500<span class="unit">+</span></span>
-        <span class="hero-stat-label">Projects</span>
+        <span class="hero-stat-num">{{ config.stat_projects|safe }}</span>
+        <span class="hero-stat-label">{{ config.stat_projects_label }}</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-num">50<span class="unit">+</span></span>
-        <span class="hero-stat-label">Countries</span>
+        <span class="hero-stat-num">{{ config.stat_countries|safe }}</span>
+        <span class="hero-stat-label">{{ config.stat_countries_label }}</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-num">60<span class="unit">%</span></span>
-        <span class="hero-stat-label">Energy Save</span>
+        <span class="hero-stat-num">{{ config.stat_energy|safe }}</span>
+        <span class="hero-stat-label">{{ config.stat_energy_label }}</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-num">24<span class="unit">/7</span></span>
-        <span class="hero-stat-label">Support</span>
+        <span class="hero-stat-num">{{ config.stat_support|safe }}</span>
+        <span class="hero-stat-label">{{ config.stat_support_label }}</span>
       </div>
     </div>
   </div>
@@ -1123,44 +1121,27 @@
 <section id="products">
   <div class="container">
     <span class="section-label"><span class="num">/01</span> PRODUCTS</span>
-    <h2 class="section-title">Our Products</h2>
-    <p class="section-body">From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.</p>
+    <h2 class="section-title">{{ config.products_title }}</h2>
+    <p class="section-body">{{ config.products_subtitle }}</p>
 
     <div class="products-grid">
+      {% for product in products %}
       <div class="product-card reveal">
-        <div class="product-card-top"><span class="index">/01</span><span>MODULAR</span></div>
-        <div class="product-card-img"><img src="images/processed/rt200-m.png" alt="M Series Modular Luminaire" class="m-series-img"></div>
-        <h3 class="product-card-title">M Series</h3>
-        <p class="product-card-desc">Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.</p>
+        <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category }}</span></div>
+        {% if product.image %}
+        <div class="product-card-img"><img src="{{ product.image.url }}" alt="{{ product.name }}"></div>
+        {% endif %}
+        <h3 class="product-card-title">{{ product.name }}</h3>
+        <p class="product-card-desc">{{ product.description }}</p>
         <div class="product-card-specs">
-          <div class="product-spec"><span class="product-spec-value">80-1280W+</span><span class="product-spec-label">Scalable Power</span></div>
-          <div class="product-spec"><span class="product-spec-value">IP67</span><span class="product-spec-label">Protection</span></div>
+          {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">Power</span></div>{% endif %}
+          {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">Efficacy</span></div>{% endif %}
+          {% if product.output %}<div class="product-spec"><span class="product-spec-value">{{ product.output }}</span><span class="product-spec-label">Output</span></div>{% endif %}
+          {% if product.beam_angle %}<div class="product-spec"><span class="product-spec-value">{{ product.beam_angle }}</span><span class="product-spec-label">Beam Angle</span></div>{% endif %}
+          {% if product.protection %}<div class="product-spec"><span class="product-spec-value">{{ product.protection }}</span><span class="product-spec-label">Protection</span></div>{% endif %}
         </div>
       </div>
-
-      <div class="product-card reveal">
-        <div class="product-card-top"><span class="index">/02</span><span>FLOODLIGHT</span></div>
-        <div class="product-card-img"><img src="images/processed/floodlight.fw.png" alt="RT410 Series Floodlight"></div>
-        <h3 class="product-card-title">RT410 Series</h3>
-        <p class="product-card-desc">Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.</p>
-        <div class="product-card-specs">
-          <div class="product-spec"><span class="product-spec-value">260W</span><span class="product-spec-label">Power</span></div>
-          <div class="product-spec"><span class="product-spec-value">125lm/W</span><span class="product-spec-label">Output</span></div>
-          <div class="product-spec"><span class="product-spec-value">18-100&deg;</span><span class="product-spec-label">Beam Angle</span></div>
-        </div>
-      </div>
-
-      <div class="product-card reveal">
-        <div class="product-card-top"><span class="index">/03</span><span>HIGH BAY</span></div>
-        <div class="product-card-img"><img src="images/processed/HB.png" alt="HB Series High Bay"></div>
-        <h3 class="product-card-title">HB Series</h3>
-        <p class="product-card-desc">Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.</p>
-        <div class="product-card-specs">
-          <div class="product-spec"><span class="product-spec-value">100-300W</span><span class="product-spec-label">Power</span></div>
-          <div class="product-spec"><span class="product-spec-value">120lm/W</span><span class="product-spec-label">Efficacy</span></div>
-          <div class="product-spec"><span class="product-spec-value">IP66</span><span class="product-spec-label">Protection</span></div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -1169,57 +1150,29 @@
 <section id="projects">
   <div class="container">
     <span class="section-label"><span class="num">/02</span> PROJECTS</span>
-    <h2 class="section-title">Featured Projects</h2>
-    <p class="section-body">Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.</p>
+    <h2 class="section-title">{{ config.projects_title }}</h2>
+    <p class="section-body">{{ config.projects_subtitle }}</p>
 
     <div class="projects-grid">
+      {% for project in projects %}
       <div class="project-card reveal">
         <div class="project-card-img">
-          <img src="images/processed/footballfield.png" alt="Football Field Lighting Project">
+          {% if project.image %}
+          <img src="{{ project.image.url }}" alt="{{ project.title }}">
+          {% else %}
+          <div class="project-card-img-placeholder stadium">
+            <span class="field-label">Project Image</span>
+          </div>
+          {% endif %}
         </div>
         <div class="project-card-body">
-          <div class="project-card-location">United States</div>
-          <h3 class="project-card-title">Football Field LED Retrofit</h3>
-          <p class="project-card-desc">A precision photometric design was completed to ensure that the design specifications were met. The design called for replacement of 40 existing 1500W MH light fixtures with 48 of our FL9M-630W LED performance sports lights.</p>
-          <p class="project-card-desc" style="margin-top:12px;">Results: <strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> &mdash; exceeding the project requirements.</p>
+          <div class="project-card-location">{{ project.location }}</div>
+          <h3 class="project-card-title">{{ project.title }}</h3>
+          <p class="project-card-desc">{{ project.description }}</p>
+          {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">Results: {{ project.results|safe }}</p>{% endif %}
         </div>
       </div>
-
-      <div class="project-card reveal">
-        <div class="project-card-img">
-          <img src="images/processed/Baseball.png" alt="Baseball Field Lighting Project">
-        </div>
-        <div class="project-card-body">
-          <div class="project-card-location">United States</div>
-          <h3 class="project-card-title">Baseball Field LED Retrofit</h3>
-          <p class="project-card-desc">150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.</p>
-          <p class="project-card-desc" style="margin-top:12px;">Results: <strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> &mdash; meeting the project specifications.</p>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-card-img">
-          <img src="images/processed/basketball.png" alt="Multi-sport Arena France">
-        </div>
-        <div class="project-card-body">
-          <div class="project-card-location">France</div>
-          <h3 class="project-card-title">Multi-Sport Arena HD Broadcast</h3>
-          <p class="project-card-desc">A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.</p>
-          <p class="project-card-desc" style="margin-top:12px;">Results: <strong>&gt;2000 lux</strong> &mdash; meeting HD broadcast standards.</p>
-        </div>
-      </div>
-
-      <div class="project-card reveal">
-        <div class="project-card-img">
-          <img src="images/processed/soccerfield.png" alt="Shanghai Yuanshen Sports Centre Stadium">
-        </div>
-        <div class="project-card-body">
-          <div class="project-card-location">Shanghai, China</div>
-          <h3 class="project-card-title">Yuanshen Sports Centre Stadium</h3>
-          <p class="project-card-desc">A multipurpose stadium in Shanghai's Pudong New Area with 160,000 sqm and 20,000 seats. 320 FL12M-1000W LED sports lights (CCT: 5000-5500K) with networking control system for remote on/off and power monitoring.</p>
-          <p class="project-card-desc" style="margin-top:12px;">Results: <strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> &mdash; meeting AFC Stadium Lighting Guidelines 2018.</p>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -1228,28 +1181,28 @@
 <section id="about" class="about-section">
   <div class="container">
     <span class="section-label"><span class="num">/03</span> WHY SOLARONE</span>
-    <h2 class="section-title">Trusted worldwide for a reason.</h2>
+    <h2 class="section-title">{{ config.about_title }}</h2>
     <div class="about-content">
-      <p class="about-text">Since 2007, SolarOne Vision has focused on the design and manufacture of high power LED Sports lighting systems, LED Roadway infrastructure lighting systems, and LED industrial lighting systems. We bring first-hand knowledge and experience for new and retrofit projects &mdash; from small projects requiring a few lights to professional high-level facilities, we've got you covered.</p>
-      <p class="about-text" style="margin-top: 20px;">SolarOne's mission is to deliver innovative outdoor and indoor lighting solutions for recreational, high school, college, and semi-professional sports venues, airports, seaports, and other industrial facilities. We protect the environment, reduce energy consumption, deliver satisfying and inspiring lighting experiences, and add value to people's vision of life.</p>
+      <p class="about-text">{{ config.about_text_1 }}</p>
+      <p class="about-text" style="margin-top: 20px;">{{ config.about_text_2 }}</p>
     </div>
 
     <div class="about-stats">
       <div class="about-stat reveal">
-        <span class="about-stat-num"><span data-count="500">0</span><span class="plus">+</span></span>
-        <span class="about-stat-label">Projects Completed</span>
+        <span class="about-stat-num">{{ config.about_stat_projects|safe }}</span>
+        <span class="about-stat-label">{{ config.about_stat_projects_label }}</span>
       </div>
       <div class="about-stat reveal">
-        <span class="about-stat-num"><span data-count="50">0</span><span class="plus">+</span></span>
-        <span class="about-stat-label">Countries Served</span>
+        <span class="about-stat-num">{{ config.about_stat_countries|safe }}</span>
+        <span class="about-stat-label">{{ config.about_stat_countries_label }}</span>
       </div>
       <div class="about-stat reveal">
-        <span class="about-stat-num"><span data-count="60">0</span><span class="unit">%</span></span>
-        <span class="about-stat-label">Energy Savings</span>
+        <span class="about-stat-num">{{ config.about_stat_years|safe }}</span>
+        <span class="about-stat-label">{{ config.about_stat_years_label }}</span>
       </div>
       <div class="about-stat reveal">
-        <span class="about-stat-num">24<span class="unit">/7</span></span>
-        <span class="about-stat-label">Global Support</span>
+        <span class="about-stat-num">{{ config.about_stat_clients|safe }}</span>
+        <span class="about-stat-label">{{ config.about_stat_clients_label }}</span>
       </div>
     </div>
   </div>
@@ -1259,8 +1212,8 @@
 <section id="contact">
   <div class="container">
     <span class="section-label"><span class="num">/04</span> CONTACT</span>
-    <h2 class="section-title">Get in Touch</h2>
-    <p class="section-body">Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.</p>
+    <h2 class="section-title">{{ config.contact_title }}</h2>
+    <p class="section-body">{{ config.contact_subtitle }}</p>
 
     <div class="contact-grid">
       <div class="contact-info reveal">
@@ -1271,7 +1224,7 @@
             </div>
             <div class="contact-info-detail">
               <span class="contact-info-label">Email</span>
-              <span class="contact-info-value"><a href="mailto:sales@solarone.com">sales@solarone.com</a></span>
+              <span class="contact-info-value"><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></span>
             </div>
           </li>
           <li class="contact-info-item">
@@ -1280,7 +1233,7 @@
             </div>
             <div class="contact-info-detail">
               <span class="contact-info-label">Phone</span>
-              <span class="contact-info-value"><a href="tel:+864000000000">+86 400 0000 0000</a></span>
+              <span class="contact-info-value"><a href="tel:{{ config.contact_phone_1 }}">{{ config.contact_phone_1 }}</a></span>
             </div>
           </li>
           <li class="contact-info-item">
@@ -1289,7 +1242,7 @@
             </div>
             <div class="contact-info-detail">
               <span class="contact-info-label">WhatsApp</span>
-              <span class="contact-info-value"><a href="https://wa.me/8613000000000" target="_blank" rel="noopener">+86 130 0000 0000</a></span>
+              <span class="contact-info-value"><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">{{ config.contact_whatsapp }}</a></span>
             </div>
           </li>
           <li class="contact-info-item">
@@ -1298,18 +1251,26 @@
             </div>
             <div class="contact-info-detail">
               <span class="contact-info-label">Address</span>
-              <span class="contact-info-value">Beijing, China</span>
+              <span class="contact-info-value">{{ config.contact_address }}</span>
             </div>
           </li>
         </ul>
-        <a href="https://wa.me/8613000000000" target="_blank" rel="noopener" class="contact-whatsapp">
+        <a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener" class="contact-whatsapp">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Chat on WhatsApp
         </a>
       </div>
 
       <div class="contact-form-wrap reveal">
-        <form class="contact-form" id="contactForm" onsubmit="return false;">
+        {% if messages %}
+        <div style="margin-bottom: 20px; padding: 14px 20px; background: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.3); color: #22C55E; font-size: 14px;">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+        {% endif %}
+        <form class="contact-form" id="contactForm" method="post" action="{% url 'home' %}">
+          {% csrf_token %}
           <div class="form-group">
             <label for="formName">Name *</label>
             <input type="text" id="formName" name="name" placeholder="Your full name" required>
@@ -1331,7 +1292,7 @@
           </div>
           <div class="form-whatsapp-row">
             <span style="font-family: var(--ff-mono); font-size: 11px; color: var(--ink-subtle); letter-spacing: 0.1em; text-transform: uppercase;">or</span>
-            <a href="https://wa.me/8613000000000" target="_blank" rel="noopener" class="contact-whatsapp" style="margin-top: 0; font-size: 11px; padding: 10px 16px;">
+            <a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener" class="contact-whatsapp" style="margin-top: 0; font-size: 11px; padding: 10px 16px;">
               <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               WhatsApp Us
             </a>
@@ -1347,8 +1308,8 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand-block">
-        <div class="footer-brand-name">SolarOne</div>
-        <p class="footer-brand-text">Professional LED lighting systems for sports, industrial, and infrastructure applications. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.</p>
+        <div class="footer-brand-name">{{ config.brand_name }}</div>
+        <p class="footer-brand-text">{{ config.footer_description }}</p>
       </div>
       <div>
         <div class="footer-col-label">Quick Links</div>
@@ -1363,19 +1324,19 @@
         <div class="footer-col-label">Social Media</div>
         <div class="footer-social">
           <!-- Facebook -->
-          <a href="#" aria-label="Facebook" target="_blank" rel="noopener">
+          <a href="{{ config.social_facebook }}" aria-label="Facebook" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
           <!-- Instagram -->
-          <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
+          <a href="{{ config.social_instagram }}" aria-label="Instagram" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
           <!-- YouTube -->
-          <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
+          <a href="{{ config.social_youtube }}" aria-label="YouTube" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </a>
           <!-- TikTok -->
-          <a href="#" aria-label="TikTok" target="_blank" rel="noopener">
+          <a href="{{ config.social_tiktok }}" aria-label="TikTok" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
           </a>
         </div>
@@ -1383,15 +1344,15 @@
       <div>
         <div class="footer-col-label">Contact</div>
         <ul class="footer-list">
-          <li><a href="mailto:sales@solarone.com">sales@solarone.com</a></li>
-          <li><a href="tel:+864000000000">+86 400 0000 0000</a></li>
-          <li><a href="https://wa.me/8613000000000" target="_blank" rel="noopener">WhatsApp: +86 130 0000 0000</a></li>
-          <li><a href="#">Beijing, China</a></li>
+          <li><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></li>
+          <li><a href="tel:{{ config.contact_phone_1 }}">{{ config.contact_phone_1 }}</a></li>
+          <li><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">WhatsApp: {{ config.contact_whatsapp }}</a></li>
+          <li><a href="#">{{ config.contact_address }}</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">&copy; 2007 &mdash; 2026 SolarOne Lighting Co., Ltd. All rights reserved.</span>
+      <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. All rights reserved.</span>
       <div class="footer-legal">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
@@ -1405,11 +1366,11 @@
   'use strict';
 
   // ============ MOBILE PANEL ============
-  const hamburger = document.getElementById('hamburgerBtn');
-  const panel = document.getElementById('mobilePanel');
-  const overlay = document.getElementById('mobileOverlay');
-  const closeBtn = document.getElementById('mobileClose');
-  const mobileLinks = document.querySelectorAll('.mobile-panel-links a');
+  var hamburger = document.getElementById('hamburgerBtn');
+  var panel = document.getElementById('mobilePanel');
+  var overlay = document.getElementById('mobileOverlay');
+  var closeBtn = document.getElementById('mobileClose');
+  var mobileLinks = document.querySelectorAll('.mobile-panel-links a');
 
   function openPanel() {
     panel.classList.add('open');
@@ -1437,7 +1398,7 @@
   });
 
   // ============ REVEAL ON SCROLL ============
-  const revealObserver = new IntersectionObserver(function(entries) {
+  var revealObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
@@ -1462,7 +1423,7 @@
   });
 
   // ============ COUNTER ANIMATION ============
-  const counters = document.querySelectorAll('[data-count]');
+  var counters = document.querySelectorAll('[data-count]');
 
   function animateCounter(el) {
     var target = parseInt(el.getAttribute('data-count'), 10);
@@ -1501,35 +1462,25 @@
     counterObserver.observe(stat);
   });
 
-  // ============ FORM HANDLING (Frontend-only) ============
+  // ============ FORM HANDLING (Django backend) ============
   var form = document.getElementById('contactForm');
   var submitBtn = document.getElementById('formSubmitBtn');
 
   form.addEventListener('submit', function(e) {
-    e.preventDefault();
     var name = document.getElementById('formName').value.trim();
     var email = document.getElementById('formEmail').value.trim();
     var message = document.getElementById('formMessage').value.trim();
 
-    if (!name || !email || !message) return;
+    if (!name || !email || !message) {
+      e.preventDefault();
+      return;
+    }
 
-    // Simulate submission
+    // Let the form submit to Django backend normally
+    // Show loading state
     submitBtn.textContent = 'Sending...';
     submitBtn.style.opacity = '0.7';
     submitBtn.style.pointerEvents = 'none';
-
-    setTimeout(function() {
-      submitBtn.textContent = 'Message Sent!';
-      submitBtn.style.background = '#22C55E';
-      submitBtn.style.opacity = '1';
-      form.reset();
-
-      setTimeout(function() {
-        submitBtn.textContent = 'Send Message';
-        submitBtn.style.background = '';
-        submitBtn.style.pointerEvents = '';
-      }, 3000);
-    }, 1500);
   });
 
   // ============ SMOOTH SCROLL FOR ANCHOR LINKS ============
