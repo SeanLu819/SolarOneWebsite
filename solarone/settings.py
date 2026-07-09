@@ -12,6 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
 
+# Detect Vercel environment
+IS_VERCEL = os.environ.get('VERCEL', '') == '1'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
 
@@ -19,7 +22,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django.contrib.admin' if not IS_VERCEL else 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -28,6 +31,10 @@ INSTALLED_APPS = [
     'pages',
     # 'django_cleanup',  # Uncomment after installing: pip install django-cleanup
 ]
+
+# On Vercel, use cookie-based sessions (no DB writes)
+if IS_VERCEL:
+    SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -38,7 +45,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pages.middleware.VisitorTrackingMiddleware',
+    'pages.middleware.VisitorTrackingMiddleware' if not IS_VERCEL else 'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'solarone.urls'
