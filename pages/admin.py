@@ -33,6 +33,17 @@ class SiteConfigAdmin(admin.ModelAdmin):
         ('Brand & Meta', {
             'fields': ('brand_name', 'logo', 'meta_title', 'meta_description', 'og_image')
         }),
+        ('Typography', {
+            'fields': (
+                ('font_family_body', 'font_family_heading'),
+                ('font_size_base', 'font_size_nav'),
+                ('font_size_hero_title', 'font_size_hero_subtitle'),
+                ('font_size_section_title', 'font_size_body'),
+                ('font_size_card_title', 'font_size_card_desc'),
+                'accent_color',
+            ),
+            'classes': ('collapse',),
+        }),
         ('Hero Section', {
             'fields': ('hero_title', 'hero_subtitle', 'hero_background')
         }),

@@ -131,6 +131,74 @@ class SiteConfig(models.Model):
     # SEO / Open Graph
     og_image = models.ImageField(upload_to='site/', blank=True, help_text="Social sharing preview image")
 
+    # Typography
+    font_family_body = models.CharField(
+        max_length=200, 
+        default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        verbose_name="Body Font Family",
+        help_text="CSS font-family value, e.g. 'Inter', sans-serif"
+    )
+    font_family_heading = models.CharField(
+        max_length=200,
+        default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        verbose_name="Heading Font Family",
+        help_text="CSS font-family value for headings"
+    )
+    font_size_base = models.CharField(
+        max_length=10,
+        default="16px",
+        verbose_name="Base Font Size",
+        help_text="Root font size, e.g. 16px, 18px"
+    )
+    font_size_nav = models.CharField(
+        max_length=10,
+        default="17px",
+        verbose_name="Navigation Font Size",
+        help_text="Nav link font size, e.g. 15px, 17px, 18px"
+    )
+    font_size_hero_title = models.CharField(
+        max_length=10,
+        default="3.5rem",
+        verbose_name="Hero Title Font Size",
+        help_text="Hero heading size, e.g. 3.5rem, 4rem"
+    )
+    font_size_hero_subtitle = models.CharField(
+        max_length=10,
+        default="1.15rem",
+        verbose_name="Hero Subtitle Font Size",
+        help_text="Hero subtitle size, e.g. 1.15rem, 1.25rem"
+    )
+    font_size_section_title = models.CharField(
+        max_length=10,
+        default="2.25rem",
+        verbose_name="Section Title Font Size",
+        help_text="Section headings size, e.g. 2.25rem, 2.5rem"
+    )
+    font_size_body = models.CharField(
+        max_length=10,
+        default="1.05rem",
+        verbose_name="Body Text Font Size",
+        help_text="Paragraph text size, e.g. 1.05rem, 1.1rem"
+    )
+    font_size_card_title = models.CharField(
+        max_length=10,
+        default="1.25rem",
+        verbose_name="Card Title Font Size",
+        help_text="Product/Project card title size"
+    )
+    font_size_card_desc = models.CharField(
+        max_length=10,
+        default="0.95rem",
+        verbose_name="Card Description Font Size",
+        help_text="Product/Project card description size"
+    )
+    accent_color = models.CharField(
+        max_length=20,
+        default="#0088FF",
+        verbose_name="Accent Color",
+        help_text="Primary accent color, e.g. #0088FF, #FF6B00"
+    )
+
     class Meta:
         verbose_name = "Site Configuration"
         verbose_name_plural = "Site Configuration"
