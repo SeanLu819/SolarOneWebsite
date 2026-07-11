@@ -30,3 +30,9 @@ awesome-design-md-main/
 __pycache__/
 media/
 staticfiles/
+
+# Unused logo variants
+static/images/logo-original.png
+static/images/logo.final.png
+static/images/logo.original-compressed.png
+static/images/logo.webp
