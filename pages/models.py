@@ -105,9 +105,9 @@ class SiteConfig(models.Model):
     contact_title = models.CharField(max_length=500, default="Get in Touch")
     contact_subtitle = models.TextField(default="Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.")
     contact_email = models.EmailField(default="sales@solarone.com")
-    contact_phone_1 = models.CharField(max_length=200, default="+86 400 0000 0000")
-    contact_phone_2 = models.CharField(max_length=200, default="+86 130 0000 0000")
-    contact_whatsapp = models.CharField(max_length=200, default="+86 130 0000 0000")
+    contact_phone_1 = models.CharField(max_length=200, default="+8613910887405")
+    contact_phone_2 = models.CharField(max_length=200, default="+8613910887405")
+    contact_whatsapp = models.CharField(max_length=200, default="+86 13910887405")
     contact_address = models.CharField(max_length=500, default="Beijing, China")
 
     # Social Media

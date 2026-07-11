@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ============ CONTACT HEADER ============ -->
+<section style="padding: 140px 0 60px;">
+  <div class="container" style="text-align: center;">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 12px;">
+      <img src="{% static 'images/logo.png' %}" alt="SolarOne" style="height: 36px; width: auto;">
+      <span style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.02em;">www.solar-one.com.cn</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HEADQUARTERS ============ -->
+<section style="padding: 80px 0; border-top: 1px solid var(--line);">
+  <div class="container">
+    <div style="max-width: 800px; margin: 0 auto;" class="reveal">
+      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Headquarters</span>
+      <h2 style="font-family: var(--ff-display); font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: 600; color: var(--ink); margin-bottom: 32px; line-height: 1.3;">BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line);">
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Address</span>
+          <span style="font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6;">No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China</span>
+        </div>
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Post Code</span>
+          <span style="font-size: 0.95rem; color: var(--ink-soft);">102209</span>
+        </div>
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Tel</span>
+          <a href="tel:86-010-59796555" style="font-size: 0.95rem; color: var(--ink-soft); transition: color 0.2s;">86-010-59796555</a>
+        </div>
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Fax</span>
+          <span style="font-size: 0.95rem; color: var(--ink-soft);">86-010-59796555-834</span>
+        </div>
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Website</span>
+          <a href="https://www.solar-one.com.cn" target="_blank" rel="noopener" style="font-size: 0.95rem; color: var(--accent); transition: color 0.2s;">www.solar-one.com.cn</a>
+        </div>
+        <div style="padding: 20px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+          <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Email</span>
+          <a href="mailto:sales@solarone.com" style="font-size: 0.95rem; color: var(--accent); transition: color 0.2s;">sales@solarone.com</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AGENTS ============ -->
+<section style="padding: 80px 0 120px; border-top: 1px solid var(--line);">
+  <div class="container">
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="reveal" style="margin-bottom: 48px;">
+        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Global Network</span>
+        <h2 class="section-title" style="margin-bottom: 0;">Agents & Distributors</h2>
+      </div>
+
+      <div style="display: grid; gap: 24px;">
+        <!-- USA Agent -->
+        <div class="reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px 36px; display: flex; gap: 24px; align-items: flex-start;">
+          <div style="width: 100px; height: 100px; border-radius: 14px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+            <img src="{% static 'images/agent-usa.png' %}" alt="USA Agent" style="width: 90px; height: 90px; object-fit: contain;">
+          </div>
+          <div>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">USA Agent</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA</p>
+          </div>
+          </div>
+        </div>
+
+        <!-- Germany Agent -->
+        <div class="reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px 36px; display: flex; gap: 24px; align-items: flex-start;">
+          <div style="width: 100px; height: 100px; border-radius: 14px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+            <img src="{% static 'images/agent-germany.png' %}" alt="Germany Agent" style="width: 90px; height: 90px; object-fit: contain;">
+          </div>
+          <div>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">Germany Agent</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft); margin-bottom: 6px;">Gewerbepark, Talstr. 27, 41751 Viersen, Germany</p>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">Blaukehlchenweg 6, 76706 Dettenheim, Germany</p>
+          </div>
+        </div>
+
+        <!-- France Agent -->
+        <div class="reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px 36px; display: flex; gap: 24px; align-items: flex-start;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <div>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">France Agent</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  a[href^="mailto"], a[href^="tel"] { transition: color 0.2s; }
+  a[href^="mailto"]:hover, a[href^="tel"]:hover { color: var(--accent) !important; }
+  a[href^="https://www.solar-one"]:hover { color: var(--accent-hover) !important; }
+
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    div[style*="grid-template-columns: 1fr 1fr"] > div {
+      border-right: none !important;
+    }
+  }
+</style>
+
+{% endblock %}

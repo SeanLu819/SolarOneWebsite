@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Projects grid -->
+<section class="projects-section" id="projects" style="padding: 80px 0;">
+  <div class="container">
+    <div class="projects-grid">
+      {% for project in projects %}
+      <div class="project-card reveal">
+        <div class="project-card-img">
+          {% if project.image_url %}
+          <img src="{{ project.image_url }}" alt="{{ project.title }}">
+          {% else %}
+          <div class="project-card-img-placeholder stadium">
+            <span class="field-label">Project Image</span>
+          </div>
+          {% endif %}
+        </div>
+        <div class="project-card-body">
+          <div class="project-card-location">{{ project.location }}</div>
+          <h3 class="project-card-title">{{ project.title }}</h3>
+          <p class="project-card-desc">{{ project.description }}</p>
+          {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">Results: {{ project.results|safe }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
