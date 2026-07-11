@@ -26,7 +26,6 @@ venv/
 awesome-design-md-main/
 
 # Django
-db.sqlite3
 *.pyc
 __pycache__/
 media/
