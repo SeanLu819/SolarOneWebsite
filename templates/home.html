@@ -47,4 +47,149 @@
   </div>
 </section>
 
+<!-- ============ PRODUCTS PREVIEW ============ -->
+<section class="home-preview-section">
+  <div class="container">
+    <div class="home-preview-card reveal">
+      <div class="home-preview-img">
+        <img src="{% static 'images/home-products.png' %}" alt="LED Lighting Products">
+      </div>
+      <div class="home-preview-text">
+        <span class="home-preview-tag">Products</span>
+        <h2>Professional LED Lighting Systems</h2>
+        <p>From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.</p>
+        <a href="{% url 'products' %}" class="home-preview-link">
+          View All Products <span class="link-arrow">&#8250;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS PREVIEW ============ -->
+<section style="padding: 0;">
+  <div class="container">
+    <div class="home-preview-card reversed reveal">
+      <div class="home-preview-img">
+        <img src="{% static 'images/home-project.jpg' %}" alt="SolarOne Projects">
+      </div>
+      <div class="home-preview-text">
+        <span class="home-preview-tag">Projects</span>
+        <h2>Trusted Worldwide</h2>
+        <p>Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience.</p>
+        <a href="{% url 'projects' %}" class="home-preview-link">
+          View All Projects <span class="link-arrow">&#8250;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-preview-section {
+    padding: 48px 0 0;
+  }
+  .home-preview-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    margin-bottom: 0;
+    transition: border-color 0.3s;
+  }
+  .home-preview-card:hover {
+    border-color: var(--line-strong);
+  }
+  .home-preview-img {
+    overflow: hidden;
+    min-height: 320px;
+    background: var(--bg);
+  }
+  .home-preview-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .home-preview-card:hover .home-preview-img img {
+    transform: scale(1.03);
+  }
+  .home-preview-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 48px;
+    gap: 20px;
+  }
+  .home-preview-tag {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .home-preview-text h2 {
+    font-family: var(--ff-display);
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+    margin-bottom: 0;
+  }
+  .home-preview-text p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--ink-mute);
+    max-width: 480px;
+  }
+  .home-preview-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    transition: gap 0.2s;
+    margin-top: 4px;
+  }
+  .home-preview-link:hover {
+    gap: 12px;
+  }
+  .home-preview-link .link-arrow {
+    transition: transform 0.2s;
+    font-size: 14px;
+  }
+  .home-preview-link:hover .link-arrow {
+    transform: translateX(4px);
+  }
+  /* Second card reverses order */
+  .home-preview-card.reversed .home-preview-img {
+    order: 2;
+  }
+  .home-preview-card.reversed .home-preview-text {
+    order: 1;
+  }
+
+  @media (max-width: 768px) {
+    .home-preview-card,
+    .home-preview-card.reversed {
+      grid-template-columns: 1fr;
+    }
+    .home-preview-card .home-preview-img,
+    .home-preview-card.reversed .home-preview-img {
+      order: -1;
+      min-height: 220px;
+    }
+    .home-preview-card .home-preview-text,
+    .home-preview-card.reversed .home-preview-text {
+      order: 1;
+      padding: 32px 24px;
+    }
+  }
+</style>
+
 {% endblock %}
