@@ -1,7 +1,7 @@
 {% load static %}
 {% load i18n %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_CODE == 'ar' %} dir="rtl"{% endif %}>
+<html lang="{{ LANGUAGE_CODE }}" data-theme="dark"{% if LANGUAGE_CODE == 'ar' %} dir="rtl"{% endif %}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1295,7 +1295,7 @@
       <div class="lang-switch-menu" id="langSwitchMenu">
         {% get_current_language as LANG_CODE %}
         {% for lang_code, lang_name in LANGUAGES %}
-        <a href="{% url 'set_language' %}" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
+        <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
           {{ lang_name }}
         </a>
         {% endfor %}
@@ -1485,7 +1485,7 @@
 
       // Let the form submit to Django backend normally
       // Show loading state
-      submitBtn.textContent = {% trans "Sending..." %};
+      submitBtn.textContent = '{% trans "Sending..." %}';
       submitBtn.style.opacity = '0.7';
       submitBtn.style.pointerEvents = 'none';
     });

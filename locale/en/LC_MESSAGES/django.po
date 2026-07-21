@@ -12,313 +12,313 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Products"
-msgstr ""
+msgstr "Products"
 
 msgid "Projects"
-msgstr ""
+msgstr "Projects"
 
 msgid "About"
-msgstr ""
+msgstr "About"
 
 msgid "Contact Us"
-msgstr ""
+msgstr "Contact Us"
 
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 msgid "Close menu"
-msgstr ""
+msgstr "Close menu"
 
 msgid "Open menu"
-msgstr ""
+msgstr "Open menu"
 
 msgid "Toggle light/dark theme"
-msgstr ""
+msgstr "Toggle light/dark theme"
 
 msgid "Quick Links"
-msgstr ""
+msgstr "Quick Links"
 
 msgid "Social Media"
-msgstr ""
+msgstr "Social Media"
 
 msgid "WhatsApp:"
-msgstr ""
+msgstr "WhatsApp:"
 
 msgid "All rights reserved."
-msgstr ""
+msgstr "All rights reserved."
 
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Privacy Policy"
 
 msgid "Terms of Service"
-msgstr ""
+msgstr "Terms of Service"
 
 msgid "View Products"
-msgstr ""
+msgstr "View Products"
 
 msgid "Professional LED Lighting Systems"
-msgstr ""
+msgstr "Professional LED Lighting Systems"
 
 msgid "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line."
-msgstr ""
+msgstr "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line."
 
 msgid "View All Products"
-msgstr ""
+msgstr "View All Products"
 
 msgid "LED Lighting Products"
-msgstr ""
+msgstr "LED Lighting Products"
 
 msgid "Trusted Worldwide"
-msgstr ""
+msgstr "Trusted Worldwide"
 
 msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
-msgstr ""
+msgstr "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
 
 msgid "View All Projects"
-msgstr ""
+msgstr "View All Projects"
 
 msgid "SolarOne Projects"
-msgstr ""
+msgstr "SolarOne Projects"
 
 msgid "Sending..."
-msgstr ""
+msgstr "Sending..."
 
 msgid "Get In Touch"
-msgstr ""
+msgstr "Get In Touch"
 
 msgid "Name *"
-msgstr ""
+msgstr "Name *"
 
 msgid "Your name"
-msgstr ""
+msgstr "Your name"
 
 msgid "Email *"
-msgstr ""
+msgstr "Email *"
 
 msgid "your@email.com"
-msgstr ""
+msgstr "your@email.com"
 
 msgid "Phone"
-msgstr ""
+msgstr "Phone"
 
 msgid "+86 xxx xxxx xxxx"
-msgstr ""
+msgstr "+86 xxx xxxx xxxx"
 
 msgid "Message *"
-msgstr ""
+msgstr "Message *"
 
 msgid "Tell us about your project..."
-msgstr ""
+msgstr "Tell us about your project..."
 
 msgid "Send Message"
-msgstr ""
+msgstr "Send Message"
 
 msgid "Headquarters"
-msgstr ""
+msgstr "Headquarters"
 
 msgid "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
-msgstr ""
+msgstr "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
 
 msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
-msgstr ""
+msgstr "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
 
 msgid "Tel"
-msgstr ""
+msgstr "Tel"
 
 msgid "Fax"
-msgstr ""
+msgstr "Fax"
 
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 msgid "Global Network"
-msgstr ""
+msgstr "Global Network"
 
 msgid "Agents & Distributors"
-msgstr ""
+msgstr "Agents & Distributors"
 
 msgid "USA Agent"
-msgstr ""
+msgstr "USA Agent"
 
 msgid "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA"
-msgstr ""
+msgstr "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA"
 
 msgid "Germany Agent"
-msgstr ""
+msgstr "Germany Agent"
 
 msgid "Gewerbepark, Talstr. 27, 41751 Viersen, Germany"
-msgstr ""
+msgstr "Gewerbepark, Talstr. 27, 41751 Viersen, Germany"
 
 msgid "Blaukehlchenweg 6, 76706 Dettenheim, Germany"
-msgstr ""
+msgstr "Blaukehlchenweg 6, 76706 Dettenheim, Germany"
 
 msgid "France Agent"
-msgstr ""
+msgstr "France Agent"
 
 msgid "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France"
-msgstr ""
+msgstr "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France"
 
 msgid "Results:"
-msgstr ""
+msgstr "Results:"
 
 msgid "Project Image"
-msgstr ""
+msgstr "Project Image"
 
 msgid "Power"
-msgstr ""
+msgstr "Power"
 
 msgid "Efficacy"
-msgstr ""
+msgstr "Efficacy"
 
 msgid "Output"
-msgstr ""
+msgstr "Output"
 
 msgid "Beam Angle"
-msgstr ""
+msgstr "Beam Angle"
 
 msgid "Protection"
-msgstr ""
+msgstr "Protection"
 
 msgid "Our Story"
-msgstr ""
+msgstr "Our Story"
 
 msgid "To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life."
-msgstr ""
+msgstr "To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life."
 
 msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
-msgstr ""
+msgstr "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
 
 msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
-msgstr ""
+msgstr "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
 
 msgid "About SolarOne"
-msgstr ""
+msgstr "About SolarOne"
 
 msgid "YEARS"
-msgstr ""
+msgstr "YEARS"
 
 msgid "PROJECTS"
-msgstr ""
+msgstr "PROJECTS"
 
 msgid "COUNTRIES"
-msgstr ""
+msgstr "COUNTRIES"
 
 msgid "CLIENTS"
-msgstr ""
+msgstr "CLIENTS"
 
 msgid "Engineering Excellence"
-msgstr ""
+msgstr "Engineering Excellence"
 
 msgid "Technical Advantages"
-msgstr ""
+msgstr "Technical Advantages"
 
 msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
-msgstr ""
+msgstr "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
 
 msgid "Clearest Visual Comfort"
-msgstr ""
+msgstr "Clearest Visual Comfort"
 
 msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
-msgstr ""
+msgstr "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
 
 msgid "Powerful and Efficient"
-msgstr ""
+msgstr "Powerful and Efficient"
 
 msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
-msgstr ""
+msgstr "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
 
 msgid "Proprietary Technology"
-msgstr ""
+msgstr "Proprietary Technology"
 
 msgid "CPG-Optics System"
-msgstr ""
+msgstr "CPG-Optics System"
 
 msgid "Three layers of precision-engineered optics working in harmony."
-msgstr ""
+msgstr "Three layers of precision-engineered optics working in harmony."
 
 msgid "Layer 01"
-msgstr ""
+msgstr "Layer 01"
 
 msgid "COB Light Engine"
-msgstr ""
+msgstr "COB Light Engine"
 
 msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
-msgstr ""
+msgstr "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
 
 msgid "COB LED Chip"
-msgstr ""
+msgstr "COB LED Chip"
 
 msgid "Layer 02"
-msgstr ""
+msgstr "Layer 02"
 
 msgid "Proprietary Reflector"
-msgstr ""
+msgstr "Proprietary Reflector"
 
 msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
-msgstr ""
+msgstr "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
 
 msgid "Layer 03"
-msgstr ""
+msgstr "Layer 03"
 
 msgid "Glass Fresnel Lens"
-msgstr ""
+msgstr "Glass Fresnel Lens"
 
 msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
-msgstr ""
+msgstr "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
 
 msgid "End to End"
-msgstr ""
+msgstr "End to End"
 
 msgid "Lighting Projects Made Simple"
-msgstr ""
+msgstr "Lighting Projects Made Simple"
 
 msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
-msgstr ""
+msgstr "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
 
 msgid "Consultation"
-msgstr ""
+msgstr "Consultation"
 
 msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
-msgstr ""
+msgstr "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
 
 msgid "Custom Fabrication"
-msgstr ""
+msgstr "Custom Fabrication"
 
 msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
-msgstr ""
+msgstr "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
 
 msgid "Manufacture"
-msgstr ""
+msgstr "Manufacture"
 
 msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
-msgstr ""
+msgstr "Experts providing both lighting and structural engineering designs with precision manufacturing."
 
 msgid "Installation"
-msgstr ""
+msgstr "Installation"
 
 msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
-msgstr ""
+msgstr "Experienced on-site install teams ensuring safe and reliable installations worldwide."
 
 msgid "Maintenance"
-msgstr ""
+msgstr "Maintenance"
 
 msgid "Safeguarding your investment and ensuring long-term brilliant performance."
-msgstr ""
+msgstr "Safeguarding your investment and ensuring long-term brilliant performance."
 
 msgid "Financing Solutions"
-msgstr ""
+msgstr "Financing Solutions"
 
 msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
-msgstr ""
+msgstr "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
 
 msgid "Ready to Light Up Your Project?"
-msgstr ""
+msgstr "Ready to Light Up Your Project?"
 
 msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
-msgstr ""
+msgstr "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
