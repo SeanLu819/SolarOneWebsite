@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -16,11 +17,11 @@
         <h3 class="product-card-title">{{ product.name }}</h3>
         <p class="product-card-desc">{{ product.description }}</p>
         <div class="product-card-specs">
-          {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">Power</span></div>{% endif %}
-          {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">Efficacy</span></div>{% endif %}
-          {% if product.output %}<div class="product-spec"><span class="product-spec-value">{{ product.output }}</span><span class="product-spec-label">Output</span></div>{% endif %}
-          {% if product.beam_angle %}<div class="product-spec"><span class="product-spec-value">{{ product.beam_angle }}</span><span class="product-spec-label">Beam Angle</span></div>{% endif %}
-          {% if product.protection %}<div class="product-spec"><span class="product-spec-value">{{ product.protection }}</span><span class="product-spec-label">Protection</span></div>{% endif %}
+          {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">{% trans "Power" %}</span></div>{% endif %}
+          {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}
+          {% if product.output %}<div class="product-spec"><span class="product-spec-value">{{ product.output }}</span><span class="product-spec-label">{% trans "Output" %}</span></div>{% endif %}
+          {% if product.beam_angle %}<div class="product-spec"><span class="product-spec-value">{{ product.beam_angle }}</span><span class="product-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
+          {% if product.protection %}<div class="product-spec"><span class="product-spec-value">{{ product.protection }}</span><span class="product-spec-label">{% trans "Protection" %}</span></div>{% endif %}
         </div>
       </div>
       {% endfor %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -9,21 +10,21 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;" class="about-story-grid">
       <!-- Left: Text -->
       <div class="reveal">
-        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 20px;">Our Story</span>
+        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 20px;">{% trans "Our Story" %}</span>
         <h2 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 32px;">
-          To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life.
+          {% trans "To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life." %}
         </h2>
         <p style="font-size: 1.05rem; line-height: 1.85; color: var(--ink-soft); margin-bottom: 20px;">
-          Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences.
+          {% trans "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences." %}
         </p>
         <p style="font-size: 1.05rem; line-height: 1.85; color: var(--ink-soft);">
-          We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we've got you covered.
+          {% trans "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we've got you covered." %}
         </p>
       </div>
       <!-- Right: Image -->
       <div class="about-story-image reveal" style="position: relative;">
         <div style="border-radius: 16px; overflow: hidden; border: 1px solid var(--line);">
-          <img src="{% static 'images/about-main.jpg' %}" alt="About SolarOne" style="width: 100%; height: auto; display: block;">
+          <img src="{% static 'images/about-main.jpg' %}" alt="{% trans 'About SolarOne' %}" style="width: 100%; height: auto; display: block;">
         </div>
       </div>
     </div>
@@ -33,28 +34,28 @@
       <div class="reveal" style="text-align: center;">
         <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_years|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">YEARS</span>
+          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "YEARS" %}</span>
         </div>
         <span style="font-size: 0.85rem; color: var(--ink-mute);">{{ config.about_stat_years_label }}</span>
       </div>
       <div class="reveal" style="text-align: center;">
         <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_projects|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">PROJECTS</span>
+          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "PROJECTS" %}</span>
         </div>
         <span style="font-size: 0.85rem; color: var(--ink-mute);">{{ config.about_stat_projects_label }}</span>
       </div>
       <div class="reveal" style="text-align: center;">
         <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_countries|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">COUNTRIES</span>
+          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "COUNTRIES" %}</span>
         </div>
         <span style="font-size: 0.85rem; color: var(--ink-mute);">{{ config.about_stat_countries_label }}</span>
       </div>
       <div class="reveal" style="text-align: center;">
         <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
           <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_clients|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">CLIENTS</span>
+          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "CLIENTS" %}</span>
         </div>
         <span style="font-size: 0.85rem; color: var(--ink-mute);">{{ config.about_stat_clients_label }}</span>
       </div>
@@ -66,10 +67,10 @@
 <section style="padding: 120px 0;">
   <div class="container">
     <div style="text-align: center; max-width: 800px; margin: 0 auto 64px;" class="reveal">
-      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Engineering Excellence</span>
-      <h2 class="section-title" style="margin-bottom: 20px;">Technical Advantages</h2>
+      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "Engineering Excellence" %}</span>
+      <h2 class="section-title" style="margin-bottom: 20px;">{% trans "Technical Advantages" %}</h2>
       <p class="section-body">
-        Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance.
+        {% trans "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance." %}
       </p>
     </div>
 
@@ -80,9 +81,9 @@
         <div style="width: 72px; height: 72px; margin: 0 auto 28px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center;">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </div>
-        <h3 style="font-family: var(--ff-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px;">Clearest Visual Comfort</h3>
+        <h3 style="font-family: var(--ff-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px;">{% trans "Clearest Visual Comfort" %}</h3>
         <p style="font-size: 0.95rem; line-height: 1.7; color: var(--ink-mute);">
-          Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics.
+          {% trans "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics." %}
         </p>
       </div>
       <!-- Pillar 2 -->
@@ -91,9 +92,9 @@
         <div style="width: 72px; height: 72px; margin: 0 auto 28px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center;">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
-        <h3 style="font-family: var(--ff-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px;">Powerful and Efficient</h3>
+        <h3 style="font-family: var(--ff-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px;">{% trans "Powerful and Efficient" %}</h3>
         <p style="font-size: 0.95rem; line-height: 1.7; color: var(--ink-mute);">
-          Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses.
+          {% trans "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses." %}
         </p>
       </div>
     </div>
@@ -104,48 +105,48 @@
 <section style="padding: 120px 0; background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
   <div class="container">
     <div style="text-align: center; max-width: 800px; margin: 0 auto 64px;" class="reveal">
-      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Proprietary Technology</span>
-      <h2 class="section-title" style="margin-bottom: 20px;">CPG-Optics System</h2>
-      <p class="section-body">Three layers of precision-engineered optics working in harmony.</p>
+      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "Proprietary Technology" %}</span>
+      <h2 class="section-title" style="margin-bottom: 20px;">{% trans "CPG-Optics System" %}</h2>
+      <p class="section-body">{% trans "Three layers of precision-engineered optics working in harmony." %}</p>
     </div>
 
     <div class="about-optics-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; max-width: 1100px; margin: 0 auto;">
       <!-- Optics 1: Image on top -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-ledchip.png' %}" alt="COB LED Chip" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-ledchip.png' %}" alt="{% trans 'COB LED Chip' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
         </div>
         <div style="padding: 32px 28px;">
-          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">Layer 01</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">COB Light Engine</h3>
+          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 01" %}</div>
+          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">{% trans "COB Light Engine" %}</h3>
           <p style="font-size: 0.92rem; line-height: 1.75; color: var(--ink-mute);">
-            Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface.
+            {% trans "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface." %}
           </p>
         </div>
       </div>
       <!-- Optics 2 -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-reflector.png' %}" alt="Proprietary Reflector" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-reflector.png' %}" alt="{% trans 'Proprietary Reflector' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
         </div>
         <div style="padding: 32px 28px;">
-          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">Layer 02</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">Proprietary Reflector</h3>
+          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 02" %}</div>
+          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">{% trans "Proprietary Reflector" %}</h3>
           <p style="font-size: 0.92rem; line-height: 1.75; color: var(--ink-mute);">
-            The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips.
+            {% trans "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips." %}
           </p>
         </div>
       </div>
       <!-- Optics 3 -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-lens1.png' %}" alt="Glass Fresnel Lens" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-lens1.png' %}" alt="{% trans 'Glass Fresnel Lens' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
         </div>
         <div style="padding: 32px 28px;">
-          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">Layer 03</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">Glass Fresnel Lens</h3>
+          <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 03" %}</div>
+          <h3 style="font-family: var(--ff-display); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 16px;">{% trans "Glass Fresnel Lens" %}</h3>
           <p style="font-size: 0.92rem; line-height: 1.75; color: var(--ink-mute);">
-            Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time.
+            {% trans "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time." %}
           </p>
         </div>
       </div>
@@ -157,10 +158,10 @@
 <section style="padding: 120px 0;">
   <div class="container">
     <div style="text-align: center; max-width: 800px; margin: 0 auto 64px;" class="reveal">
-      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">End to End</span>
-      <h2 class="section-title" style="margin-bottom: 20px;">Lighting Projects Made Simple</h2>
+      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "End to End" %}</span>
+      <h2 class="section-title" style="margin-bottom: 20px;">{% trans "Lighting Projects Made Simple" %}</h2>
       <p class="section-body">
-        We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings.
+        {% trans "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings." %}
       </p>
     </div>
 
@@ -169,49 +170,49 @@
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">01</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Consultation</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Consultation" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">From initial ideas through to detailed plans we are able to supply consultancy as part of our package.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "From initial ideas through to detailed plans we are able to supply consultancy as part of our package." %}</p>
       </div>
       <!-- Service 2 -->
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">02</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Custom Fabrication</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Custom Fabrication" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand." %}</p>
       </div>
       <!-- Service 3 -->
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">03</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Manufacture</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Manufacture" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">Experts providing both lighting and structural engineering designs with precision manufacturing.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "Experts providing both lighting and structural engineering designs with precision manufacturing." %}</p>
       </div>
       <!-- Service 4 -->
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">04</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Installation</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Installation" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">Experienced on-site install teams ensuring safe and reliable installations worldwide.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "Experienced on-site install teams ensuring safe and reliable installations worldwide." %}</p>
       </div>
       <!-- Service 5 -->
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">05</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Maintenance</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Maintenance" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">Safeguarding your investment and ensuring long-term brilliant performance.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "Safeguarding your investment and ensuring long-term brilliant performance." %}</p>
       </div>
       <!-- Service 6 -->
       <div class="about-service-card reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 36px 28px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; color: #fff;">06</div>
-          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">Financing Solutions</h3>
+          <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink);">{% trans "Financing Solutions" %}</h3>
         </div>
-        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget.</p>
+        <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-mute);">{% trans "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget." %}</p>
       </div>
     </div>
   </div>
@@ -220,11 +221,11 @@
 <!-- ============ CTA ============ -->
 <section style="padding: 100px 0; text-align: center; background: var(--bg-soft); border-top: 1px solid var(--line);">
   <div class="container reveal">
-    <h2 style="font-family: var(--ff-display); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 600; color: var(--ink); margin-bottom: 16px;">Ready to Light Up Your Project?</h2>
-    <p style="font-size: 1.05rem; color: var(--ink-mute); max-width: 500px; margin: 0 auto 32px;">Get in touch and our engineering team will respond with a full photometric proposal within 48 hours.</p>
+    <h2 style="font-family: var(--ff-display); font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 600; color: var(--ink); margin-bottom: 16px;">{% trans "Ready to Light Up Your Project?" %}</h2>
+    <p style="font-size: 1.05rem; color: var(--ink-mute); max-width: 500px; margin: 0 auto 32px;">{% trans "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours." %}</p>
     <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-      <a href="{% url 'contact' %}" class="btn-primary">Contact Us</a>
-      <a href="{% url 'products' %}" class="btn-ghost">View Products</a>
+      <a href="{% url 'contact' %}" class="btn-primary">{% trans "Contact Us" %}</a>
+      <a href="{% url 'products' %}" class="btn-ghost">{% trans "View Products" %}</a>
     </div>
   </div>
 </section>

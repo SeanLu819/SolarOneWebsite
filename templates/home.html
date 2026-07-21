@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -23,8 +24,8 @@
     <h1 class="hero-title">{{ config.hero_title|safe }}</h1>
     <p class="hero-lede">{{ config.hero_subtitle }}</p>
     <div class="hero-actions">
-      <a href="{% url 'products' %}" class="btn-primary">View Products</a>
-      <a href="{% url 'contact' %}" class="btn-ghost">Contact Us</a>
+      <a href="{% url 'products' %}" class="btn-primary">{% trans "View Products" %}</a>
+      <a href="{% url 'contact' %}" class="btn-ghost">{% trans "Contact Us" %}</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
@@ -52,14 +53,14 @@
   <div class="container">
     <div class="home-preview-card reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-products.png' %}" alt="LED Lighting Products">
+        <img src="{% static 'images/home-products.png' %}" alt="{% trans 'LED Lighting Products' %}">
       </div>
       <div class="home-preview-text">
-        <span class="home-preview-tag">Products</span>
-        <h2>Professional LED Lighting Systems</h2>
-        <p>From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.</p>
+        <span class="home-preview-tag">{% trans "Products" %}</span>
+        <h2>{% trans "Professional LED Lighting Systems" %}</h2>
+        <p>{% trans "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line." %}</p>
         <a href="{% url 'products' %}" class="home-preview-link">
-          View All Products <span class="link-arrow">&#8250;</span>
+          {% trans "View All Products" %} <span class="link-arrow">&#8250;</span>
         </a>
       </div>
     </div>
@@ -71,14 +72,14 @@
   <div class="container">
     <div class="home-preview-card reversed reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-project.jpg' %}" alt="SolarOne Projects">
+        <img src="{% static 'images/home-project.jpg' %}" alt="{% trans 'SolarOne Projects' %}">
       </div>
       <div class="home-preview-text">
-        <span class="home-preview-tag">Projects</span>
-        <h2>Trusted Worldwide</h2>
-        <p>Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience.</p>
+        <span class="home-preview-tag">{% trans "Projects" %}</span>
+        <h2>{% trans "Trusted Worldwide" %}</h2>
+        <p>{% trans "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience." %}</p>
         <a href="{% url 'projects' %}" class="home-preview-link">
-          View All Projects <span class="link-arrow">&#8250;</span>
+          {% trans "View All Projects" %} <span class="link-arrow">&#8250;</span>
         </a>
       </div>
     </div>

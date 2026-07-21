@@ -1,0 +1,324 @@
+# SolarOne Website - French (fr)
+# Generated: 2026-07-22 00:18
+
+msgid ""
+msgstr ""
+"Project-Id-Version: SolarOne Website 1.0\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: French\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Products"
+msgstr "Produits"
+
+msgid "Projects"
+msgstr "Projets"
+
+msgid "About"
+msgstr "À propos"
+
+msgid "Contact Us"
+msgstr "Contactez-nous"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Close menu"
+msgstr "Fermer le menu"
+
+msgid "Open menu"
+msgstr "Ouvrir le menu"
+
+msgid "Toggle light/dark theme"
+msgstr "Basculer thème clair/sombre"
+
+msgid "Quick Links"
+msgstr "Liens rapides"
+
+msgid "Social Media"
+msgstr "Réseaux sociaux"
+
+msgid "WhatsApp:"
+msgstr "WhatsApp :"
+
+msgid "All rights reserved."
+msgstr "Tous droits réservés."
+
+msgid "Privacy Policy"
+msgstr "Politique de confidentialité"
+
+msgid "Terms of Service"
+msgstr "Conditions d’utilisation"
+
+msgid "View Products"
+msgstr "Voir les produits"
+
+msgid "Professional LED Lighting Systems"
+msgstr "Systèmes d’éclairage LED professionnels"
+
+msgid "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line."
+msgstr "Des luminaires modulaires compacts aux systèmes industriel de haut niveau. Optique de précision, architecture modulaire et fiabilité éprouvée sur le terrain pour chaque gamme de produits."
+
+msgid "View All Products"
+msgstr "Voir tous les produits"
+
+msgid "LED Lighting Products"
+msgstr "Produits d’éclairage LED"
+
+msgid "Trusted Worldwide"
+msgstr "Reconnu dans le monde entier"
+
+msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
+msgstr "Plus de 500 projets livrés dans plus de 50 pays. Des stades sportifs professionnels aux installations industrielles, aéroports et ports maritimes — nous apportons une connaissance et une expérience de première main."
+
+msgid "View All Projects"
+msgstr "Voir tous les projets"
+
+msgid "SolarOne Projects"
+msgstr "Projets SolarOne"
+
+msgid "Sending..."
+msgstr "Envoi en cours..."
+
+msgid "Get In Touch"
+msgstr "Contactez-nous"
+
+msgid "Name *"
+msgstr "Nom *"
+
+msgid "Your name"
+msgstr "Votre nom"
+
+msgid "Email *"
+msgstr "E-mail *"
+
+msgid "your@email.com"
+msgstr "votre@email.com"
+
+msgid "Phone"
+msgstr "Téléphone"
+
+msgid "+86 xxx xxxx xxxx"
+msgstr "+86 xxx xxxx xxxx"
+
+msgid "Message *"
+msgstr "Message *"
+
+msgid "Tell us about your project..."
+msgstr "Parlez-nous de votre projet..."
+
+msgid "Send Message"
+msgstr "Envoyer le message"
+
+msgid "Headquarters"
+msgstr "Siège social"
+
+msgid "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
+msgstr "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
+
+msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+msgstr "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+
+msgid "Tel"
+msgstr "Tél"
+
+msgid "Fax"
+msgstr "Fax"
+
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Website"
+msgstr "Site web"
+
+msgid "Global Network"
+msgstr "Réseau mondial"
+
+msgid "Agents & Distributors"
+msgstr "Agents et distributeurs"
+
+msgid "USA Agent"
+msgstr "Agent USA"
+
+msgid "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA"
+msgstr "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA"
+
+msgid "Germany Agent"
+msgstr "Agent Allemagne"
+
+msgid "Gewerbepark, Talstr. 27, 41751 Viersen, Germany"
+msgstr "Gewerbepark, Talstr. 27, 41751 Viersen, Germany"
+
+msgid "Blaukehlchenweg 6, 76706 Dettenheim, Germany"
+msgstr "Blaukehlchenweg 6, 76706 Dettenheim, Germany"
+
+msgid "France Agent"
+msgstr "Agent France"
+
+msgid "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France"
+msgstr "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France"
+
+msgid "Results:"
+msgstr "Résultats :"
+
+msgid "Project Image"
+msgstr "Image du projet"
+
+msgid "Power"
+msgstr "Puissance"
+
+msgid "Efficacy"
+msgstr "Efficacité"
+
+msgid "Output"
+msgstr "Flux lumineux"
+
+msgid "Beam Angle"
+msgstr "Angle de faisceau"
+
+msgid "Protection"
+msgstr "Protection"
+
+msgid "Our Story"
+msgstr "Notre histoire"
+
+msgid "To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life."
+msgstr "Offrir des solutions d’éclairage intérieur/extérieur innovantes qui protègent l’environnement et inspirent la vie."
+
+msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
+msgstr "En livrant des solutions d’éclairage innovantes pour les installations sportives récréatives, les lycées, les colleges et les installations semi-professionnelles, les aéroports, les ports maritimes et autres installations industrielles, SolarOne protège l’environnement, réduit la consommation d’énergie et offre des expériences d’éclairage satisfaisantes et inspirantes."
+
+msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
+msgstr "Nous apportons des connaissances et une expérience de première main pour les projets neufs et de rénovation — des petits projets nécessitant quelques luminaires aux installations professionnelles de haut niveau, nous vous couvrons."
+
+msgid "About SolarOne"
+msgstr "À propos de SolarOne"
+
+msgid "YEARS"
+msgstr "ANNÉES"
+
+msgid "PROJECTS"
+msgstr "PROJETS"
+
+msgid "COUNTRIES"
+msgstr "PAYS"
+
+msgid "CLIENTS"
+msgstr "CLIENTS"
+
+msgid "Engineering Excellence"
+msgstr "Excellence technique"
+
+msgid "Technical Advantages"
+msgstr "Avantages techniques"
+
+msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
+msgstr "Nos produits d’éclairage LED sont conçus pour offrir le plus grand confort visuel tout en délivrant le flux le plus élevé à la cible — Améliore les performances humaines."
+
+msgid "Clearest Visual Comfort"
+msgstr "Confort visuel optimal"
+
+msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
+msgstr "Indice d’éblouissement réduit et luminance uniforme accrue grâce à la technologie de moteur lumineux COB avancée et à l’optique de précision."
+
+msgid "Powerful and Efficient"
+msgstr "Puissant et efficace"
+
+msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
+msgstr "Flux lumineux supérieur à des distances plus grandes grâce à des réflecteurs propriétaires et des lentilles Fresnel en verre avec 99% de transmission lumineuse."
+
+msgid "Proprietary Technology"
+msgstr "Technologie propriétaire"
+
+msgid "CPG-Optics System"
+msgstr "Système d’optique CPG"
+
+msgid "Three layers of precision-engineered optics working in harmony."
+msgstr "Trois couches d’optique de précision travaillant en harmonie."
+
+msgid "Layer 01"
+msgstr "Couche 01"
+
+msgid "COB Light Engine"
+msgstr "Moteur lumineux COB"
+
+msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
+msgstr "Notre moteur lumineux COB présente un indice d’éblouissement plus faible et une luminance uniforme plus grande que les moteurs lumineux LED séparés, offrant un éclairage plus doux et plus confortable sur chaque surface."
+
+msgid "COB LED Chip"
+msgstr "Puce LED COB"
+
+msgid "Layer 02"
+msgstr "Couche 02"
+
+msgid "Proprietary Reflector"
+msgstr "Réflecteur propriétaire"
+
+msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
+msgstr "Le réflecteur en aluminium poli unique dirige toute la lumière COB dans une distribution uniforme avec des coupes nettes — bien supérieur aux lentilles en plastique sur puces SMD multiples."
+
+msgid "Layer 03"
+msgstr "Couche 03"
+
+msgid "Glass Fresnel Lens"
+msgstr "Lentille Fresnel en verre"
+
+msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
+msgstr "Le verre propriétaire atteint 99% de transmission lumineuse avec un motif Fresnel pour réduire l’éblouissement. Contrairement aux lentilles en polycarbonate, notre lentille en verre ne jaunira jamais avec le temps."
+
+msgid "End to End"
+msgstr "De bout en bout"
+
+msgid "Lighting Projects Made Simple"
+msgstr "Des projets d’éclairage simplifiés"
+
+msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
+msgstr "Nous abordons chaque projet comme une opportunité unique de dépasser les attentes en matière d’éclairage amélioré, de confort visuel et d’économies opérationnelles."
+
+msgid "Consultation"
+msgstr "Consultation"
+
+msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
+msgstr "Des idées initiales aux plans détaillés, nous pouvons fournir des services de consultation dans le cadre de notre offre."
+
+msgid "Custom Fabrication"
+msgstr "Fabrication sur mesure"
+
+msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
+msgstr "Solutions de construction spéciales avec des experts fournissant à la fois des conceptions d’éclairage (Dialux) et d’ingénierie structurelle selon la demande du client."
+
+msgid "Manufacture"
+msgstr "Fabrication"
+
+msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgstr "Des experts fournissant à la fois des conceptions d’éclairage et d’ingénierie structurelle avec une fabrication de précision."
+
+msgid "Installation"
+msgstr "Installation"
+
+msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
+msgstr "Des équipes d’installation expérimentées sur site garantissant des installations sûres et fiables dans le monde entier."
+
+msgid "Maintenance"
+msgstr "Maintenance"
+
+msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgstr "Protéger votre investissement et assurer une performance brillante à long terme."
+
+msgid "Financing Solutions"
+msgstr "Solutions de financement"
+
+msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgstr "Solutions financières personnalisées — p.ex. Contrat de gestion de l’énergie (EMC) pour s’adapter à votre budget."
+
+msgid "Ready to Light Up Your Project?"
+msgstr "Prêt à illuminer votre projet ?"
+
+msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgstr "Contactez-nous et notre équipe d’ingénierie vous répondra avec une proposition photométrique complète sous 48 heures."

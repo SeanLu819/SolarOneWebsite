@@ -1,0 +1,324 @@
+# SolarOne Website - English (en)
+# Generated: 2026-07-22 00:18
+
+msgid ""
+msgstr ""
+"Project-Id-Version: SolarOne Website 1.0\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: English\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Products"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Contact Us"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "Close menu"
+msgstr ""
+
+msgid "Open menu"
+msgstr ""
+
+msgid "Toggle light/dark theme"
+msgstr ""
+
+msgid "Quick Links"
+msgstr ""
+
+msgid "Social Media"
+msgstr ""
+
+msgid "WhatsApp:"
+msgstr ""
+
+msgid "All rights reserved."
+msgstr ""
+
+msgid "Privacy Policy"
+msgstr ""
+
+msgid "Terms of Service"
+msgstr ""
+
+msgid "View Products"
+msgstr ""
+
+msgid "Professional LED Lighting Systems"
+msgstr ""
+
+msgid "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line."
+msgstr ""
+
+msgid "View All Products"
+msgstr ""
+
+msgid "LED Lighting Products"
+msgstr ""
+
+msgid "Trusted Worldwide"
+msgstr ""
+
+msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
+msgstr ""
+
+msgid "View All Projects"
+msgstr ""
+
+msgid "SolarOne Projects"
+msgstr ""
+
+msgid "Sending..."
+msgstr ""
+
+msgid "Get In Touch"
+msgstr ""
+
+msgid "Name *"
+msgstr ""
+
+msgid "Your name"
+msgstr ""
+
+msgid "Email *"
+msgstr ""
+
+msgid "your@email.com"
+msgstr ""
+
+msgid "Phone"
+msgstr ""
+
+msgid "+86 xxx xxxx xxxx"
+msgstr ""
+
+msgid "Message *"
+msgstr ""
+
+msgid "Tell us about your project..."
+msgstr ""
+
+msgid "Send Message"
+msgstr ""
+
+msgid "Headquarters"
+msgstr ""
+
+msgid "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
+msgstr ""
+
+msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+msgstr ""
+
+msgid "Tel"
+msgstr ""
+
+msgid "Fax"
+msgstr ""
+
+msgid "WhatsApp"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Global Network"
+msgstr ""
+
+msgid "Agents & Distributors"
+msgstr ""
+
+msgid "USA Agent"
+msgstr ""
+
+msgid "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA"
+msgstr ""
+
+msgid "Germany Agent"
+msgstr ""
+
+msgid "Gewerbepark, Talstr. 27, 41751 Viersen, Germany"
+msgstr ""
+
+msgid "Blaukehlchenweg 6, 76706 Dettenheim, Germany"
+msgstr ""
+
+msgid "France Agent"
+msgstr ""
+
+msgid "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France"
+msgstr ""
+
+msgid "Results:"
+msgstr ""
+
+msgid "Project Image"
+msgstr ""
+
+msgid "Power"
+msgstr ""
+
+msgid "Efficacy"
+msgstr ""
+
+msgid "Output"
+msgstr ""
+
+msgid "Beam Angle"
+msgstr ""
+
+msgid "Protection"
+msgstr ""
+
+msgid "Our Story"
+msgstr ""
+
+msgid "To deliver innovative Outdoor / Indoor Lighting Solutions that protect the environment and inspire life."
+msgstr ""
+
+msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
+msgstr ""
+
+msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
+msgstr ""
+
+msgid "About SolarOne"
+msgstr ""
+
+msgid "YEARS"
+msgstr ""
+
+msgid "PROJECTS"
+msgstr ""
+
+msgid "COUNTRIES"
+msgstr ""
+
+msgid "CLIENTS"
+msgstr ""
+
+msgid "Engineering Excellence"
+msgstr ""
+
+msgid "Technical Advantages"
+msgstr ""
+
+msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
+msgstr ""
+
+msgid "Clearest Visual Comfort"
+msgstr ""
+
+msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
+msgstr ""
+
+msgid "Powerful and Efficient"
+msgstr ""
+
+msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
+msgstr ""
+
+msgid "Proprietary Technology"
+msgstr ""
+
+msgid "CPG-Optics System"
+msgstr ""
+
+msgid "Three layers of precision-engineered optics working in harmony."
+msgstr ""
+
+msgid "Layer 01"
+msgstr ""
+
+msgid "COB Light Engine"
+msgstr ""
+
+msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
+msgstr ""
+
+msgid "COB LED Chip"
+msgstr ""
+
+msgid "Layer 02"
+msgstr ""
+
+msgid "Proprietary Reflector"
+msgstr ""
+
+msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
+msgstr ""
+
+msgid "Layer 03"
+msgstr ""
+
+msgid "Glass Fresnel Lens"
+msgstr ""
+
+msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
+msgstr ""
+
+msgid "End to End"
+msgstr ""
+
+msgid "Lighting Projects Made Simple"
+msgstr ""
+
+msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
+msgstr ""
+
+msgid "Consultation"
+msgstr ""
+
+msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
+msgstr ""
+
+msgid "Custom Fabrication"
+msgstr ""
+
+msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
+msgstr ""
+
+msgid "Manufacture"
+msgstr ""
+
+msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgstr ""
+
+msgid "Installation"
+msgstr ""
+
+msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
+msgstr ""
+
+msgid "Maintenance"
+msgstr ""
+
+msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgstr ""
+
+msgid "Financing Solutions"
+msgstr ""
+
+msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgstr ""
+
+msgid "Ready to Light Up Your Project?"
+msgstr ""
+
+msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgstr ""

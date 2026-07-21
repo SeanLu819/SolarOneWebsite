@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_CODE == 'ar' %} dir="rtl"{% endif %}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -148,6 +149,67 @@
 
   /* Body transition for smooth theme switch */
   body, .nav, .hero-bg::after { transition: background-color 0.4s ease, color 0.3s ease, border-color 0.3s ease; }
+
+  /* Language switcher */
+  .lang-switch {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .lang-switch-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--ink-soft);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .lang-switch-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .lang-switch-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--bg-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    min-width: 160px;
+    z-index: 100;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -8px rgba(0,0,0,0.3);
+  }
+  .lang-switch-menu.open { display: block; }
+  .lang-switch-option {
+    display: block;
+    padding: 10px 16px;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .lang-switch-option:hover { background: var(--accent-soft); color: var(--accent); }
+  .lang-switch-option.active { color: var(--accent); font-weight: 600; }
+
+  /* RTL support for Arabic */
+  [dir="rtl"] .nav-links { flex-direction: row-reverse; }
+  [dir="rtl"] .nav-brand { order: 1; }
+  [dir="rtl"] .nav-actions { flex-direction: row-reverse; }
+  [dir="rtl"] .hero-content { text-align: right; }
+  [dir="rtl"] .footer-grid { direction: rtl; }
+  [dir="rtl"] .footer-bottom { flex-direction: row-reverse; }
+  [dir="rtl"] .lang-switch-menu { right: auto; left: 0; }
+  [dir="rtl"] .hero-corner-marks { transform: scaleX(-1); }
+  [dir="rtl"] .home-preview-card.reversed .home-preview-img { order: 1; }
+  [dir="rtl"] .home-preview-card.reversed .home-preview-text { order: 2; }
+  [dir="rtl"] .link-arrow { display: inline-block; transform: scaleX(-1); }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -1198,14 +1260,14 @@
 
 <!-- ============ MOBILE SIDE PANEL ============ -->
 <div class="mobile-panel" id="mobilePanel">
-  <button class="mobile-panel-close" id="mobileClose" aria-label="Close menu">
+  <button class="mobile-panel-close" id="mobileClose" aria-label="{% trans 'Close menu' %}">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
   <ul class="mobile-panel-links">
-    <li><a href="{% url 'products' %}" id="mobileLinkProducts">Products</a></li>
-    <li><a href="{% url 'projects' %}" id="mobileLinkProjects">Projects</a></li>
-    <li><a href="{% url 'about' %}" id="mobileLinkAbout">About</a></li>
-    <li><a href="{% url 'contact' %}" id="mobileLinkContact">Contact</a></li>
+    <li><a href="{% url 'products' %}" id="mobileLinkProducts">{% trans "Products" %}</a></li>
+    <li><a href="{% url 'projects' %}" id="mobileLinkProjects">{% trans "Projects" %}</a></li>
+    <li><a href="{% url 'about' %}" id="mobileLinkAbout">{% trans "About" %}</a></li>
+    <li><a href="{% url 'contact' %}" id="mobileLinkContact">{% trans "Contact" %}</a></li>
   </ul>
 </div>
 
@@ -1216,16 +1278,30 @@
       <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none'">
     </a>
     <div class="nav-links">
-      <a href="{% url 'products' %}">Products</a>
-      <a href="{% url 'projects' %}">Projects</a>
-      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'products' %}">{% trans "Products" %}</a>
+      <a href="{% url 'projects' %}">{% trans "Projects" %}</a>
+      <a href="{% url 'about' %}">{% trans "About" %}</a>
     </div>
-    <a href="{% url 'contact' %}" class="nav-cta">Contact Us <span class="arrow">&#8250;</span></a>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark theme">
+    <a href="{% url 'contact' %}" class="nav-cta">{% trans "Contact Us" %} <span class="arrow">&#8250;</span></a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="{% trans 'Toggle light/dark theme' %}">
       <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
     </button>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+    <div class="lang-switch" id="langSwitch">
+      <button class="lang-switch-btn" id="langSwitchBtn" aria-label="Change language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-switch-current">{{ LANGUAGE_CODE|upper }}</span>
+      </button>
+      <div class="lang-switch-menu" id="langSwitchMenu">
+        {% get_current_language as LANG_CODE %}
+        {% for lang_code, lang_name in LANGUAGES %}
+        <a href="{% url 'set_language' %}" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
+          {{ lang_name }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="{% trans 'Open menu' %}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
   </div>
@@ -1242,16 +1318,16 @@
         <p class="footer-brand-text">{{ config.footer_description }}</p>
       </div>
       <div>
-        <div class="footer-col-label">Quick Links</div>
+        <div class="footer-col-label">{% trans "Quick Links" %}</div>
         <ul class="footer-list">
-          <li><a href="{% url 'products' %}">Products</a></li>
-          <li><a href="{% url 'projects' %}">Projects</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
-          <li><a href="{% url 'contact' %}">Contact</a></li>
+          <li><a href="{% url 'products' %}">{% trans "Products" %}</a></li>
+          <li><a href="{% url 'projects' %}">{% trans "Projects" %}</a></li>
+          <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+          <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
         </ul>
       </div>
       <div>
-        <div class="footer-col-label">Social Media</div>
+        <div class="footer-col-label">{% trans "Social Media" %}</div>
         <div class="footer-social">
           <!-- Facebook -->
           <a href="{{ config.social_facebook }}" aria-label="Facebook" target="_blank" rel="noopener">
@@ -1272,20 +1348,20 @@
         </div>
       </div>
       <div>
-        <div class="footer-col-label">Contact</div>
+        <div class="footer-col-label">{% trans "Contact" %}</div>
         <ul class="footer-list">
           <li><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></li>
           <li><a href="tel:{{ config.contact_phone_1 }}">{{ config.contact_phone_1 }}</a></li>
-          <li><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">WhatsApp: {{ config.contact_whatsapp }}</a></li>
+          <li><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">{% trans "WhatsApp:" %} {{ config.contact_whatsapp }}</a></li>
           <li><a href="#">{{ config.contact_address }}</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. All rights reserved.</span>
+      <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. {% trans "All rights reserved." %}</span>
       <div class="footer-legal">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="#">{% trans "Privacy Policy" %}</a>
+        <a href="#">{% trans "Terms of Service" %}</a>
       </div>
     </div>
   </div>
@@ -1409,7 +1485,7 @@
 
       // Let the form submit to Django backend normally
       // Show loading state
-      submitBtn.textContent = 'Sending...';
+      submitBtn.textContent = {% trans "Sending..." %};
       submitBtn.style.opacity = '0.7';
       submitBtn.style.pointerEvents = 'none';
     });
@@ -1450,6 +1526,32 @@
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       updateThemeIcon();
+    });
+  }
+
+  // ============ LANGUAGE SWITCH ============
+  var langBtn = document.getElementById('langSwitchBtn');
+  var langMenu = document.getElementById('langSwitchMenu');
+  if (langBtn && langMenu) {
+    langBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      langMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', function() {
+      langMenu.classList.remove('open');
+    });
+    langMenu.querySelectorAll('.lang-switch-option').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var code = this.getAttribute('data-code');
+        var currentPath = window.location.pathname;
+        // Extract the current language prefix if any
+        var langPattern = /^\/(en|fr|es|de|ru|ar)\//;
+        var cleanPath = currentPath.replace(langPattern, '/');
+        if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+        var newPath = '/' + code + cleanPath;
+        window.location.href = newPath;
+      });
     });
   }
 

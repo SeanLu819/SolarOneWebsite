@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
@@ -7,8 +8,8 @@
 <section style="padding: 120px 0 60px;">
   <div class="container">
     <div style="max-width: 960px; margin: 0 auto;" class="reveal">
-      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">Get In Touch</span>
-      <h2 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); margin-bottom: 48px; line-height: 1.2;">Contact Us</h2>
+      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "Get In Touch" %}</span>
+      <h2 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); margin-bottom: 48px; line-height: 1.2;">{% trans "Contact Us" %}</h2>
 
       <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: flex-start;">
 
@@ -17,55 +18,55 @@
           <form id="contactForm" method="post" action="{% url 'contact' %}" style="display: flex; flex-direction: column; gap: 20px;">
             {% csrf_token %}
             <div>
-              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Name *</label>
-              <input type="text" id="formName" name="name" required placeholder="Your name" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
+              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">{% trans "Name *" %}</label>
+              <input type="text" id="formName" name="name" required placeholder="{% trans 'Your name' %}" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
             </div>
             <div>
-              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Email *</label>
-              <input type="email" id="formEmail" name="email" required placeholder="your@email.com" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
+              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">{% trans "Email *" %}</label>
+              <input type="email" id="formEmail" name="email" required placeholder="{% trans 'your@email.com' %}" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
             </div>
             <div>
-              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Phone</label>
-              <input type="tel" name="phone" placeholder="+86 xxx xxxx xxxx" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
+              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">{% trans "Phone" %}</label>
+              <input type="tel" name="phone" placeholder="{% trans '+86 xxx xxxx xxxx' %}" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s;">
             </div>
             <div>
-              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">Message *</label>
-              <textarea id="formMessage" name="message" required rows="5" placeholder="Tell us about your project..." style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s;"></textarea>
+              <label style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 6px;">{% trans "Message *" %}</label>
+              <textarea id="formMessage" name="message" required rows="5" placeholder="{% trans 'Tell us about your project...' %}" style="width: 100%; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg-soft); color: var(--ink); font-family: var(--ff-body); font-size: 0.9rem; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s;"></textarea>
             </div>
             <button type="submit" id="formSubmitBtn" style="align-self: flex-start; padding: 12px 32px; background: var(--accent); color: #fff; font-family: var(--ff-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--accent); border-radius: 8px; cursor: pointer; transition: background 0.2s, border-color 0.2s;">
-              Send Message
+              {% trans "Send Message" %}
             </button>
           </form>
         </div>
 
         <!-- Right: Company Info (single column) -->
         <div>
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Headquarters</span>
-          <h3 style="font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: 24px; line-height: 1.3;">BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD</h3>
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "Headquarters" %}</span>
+          <h3 style="font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: 24px; line-height: 1.3;">{% trans "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD" %}</h3>
 
           <div style="display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line);">
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">Address</span>
-              <span style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5;">No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "Address" %}</span>
+              <span style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5;">{% trans "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China" %}</span>
             </div>
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">Tel</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "Tel" %}</span>
               <a href="tel:86-010-59796555" style="font-size: 0.9rem; color: var(--ink-soft);">86-010-59796555</a>
             </div>
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">Fax</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "Fax" %}</span>
               <span style="font-size: 0.9rem; color: var(--ink-soft);">86-010-59796555-834</span>
             </div>
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">WhatsApp</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "WhatsApp" %}</span>
               <a href="https://wa.me/8613910887405" target="_blank" style="font-size: 0.9rem; color: var(--accent);">+86 13910887405</a>
             </div>
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">Email</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "Email" %}</span>
               <a href="mailto:sales@solarone.com" style="font-size: 0.9rem; color: var(--accent);">sales@solarone.com</a>
             </div>
             <div style="padding: 14px 0; border-bottom: 1px solid var(--line);">
-              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">Website</span>
+              <span style="font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-subtle); display: block; margin-bottom: 4px;">{% trans "Website" %}</span>
               <a href="https://www.solar-one.com.cn" target="_blank" rel="noopener" style="font-size: 0.9rem; color: var(--accent);">www.solar-one.com.cn</a>
             </div>
           </div>
@@ -81,19 +82,19 @@
   <div class="container">
     <div style="max-width: 800px; margin: 0 auto;">
       <div class="reveal" style="margin-bottom: 48px;">
-        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">Global Network</span>
-        <h2 class="section-title" style="margin-bottom: 0;">Agents & Distributors</h2>
+        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "Global Network" %}</span>
+        <h2 class="section-title" style="margin-bottom: 0;">{% trans "Agents & Distributors" %}</h2>
       </div>
 
       <div style="display: grid; gap: 24px;">
         <!-- USA Agent -->
         <div class="reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px 36px; display: flex; gap: 24px; align-items: flex-start;">
           <div style="width: 100px; height: 100px; border-radius: 14px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
-            <img src="{% static 'images/agent-usa.png' %}" alt="USA Agent" style="width: 90px; height: 90px; object-fit: contain;">
+            <img src="{% static 'images/agent-usa.png' %}" alt="{% trans 'USA Agent' %}" style="width: 90px; height: 90px; object-fit: contain;">
           </div>
           <div>
-            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">USA Agent</h3>
-            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA</p>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">{% trans "USA Agent" %}</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">{% trans "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA" %}</p>
           </div>
           </div>
         </div>
@@ -101,12 +102,12 @@
         <!-- Germany Agent -->
         <div class="reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 32px 36px; display: flex; gap: 24px; align-items: flex-start;">
           <div style="width: 100px; height: 100px; border-radius: 14px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
-            <img src="{% static 'images/agent-germany.png' %}" alt="Germany Agent" style="width: 90px; height: 90px; object-fit: contain;">
+            <img src="{% static 'images/agent-germany.png' %}" alt="{% trans 'Germany Agent' %}" style="width: 90px; height: 90px; object-fit: contain;">
           </div>
           <div>
-            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">Germany Agent</h3>
-            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft); margin-bottom: 6px;">Gewerbepark, Talstr. 27, 41751 Viersen, Germany</p>
-            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">Blaukehlchenweg 6, 76706 Dettenheim, Germany</p>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">{% trans "Germany Agent" %}</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft); margin-bottom: 6px;">{% trans "Gewerbepark, Talstr. 27, 41751 Viersen, Germany" %}</p>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">{% trans "Blaukehlchenweg 6, 76706 Dettenheim, Germany" %}</p>
           </div>
         </div>
 
@@ -116,8 +117,8 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
           </div>
           <div>
-            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">France Agent</h3>
-            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France</p>
+            <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">{% trans "France Agent" %}</h3>
+            <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">{% trans "Aerodrome Blois - Le Breuil, 41330 La Chapelle Vendomoise, France" %}</p>
           </div>
         </div>
       </div>
