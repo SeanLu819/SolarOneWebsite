@@ -12,8 +12,8 @@
 <script>
 (function(){
   var saved=localStorage.getItem('theme');
-  if(saved){document.documentElement.setAttribute('data-theme',saved)}
-  else{var h=new Date().getHours();document.documentElement.setAttribute('data-theme',h>=6&&h<18?'light':'dark')}
+  if(saved==='dark'||saved==='light'){document.documentElement.setAttribute('data-theme',saved)}
+  else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
 <style>
