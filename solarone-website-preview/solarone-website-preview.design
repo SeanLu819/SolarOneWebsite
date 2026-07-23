@@ -1,0 +1,75 @@
+{
+  "data": [
+    {
+      "id": "image-001",
+      "title": "首页 (English)",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/home-en.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "image-002",
+      "title": "产品页 (English)",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/products-en.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "image-003",
+      "title": "项目案例 (English)",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/projects-en.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "image-004",
+      "title": "关于我们 (English)",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/about-en.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "image-005",
+      "title": "联系我们 (English)",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/contact-en.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "image-006",
+      "title": "首页 (Français) - 多语言展示",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1784782412173,
+      "devMetadata": {
+        "imageSrc": "assets/home-fr.png"
+      },
+      "canvasData": { "x": 0, "y": 0 }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "SolarOne 网站预览"
+  }
+}
