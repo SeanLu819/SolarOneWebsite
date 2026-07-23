@@ -455,3 +455,9 @@ msgstr ""
 "Professional LED lighting systems for sports, industrial, and infrastructure"
 " applications. Engineered in Beijing since 2007, trusted in 50+ countries "
 "worldwide."
+
+msgid "Countries"
+msgstr "Countries"
+
+msgid "Support"
+msgstr "Support"

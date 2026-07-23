@@ -457,3 +457,9 @@ msgstr ""
 "Professionelle LED-Beleuchtungssysteme für Sport, Industrie und "
 "Infrastruktur. Entwickelt in Peking seit 2007, vertraut in über 50 Ländern "
 "weltweit."
+
+msgid "Countries"
+msgstr "Länder"
+
+msgid "Support"
+msgstr "Support"

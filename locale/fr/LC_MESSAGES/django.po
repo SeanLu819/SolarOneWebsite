@@ -461,3 +461,9 @@ msgstr ""
 "Systèmes d'éclairage LED professionnels pour le sport, l'industrie et les "
 "infrastructures. Conçus à Pékin depuis 2007, reconnus dans plus de 50 pays à"
 " travers le monde."
+
+msgid "Countries"
+msgstr "Pays"
+
+msgid "Support"
+msgstr "Support"

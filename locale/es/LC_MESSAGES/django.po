@@ -458,3 +458,9 @@ msgstr ""
 "Sistemas de iluminación LED profesionales para deportes, industria e "
 "infraestructura. Diseñados en Beijing desde 2007, de confianza en más de 50 "
 "países de todo el mundo."
+
+msgid "Countries"
+msgstr "Países"
+
+msgid "Support"
+msgstr "Soporte"
