@@ -1097,6 +1097,7 @@
     padding: 14px 16px;
     background: var(--bg-soft);
     border: 1px solid var(--line);
+    border-radius: 8px;
     color: var(--ink);
     font-family: var(--ff-body);
     font-size: 15px;
@@ -1118,6 +1119,9 @@
   }
   .form-submit {
     align-self: flex-start;
+  }
+  .form-submit .btn-primary {
+    border-radius: 8px;
   }
   .form-whatsapp-row {
     display: flex;
@@ -1218,6 +1222,93 @@
     transition: color 0.2s;
   }
   .footer-legal a:hover { color: var(--accent); }
+
+  /* ============ SIDEBAR NAV (shared across sidebar pages) ============ */
+  .sidebar-nav-parent {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    font-family: var(--ff-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-radius: 8px;
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sidebar-nav-parent:hover,
+  .sidebar-nav-parent.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .sidebar-nav-children {
+    padding: 4px 0 4px 8px;
+  }
+  .sidebar-nav-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    color: var(--ink-mute);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .sidebar-nav-child::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 60%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.2s;
+  }
+  .sidebar-nav-child:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .sidebar-nav-child:hover::before,
+  .sidebar-nav-child.active::before {
+    width: 3px;
+  }
+  .sidebar-nav-child.active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .sidebar-nav-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-subtle);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .sidebar-nav-child:hover .sidebar-nav-dot,
+  .sidebar-nav-child.active .sidebar-nav-dot {
+    background: var(--accent);
+  }
+  .sidebar-nav-all:hover {
+    color: var(--accent);
+  }
+  .sidebar-nav-all.active {
+    color: var(--accent);
+  }
+  @media (max-width: 900px) {
+    .sidebar-layout {
+      grid-template-columns: 1fr !important;
+    }
+    .sidebar-nav {
+      position: relative !important;
+      top: auto !important;
+    }
+  }
 
   /* ============ REVEAL ============ */
   .reveal {

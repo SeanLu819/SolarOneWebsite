@@ -4,31 +4,81 @@
 
 {% block content %}
 
-<!-- Projects grid -->
-<section class="projects-section" id="projects" style="padding: 80px 0;">
+<!-- Projects page with sidebar -->
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="projects-grid">
-      {% for project in projects %}
-      <div class="project-card reveal">
-        <div class="project-card-img">
-          {% if project.image_url %}
-          <img src="{{ project.image_url }}" alt="{{ project.title }}">
-          {% else %}
-          <div class="project-card-img-placeholder stadium">
-            <span class="field-label">{% trans "Project Image" %}</span>
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Filter by Sport" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for vt in venue_types %}
+          <div class="sidebar-nav-group" style="margin-bottom: 8px;">
+            <div class="sidebar-nav-parent{% if active_venue_type == vt.key %} active{% endif %}">
+              {{ vt.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for st in vt.sports %}
+              <a href="{% url 'projects' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
+                <span class="sidebar-nav-dot"></span>
+                {{ st.label }}
+              </a>
+              {% endfor %}
+            </div>
           </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'projects' %}" class="sidebar-nav-all{% if not active_sport_type %} active{% endif %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Projects" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="sidebar-content">
+        <div class="sidebar-content-header" style="margin-bottom: 40px;">
+          {% if active_sport_type_label %}
+          <h1 class="section-title" style="margin-bottom: 8px;">{{ active_sport_type_label }}</h1>
+          <p class="section-body" style="max-width: none;">{{ active_sport_type_label }} {% trans "lighting projects delivered worldwide." %}</p>
+          {% elif active_venue_type_label %}
+          <h1 class="section-title" style="margin-bottom: 8px;">{{ active_venue_type_label }} {% trans "Projects" %}</h1>
+          <p class="section-body" style="max-width: none;">{% trans "Professional lighting solutions for outdoor venues." %}</p>
+          {% else %}
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "SolarOne Projects" %}</span>
+          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Trusted Worldwide" %}</h1>
+          <p class="section-body" style="max-width: none;">{% trans "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience." %}</p>
           {% endif %}
         </div>
-        <div class="project-card-body">
-          <div class="project-card-location">{{ project.location_t }}</div>
-          <h3 class="project-card-title">{{ project.title_t }}</h3>
-          <p class="project-card-desc">{{ project.description_t }}</p>
-          {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
+
+        <div class="projects-grid">
+          {% for project in projects %}
+          <div class="project-card reveal">
+            <div class="project-card-img">
+              {% if project.image_url %}
+              <img src="{{ project.image_url }}" alt="{{ project.title }}">
+              {% else %}
+              <div class="project-card-img-placeholder stadium">
+                <span class="field-label">{% trans "Project Image" %}</span>
+              </div>
+              {% endif %}
+            </div>
+            <div class="project-card-body">
+              <div class="project-card-location">{{ project.location_t }}</div>
+              <h3 class="project-card-title">{{ project.title_t }}</h3>
+              <p class="project-card-desc">{{ project.description_t }}</p>
+              {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
+
     </div>
   </div>
 </section>
+
+<style>
+  /* Sidebar nav styles inherited from base.html */
+</style>
 
 {% endblock %}

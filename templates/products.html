@@ -4,29 +4,73 @@
 
 {% block content %}
 
-<!-- Products grid -->
-<section class="products-section" id="products">
+<!-- Products page with sidebar -->
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="products-grid">
-      {% for product in products %}
-      <div class="product-card reveal">
-        <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_t }}</span></div>
-        {% if product.image_url %}
-        <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}"></div>
-        {% endif %}
-        <h3 class="product-card-title">{{ product.name_t }}</h3>
-        <p class="product-card-desc">{{ product.description_t }}</p>
-        <div class="product-card-specs">
-          {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">{% trans "Power" %}</span></div>{% endif %}
-          {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}
-          {% if product.output %}<div class="product-spec"><span class="product-spec-value">{{ product.output }}</span><span class="product-spec-label">{% trans "Output" %}</span></div>{% endif %}
-          {% if product.beam_angle %}<div class="product-spec"><span class="product-spec-value">{{ product.beam_angle }}</span><span class="product-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
-          {% if product.protection %}<div class="product-spec"><span class="product-spec-value">{{ product.protection }}</span><span class="product-spec-label">{% trans "Protection" %}</span></div>{% endif %}
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for cat in product_categories %}
+          <div class="sidebar-nav-group" style="margin-bottom: 8px;">
+            <div class="sidebar-nav-parent{% if active_category == cat.key %} active{% endif %}">
+              {{ cat.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for sub in cat.series %}
+              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
+                <span class="sidebar-nav-dot"></span>
+                {{ sub.label }}
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'products' %}" class="sidebar-nav-all{% if not active_series %} active{% endif %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="sidebar-content">
+        <div class="sidebar-content-header" style="margin-bottom: 40px;">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "LED Lighting Products" %}</span>
+          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Professional LED Lighting Systems" %}</h1>
+          <p class="section-body" style="max-width: none;">{% trans "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line." %}</p>
+        </div>
+
+        <div class="products-grid">
+          {% for product in products %}
+          <div class="product-card reveal">
+            <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_t }}</span></div>
+            <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+              {% if product.image_url %}
+              <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}"></div>
+              {% endif %}
+            </a>
+            <h3 class="product-card-title">{{ product.name_t }}</h3>
+            <p class="product-card-desc">{{ product.description_t }}</p>
+            <div class="product-card-specs">
+              {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">{% trans "Power" %}</span></div>{% endif %}
+              {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}
+              {% if product.output %}<div class="product-spec"><span class="product-spec-value">{{ product.output }}</span><span class="product-spec-label">{% trans "Output" %}</span></div>{% endif %}
+              {% if product.beam_angle %}<div class="product-spec"><span class="product-spec-value">{{ product.beam_angle }}</span><span class="product-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
+              {% if product.protection %}<div class="product-spec"><span class="product-spec-value">{{ product.protection }}</span><span class="product-spec-label">{% trans "Protection" %}</span></div>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
+
     </div>
   </div>
 </section>
+
+<style>
+  /* Sidebar nav styles inherited from base.html */
+</style>
 
 {% endblock %}

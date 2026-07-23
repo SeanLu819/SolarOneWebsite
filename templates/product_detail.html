@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+<!-- Product detail page — full-width two-column layout -->
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for cat in product_categories %}
+          <div class="sidebar-nav-group" style="margin-bottom: 8px;">
+            <div class="sidebar-nav-parent">
+              {{ cat.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for sub in cat.series %}
+              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
+                <span class="sidebar-nav-dot"></span>
+                {{ sub.label }}
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'products' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT — Full-width two-column ===== -->
+      <div class="detail-content">
+
+        {% if product %}
+        <div class="detail-hero">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;">{{ product.name_t }}</h1>
+        </div>
+
+        <div class="detail-grid">
+          <!-- Left: Image -->
+          <div class="detail-image">
+            {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name_t }}">
+            {% else %}
+            <div class="detail-image-placeholder">
+              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Right: Text + Specs -->
+          <div class="detail-info">
+            <p class="detail-desc">{{ product.description_t }}</p>
+
+            {% if product.power or product.efficacy or product.output or product.beam_angle or product.protection %}
+            <div class="detail-specs">
+              {% if product.power %}<div class="detail-spec"><span class="detail-spec-value">{{ product.power }}</span><span class="detail-spec-label">{% trans "Power" %}</span></div>{% endif %}
+              {% if product.efficacy %}<div class="detail-spec"><span class="detail-spec-value">{{ product.efficacy }}</span><span class="detail-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}
+              {% if product.output %}<div class="detail-spec"><span class="detail-spec-value">{{ product.output }}</span><span class="detail-spec-label">{% trans "Output" %}</span></div>{% endif %}
+              {% if product.beam_angle %}<div class="detail-spec"><span class="detail-spec-value">{{ product.beam_angle }}</span><span class="detail-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
+              {% if product.protection %}<div class="detail-spec"><span class="detail-spec-value">{{ product.protection }}</span><span class="detail-spec-label">{% trans "Protection" %}</span></div>{% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% else %}
+        <h1 class="section-title">{% trans "Product Not Found" %}</h1>
+        <p class="section-body"><a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Back to Products" %}</a></p>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Sidebar nav styles inherited from base.html */
+
+  /* === Detail page two-column layout === */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    margin-top: 40px;
+  }
+  .detail-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+  .detail-image img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.35));
+  }
+  .detail-image-placeholder {
+    width: 100%;
+    min-height: 320px;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .detail-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 40px;
+  }
+  .detail-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .detail-spec {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .detail-spec-value {
+    font-family: var(--ff-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .detail-spec-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-subtle);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar-layout {
+      grid-template-columns: 1fr !important;
+    }
+    .sidebar-nav {
+      position: relative !important;
+      top: auto !important;
+    }
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .detail-image {
+      min-height: 240px;
+    }
+  }
+</style>
+
+{% endblock %}

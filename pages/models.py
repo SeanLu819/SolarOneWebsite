@@ -4,9 +4,10 @@ from django.db.models import JSONField
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
-        ('MODULAR', 'Modular'),
-        ('FLOODLIGHT', 'Floodlight'),
+        ('FLOODLIGHT', 'Flood Lighting'),
         ('HIGH_BAY', 'High Bay'),
+        ('STREET_LIGHTING', 'Street Lighting'),
+        ('MODULAR', 'Modular'),
         ('OTHER', 'Other'),
     ]
 
@@ -41,9 +42,31 @@ class Product(models.Model):
 
 
 class Project(models.Model):
+    VENUE_TYPE_CHOICES = [
+        ('OUTDOOR', 'Outdoor'),
+        ('INDOOR', 'Indoor'),
+        ('INFRASTRUCTURE', 'Infrastructure'),
+    ]
+
+    SPORT_TYPE_CHOICES = [
+        ('FOOTBALL_FIELD', 'Football Field'),
+        ('SOCCER_FIELD', 'Soccer Field'),
+        ('BASEBALL_FIELD', 'Baseball Field'),
+        ('TENNIS_COURTS', 'Tennis Courts'),
+        ('BASKETBALL', 'Basketball'),
+        ('VOLLEYBALL', 'Volleyball'),
+        ('TRACK_FIELD', 'Track and Field'),
+        ('MULTI_SPORT', 'Multi-Sport Arena'),
+        ('AIRPORT', 'Airport'),
+        ('SEAPORT', 'Seaport'),
+        ('OTHER', 'Other'),
+    ]
+
     title = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
+    venue_type = models.CharField(max_length=20, choices=VENUE_TYPE_CHOICES, default='OUTDOOR')
+    sport_type = models.CharField(max_length=50, choices=SPORT_TYPE_CHOICES, default='OTHER')
     description = models.TextField()
     results = models.TextField(blank=True)
     image = models.ImageField(upload_to='projects/', blank=True)
