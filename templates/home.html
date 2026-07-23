@@ -21,8 +21,8 @@
       <span class="divider"></span>
       <span>Since 2007</span>
     </div>
-    <h1 class="hero-title">{{ config.hero_title|safe }}</h1>
-    <p class="hero-lede">{{ config.hero_subtitle }}</p>
+    <h1 class="hero-title">{% trans "Precision LED systems for every arena." %}</h1>
+    <p class="hero-lede">{% trans "Professional sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast." %}</p>
     <div class="hero-actions">
       <a href="{% url 'products' %}" class="btn-primary">{% trans "View Products" %}</a>
       <a href="{% url 'contact' %}" class="btn-ghost">{% trans "Contact Us" %}</a>
@@ -30,19 +30,19 @@
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_projects|safe }}</span>
-        <span class="hero-stat-label">{{ config.stat_projects_label }}</span>
+        <span class="hero-stat-label">{% trans "Projects" %}</span>
       </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_countries|safe }}</span>
-        <span class="hero-stat-label">{{ config.stat_countries_label }}</span>
+        <span class="hero-stat-label">{% trans "Countries" %}</span>
       </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_energy|safe }}</span>
-        <span class="hero-stat-label">{{ config.stat_energy_label }}</span>
+        <span class="hero-stat-label">{% trans "Energy Save" %}</span>
       </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_support|safe }}</span>
-        <span class="hero-stat-label">{{ config.stat_support_label }}</span>
+        <span class="hero-stat-label">{% trans "Support" %}</span>
       </div>
     </div>
   </div>

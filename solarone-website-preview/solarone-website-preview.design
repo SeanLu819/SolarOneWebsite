@@ -6,10 +6,13 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 0,
+        "y": -36
+      },
       "devMetadata": {
         "imageSrc": "assets/home-en.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     },
     {
       "id": "image-002",
@@ -17,10 +20,13 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 620,
+        "y": 0
+      },
       "devMetadata": {
         "imageSrc": "assets/products-en.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     },
     {
       "id": "image-003",
@@ -28,10 +34,13 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 1240,
+        "y": 0
+      },
       "devMetadata": {
         "imageSrc": "assets/projects-en.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     },
     {
       "id": "image-004",
@@ -39,10 +48,13 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 1860,
+        "y": 0
+      },
       "devMetadata": {
         "imageSrc": "assets/about-en.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     },
     {
       "id": "image-005",
@@ -50,10 +62,13 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 2480,
+        "y": 0
+      },
       "devMetadata": {
         "imageSrc": "assets/contact-en.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     },
     {
       "id": "image-006",
@@ -61,14 +76,17 @@
       "type": "image",
       "version": 1,
       "createdAt": 1784782412173,
+      "canvasData": {
+        "x": 3100,
+        "y": 0
+      },
       "devMetadata": {
         "imageSrc": "assets/home-fr.png"
-      },
-      "canvasData": { "x": 0, "y": 0 }
+      }
     }
   ],
   "config": {
-    "autoLayout": true,
+    "autoLayout": false,
     "deviceType": "desktop",
     "projectName": "SolarOne 网站预览"
   }
