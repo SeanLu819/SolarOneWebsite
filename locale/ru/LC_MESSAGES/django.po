@@ -464,3 +464,9 @@ msgstr "Страны"
 
 msgid "Support"
 msgstr "Поддержка"
+
+msgid "Since 2007"
+msgstr "С 2007 года"
+
+msgid "Address"
+msgstr "Адрес"

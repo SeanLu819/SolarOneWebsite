@@ -467,3 +467,9 @@ msgstr "Pays"
 
 msgid "Support"
 msgstr "Support"
+
+msgid "Since 2007"
+msgstr "Depuis 2007"
+
+msgid "Address"
+msgstr "Adresse"

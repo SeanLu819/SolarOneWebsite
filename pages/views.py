@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.templatetags.static import static
+from django.utils.translation import get_language
 from pages.models import Product, Project, SiteConfig, ContactMessage
 
 
@@ -50,24 +51,35 @@ def contact(request):
 
 def products(request):
     context = get_common_context()
+    lang = get_language()
     products_list = Product.objects.all()
     for p in products_list:
         if p.image:
             p.image_url = static(p.image.name)
         else:
             p.image_url = ''
+        # Attach translated fields
+        p.name_t = p.t('name', lang)
+        p.description_t = p.t('description', lang)
+        p.category_t = p.t('category', lang)
     context['products'] = products_list
     return render(request, 'products.html', context)
 
 
 def projects(request):
     context = get_common_context()
+    lang = get_language()
     projects_list = Project.objects.all()
     for proj in projects_list:
         if proj.image:
             proj.image_url = static(proj.image.name)
         else:
             proj.image_url = ''
+        # Attach translated fields
+        proj.title_t = proj.t('title', lang)
+        proj.description_t = proj.t('description', lang)
+        proj.location_t = proj.t('location', lang)
+        proj.results_t = proj.t('results', lang)
     context['projects'] = projects_list
     return render(request, 'projects.html', context)
 

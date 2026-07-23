@@ -20,10 +20,10 @@
           {% endif %}
         </div>
         <div class="project-card-body">
-          <div class="project-card-location">{{ project.location }}</div>
-          <h3 class="project-card-title">{{ project.title }}</h3>
-          <p class="project-card-desc">{{ project.description }}</p>
-          {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results|safe }}</p>{% endif %}
+          <div class="project-card-location">{{ project.location_t }}</div>
+          <h3 class="project-card-title">{{ project.title_t }}</h3>
+          <p class="project-card-desc">{{ project.description_t }}</p>
+          {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
         </div>
       </div>
       {% endfor %}

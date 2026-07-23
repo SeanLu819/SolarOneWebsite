@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 
 
 class Product(models.Model):
@@ -21,12 +22,22 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', blank=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    # JSON translations: {"fr": {"name": "...", "description": "...", "category": "..."}, "es": {...}, ...}
+    translations = JSONField(default=dict, blank=True)
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
         return self.name
+
+    def t(self, field_name, lang='en'):
+        """Get translated value for a field, falling back to the default English value."""
+        if lang == 'en' or not self.translations:
+            return getattr(self, field_name, '')
+        lang_data = self.translations.get(lang, {})
+        val = lang_data.get(field_name, '')
+        return val if val else getattr(self, field_name, '')
 
 
 class Project(models.Model):
@@ -38,12 +49,22 @@ class Project(models.Model):
     image = models.ImageField(upload_to='projects/', blank=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    # JSON translations: {"fr": {"title": "...", "description": "...", "location": "...", "results": "..."}, ...}
+    translations = JSONField(default=dict, blank=True)
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
         return self.title
+
+    def t(self, field_name, lang='en'):
+        """Get translated value for a field, falling back to the default English value."""
+        if lang == 'en' or not self.translations:
+            return getattr(self, field_name, '')
+        lang_data = self.translations.get(lang, {})
+        val = lang_data.get(field_name, '')
+        return val if val else getattr(self, field_name, '')
 
 
 class ContactMessage(models.Model):

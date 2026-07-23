@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'debug': True,  # Disable template caching - ensures {% trans %} always uses fresh translations
         },
     },
 ]

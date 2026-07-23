@@ -10,12 +10,12 @@
     <div class="products-grid">
       {% for product in products %}
       <div class="product-card reveal">
-        <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category }}</span></div>
+        <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_t }}</span></div>
         {% if product.image_url %}
-        <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name }}"></div>
+        <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}"></div>
         {% endif %}
-        <h3 class="product-card-title">{{ product.name }}</h3>
-        <p class="product-card-desc">{{ product.description }}</p>
+        <h3 class="product-card-title">{{ product.name_t }}</h3>
+        <p class="product-card-desc">{{ product.description_t }}</p>
         <div class="product-card-specs">
           {% if product.power %}<div class="product-spec"><span class="product-spec-value">{{ product.power }}</span><span class="product-spec-label">{% trans "Power" %}</span></div>{% endif %}
           {% if product.efficacy %}<div class="product-spec"><span class="product-spec-value">{{ product.efficacy }}</span><span class="product-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}

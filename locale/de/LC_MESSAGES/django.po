@@ -463,3 +463,9 @@ msgstr "Länder"
 
 msgid "Support"
 msgstr "Support"
+
+msgid "Since 2007"
+msgstr "Seit 2007"
+
+msgid "Address"
+msgstr "Adresse"

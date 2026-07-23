@@ -441,3 +441,9 @@ msgstr "دول"
 
 msgid "Support"
 msgstr "دعم"
+
+msgid "Since 2007"
+msgstr "منذ 2007"
+
+msgid "Address"
+msgstr "العنوان"

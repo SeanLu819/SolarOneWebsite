@@ -1545,11 +1545,14 @@
         e.preventDefault();
         var code = this.getAttribute('data-code');
         var currentPath = window.location.pathname;
-        // Extract the current language prefix if any
-        var langPattern = /^\/(en|fr|es|de|ru|ar)\//;
+        // Extract the current language prefix if any (non-default languages only)
+        var langPattern = /^\/(fr|es|de|ru|ar)\//;
         var cleanPath = currentPath.replace(langPattern, '/');
         if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
-        var newPath = '/' + code + cleanPath;
+        // Default language (en) uses no prefix; others get /code/ prefix
+        var newPath = (code === 'en') ? cleanPath : ('/' + code + cleanPath);
+        // Persist language preference in cookie for LocaleMiddleware
+        document.cookie = 'django_language=' + code + ';path=/;max-age=31536000;SameSite=Lax';
         window.location.href = newPath;
       });
     });
