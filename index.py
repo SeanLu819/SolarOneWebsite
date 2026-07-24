@@ -11,6 +11,6 @@ from whitenoise import WhiteNoise
 
 application = get_wsgi_application()
 
-static_root = getattr(settings, 'STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))
-if os.path.exists(static_root):
-    application = WhiteNoise(application, root=static_root)
+# WhiteNoise wraps the WSGI app and serves static files from STATIC_ROOT
+# After collectstatic runs during build, STATIC_ROOT will have all assets
+application = WhiteNoise(application, root=settings.STATIC_ROOT, prefix='static/')

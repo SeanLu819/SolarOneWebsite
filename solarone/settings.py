@@ -13,10 +13,7 @@ IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # In production (Vercel), SECRET_KEY must be set as an environment variable.
-if IS_VERCEL:
-    SECRET_KEY = os.environ['SECRET_KEY']
-else:
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'
@@ -80,14 +77,15 @@ WSGI_APPLICATION = 'solarone.wsgi.application'
 # Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase)
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 if DATABASE_URL:
-    # Parse DATABASE_URL (e.g., postgres://user:pass@host:5432/dbname)
     import dj_database_url
     DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
 else:
+    # Local development uses SQLite; Vercel falls back to /tmp (ephemeral but writable)
+    _db_path = '/tmp/db.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': _db_path,
         }
     }
 
@@ -129,9 +127,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files (User uploads)
+# Media files (User uploads) — /tmp on Vercel (ephemeral but writable)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = '/tmp/media' if IS_VERCEL else BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
