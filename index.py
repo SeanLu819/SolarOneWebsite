@@ -7,31 +7,20 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'solarone.settings')
 
 from django.core.wsgi import get_wsgi_application
 from django.conf import settings
-from django.core.management import call_command
-
-# On Vercel cold start: ensure DB tables exist and static files are collected
-if os.environ.get('VERCEL', '') == '1':
-    try:
-        # Create tables in /tmp SQLite
-        call_command('migrate', '--run-syncdb', verbosity=0)
-    except Exception:
-        pass
-    try:
-        # Collect static files into STATIC_ROOT for WhiteNoise to serve
-        # Only run if STATIC_ROOT is empty or doesn't have the expected files
-        static_root = str(settings.STATIC_ROOT)
-        if not os.path.isdir(static_root) or not os.listdir(static_root):
-            call_command('collectstatic', '--noinput', verbosity=0)
-    except Exception:
-        pass
 
 application = get_wsgi_application()
 
+# WhiteNoise: serve static files directly from STATICFILES_DIRS (source)
+# On Vercel, the build output directory is read-only, so we use the source dirs
 from whitenoise import WhiteNoise
 
-# Ensure STATIC_ROOT exists for WhiteNoise
-_whitenoise_root = str(settings.STATIC_ROOT)
-if not os.path.isdir(_whitenoise_root):
+_whitenoise_dirs = [str(d) for d in settings.STATICFILES_DIRS if os.path.isdir(d)]
+if not _whitenoise_dirs:
+    # Fallback: serve from STATIC_ROOT if available
+    _whitenoise_root = str(settings.STATIC_ROOT)
     os.makedirs(_whitenoise_root, exist_ok=True)
-
-application = WhiteNoise(application, root=_whitenoise_root, autorefresh=False, prefix='static/')
+    application = WhiteNoise(application, root=_whitenoise_root, autorefresh=False, prefix='static/')
+else:
+    # Add each static files dir as a WhiteNoise root
+    for static_dir in _whitenoise_dirs:
+        application = WhiteNoise(application, root=static_dir, prefix='static/')
