@@ -1,9 +1,12 @@
+import logging
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
 from pages.models import Product, Project, SiteConfig, ContactMessage
+
+logger = logging.getLogger(__name__)
 
 
 # Translation map for sidebar labels
@@ -154,13 +157,17 @@ def contact(request):
         phone = request.POST.get('phone', '')
         message = request.POST.get('message', '')
         if name and email and message:
-            ContactMessage.objects.create(
-                name=name,
-                email=email,
-                phone=phone,
-                message=message
-            )
-            messages.success(request, _('Your message has been sent successfully!'))
+            try:
+                ContactMessage.objects.create(
+                    name=name,
+                    email=email,
+                    phone=phone,
+                    message=message
+                )
+                messages.success(request, _('Your message has been sent successfully!'))
+            except Exception:
+                logger.warning('Failed to save contact message', exc_info=True)
+                messages.error(request, _('Sorry, we could not save your message. Please try again.'))
 
     return render(request, 'contact.html', context)
 
@@ -193,23 +200,27 @@ def products(request):
     context['active_category_label'] = active_category_label
     context['active_series_label'] = active_series_label
 
-    # Filter products
-    products_list = Product.objects.all()
-    if active_category:
-        products_list = products_list.filter(category=active_category)
-    if active_series:
-        # series filter uses name matching (e.g. "RT410 Series")
-        if active_series_label:
-            products_list = products_list.filter(name__icontains=active_series_label.replace(' Series', ''))
+    # Filter products — safely handle DB errors
+    try:
+        products_list = Product.objects.all()
+        if active_category:
+            products_list = products_list.filter(category=active_category)
+        if active_series:
+            if active_series_label:
+                products_list = products_list.filter(name__icontains=active_series_label.replace(' Series', ''))
 
-    for p in products_list:
-        if p.image:
-            p.image_url = static(p.image.name)
-        else:
-            p.image_url = ''
-        p.name_t = p.t('name', lang)
-        p.description_t = p.t('description', lang)
-        p.category_t = p.t('category', lang)
+        for p in products_list:
+            if p.image:
+                p.image_url = static(p.image.name)
+            else:
+                p.image_url = ''
+            p.name_t = p.t('name', lang)
+            p.description_t = p.t('description', lang)
+            p.category_t = p.t('category', lang)
+    except Exception:
+        logger.warning('Failed to load products', exc_info=True)
+        products_list = []
+
     context['products'] = products_list
     return render(request, 'products.html', context)
 
@@ -242,22 +253,27 @@ def projects(request):
     context['active_venue_type_label'] = active_venue_type_label
     context['active_sport_type_label'] = active_sport_type_label
 
-    # Filter projects
-    projects_list = Project.objects.all()
-    if active_venue_type:
-        projects_list = projects_list.filter(venue_type=active_venue_type)
-    if active_sport_type:
-        projects_list = projects_list.filter(sport_type=active_sport_type)
+    # Filter projects — safely handle DB errors
+    try:
+        projects_list = Project.objects.all()
+        if active_venue_type:
+            projects_list = projects_list.filter(venue_type=active_venue_type)
+        if active_sport_type:
+            projects_list = projects_list.filter(sport_type=active_sport_type)
 
-    for proj in projects_list:
-        if proj.image:
-            proj.image_url = static(proj.image.name)
-        else:
-            proj.image_url = ''
-        proj.title_t = proj.t('title', lang)
-        proj.description_t = proj.t('description', lang)
-        proj.location_t = proj.t('location', lang)
-        proj.results_t = proj.t('results', lang)
+        for proj in projects_list:
+            if proj.image:
+                proj.image_url = static(proj.image.name)
+            else:
+                proj.image_url = ''
+            proj.title_t = proj.t('title', lang)
+            proj.description_t = proj.t('description', lang)
+            proj.location_t = proj.t('location', lang)
+            proj.results_t = proj.t('results', lang)
+    except Exception:
+        logger.warning('Failed to load projects', exc_info=True)
+        projects_list = []
+
     context['projects'] = projects_list
     return render(request, 'projects.html', context)
 
@@ -279,6 +295,9 @@ def product_detail(request, slug):
     try:
         product = Product.objects.get(slug=slug)
     except Product.DoesNotExist:
+        product = None
+    except Exception:
+        logger.warning('Failed to load product detail', exc_info=True)
         product = None
 
     # Resolve active series key from product's category
