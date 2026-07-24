@@ -118,9 +118,13 @@ def get_common_context():
     """Get context shared across all pages"""
     config = cache.get('site_config')
     if not config:
-        config = SiteConfig.objects.first()
-        if not config:
-            config = SiteConfig.objects.create()
+        try:
+            config = SiteConfig.objects.first()
+            if not config:
+                config = SiteConfig.objects.create()
+        except Exception:
+            # Database not ready (e.g. fresh Vercel cold start) — return a minimal config
+            config = SiteConfig()
         cache.set('site_config', config, timeout=300)
 
     # Pre-compute static URLs for hero bg and logo
