@@ -11,6 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Detect Vercel environment
 IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
+# During build time, Vercel sets VERCEL but we need normal paths for collectstatic
+# At runtime, we use /tmp for writable storage
+IS_RUNTIME = IS_VERCEL and os.environ.get('VERCEL_ENV', '') != ''
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # In production (Vercel), SECRET_KEY must be set as an environment variable.
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
@@ -82,7 +86,7 @@ if DATABASE_URL:
         DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
     except ImportError:
         # dj-database-url not installed — fall back to SQLite
-        _db_path = '/tmp/db.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
+        _db_path = '/tmp/db.sqlite3' if IS_RUNTIME else BASE_DIR / 'db.sqlite3'
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
@@ -91,7 +95,7 @@ if DATABASE_URL:
         }
 else:
     # Local development uses SQLite; Vercel falls back to /tmp (ephemeral but writable)
-    _db_path = '/tmp/db.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
+    _db_path = '/tmp/db.sqlite3' if IS_RUNTIME else BASE_DIR / 'db.sqlite3'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -135,11 +139,11 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = '/tmp/staticfiles' if IS_VERCEL else BASE_DIR / 'staticfiles'
+STATIC_ROOT = '/tmp/staticfiles' if IS_RUNTIME else BASE_DIR / 'staticfiles'
 
 # Media files (User uploads) — /tmp on Vercel (ephemeral but writable)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/tmp/media' if IS_VERCEL else BASE_DIR / 'media'
+MEDIA_ROOT = '/tmp/media' if IS_RUNTIME else BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
