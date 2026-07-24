@@ -3,11 +3,7 @@
   "builds": [
     {
       "src": "index.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "command": "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py compilemessages"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
@@ -17,10 +13,6 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       },
       "dest": "/static/$1"
-    },
-    {
-      "src": "/media/(.*)",
-      "dest": "/index.py"
     },
     {
       "src": "/(.*)",

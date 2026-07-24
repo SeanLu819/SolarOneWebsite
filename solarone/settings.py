@@ -77,8 +77,18 @@ WSGI_APPLICATION = 'solarone.wsgi.application'
 # Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase)
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 if DATABASE_URL:
-    import dj_database_url
-    DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+    try:
+        import dj_database_url
+        DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+    except ImportError:
+        # dj-database-url not installed — fall back to SQLite
+        _db_path = '/tmp/db.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': _db_path,
+            }
+        }
 else:
     # Local development uses SQLite; Vercel falls back to /tmp (ephemeral but writable)
     _db_path = '/tmp/db.sqlite3' if IS_VERCEL else BASE_DIR / 'db.sqlite3'
@@ -125,7 +135,7 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = '/tmp/staticfiles' if IS_VERCEL else BASE_DIR / 'staticfiles'
 
 # Media files (User uploads) — /tmp on Vercel (ephemeral but writable)
 MEDIA_URL = '/media/'
