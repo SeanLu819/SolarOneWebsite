@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib import messages
+from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
 from pages.models import Product, Project, SiteConfig, ContactMessage
@@ -115,22 +116,25 @@ def _get_products_sidebar(lang='en'):
 
 def get_common_context():
     """Get context shared across all pages"""
-    site_config = SiteConfig.objects.first()
-    if not site_config:
-        site_config = SiteConfig.objects.create()
+    config = cache.get('site_config')
+    if not config:
+        config = SiteConfig.objects.first()
+        if not config:
+            config = SiteConfig.objects.create()
+        cache.set('site_config', config, timeout=300)
 
     # Pre-compute static URLs for hero bg and logo
-    if site_config.hero_background:
-        site_config.hero_bg_url = static(site_config.hero_background.name)
+    if config.hero_background:
+        config.hero_bg_url = static(config.hero_background.name)
     else:
-        site_config.hero_bg_url = static('images/hero-main.fw.png')
+        config.hero_bg_url = static('images/hero-main.fw.png')
 
-    if site_config.logo:
-        site_config.logo_url = static(site_config.logo.name)
+    if config.logo:
+        config.logo_url = static(config.logo.name)
     else:
-        site_config.logo_url = static('images/logo.png')
+        config.logo_url = static('images/logo.png')
 
-    return {'config': site_config}
+    return {'config': config}
 
 
 def home(request):
@@ -152,7 +156,7 @@ def contact(request):
                 phone=phone,
                 message=message
             )
-            messages.success(request, 'Your message has been sent successfully!')
+            messages.success(request, _('Your message has been sent successfully!'))
 
     return render(request, 'contact.html', context)
 

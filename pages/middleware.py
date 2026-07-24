@@ -55,12 +55,13 @@ class VisitorTrackingMiddleware:
                 is_unique=is_unique,
             )
             
-            # Update daily stats
+            # Update daily stats (use F() to avoid race conditions)
+            from django.db.models import F
             daily_stats, _ = DailyStats.objects.get_or_create(date=today)
-            daily_stats.total_visits += 1
-            if is_unique:
-                daily_stats.unique_visits += 1
-            daily_stats.save()
+            DailyStats.objects.filter(pk=daily_stats.pk).update(
+                total_visits=F('total_visits') + 1,
+                unique_visits=F('unique_visits') + (1 if is_unique else 0),
+            )
             
         except Exception:
             pass  # Never let tracking break the site

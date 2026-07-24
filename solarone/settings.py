@@ -4,25 +4,28 @@ Django settings for solarone project.
 
 from pathlib import Path
 import os
-import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
-
 # Detect Vercel environment
 IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+# SECURITY WARNING: keep the secret key used in production secret!
+# In production (Vercel), SECRET_KEY must be set as an environment variable.
+if IS_VERCEL:
+    SECRET_KEY = os.environ['SECRET_KEY']
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,localhost,127.0.0.1').split(',')
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin' if not IS_VERCEL else 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -46,8 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'pages.middleware.VisitorTrackingMiddleware' if not IS_VERCEL else 'django.middleware.common.CommonMiddleware',
 ]
+
+# Visitor tracking middleware only in local dev (not on Vercel)
+if not IS_VERCEL:
+    MIDDLEWARE.append('pages.middleware.VisitorTrackingMiddleware')
 
 ROOT_URLCONF = 'solarone.urls'
 
@@ -64,20 +70,26 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'debug': True,  # Disable template caching - ensures {% trans %} always uses fresh translations
+            'debug': DEBUG,  # Match DEBUG setting instead of hardcoded True
         },
     },
 ]
 
 WSGI_APPLICATION = 'solarone.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase)
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+if DATABASE_URL:
+    # Parse DATABASE_URL (e.g., postgres://user:pass@host:5432/dbname)
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

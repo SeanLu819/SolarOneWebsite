@@ -7,6 +7,13 @@
 <!-- ============ CONTACT SECTION ============ -->
 <section style="padding: 120px 0 60px;">
   <div class="container">
+    {% if messages %}
+    <div style="max-width: 960px; margin: 0 auto 24px;">
+      {% for message in messages %}
+      <div style="padding: 16px 20px; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 10px; color: var(--accent); font-family: var(--ff-body); font-size: 0.95rem;">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
     <div style="max-width: 960px; margin: 0 auto;" class="reveal">
       <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "Get In Touch" %}</span>
       <h2 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); margin-bottom: 48px; line-height: 1.2;">{% trans "Contact Us" %}</h2>
@@ -95,7 +102,6 @@
           <div>
             <h3 style="font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 8px;">{% trans "USA Agent" %}</h3>
             <p style="font-size: 0.92rem; line-height: 1.7; color: var(--ink-soft);">{% trans "6700 Alexander Bell Drive, Suite #200, Columbia, MD 21046, USA" %}</p>
-          </div>
           </div>
         </div>
 
