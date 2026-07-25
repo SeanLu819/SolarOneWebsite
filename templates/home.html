@@ -193,4 +193,11 @@
   }
 </style>
 
+{% if seed_debug %}
+<div style="position:fixed;bottom:0;left:0;right:0;background:#000;color:#0f0;padding:16px;font-family:monospace;font-size:12px;z-index:99999;overflow:auto;max-height:40vh;">
+<pre>{{ seed_debug|json_script:"seed-debug" }}</pre>
+<script>document.getElementById('seed-debug').textContent=''; document.getElementById('seed-debug').textContent=JSON.stringify({{ seed_debug|safe }}, null, 2);</script>
+</div>
+{% endif %}
+
 {% endblock %}

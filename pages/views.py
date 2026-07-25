@@ -145,7 +145,26 @@ def get_common_context():
 
 
 def home(request):
-    return render(request, 'home.html', get_common_context())
+    context = get_common_context()
+    # Inject seed debug info for Vercel troubleshooting
+    if request.GET.get('seed_debug'):
+        import os as _os
+        from django.conf import settings as _settings
+        from django.db import connection as _conn
+        debug_info = {
+            'IS_VERCEL': str(_settings.IS_VERCEL),
+            'DB_NAME': str(_settings.DATABASES['default']['NAME']),
+            'DB_EXISTS': str(_os.path.isfile(str(_settings.DATABASES['default']['NAME']))),
+            'SEED_FILE': str(_os.path.isfile(str(_settings.BASE_DIR / 'seed_data.json'))),
+        }
+        try:
+            with _conn.cursor() as cur:
+                cur.execute("SELECT COUNT(*) FROM pages_product")
+                debug_info['PRODUCT_COUNT'] = cur.fetchone()[0]
+        except Exception as e:
+            debug_info['DB_ERROR'] = str(e)
+        context['seed_debug'] = debug_info
+    return render(request, 'home.html', context)
 
 
 def contact(request):
