@@ -6,6 +6,16 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
+
+# CRITICAL: Force Vercel database to /tmp before Django settings loads.
+# Vercel's project directory is read-only; /tmp is writable for serverless functions.
+# We must do this BEFORE importing Django settings, which reads IS_RUNTIME from env vars
+# that may not be set during module import time.
+if os.environ.get('VERCEL', '') == '1':
+    # Four slashes for absolute path: sqlite:////absolute/path/to/db.sqlite3
+    # This ensures dj_database_url parses it correctly
+    os.environ.setdefault('DATABASE_URL', 'sqlite:////tmp/db.sqlite3')
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'solarone.settings')
 
 from django.core.wsgi import get_wsgi_application
@@ -41,6 +51,18 @@ def _seed_database():
     _seed_done = True
 
     logger = logging.getLogger('index.seed')
+    logger.setLevel(logging.INFO)
+    
+    # Add console handler for debugging
+    if not logger.handlers:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter('[%(name)s] %(levelname)s: %(message)s'))
+        logger.addHandler(handler)
+
+    logger.info('Starting seed process...')
+    logger.info('BASE_DIR = %s', BASE_DIR)
+    logger.info('DB engine = %s', settings.DATABASES['default']['ENGINE'])
+    logger.info('DB name = %s', settings.DATABASES['default']['NAME'])
 
     # 1. Ensure database tables exist
     try:
@@ -52,18 +74,31 @@ def _seed_database():
 
     # 2. Read seed data
     seed_path = os.path.join(BASE_DIR, 'seed_data.json')
+    logger.info('Looking for seed data at: %s', seed_path)
+    
     if not os.path.isfile(seed_path):
         logger.warning('seed_data.json not found at %s', seed_path)
         return
 
-    with open(seed_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    try:
+        with open(seed_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        logger.info('Seed data loaded successfully: %d products, %d projects', 
+                    len(data.get('products', [])), len(data.get('projects', [])))
+    except Exception as e:
+        logger.warning('Failed to read seed_data.json: %s', e, exc_info=True)
+        return
 
     # 3. Check if already seeded
     from django.db import connection
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM pages_product")
-        product_count = cursor.fetchone()[0]
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM pages_product")
+            product_count = cursor.fetchone()[0]
+        logger.info('Current database has %d products', product_count)
+    except Exception as e:
+        logger.warning('Failed to check product count: %s', e, exc_info=True)
+        product_count = 0
 
     if product_count > 0:
         logger.info('Database already has %d products, skipping seed', product_count)
@@ -90,7 +125,7 @@ def _seed_database():
                          font_family_body, font_family_heading, font_size_base, font_size_nav,
                          font_size_hero_title, font_size_hero_subtitle, font_size_section_title,
                          font_size_body, font_size_card_title, font_size_card_desc, accent_color)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """, [
                     cfg.get('hero_title', ''), cfg.get('hero_subtitle', ''), cfg.get('hero_background', ''),
                     cfg.get('stat_projects', '500+'), cfg.get('stat_projects_label', 'Projects'),
@@ -128,7 +163,7 @@ def _seed_database():
                     INSERT INTO pages_product
                         (name, category, slug, description, power, efficacy, protection,
                          output, beam_angle, image, "order", translations, created_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
                 """, [
                     item.get('name', ''), item.get('category', ''), item.get('slug', ''),
                     item.get('description', ''), item.get('power', ''), item.get('efficacy', ''),
@@ -146,7 +181,7 @@ def _seed_database():
                     INSERT INTO pages_project
                         (title, location, slug, venue_type, sport_type, description,
                          results, image, "order", translations, created_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?)
                 """, [
                     item.get('title', ''), item.get('location', ''), item.get('slug', ''),
                     item.get('venue_type', ''), item.get('sport_type', ''),
@@ -158,7 +193,10 @@ def _seed_database():
             if project_count:
                 logger.info('Seeded %d projects via raw SQL', project_count)
 
+            logger.info('Seed completed successfully!')
+
     except Exception as e:
         logger.warning('Seed error: %s', e, exc_info=True)
 
+# Run seed immediately after Django app initialization
 _seed_database()

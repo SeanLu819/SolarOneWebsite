@@ -13,8 +13,10 @@ IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
 # Build time: VERCEL is set but VERCEL_URL is not yet available
 # Runtime: both VERCEL and VERCEL_URL are set
-# We only use /tmp paths at runtime, not during build
-IS_RUNTIME = IS_VERCEL and os.environ.get('VERCEL_URL', '') != ''
+# NOTE: IS_RUNTIME is unreliable on Vercel because VERCEL_URL timing varies.
+# index.py pre-sets DATABASE_URL=sqlite:///tmp/db.sqlite3 when VERCEL=1,
+# so we detect runtime by DATABASE_URL being set AND containing /tmp/
+IS_RUNTIME = IS_VERCEL and '/tmp/' in os.environ.get('DATABASE_URL', '')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # In production (Vercel), SECRET_KEY must be set as an environment variable.
