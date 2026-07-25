@@ -82,29 +82,36 @@ TEMPLATES = [
 WSGI_APPLICATION = 'solarone.wsgi.application'
 
 # Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase)
-DATABASE_URL = os.environ.get('DATABASE_URL', '')
-if DATABASE_URL:
-    try:
-        import dj_database_url
-        DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
-    except ImportError:
-        # dj-database-url not installed — fall back to SQLite
-        _db_path = '/tmp/db.sqlite3' if IS_RUNTIME else BASE_DIR / 'db.sqlite3'
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': _db_path,
-            }
-        }
-else:
-    # Local development uses SQLite; Vercel falls back to /tmp (ephemeral but writable)
-    _db_path = '/tmp/db.sqlite3' if IS_RUNTIME else BASE_DIR / 'db.sqlite3'
+# On Vercel: index.py sets DATABASE_URL=sqlite:////tmp/db.sqlite3 before settings loads.
+# IS_RUNTIME now checks for /tmp/ in DATABASE_URL (set by index.py).
+# We use direct SQLite config on Vercel to avoid dj_database_url parsing issues.
+if IS_VERCEL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': _db_path,
+            'NAME': '/tmp/db.sqlite3',
         }
     }
+else:
+    DATABASE_URL = os.environ.get('DATABASE_URL', '')
+    if DATABASE_URL:
+        try:
+            import dj_database_url
+            DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+        except ImportError:
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

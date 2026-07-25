@@ -7,15 +7,6 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
 
-# CRITICAL: Force Vercel database to /tmp before Django settings loads.
-# Vercel's project directory is read-only; /tmp is writable for serverless functions.
-# We must do this BEFORE importing Django settings, which reads IS_RUNTIME from env vars
-# that may not be set during module import time.
-if os.environ.get('VERCEL', '') == '1':
-    # Four slashes for absolute path: sqlite:////absolute/path/to/db.sqlite3
-    # This ensures dj_database_url parses it correctly
-    os.environ.setdefault('DATABASE_URL', 'sqlite:////tmp/db.sqlite3')
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'solarone.settings')
 
 from django.core.wsgi import get_wsgi_application
