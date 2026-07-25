@@ -1,0 +1,351 @@
+{
+  "products": [
+    {
+      "pk": 1,
+      "name": "M Series",
+      "category": "FLOODLIGHT",
+      "slug": "m-series",
+      "description": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
+      "power": "80-1280W+",
+      "efficacy": "",
+      "protection": "IP67",
+      "output": "",
+      "beam_angle": "",
+      "image": "images/processed/rt200-m.png",
+      "order": 1,
+      "translations": {
+        "fr": {
+          "name": "Série M",
+          "category": "Modulaire",
+          "description": "Design véritablement modulaire — évolutif d’un seul module 1M (80W) jusqu’à 16M (1280W) ou plus. Configurations combinables flexibles pour répondre précisément aux exigences de chaque projet."
+        },
+        "es": {
+          "name": "Serie M",
+          "category": "Modular",
+          "description": "Diseño verdaderamente modular — escalable desde un solo módulo 1M (80W) hasta 16M (1280W) o más. Configuraciones combinables flexibles para satisfacer con precisión los requisitos de cualquier proyecto."
+        },
+        "de": {
+          "name": "M-Serie",
+          "category": "Modular",
+          "description": "Wirklich modulares Design — skalierbar von einem einzelnen 1M (80W) Modul bis zu 16M (1280W) oder mehr. Flexible Kombinationskonfigurationen zur genauen Erfüllung jeder Projektforderung."
+        },
+        "ru": {
+          "name": "Серия M",
+          "category": "Модульные",
+          "description": "Истинно модульная конструкция — масштабируемая от одного модуля 1M (80 Вт) до 16M (1280 Вт) и более. Гибкие комбинации конфигураций для точного соответствия требованиям любого проекта."
+        },
+        "ar": {
+          "name": "سلسلة M",
+          "category": "معيارية",
+          "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
+        }
+      }
+    },
+    {
+      "pk": 2,
+      "name": "RT410 Series",
+      "category": "FLOODLIGHT",
+      "slug": "rt410-series",
+      "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
+      "power": "260W",
+      "efficacy": "",
+      "protection": "",
+      "output": "125lm/W",
+      "beam_angle": "18-100°",
+      "image": "images/processed/floodlight.fw.png",
+      "order": 2,
+      "translations": {
+        "fr": {
+          "name": "Série RT410",
+          "category": "Projecteur",
+          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast."
+        },
+        "es": {
+          "name": "Serie RT410",
+          "category": "Proyector",
+          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast."
+        },
+        "de": {
+          "name": "RT410-Serie",
+          "category": "Flutlicht",
+          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität."
+        },
+        "ru": {
+          "name": "Серия RT410",
+          "category": "Прожекторы",
+          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством."
+        },
+        "ar": {
+          "name": "سلسلة RT410",
+          "category": "مشاريع إضاءة",
+          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
+        }
+      }
+    },
+    {
+      "pk": 4,
+      "name": "RT400 Series",
+      "category": "HIGH_BAY",
+      "slug": "rt400-series",
+      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
+      "power": "100-300W",
+      "efficacy": "120lm/W",
+      "protection": "IP66",
+      "output": "",
+      "beam_angle": "",
+      "image": "images/processed/HB.png",
+      "order": 3,
+      "translations": {}
+    },
+    {
+      "pk": 5,
+      "name": "RT500 Series",
+      "category": "HIGH_BAY",
+      "slug": "rt500-series",
+      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
+      "power": "100-300W",
+      "efficacy": "120lm/W",
+      "protection": "IP66",
+      "output": "",
+      "beam_angle": "",
+      "image": "images/processed/HB.png",
+      "order": 4,
+      "translations": {}
+    }
+  ],
+  "projects": [
+    {
+      "pk": 1,
+      "title": "Football Field LED Retrofit",
+      "location": "United States",
+      "slug": "football-field-led-retrofit",
+      "venue_type": "OUTDOOR",
+      "sport_type": "FOOTBALL_FIELD",
+      "description": "A precision photometric design was completed to ensure that the design specifications were met. The design called for replacement of 40 existing 1500W MH light fixtures with 48 of our FL9M-630W LED performance sports lights.",
+      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
+      "image": "images/processed/footballfield.png",
+      "order": 1,
+      "translations": {
+        "fr": {
+          "title": "Rénovation LED Terrain de Football",
+          "location": "États-Unis",
+          "description": "Un design photométrique de précision a été réalisé pour garantir que les spécifications de conception soient respectées. Le projet prévoyait le remplacement de 40 projecteurs MH 1500W existants par 48 de nos LED FL9M-630W.",
+          "results": "30fc éclairage moyen, uniformité 1.37:1 — dépassant les exigences du projet."
+        },
+        "es": {
+          "title": "Renovación LED Campo de Fútbol",
+          "location": "Estados Unidos",
+          "description": "Se completó un diseño fotométrico de precisión para garantizar el cumplimiento de las especificaciones. El proyecto requería el reemplazo de 40 luminarias MH de 1500W por 48 de nuestras LED FL9M-630W.",
+          "results": "30fc iluminación promedio, uniformidad 1.37:1 — superando los requisitos del proyecto."
+        },
+        "de": {
+          "title": "LED-Umrüstung Fußballfeld",
+          "location": "Vereinigte Staaten",
+          "description": "Ein präzises fotometrisches Design wurde durchgeführt um sicherzustellen, dass die Designspezifikationen erfüllt werden. Das Projekt sah den Ersatz von 40 vorhandenen 1500W MH-Leuchten durch 48 unserer FL9M-630W LED vor.",
+          "results": "30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 1.37:1 — übertrifft die Projektanforderungen."
+        },
+        "ru": {
+          "title": "Модернизация LED футбольного поля",
+          "location": "Соединённые Штаты",
+          "description": "Был выполнен точный фотометрический расчёт для обеспечения соответствия проектным спецификациям. Проект предусматривал замену 40 существующих светильников МГ 1500Вт на 48 наших LED FL9M-630W.",
+          "results": "Средняя освещённость 30фк, равномерность 1.37:1 — превышение требований проекта."
+        },
+        "ar": {
+          "title": "ترقية LED لملاعب كرة القدم",
+          "location": "الولايات المتحدة",
+          "description": "تم إكمال تصميم ضوئي دقيق لضمان توافق المواصفات. تضمن المشروع استبدال 40 مصابيح MH بقدرة 1500 وات بـ 48 من مصابيح LED FL9M-630W.",
+          "results": "متوسط إضاءة 30fc، uniformity 1.37:1 — تجاوز متطلبات المشروع."
+        }
+      }
+    },
+    {
+      "pk": 2,
+      "title": "Baseball Field LED Retrofit",
+      "location": "United States",
+      "slug": "baseball-field-led-retrofit",
+      "venue_type": "OUTDOOR",
+      "sport_type": "BASEBALL_FIELD",
+      "description": "150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
+      "image": "images/processed/Baseball.png",
+      "order": 2,
+      "translations": {
+        "fr": {
+          "title": "Rénovation LED Terrain de Baseball",
+          "location": "États-Unis",
+          "description": "150 projecteurs LED sportifs FL9M-630W de la série Performance avec drivers à montage distant ont été installés. Un système de contrôle réseau a été intégré pour permettre le contrôle à distance marche/arrêt et la surveillance de puissance.",
+          "results": "50/30fc éclairage moyen, uniformité 2.0:1 / 2.5:1 — respectant les spécifications du projet."
+        },
+        "es": {
+          "title": "Renovación LED Campo de Béisbol",
+          "location": "Estados Unidos",
+          "description": "Se instalaron 150 luminarias LED deportivas FL9M-630W de la serie Performance con controladores de montaje remoto. Se incorporó un sistema de control en red para permitir encendido/apagado remoto y monitoreo de potencia.",
+          "results": "50/30fc iluminación promedio, uniformidad 2.0:1 / 2.5:1 — cumpliendo las especificaciones del proyecto."
+        },
+        "de": {
+          "title": "LED-Umrüstung Baseballfeld",
+          "location": "Vereinigte Staaten",
+          "description": "150 LED-Sportfluter FL9M-630W der Performance-Serie mit Fernmontage-Treibern wurden installiert. Ein Netzwerk-Steuerungssystem wurde integriert für ferngesteuerte Ein/Aus-Steuerung und Leistungsüberwachung.",
+          "results": "50/30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 2.0:1 / 2.5:1 — erfüllt die Projektspezifikationen."
+        },
+        "ru": {
+          "title": "Модернизация LED бейбольного поля",
+          "location": "Соединённые Штаты",
+          "description": "Установлены 150 спортивных LED-прожекторов FL9M-630W серии Performance с удалёнными драйверами. Интегрирована сетевая система управления для дистанционного включения/выключения и мониторинга мощности.",
+          "results": "Средняя освещённость 50/30фк, равномерность 2.0:1 / 2.5:1 — соответствие проектным спецификациям."
+        },
+        "ar": {
+          "title": "ترقية LED لملاعب البيسبول",
+          "location": "الولايات المتحدة",
+          "description": "تم تركيب 150 مصابيح LED رياضية FL9M-630W من سلسلة الأداء مع محركات تحكم عن بعد. تم دمج نظام تحكم شبكي للسماح بالتشغيل/الإيقاف عن بعد ومراقبة الطاقة.",
+          "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
+        }
+      }
+    },
+    {
+      "pk": 3,
+      "title": "Multi-Sport Arena HD Broadcast",
+      "location": "France",
+      "slug": "multi-sport-arena-hd-broadcast",
+      "venue_type": "INDOOR",
+      "sport_type": "MULTI_SPORT",
+      "description": "A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.",
+      "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
+      "image": "images/processed/basketball.png",
+      "order": 3,
+      "translations": {
+        "fr": {
+          "title": "Arène Multisport HD Broadcast",
+          "location": "France",
+          "description": "Un lieu polyvalent en France conçu pour la télévision HD, convertible entre configurations basket et tennis. Les projecteurs LED FL9M-630W satisfont pleinement les exigences d’éclairage pour le basket et le tennis.",
+          "results": ">2000 lux — répondant aux normes de diffusion HD."
+        },
+        "es": {
+          "title": "Arena Multideporte HD Broadcast",
+          "location": "Francia",
+          "description": "Un recinto polideportivo en Francia diseñado para televisión HD, convertible entre configuraciones de baloncesto y tenis. Las luminarias LED FL9M-630W satisfacen plenamente los requisitos de iluminación.",
+          "results": ">2000 lux — cumpliendo los estándares de transmisión HD."
+        },
+        "de": {
+          "title": "Mehrzweck-HD-Broadcast-Arena",
+          "location": "Frankreich",
+          "description": "Eine Mehrzweckhalle in Frankreich für HD-Fernsehen, umschaltbar zwischen Basketball- und Tennis-Konfiguration. FL9M-630W LED-Sportfluter erfüllen vollumfänglich die Beleuchtungsanforderungen.",
+          "results": ">2000 Lux — erfüllt HD-Broadcast-Standards."
+        },
+        "ru": {
+          "title": "Многоспортивная арена HD-вещания",
+          "location": "Франция",
+          "description": "Многоцелевой комплекс во Франции, спроектированный для HD-телевидения, преобразуемый между баскетбольными и теннисными конфигурациями. LED-прожекторы FL9M-630W полностью удовлетворяют требованиям освещения.",
+          "results": ">2000 люкс — соответствие стандартам HD-вещания."
+        },
+        "ar": {
+          "title": "صالة رياضية متعددة الألعاب بث HD",
+          "location": "فرنسا",
+          "description": "مرفق متعدد الأغراض في فرنسا مصمم للتلفزيون عالي الدقة، قابل للتحويل بين إعدادات كرة السلة والتنس. مصابيح LED FL9M-630W تلبي بالكامل متطلبات الإضاءة.",
+          "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
+        }
+      }
+    },
+    {
+      "pk": 4,
+      "title": "Yuanshen Sports Centre Stadium",
+      "location": "Shanghai, China",
+      "slug": "yuanshen-sports-centre-stadium",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SOCCER_FIELD",
+      "description": "A multipurpose stadium in Shanghai Pudong New Area with 160,000 sqm and 20,000 seats. 320 FL12M-1000W LED sports lights (CCT: 5000-5500K) with networking control system for remote on/off and power monitoring.",
+      "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
+      "image": "images/processed/soccerfield.png",
+      "order": 4,
+      "translations": {
+        "fr": {
+          "title": "Stade du Centre Sportif Yuanshen",
+          "location": "Shanghai, Chine",
+          "description": "Un stade polyvalent à Shanghai Pudong avec 160 000 m² et 20 000 places. 320 projecteurs LED FL12M-1000W (TCP: 5000-5500K) avec système de contrôle réseau pour la commande à distance et le monitoring de puissance.",
+          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018."
+        },
+        "es": {
+          "title": "Estadio del Centro Deportivo Yuanshen",
+          "location": "Shanghai, China",
+          "description": "Un estadio polideportivo en Shanghai Pudong con 160,000 m² y 20,000 asientos. 320 luminarias LED FL12M-1000W (TCP: 5000-5500K) con sistema de control en red para encendido/apagado remoto y monitoreo.",
+          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018."
+        },
+        "de": {
+          "title": "Yuanshen Sportzentrum Stadion",
+          "location": "Shanghai, China",
+          "description": "Ein Mehrzweckstadion in Shanghai Pudong mit 160.000 m² und 20.000 Sitzplätzen. 320 LED-Sportfluter FL12M-1000W (TDF: 5000-5500K) mit Netzwerk-Steuerungssystem.",
+          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018."
+        },
+        "ru": {
+          "title": "Стадион Спортивного центра Юаньшэнь",
+          "location": "Шанхай, Китай",
+          "description": "Многоцелевой стадион в районе Пудун, Шанхай, площадью 160 000 м² на 20 000 мест. 320 спортивных LED-прожекторов FL12M-1000W (ЦТТ: 5000-5500К) с сетевой системой управления.",
+          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018."
+        },
+        "ar": {
+          "title": "ملعب مركز يوانشين الرياضي",
+          "location": "شنغهاي، الصين",
+          "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
+          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
+        }
+      }
+    }
+  ],
+  "siteconfig": {
+    "hero_title": "Precision LED systems for every arena.",
+    "hero_subtitle": "Professional sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.",
+    "hero_background": "",
+    "stat_projects": "500+",
+    "stat_projects_label": "Projects",
+    "stat_countries": "50+",
+    "stat_countries_label": "Countries",
+    "stat_energy": "60%",
+    "stat_energy_label": "Energy Save",
+    "stat_support": "24/7",
+    "stat_support_label": "Support",
+    "about_title": "Trusted worldwide for a reason.",
+    "about_text_1": "Since 2007, SolarOne Vision has focused on the design and manufacture of high power LED Sports lighting systems, LED Roadway infrastructure lighting systems, and LED industrial lighting systems. We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we've got you covered.",
+    "about_text_2": "SolarOne's mission is to deliver innovative outdoor and indoor lighting solutions for recreational, high school, college, and semi-professional sports venues, airports, seaports, and other industrial facilities. We protect the environment, reduce energy consumption, deliver satisfying and inspiring lighting experiences, and add value to people's vision of life.",
+    "about_stat_years": "18+",
+    "about_stat_years_label": "Years Experience",
+    "about_stat_projects": "500+",
+    "about_stat_projects_label": "Projects Delivered",
+    "about_stat_countries": "50+",
+    "about_stat_countries_label": "Countries Served",
+    "about_stat_clients": "1000+",
+    "about_stat_clients_label": "Happy Clients",
+    "products_title": "Our Products",
+    "products_subtitle": "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.",
+    "projects_title": "Featured Projects",
+    "projects_subtitle": "Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.",
+    "contact_title": "Get in Touch",
+    "contact_subtitle": "Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.",
+    "contact_email": "sales@solarone.com",
+    "contact_phone_1": "+8613910887405",
+    "contact_phone_2": "+86 130 0000 0000",
+    "contact_whatsapp": "+86 13910887405",
+    "contact_address": "Beijing, China",
+    "social_facebook": "https://facebook.com",
+    "social_instagram": "https://instagram.com",
+    "social_youtube": "https://youtube.com",
+    "social_tiktok": "https://tiktok.com",
+    "social_linkedin": "",
+    "footer_description": "Professional LED lighting systems for sports, industrial, and infrastructure applications. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.",
+    "brand_name": "SolarOne",
+    "logo": "",
+    "meta_title": "SolarOne — Precision LED Lighting Systems",
+    "meta_description": "Professional LED sports lighting, high bay, and modular luminaire solutions. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.",
+    "og_image": "",
+    "font_family_body": "'Inter', 'Helvetica Neue', Arial, sans-serif",
+    "font_family_heading": "'Inter', 'Helvetica Neue', Arial, sans-serif",
+    "font_size_base": "16px",
+    "font_size_nav": "17px",
+    "font_size_hero_title": "3.5rem",
+    "font_size_hero_subtitle": "1.15rem",
+    "font_size_section_title": "2.25rem",
+    "font_size_body": "1.05rem",
+    "font_size_card_title": "1.25rem",
+    "font_size_card_desc": "0.95rem",
+    "accent_color": "#0088FF"
+  }
+}
