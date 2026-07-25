@@ -323,3 +323,65 @@ def product_detail(request, slug):
         context['product'] = product
 
     return render(request, 'product_detail.html', context)
+
+
+import os
+import json as _json
+from django.http import HttpResponse, JsonResponse
+
+def debug_seed(request):
+    """Debug endpoint to check database and seed status on Vercel."""
+    import sqlite3
+    from django.conf import settings
+    
+    info = {
+        'VERCEL': os.environ.get('VERCEL', ''),
+        'VERCEL_URL': os.environ.get('VERCEL_URL', ''),
+        'DATABASE_URL': os.environ.get('DATABASE_URL', ''),
+        'IS_VERCEL': str(settings.IS_VERCEL),
+        'IS_RUNTIME': str(settings.IS_RUNTIME),
+        'DB_ENGINE': settings.DATABASES['default']['ENGINE'],
+        'DB_NAME': str(settings.DATABASES['default']['NAME']),
+        'BASE_DIR': str(settings.BASE_DIR),
+    }
+    
+    # Check if db file exists
+    db_name = str(settings.DATABASES['default']['NAME'])
+    if db_name != ':memory:':
+        info['db_exists'] = os.path.isfile(db_name)
+        info['db_writable'] = os.access(os.path.dirname(db_name), os.W_OK) if os.path.exists(os.path.dirname(db_name)) else False
+        if info['db_exists']:
+            info['db_size'] = os.path.getsize(db_name)
+    else:
+        info['db_exists'] = True
+        info['db_writable'] = True
+    
+    # Check seed file
+    seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+    info['seed_file_exists'] = os.path.isfile(seed_path)
+    info['seed_file_path'] = seed_path
+    
+    # List static images
+    static_dir = str(settings.BASE_DIR / 'static' / 'images' / 'processed')
+    info['static_images_dir'] = static_dir
+    info['static_images_exist'] = os.path.isdir(static_dir)
+    if info['static_images_exist']:
+        info['static_images'] = os.listdir(static_dir)
+    
+    # Try to count products
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) FROM pages_product")
+            info['product_count'] = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM pages_project")
+            info['project_count'] = cursor.fetchone()[0]
+            cursor.execute("SELECT COUNT(*) FROM pages_siteconfig")
+            info['siteconfig_count'] = cursor.fetchone()[0]
+            # Get product names
+            cursor.execute("SELECT name, image FROM pages_product")
+            info['products'] = [{'name': r[0], 'image': r[1]} for r in cursor.fetchall()]
+    except Exception as e:
+        info['db_error'] = str(e)
+    
+    return JsonResponse(info, json_dumps_params={'indent': 2})
