@@ -11,9 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Detect Vercel environment
 IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
-# During build time, Vercel sets VERCEL but we need normal paths for collectstatic
-# At runtime, we use /tmp for writable storage
-IS_RUNTIME = IS_VERCEL and os.environ.get('VERCEL_ENV', '') != ''
+# Build time: VERCEL is set but VERCEL_URL is not yet available
+# Runtime: both VERCEL and VERCEL_URL are set
+# We only use /tmp paths at runtime, not during build
+IS_RUNTIME = IS_VERCEL and os.environ.get('VERCEL_URL', '') != ''
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # In production (Vercel), SECRET_KEY must be set as an environment variable.

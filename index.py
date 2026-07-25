@@ -10,17 +10,24 @@ from django.conf import settings
 
 application = get_wsgi_application()
 
-# WhiteNoise: serve static files directly from STATICFILES_DIRS (source)
-# On Vercel, the build output directory is read-only, so we use the source dirs
-from whitenoise import WhiteNoise
+# WhiteNoise: serve static files directly on Vercel
+# Vercel's Python runtime can read the source static/ directory,
+# so we serve from STATICFILES_DIRS (not collectstatic output)
+import whitenoise
 
-_whitenoise_dirs = [str(d) for d in settings.STATICFILES_DIRS if os.path.isdir(d)]
-if not _whitenoise_dirs:
-    # Fallback: serve from STATIC_ROOT if available
-    _whitenoise_root = str(settings.STATIC_ROOT)
-    os.makedirs(_whitenoise_root, exist_ok=True)
-    application = WhiteNoise(application, root=_whitenoise_root, autorefresh=False, prefix='static/')
+# Find the first available static files directory
+_serve_root = None
+for d in settings.STATICFILES_DIRS:
+    _d = str(d)
+    if os.path.isdir(_d):
+        _serve_root = _d
+        break
+
+if _serve_root:
+    # WhiteNoise wraps the WSGI app once, serving /static/* from the source dir
+    application = whitenoise.WhiteNoise(application, root=_serve_root, autorefresh=False, prefix='static/')
 else:
-    # Add each static files dir as a WhiteNoise root
-    for static_dir in _whitenoise_dirs:
-        application = WhiteNoise(application, root=static_dir, prefix='static/')
+    # Last resort: use STATIC_ROOT
+    _sr = str(settings.STATIC_ROOT)
+    if os.path.isdir(_sr):
+        application = whitenoise.WhiteNoise(application, root=_sr, autorefresh=False, prefix='static/')
