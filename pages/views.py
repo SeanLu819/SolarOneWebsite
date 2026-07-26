@@ -12,20 +12,30 @@ from pages.models import Product, Project, SiteConfig, ContactMessage
 logger = logging.getLogger(__name__)
 
 # Path to seed data — used as fallback when DB is unavailable (e.g. Vercel ephemeral SQLite)
-_SEED_PATH = os.path.join(settings.BASE_DIR, 'seed_data.json')
+# Try multiple candidate locations: BASE_DIR (local + most Vercel setups) and directories
+# relative to this file (in case @vercel/python places the lambda in a subfolder).
+_SEED_CANDIDATES = [
+    os.path.join(settings.BASE_DIR, 'seed_data.json'),
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'seed_data.json'),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seed_data.json'),
+]
 
 
 def _load_seed():
     """Load seed_data.json from disk. Cached for 5 min to avoid repeated file reads."""
     data = cache.get('seed_data_json')
     if data is None:
-        try:
-            with open(_SEED_PATH, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            cache.set('seed_data_json', data, timeout=300)
-        except Exception:
-            logger.warning('Failed to load seed_data.json', exc_info=True)
-            data = {'products': [], 'projects': {}, 'siteconfig': {}}
+        for path in _SEED_CANDIDATES:
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                break
+            except Exception:
+                continue
+        if data is None:
+            logger.warning('Failed to load seed_data.json from any candidate path: %s', _SEED_CANDIDATES, exc_info=True)
+            data = {'products': [], 'projects': [], 'siteconfig': {}}
+        cache.set('seed_data_json', data, timeout=300)
     return data
 
 
