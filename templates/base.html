@@ -354,5 +354,26 @@
 })();
 </script>
 
+<script>
+  // Shared sidebar accordion toggle for series with subseries (e.g. M Series).
+  // Only the arrow button toggles; clicking the label link navigates normally.
+  (function () {
+    document.addEventListener('click', function (e) {
+      const arrow = e.target.closest('.sidebar-nav-toggle-arrow');
+      if (!arrow) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const toggle = arrow.closest('.sidebar-nav-child-toggle');
+      if (!toggle) return;
+      const sibling = toggle.nextElementSibling;
+      const isOpen = toggle.classList.toggle('open');
+      arrow.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (sibling && sibling.classList.contains('sidebar-nav-grandchildren')) {
+        sibling.classList.toggle('open', isOpen);
+      }
+    });
+  })();
+</script>
+
 </body>
 </html>

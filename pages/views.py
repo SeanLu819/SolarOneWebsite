@@ -304,7 +304,21 @@ def _get_products_sidebar(lang='en'):
             'key': 'FLOODLIGHT',
             'label': _t('Flood Lighting', lang),
             'series': [
-                {'key': 'M_SERIES', 'slug': 'm-series', 'label': _t('M Series', lang)},
+                {
+                    'key': 'M_SERIES',
+                    'slug': 'm-series',
+                    'label': _t('M Series', lang),
+                    'subseries': [
+                        {'key': 'FL1M',  'slug': 'fl1m',  'label': 'FL1M'},
+                        {'key': 'FL4M',  'slug': 'fl4m',  'label': 'FL4M'},
+                        {'key': 'FL6M',  'slug': 'fl6m',  'label': 'FL6M'},
+                        {'key': 'FL9M',  'slug': 'fl9m',  'label': 'FL9M'},
+                        {'key': 'FL12M', 'slug': 'fl12m', 'label': 'FL12M'},
+                        {'key': 'FL16M', 'slug': 'fl16m', 'label': 'FL16M'},
+                        {'key': 'VSP_SYSTEM',     'slug': 'vsp-system',     'label': 'VSP SYSTEM'},
+                        {'key': 'RGB_RGBW_SERIES','slug': 'rgb-rgbw-series','label': 'RGB/RGBW Series'},
+                    ],
+                },
                 {'key': 'RT410_SERIES', 'slug': 'rt410-series', 'label': _t('RT410 Series', lang)},
             ],
         },
@@ -592,3 +606,163 @@ def product_detail(request, slug):
         context['product'] = product
 
     return render(request, 'product_detail.html', context)
+
+
+# ============ Sub-series pages (FL1M, FL4M, ...) ============
+# Static catalog of sub-series detail pages under M Series. Each entry can
+# define a gallery of images and specs. For now FL1M has real images; the
+# others render a placeholder gallery so the navigation tree is complete.
+
+_SUBSERIES_CATALOG = {
+    'fl1m': {
+        'title': 'FL1M Series',
+        'subtitle': 'Modular LED floodlight system with precision optics for '
+                    'mid-to-large sports and industrial venues.',
+        'images': [
+            {'src': 'images/products/fl1m/fl1m-01.png', 'alt': 'FL1M Series — view 1'},
+            {'src': 'images/products/fl1m/fl1m-02.png', 'alt': 'FL1M Series — view 2'},
+            {'src': 'images/products/fl1m/fl1m-03.png', 'alt': 'FL1M Series — view 3'},
+            {'src': 'images/products/fl1m/fl1m-04.png', 'alt': 'FL1M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '80W',         'label': 'Power'},
+            {'value': '125 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '18°-50°',     'label': 'Beam Angle'},
+        ],
+    },
+    'fl4m': {
+        'title': 'FL4M Series',
+        'subtitle': '4-module configuration of the FL M-series floodlight family.',
+        'images': [
+            {'src': 'images/products/fl4m/fl4m-01.png', 'alt': 'FL4M Series — view 1'},
+            {'src': 'images/products/fl4m/fl4m-02.png', 'alt': 'FL4M Series — view 2'},
+            {'src': 'images/products/fl4m/fl4m-03.png', 'alt': 'FL4M Series — view 3'},
+            {'src': 'images/products/fl4m/fl4m-04.png', 'alt': 'FL4M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '320W',        'label': 'Power'},
+            {'value': '130 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '15°-60°',     'label': 'Beam Angle'},
+        ],
+    },
+    'fl6m': {
+        'title': 'FL6M Series',
+        'subtitle': '6-module configuration of the FL M-series floodlight family.',
+        'images': [
+            {'src': 'images/products/fl6m/fl6m-01.png', 'alt': 'FL6M Series — view 1'},
+            {'src': 'images/products/fl6m/fl6m-02.png', 'alt': 'FL6M Series — view 2'},
+            {'src': 'images/products/fl6m/fl6m-03.png', 'alt': 'FL6M Series — view 3'},
+            {'src': 'images/products/fl6m/fl6m-04.png', 'alt': 'FL6M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '480W',        'label': 'Power'},
+            {'value': '130 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '15°-60°',     'label': 'Beam Angle'},
+        ],
+    },
+    'fl9m': {
+        'title': 'FL9M Series',
+        'subtitle': '9-module configuration of the FL M-series floodlight family.',
+        'images': [
+            {'src': 'images/products/fl9m/fl9m-01.png', 'alt': 'FL9M Series — view 1'},
+            {'src': 'images/products/fl9m/fl9m-02.png', 'alt': 'FL9M Series — view 2'},
+            {'src': 'images/products/fl9m/fl9m-03.png', 'alt': 'FL9M Series — view 3'},
+            {'src': 'images/products/fl9m/fl9m-04.png', 'alt': 'FL9M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '720W',        'label': 'Power'},
+            {'value': '130 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '15°-60°',     'label': 'Beam Angle'},
+        ],
+    },
+    'fl12m': {
+        'title': 'FL12M Series',
+        'subtitle': '12-module configuration of the FL M-series floodlight family.',
+        'images': [
+            {'src': 'images/products/fl12m/fl12m-01.png', 'alt': 'FL12M Series — view 1'},
+            {'src': 'images/products/fl12m/fl12m-02.png', 'alt': 'FL12M Series — view 2'},
+            {'src': 'images/products/fl12m/fl12m-03.png', 'alt': 'FL12M Series — view 3'},
+            {'src': 'images/products/fl12m/fl12m-04.png', 'alt': 'FL12M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '960W',        'label': 'Power'},
+            {'value': '130 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '15°-60°',     'label': 'Beam Angle'},
+        ],
+    },
+    'fl16m': {
+        'title': 'FL16M Series',
+        'subtitle': '16-module configuration of the FL M-series floodlight family.',
+        'images': [
+            {'src': 'images/products/fl16m/fl16m-01.png', 'alt': 'FL16M Series — view 1'},
+            {'src': 'images/products/fl16m/fl16m-02.png', 'alt': 'FL16M Series — view 2'},
+            {'src': 'images/products/fl16m/fl16m-03.png', 'alt': 'FL16M Series — view 3'},
+            {'src': 'images/products/fl16m/fl16m-04.png', 'alt': 'FL16M Series — view 4'},
+        ],
+        'specs': [
+            {'value': '1280W',       'label': 'Power'},
+            {'value': '130 lm/W',    'label': 'Efficacy'},
+            {'value': 'IP66',        'label': 'Protection'},
+            {'value': '15°-60°',     'label': 'Beam Angle'},
+        ],
+    },
+    'vsp-system':      {'title': 'VSP System',       'subtitle': 'Vision Strobe Protection system for broadcast venues.'},
+    'rgb-rgbw-series': {'title': 'RGB/RGBW Series',  'subtitle': 'Color-tunable RGB/RGBW floodlight for events and façade lighting.'},
+}
+
+
+def product_series(request, slug):
+    """Sub-series detail page (e.g. /products/series/fl1m/).
+
+    Renders a two-column layout with an image carousel on the left and
+    product info/specs on the right, mirroring the product_detail layout
+    but with multiple images (carousel) instead of a single image.
+    """
+    context = get_common_context()
+    lang = get_language()
+
+    product_categories = _get_products_sidebar(lang)
+    context['product_categories'] = product_categories
+
+    series_data = _SUBSERIES_CATALOG.get(slug)
+    if series_data is None:
+        context['series_title'] = _('Product Series Not Found')
+        context['series_subtitle'] = ''
+        context['gallery'] = []
+        context['specs'] = []
+    else:
+        context['series_title'] = series_data.get('title', '')
+        context['series_subtitle'] = series_data.get('subtitle', '')
+        # Resolve static URLs for gallery images
+        gallery = []
+        for img in series_data.get('images', []):
+            gallery.append({
+                'src': static(img['src']),
+                'alt': img.get('alt', ''),
+            })
+        context['gallery'] = gallery
+        context['specs'] = series_data.get('specs', [])
+
+    # Resolve active series + subseries keys for sidebar highlighting
+    context['active_series'] = ''
+    context['active_subseries'] = slug
+    for cat in product_categories:
+        for s in cat['series']:
+            if 'subseries' in s:
+                for sub in s['subseries']:
+                    if sub['slug'] == slug:
+                        context['active_series'] = s['key']
+                        context['active_subseries'] = sub['key']
+                        context['parent_series_slug'] = s['slug']
+                        break
+                if context['active_series']:
+                    break
+        if context['active_series']:
+            break
+
+    return render(request, 'product_series.html', context)

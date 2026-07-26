@@ -14,16 +14,29 @@
         <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
         <nav class="sidebar-nav-list">
           {% for cat in product_categories %}
-          <div class="sidebar-nav-group" style="margin-bottom: 8px;">
+          <div class="sidebar-nav-group" style="margin-bottom: 3px;">
             <div class="sidebar-nav-parent">
               {{ cat.label }}
             </div>
             <div class="sidebar-nav-children">
               {% for sub in cat.series %}
+              {% if sub.subseries %}
+              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
+                <span class="sidebar-nav-dot"></span>
+                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
+                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
+              </div>
+              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
+                {% for grandchild in sub.subseries %}
+                <a href="{% url 'product_series' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
+                {% endfor %}
+              </div>
+              {% else %}
               <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
                 <span class="sidebar-nav-dot"></span>
                 {{ sub.label }}
               </a>
+              {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -88,8 +101,8 @@
   /* === Detail page two-column layout === */
   .detail-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 56px;
     align-items: center;
     margin-top: 40px;
   }
@@ -100,14 +113,18 @@
     min-height: 320px;
   }
   .detail-image img {
-    max-width: 100%;
-    max-height: 400px;
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
     object-fit: contain;
-    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.35));
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
   }
   .detail-image-placeholder {
     width: 100%;
-    min-height: 320px;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
     background: var(--bg-soft);
     border-radius: 12px;
     display: flex;
