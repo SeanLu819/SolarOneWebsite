@@ -164,5 +164,48 @@ STATIC_ROOT = '/tmp/staticfiles' if IS_RUNTIME else BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/tmp/media' if IS_RUNTIME else BASE_DIR / 'media'
 
+# ============ CACHE ============
+# Local dev uses LocMem (in-process). On Vercel there's no persistent cache
+# backend available without extra services, so we also fall back to LocMem
+# there — rate limiting will be per-instance (best-effort), which is
+# acceptable for a low-traffic contact form. Upgrade to Redis/Upstash for
+# strict distributed rate limiting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'solarone-default',
+    }
+}
+
+# ============ EMAIL ============
+# Email is optional: if SMTP env vars are not set, contact notifications
+# silently no-op (the DB record is still saved). Set these in Vercel/local
+# env to enable admin email alerts on new contact submissions.
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend' if os.environ.get('EMAIL_HOST_USER')
+    else 'django.core.mail.backends.locmem.EmailBackend',
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() == 'true'
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'no-reply@solarone.com')
+
+# Recipient for new contact-message notifications. Leave empty to disable
+# email notifications entirely (DB record still saved).
+CONTACT_NOTIFY_EMAIL = os.environ.get('CONTACT_NOTIFY_EMAIL', '')
+
+# ============ CONTACT RATE LIMITING ============
+# Per IP+session submission cap for the contact form. Tunable via env so
+# production can tighten/loosen without a code change.
+CONTACT_RATE_LIMIT = int(os.environ.get('CONTACT_RATE_LIMIT', '3'))   # max submissions
+CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # window in seconds
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Application version (displayed in admin)
+APP_VERSION = '1.0.0'

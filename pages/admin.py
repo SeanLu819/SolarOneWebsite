@@ -1,5 +1,11 @@
 from django.contrib import admin
+from django.conf import settings
 from .models import Product, Project, ContactMessage, SiteConfig, Visitor, DailyStats
+
+# Admin branding with version
+admin.site.site_header = f'SolarOne Admin v{settings.APP_VERSION}'
+admin.site.site_title = f'SolarOne Admin v{settings.APP_VERSION}'
+admin.site.index_title = f'Administration (v{settings.APP_VERSION})'
 
 
 @admin.register(Product)
