@@ -10,4 +10,7 @@ fi
 
 export SECRET_KEY=build-time-placeholder
 python manage.py collectstatic --noinput 2>&1
-python manage.py compilemessages 2>&1
+# compilemessages requires GNU gettext (msgfmt) which is not available in
+# Vercel's build environment. Make it non-fatal — Django falls back to
+# source-language strings when .mo files are absent.
+python manage.py compilemessages 2>&1 || true
