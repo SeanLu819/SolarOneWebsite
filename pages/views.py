@@ -1,12 +1,201 @@
+import os
+import json
 import logging
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
+from django.conf import settings
 from pages.models import Product, Project, SiteConfig, ContactMessage
 
 logger = logging.getLogger(__name__)
+
+# Path to seed data — used as fallback when DB is unavailable (e.g. Vercel ephemeral SQLite)
+_SEED_PATH = os.path.join(settings.BASE_DIR, 'seed_data.json')
+
+
+def _load_seed():
+    """Load seed_data.json from disk. Cached for 5 min to avoid repeated file reads."""
+    data = cache.get('seed_data_json')
+    if data is None:
+        try:
+            with open(_SEED_PATH, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            cache.set('seed_data_json', data, timeout=300)
+        except Exception:
+            logger.warning('Failed to load seed_data.json', exc_info=True)
+            data = {'products': [], 'projects': {}, 'siteconfig': {}}
+    return data
+
+
+class _DictProduct:
+    """Lightweight wrapper that mimics the Product model interface for templates."""
+    def __init__(self, item):
+        self.slug = item.get('slug', '')
+        self.name = item.get('name', '')
+        self.category = item.get('category', '')
+        self.description = item.get('description', '')
+        self.power = item.get('power', '')
+        self.efficacy = item.get('efficacy', '')
+        self.protection = item.get('protection', '')
+        self.output = item.get('output', '')
+        self.beam_angle = item.get('beam_angle', '')
+        self.image = item.get('image', '')
+        self.order = item.get('order', 0)
+        self.translations = item.get('translations', {}) or {}
+
+    def t(self, field_name, lang='en'):
+        if lang == 'en' or not self.translations:
+            return getattr(self, field_name, '')
+        lang_data = self.translations.get(lang, {})
+        val = lang_data.get(field_name, '')
+        return val if val else getattr(self, field_name, '')
+
+
+class _DictProject:
+    """Lightweight wrapper that mimics the Project model interface for templates."""
+    def __init__(self, item):
+        self.slug = item.get('slug', '')
+        self.title = item.get('title', '')
+        self.location = item.get('location', '')
+        self.venue_type = item.get('venue_type', '')
+        self.sport_type = item.get('sport_type', '')
+        self.description = item.get('description', '')
+        self.results = item.get('results', '')
+        self.image = item.get('image', '')
+        self.order = item.get('order', 0)
+        self.translations = item.get('translations', {}) or {}
+
+    def t(self, field_name, lang='en'):
+        if lang == 'en' or not self.translations:
+            return getattr(self, field_name, '')
+        lang_data = self.translations.get(lang, {})
+        val = lang_data.get(field_name, '')
+        return val if val else getattr(self, field_name, '')
+
+
+def _get_products_from_db(lang, active_category='', active_series='', active_series_label=''):
+    """Try loading products from DB. Returns None on failure (caller falls back to JSON)."""
+    try:
+        products_list = Product.objects.all()
+        if active_category:
+            products_list = products_list.filter(category=active_category)
+        if active_series and active_series_label:
+            products_list = products_list.filter(name__icontains=active_series_label.replace(' Series', ''))
+        result = []
+        for p in products_list:
+            if p.image:
+                p.image_url = static(p.image.name)
+            else:
+                p.image_url = ''
+            p.name_t = p.t('name', lang)
+            p.description_t = p.t('description', lang)
+            p.category_t = p.t('category', lang)
+            result.append(p)
+        return result
+    except Exception:
+        logger.warning('DB products query failed, will fall back to seed JSON', exc_info=True)
+        return None
+
+
+def _get_products_from_json(lang, active_category='', active_series='', active_series_label=''):
+    """Load products from seed_data.json (fallback for Vercel)."""
+    data = _load_seed()
+    items = data.get('products', [])
+    result = []
+    for item in items:
+        if active_category and item.get('category') != active_category:
+            continue
+        if active_series and active_series_label:
+            series_name = active_series_label.replace(' Series', '')
+            if series_name.lower() not in item.get('name', '').lower():
+                continue
+        p = _DictProduct(item)
+        p.image_url = static(p.image) if p.image else ''
+        p.name_t = p.t('name', lang)
+        p.description_t = p.t('description', lang)
+        p.category_t = p.t('category', lang)
+        result.append(p)
+    return result
+
+
+def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
+    """Try loading projects from DB. Returns None on failure."""
+    try:
+        projects_list = Project.objects.all()
+        if active_venue_type:
+            projects_list = projects_list.filter(venue_type=active_venue_type)
+        if active_sport_type:
+            projects_list = projects_list.filter(sport_type=active_sport_type)
+        result = []
+        for proj in projects_list:
+            if proj.image:
+                proj.image_url = static(proj.image.name)
+            else:
+                proj.image_url = ''
+            proj.title_t = proj.t('title', lang)
+            proj.description_t = proj.t('description', lang)
+            proj.location_t = proj.t('location', lang)
+            proj.results_t = proj.t('results', lang)
+            result.append(proj)
+        return result
+    except Exception:
+        logger.warning('DB projects query failed, will fall back to seed JSON', exc_info=True)
+        return None
+
+
+def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
+    """Load projects from seed_data.json (fallback for Vercel)."""
+    data = _load_seed()
+    items = data.get('projects', [])
+    result = []
+    for item in items:
+        if active_venue_type and item.get('venue_type') != active_venue_type:
+            continue
+        if active_sport_type and item.get('sport_type') != active_sport_type:
+            continue
+        proj = _DictProject(item)
+        proj.image_url = static(proj.image) if proj.image else ''
+        proj.title_t = proj.t('title', lang)
+        proj.description_t = proj.t('description', lang)
+        proj.location_t = proj.t('location', lang)
+        proj.results_t = proj.t('results', lang)
+        result.append(proj)
+    return result
+
+
+def _get_product_detail_from_db(slug, lang):
+    """Try loading a single product from DB. Returns None on failure."""
+    try:
+        product = Product.objects.get(slug=slug)
+        if product.image:
+            product.image_url = static(product.image.name)
+        else:
+            product.image_url = ''
+        product.name_t = product.t('name', lang)
+        product.description_t = product.t('description', lang)
+        product.category_t = product.t('category', lang)
+        return product
+    except Product.DoesNotExist:
+        return None
+    except Exception:
+        logger.warning('DB product detail query failed, will fall back to seed JSON', exc_info=True)
+        return None
+
+
+def _get_product_detail_from_json(slug, lang):
+    """Load a single product from seed_data.json (fallback for Vercel)."""
+    data = _load_seed()
+    for item in data.get('products', []):
+        if item.get('slug') == slug:
+            p = _DictProduct(item)
+            p.image_url = static(p.image) if p.image else ''
+            p.name_t = p.t('name', lang)
+            p.description_t = p.t('description', lang)
+            p.category_t = p.t('category', lang)
+            return p
+    return None
 
 
 # Translation map for sidebar labels
@@ -32,7 +221,7 @@ _SIDEBAR_I18N = {
     'Flood Lighting':   {'fr': 'Éclairage de Stade', 'es': 'Iluminación Deportiva', 'de': 'Flutlicht', 'ar': 'إضاءة الملاعب', 'ru': 'Спортивное освещение'},
     'High Bay':         {'fr': 'Éclairage Haut', 'es': 'Iluminación Alta', 'de': 'Hallenleuchte', 'ar': 'إضاءة مرتفعة', 'ru': 'Промышленный свет'},
     'Street Lighting':  {'fr': 'Éclairage Routier', 'es': 'Alumbrado Público', 'de': 'Straßenbeleuchtung', 'ar': 'إنارة الشوارع', 'ru': 'Уличное освещение'},
-    # Products — series (generally kept as-is, but add per-language if needed)
+    # Products — series
     'M Series':         {'fr': 'Série M', 'es': 'Serie M', 'de': 'M-Serie', 'ar': 'سلسلة M', 'ru': 'Серия M'},
     'RT410 Series':     {'fr': 'Série RT410', 'es': 'Serie RT410', 'de': 'RT410-Serie', 'ar': 'سلسلة RT410', 'ru': 'Серия RT410'},
     'RT400 Series':     {'fr': 'Série RT400', 'es': 'Serie RT400', 'de': 'RT400-Serie', 'ar': 'سلسلة RT400', 'ru': 'Серия RT400'},
@@ -52,7 +241,6 @@ def _t(label, lang='en'):
 
 # Sidebar data for Projects page
 def _get_projects_sidebar(lang='en'):
-    """Return structured sidebar data for projects — list of dicts."""
     return [
         {
             'key': 'OUTDOOR',
@@ -88,7 +276,6 @@ def _get_projects_sidebar(lang='en'):
 
 # Sidebar data for Products page
 def _get_products_sidebar(lang='en'):
-    """Return structured sidebar data for products — list of dicts."""
     return [
         {
             'key': 'FLOODLIGHT',
@@ -125,19 +312,39 @@ def get_common_context():
             config = SiteConfig.objects.first()
             if not config:
                 config = SiteConfig.objects.create()
+            cache.set('site_config', config, timeout=300)
         except Exception:
-            # Database not ready (e.g. fresh Vercel cold start) — return a minimal config
+            # DB unavailable — build a minimal config from seed JSON so pages render.
+            # ImageField values are skipped (they are bare strings in the JSON and
+            # would break .name access); hero_background/logo fall back to defaults.
+            logger.warning('DB SiteConfig query failed, building from seed JSON', exc_info=True)
+            data = _load_seed()
+            cfg = data.get('siteconfig', {})
             config = SiteConfig()
-        cache.set('site_config', config, timeout=300)
+            _image_fields = {'hero_background', 'logo', 'og_image'}
+            for key, val in cfg.items():
+                if key in _image_fields:
+                    continue
+                if hasattr(config, key):
+                    try:
+                        setattr(config, key, val)
+                    except Exception:
+                        pass
+            cache.set('site_config', config, timeout=300)
 
-    # Pre-compute static URLs for hero bg and logo
-    if config.hero_background:
-        config.hero_bg_url = static(config.hero_background.name)
+    # Pre-compute static URLs for hero bg and logo.
+    # Guard .name access in case config came from JSON fallback (bare value).
+    hero_bg = getattr(config, 'hero_background', '')
+    hero_name = getattr(hero_bg, 'name', hero_bg) if hero_bg else ''
+    if hero_name:
+        config.hero_bg_url = static(hero_name)
     else:
         config.hero_bg_url = static('images/hero-main.fw.png')
 
-    if config.logo:
-        config.logo_url = static(config.logo.name)
+    logo = getattr(config, 'logo', '')
+    logo_name = getattr(logo, 'name', logo) if logo else ''
+    if logo_name:
+        config.logo_url = static(logo_name)
     else:
         config.logo_url = static('images/logo.png')
 
@@ -145,26 +352,7 @@ def get_common_context():
 
 
 def home(request):
-    context = get_common_context()
-    # Inject seed debug info for Vercel troubleshooting
-    if request.GET.get('seed_debug'):
-        import os as _os
-        from django.conf import settings as _settings
-        from django.db import connection as _conn
-        debug_info = {
-            'IS_VERCEL': str(_settings.IS_VERCEL),
-            'DB_NAME': str(_settings.DATABASES['default']['NAME']),
-            'DB_EXISTS': str(_os.path.isfile(str(_settings.DATABASES['default']['NAME']))),
-            'SEED_FILE': str(_os.path.isfile(str(_settings.BASE_DIR / 'seed_data.json'))),
-        }
-        try:
-            with _conn.cursor() as cur:
-                cur.execute("SELECT COUNT(*) FROM pages_product")
-                debug_info['PRODUCT_COUNT'] = cur.fetchone()[0]
-        except Exception as e:
-            debug_info['DB_ERROR'] = str(e)
-        context['seed_debug'] = debug_info
-    return render(request, 'home.html', context)
+    return render(request, 'home.html', get_common_context())
 
 
 def contact(request):
@@ -219,26 +407,10 @@ def products(request):
     context['active_category_label'] = active_category_label
     context['active_series_label'] = active_series_label
 
-    # Filter products — safely handle DB errors
-    try:
-        products_list = Product.objects.all()
-        if active_category:
-            products_list = products_list.filter(category=active_category)
-        if active_series:
-            if active_series_label:
-                products_list = products_list.filter(name__icontains=active_series_label.replace(' Series', ''))
-
-        for p in products_list:
-            if p.image:
-                p.image_url = static(p.image.name)
-            else:
-                p.image_url = ''
-            p.name_t = p.t('name', lang)
-            p.description_t = p.t('description', lang)
-            p.category_t = p.t('category', lang)
-    except Exception:
-        logger.warning('Failed to load products', exc_info=True)
-        products_list = []
+    # Try DB first; fall back to seed JSON if DB unavailable (Vercel cold start)
+    products_list = _get_products_from_db(lang, active_category, active_series, active_series_label)
+    if products_list is None:
+        products_list = _get_products_from_json(lang, active_category, active_series, active_series_label)
 
     context['products'] = products_list
     return render(request, 'products.html', context)
@@ -272,26 +444,10 @@ def projects(request):
     context['active_venue_type_label'] = active_venue_type_label
     context['active_sport_type_label'] = active_sport_type_label
 
-    # Filter projects — safely handle DB errors
-    try:
-        projects_list = Project.objects.all()
-        if active_venue_type:
-            projects_list = projects_list.filter(venue_type=active_venue_type)
-        if active_sport_type:
-            projects_list = projects_list.filter(sport_type=active_sport_type)
-
-        for proj in projects_list:
-            if proj.image:
-                proj.image_url = static(proj.image.name)
-            else:
-                proj.image_url = ''
-            proj.title_t = proj.t('title', lang)
-            proj.description_t = proj.t('description', lang)
-            proj.location_t = proj.t('location', lang)
-            proj.results_t = proj.t('results', lang)
-    except Exception:
-        logger.warning('Failed to load projects', exc_info=True)
-        projects_list = []
+    # Try DB first; fall back to seed JSON
+    projects_list = _get_projects_from_db(lang, active_venue_type, active_sport_type)
+    if projects_list is None:
+        projects_list = _get_projects_from_json(lang, active_venue_type, active_sport_type)
 
     context['projects'] = projects_list
     return render(request, 'projects.html', context)
@@ -310,97 +466,23 @@ def product_detail(request, slug):
     product_categories = _get_products_sidebar(lang)
     context['product_categories'] = product_categories
 
-    # Find current product and its series key for active state
-    try:
-        product = Product.objects.get(slug=slug)
-    except Product.DoesNotExist:
-        product = None
-    except Exception:
-        logger.warning('Failed to load product detail', exc_info=True)
-        product = None
+    # Try DB first; fall back to seed JSON
+    product = _get_product_detail_from_db(slug, lang)
+    if product is None:
+        product = _get_product_detail_from_json(slug, lang)
 
-    # Resolve active series key from product's category
+    # Resolve active series key from slug
     active_series = ''
-    if product:
-        for cat in product_categories:
-            for s in cat['series']:
-                if s['slug'] == slug:
-                    active_series = s['key']
-                    break
-            if active_series:
+    for cat in product_categories:
+        for s in cat['series']:
+            if s['slug'] == slug:
+                active_series = s['key']
                 break
+        if active_series:
+            break
     context['active_series'] = active_series
 
     if product:
-        if product.image:
-            product.image_url = static(product.image.name)
-        else:
-            product.image_url = ''
-        product.name_t = product.t('name', lang)
-        product.description_t = product.t('description', lang)
-        product.category_t = product.t('category', lang)
         context['product'] = product
 
     return render(request, 'product_detail.html', context)
-
-
-import os
-import json as _json
-from django.http import HttpResponse, JsonResponse
-
-def debug_seed(request):
-    """Debug endpoint to check database and seed status on Vercel."""
-    import sqlite3
-    from django.conf import settings
-    
-    info = {
-        'VERCEL': os.environ.get('VERCEL', ''),
-        'VERCEL_URL': os.environ.get('VERCEL_URL', ''),
-        'DATABASE_URL': os.environ.get('DATABASE_URL', ''),
-        'IS_VERCEL': str(settings.IS_VERCEL),
-        'IS_RUNTIME': str(settings.IS_RUNTIME),
-        'DB_ENGINE': settings.DATABASES['default']['ENGINE'],
-        'DB_NAME': str(settings.DATABASES['default']['NAME']),
-        'BASE_DIR': str(settings.BASE_DIR),
-    }
-    
-    # Check if db file exists
-    db_name = str(settings.DATABASES['default']['NAME'])
-    if db_name != ':memory:':
-        info['db_exists'] = os.path.isfile(db_name)
-        info['db_writable'] = os.access(os.path.dirname(db_name), os.W_OK) if os.path.exists(os.path.dirname(db_name)) else False
-        if info['db_exists']:
-            info['db_size'] = os.path.getsize(db_name)
-    else:
-        info['db_exists'] = True
-        info['db_writable'] = True
-    
-    # Check seed file
-    seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
-    info['seed_file_exists'] = os.path.isfile(seed_path)
-    info['seed_file_path'] = seed_path
-    
-    # List static images
-    static_dir = str(settings.BASE_DIR / 'static' / 'images' / 'processed')
-    info['static_images_dir'] = static_dir
-    info['static_images_exist'] = os.path.isdir(static_dir)
-    if info['static_images_exist']:
-        info['static_images'] = os.listdir(static_dir)
-    
-    # Try to count products
-    try:
-        from django.db import connection
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT COUNT(*) FROM pages_product")
-            info['product_count'] = cursor.fetchone()[0]
-            cursor.execute("SELECT COUNT(*) FROM pages_project")
-            info['project_count'] = cursor.fetchone()[0]
-            cursor.execute("SELECT COUNT(*) FROM pages_siteconfig")
-            info['siteconfig_count'] = cursor.fetchone()[0]
-            # Get product names
-            cursor.execute("SELECT name, image FROM pages_product")
-            info['products'] = [{'name': r[0], 'image': r[1]} for r in cursor.fetchall()]
-    except Exception as e:
-        info['db_error'] = str(e)
-    
-    return JsonResponse(info, json_dumps_params={'indent': 2})
