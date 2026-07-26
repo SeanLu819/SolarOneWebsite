@@ -10,10 +10,7 @@
     },
     {
       "src": "index.py",
-      "use": "@vercel/python",
-      "config": {
-        "includeFiles": "seed_data.json"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [

@@ -22,19 +22,32 @@ _SEED_CANDIDATES = [
 
 
 def _load_seed():
-    """Load seed_data.json from disk. Cached for 5 min to avoid repeated file reads."""
+    """Load seed data. On Vercel, import from the embedded Python module
+    (pages.seed_data) so no filesystem access is needed. In local dev, fall
+    back to reading seed_data.json from disk so the JSON stays the source of
+    truth during development."""
     data = cache.get('seed_data_json')
     if data is None:
-        for path in _SEED_CANDIDATES:
-            try:
-                with open(path, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                break
-            except Exception:
-                continue
+        # Preferred: embedded Python module (works on Vercel)
+        try:
+            from pages.seed_data import SEED_DATA
+            data = SEED_DATA
+        except Exception:
+            logger.warning('Could not import pages.seed_data, trying JSON file', exc_info=True)
+            data = None
+
+        # Fallback: read JSON file from disk (local dev)
         if data is None:
-            logger.warning('Failed to load seed_data.json from any candidate path: %s', _SEED_CANDIDATES, exc_info=True)
-            data = {'products': [], 'projects': [], 'siteconfig': {}}
+            for path in _SEED_CANDIDATES:
+                try:
+                    with open(path, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+                    break
+                except Exception:
+                    continue
+            if data is None:
+                logger.warning('Failed to load seed data from any source', exc_info=True)
+                data = {'products': [], 'projects': [], 'siteconfig': {}}
         cache.set('seed_data_json', data, timeout=300)
     return data
 
