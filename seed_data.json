@@ -11,7 +11,7 @@
       "protection": "IP67",
       "output": "",
       "beam_angle": "",
-      "image": "images/processed/rt200-m.png",
+      "image": "images/processed/rt200-m.webp",
       "order": 1,
       "translations": {
         "fr": {
@@ -52,7 +52,7 @@
       "protection": "",
       "output": "125lm/W",
       "beam_angle": "18-100°",
-      "image": "images/processed/floodlight.fw.png",
+      "image": "images/processed/floodlight.webp",
       "order": 2,
       "translations": {
         "fr": {
@@ -93,7 +93,7 @@
       "protection": "IP66",
       "output": "",
       "beam_angle": "",
-      "image": "images/processed/HB.png",
+      "image": "images/processed/HB.webp",
       "order": 3,
       "translations": {}
     },
@@ -108,7 +108,7 @@
       "protection": "IP66",
       "output": "",
       "beam_angle": "",
-      "image": "images/processed/HB.png",
+      "image": "images/processed/HB.webp",
       "order": 4,
       "translations": {}
     }
@@ -123,7 +123,7 @@
       "sport_type": "FOOTBALL_FIELD",
       "description": "A precision photometric design was completed to ensure that the design specifications were met. The design called for replacement of 40 existing 1500W MH light fixtures with 48 of our FL9M-630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
-      "image": "images/processed/footballfield.png",
+      "image": "images/processed/footballfield.webp",
       "order": 1,
       "translations": {
         "fr": {
@@ -167,7 +167,7 @@
       "sport_type": "BASEBALL_FIELD",
       "description": "150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.",
       "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
-      "image": "images/processed/Baseball.png",
+      "image": "images/processed/Baseball.webp",
       "order": 2,
       "translations": {
         "fr": {
@@ -211,7 +211,7 @@
       "sport_type": "MULTI_SPORT",
       "description": "A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.",
       "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
-      "image": "images/processed/basketball.png",
+      "image": "images/processed/basketball.webp",
       "order": 3,
       "translations": {
         "fr": {
@@ -255,7 +255,7 @@
       "sport_type": "SOCCER_FIELD",
       "description": "A multipurpose stadium in Shanghai Pudong New Area with 160,000 sqm and 20,000 seats. 320 FL12M-1000W LED sports lights (CCT: 5000-5500K) with networking control system for remote on/off and power monitoring.",
       "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
-      "image": "images/processed/soccerfield.png",
+      "image": "images/processed/soccerfield.webp",
       "order": 4,
       "translations": {
         "fr": {

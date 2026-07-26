@@ -20,7 +20,10 @@ IS_RUNTIME = IS_VERCEL and '/tmp/' in os.environ.get('DATABASE_URL', '')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # In production (Vercel), SECRET_KEY must be set as an environment variable.
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
+if IS_VERCEL:
+    SECRET_KEY = os.environ['SECRET_KEY']  # Raises KeyError if missing in production
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'

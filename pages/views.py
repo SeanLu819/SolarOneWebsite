@@ -362,7 +362,7 @@ def get_common_context():
     if hero_name:
         config.hero_bg_url = static(hero_name)
     else:
-        config.hero_bg_url = static('images/hero-main.fw.png')
+        config.hero_bg_url = static('images/hero-main.webp')
 
     logo = getattr(config, 'logo', '')
     logo_name = getattr(logo, 'name', logo) if logo else ''

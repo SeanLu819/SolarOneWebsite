@@ -39,7 +39,7 @@ static/images/logo.original-compressed.png
 static/images/logo.webp
 
 # Orphan image directory (not under static/, not served)
-images/
+/images/
 
 # Vercel preview / design canvas (not runtime code)
 solarone-website-preview/
