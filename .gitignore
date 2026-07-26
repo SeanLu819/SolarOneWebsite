@@ -32,8 +32,17 @@ db.sqlite3
 media/
 staticfiles/
 
-# Unused logo variants
+# Unused logo variants (kept locally but not deployed)
 static/images/logo-original.png
 static/images/logo.final.png
 static/images/logo.original-compressed.png
 static/images/logo.webp
+
+# Orphan image directory (not under static/, not served)
+images/
+
+# Vercel preview / design canvas (not runtime code)
+solarone-website-preview/
+
+# Trae skill metadata (local only)
+.trae/
