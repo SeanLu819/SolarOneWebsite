@@ -616,8 +616,7 @@ def product_detail(request, slug):
 _SUBSERIES_CATALOG = {
     'fl1m': {
         'title': 'FL1M Series',
-        'subtitle': 'Modular LED floodlight system with precision optics for '
-                    'mid-to-large sports and industrial venues.',
+        'subtitle': '',
         'images': [
             {'src': 'images/products/fl1m/fl1m-01.png', 'alt': 'FL1M Series — view 1'},
             {'src': 'images/products/fl1m/fl1m-02.png', 'alt': 'FL1M Series — view 2'},
@@ -625,15 +624,17 @@ _SUBSERIES_CATALOG = {
             {'src': 'images/products/fl1m/fl1m-04.png', 'alt': 'FL1M Series — view 4'},
         ],
         'specs': [
-            {'value': '80W',         'label': 'Power'},
-            {'value': '125 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '18°-50°',     'label': 'Beam Angle'},
+            {'value': '80W',               'label': 'Illumination'},
+            {'value': '10,000+',           'label': 'Lumens Delivered'},
+            {'value': '75 ~ 90+',          'label': 'CRI'},
+            {'value': '3000K ~ 5700K',     'label': 'Color Temperature'},
+            {'value': 'IP66',              'label': 'Protection'},
+            {'value': '0-10V, DALI, DMX',   'label': 'Controllable'},
         ],
     },
     'fl4m': {
         'title': 'FL4M Series',
-        'subtitle': '4-module configuration of the FL M-series floodlight family.',
+        'subtitle': '',
         'images': [
             {'src': 'images/products/fl4m/fl4m-01.png', 'alt': 'FL4M Series — view 1'},
             {'src': 'images/products/fl4m/fl4m-02.png', 'alt': 'FL4M Series — view 2'},
@@ -641,11 +642,14 @@ _SUBSERIES_CATALOG = {
             {'src': 'images/products/fl4m/fl4m-04.png', 'alt': 'FL4M Series — view 4'},
         ],
         'specs': [
-            {'value': '320W',        'label': 'Power'},
-            {'value': '130 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '15°-60°',     'label': 'Beam Angle'},
+            {'value': '320W',              'label': 'Illumination'},
+            {'value': '40,000+',           'label': 'Lumens Delivered'},
+            {'value': '75 ~ 90+',          'label': 'CRI'},
+            {'value': '3000K ~ 5700K',     'label': 'Color Temperature'},
+            {'value': 'IP66',              'label': 'Protection'},
+            {'value': '0-10V, DALI, DMX',   'label': 'Controllable'},
         ],
+        'banner_image': 'images/products/fl4m/fl4m-3d-view.png',
     },
     'fl6m': {
         'title': 'FL6M Series',
@@ -747,6 +751,8 @@ def product_series(request, slug):
             })
         context['gallery'] = gallery
         context['specs'] = series_data.get('specs', [])
+        banner_img = series_data.get('banner_image', '')
+        context['banner_image'] = static(banner_img) if banner_img else ''
 
     # Resolve active series + subseries keys for sidebar highlighting
     context['active_series'] = ''

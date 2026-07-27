@@ -77,14 +77,20 @@
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
 
-              <!-- Dot indicators -->
-              <div class="ps-carousel-dots">
-                {% for img in gallery %}
-                <button class="ps-carousel-dot{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}Go to image {{ forloop.counter }}{% endblocktrans %}"></button>
-                {% endfor %}
-              </div>
               {% endif %}
             </div>
+
+            <!-- Thumbnail strip -->
+            {% if gallery %}
+            <div class="ps-thumbnails">
+              {% for img in gallery %}
+              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+                <img src="{{ img.src }}" alt="{{ img.alt }}">
+              </button>
+              {% endfor %}
+            </div>
+            {% endif %}
+
             {% else %}
             <div class="detail-image-placeholder">
               <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
@@ -109,6 +115,13 @@
           </div>
         </div>
 
+        <!-- Full-width banner image below carousel + specs -->
+        {% if banner_image %}
+        <div class="ps-banner">
+          <img src="{{ banner_image }}" alt="{{ series_title }} — 3D View">
+        </div>
+        {% endif %}
+
       </div>
 
     </div>
@@ -126,8 +139,8 @@
   }
   .detail-image {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     min-height: 320px;
   }
   .detail-image-placeholder {
@@ -146,9 +159,10 @@
     margin-bottom: 40px;
   }
   .detail-specs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px 40px;
+    align-items: start;
   }
   .detail-spec {
     display: flex;
@@ -227,30 +241,53 @@
   .ps-prev:hover { transform: translateY(-50%) scale(1.06); }
   .ps-next:hover { transform: translateY(-50%) scale(1.06); }
 
-  /* Dot indicators */
-  .ps-carousel-dots {
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
+  /* Thumbnail strip */
+  .ps-thumbnails {
     display: flex;
     gap: 8px;
-    z-index: 2;
+    margin-top: 12px;
+    max-width: 760px;
+    width: 100%;
   }
-  .ps-carousel-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.45);
+  .ps-thumb {
+    flex: 1;
+    height: 72px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
+    background: var(--bg-soft);
+    padding: 0;
+    transition: border-color 0.2s, opacity 0.2s;
+    opacity: 0.55;
   }
-  .ps-carousel-dot:hover {
-    background: rgba(255, 255, 255, 0.75);
+  .ps-thumb:hover {
+    opacity: 0.85;
   }
-  .ps-carousel-dot.active {
-    background: #fff;
-    transform: scale(1.25);
+  .ps-thumb.active {
+    border-color: var(--accent);
+    opacity: 1;
+  }
+  .ps-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  /* Full-width banner image */
+  .ps-banner {
+    margin-top: 32px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-soft);
+  }
+  .ps-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   /* Responsive */
@@ -281,7 +318,7 @@
     if (!carousel) return;
 
     const slides = carousel.querySelectorAll('.ps-carousel-slide');
-    const dots = carousel.querySelectorAll('.ps-carousel-dot');
+    const thumbs = carousel.parentElement.querySelectorAll('.ps-thumb');
     const prevBtn = carousel.querySelector('.ps-prev');
     const nextBtn = carousel.querySelector('.ps-next');
     const interval = parseInt(carousel.dataset.interval, 10) || 3000;
@@ -294,7 +331,7 @@
       // Wrap around
       current = (index + slides.length) % slides.length;
       slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === current));
     }
 
     function next() { show(current + 1); }
@@ -316,9 +353,9 @@
 
     if (prevBtn) prevBtn.addEventListener('click', () => { prev(); });
     if (nextBtn) nextBtn.addEventListener('click', () => { next(); });
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        show(parseInt(dot.dataset.index, 10));
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        show(parseInt(thumb.dataset.index, 10));
       });
     });
 
