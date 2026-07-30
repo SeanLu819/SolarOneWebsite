@@ -339,9 +339,9 @@ SEED_DATA = {'products': [{'beam_angle': '',
                                       'applications. Engineered in Beijing since 2007, trusted in 50+ countries '
                                       'worldwide.',
                 'hero_background': '',
-                'hero_subtitle': 'Professional sports lighting solutions trusted in over 50 countries. From community '
-                                 'fields to broadcast-ready stadiums, engineered for performance, built to outlast.',
-                'hero_title': 'Precision LED systems for every arena.',
+                'hero_subtitle': 'Professional SolarOne sports lighting solutions trusted in over 50 countries. From '
+                                 'community fields to broadcast-ready stadiums, engineered for performance, built to outlast.',
+                'hero_title': 'The Next Generation Lighting Systems For Every Area',
                 'logo': '',
                 'meta_description': 'Professional LED sports lighting, high bay, and modular luminaire solutions. '
                                     'Engineered in Beijing since 2007, trusted in 50+ countries worldwide.',

@@ -110,8 +110,8 @@ class ContactMessage(models.Model):
 class SiteConfig(models.Model):
     """Singleton model for all site-wide editable content"""
     # Hero Section
-    hero_title = models.CharField(max_length=500, default="Precision LED systems for every arena.")
-    hero_subtitle = models.TextField(default="Professional sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.")
+    hero_title = models.CharField(max_length=500, default="The Next Generation Lighting Systems For Every Area")
+    hero_subtitle = models.TextField(default="Professional SolarOne sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.")
     hero_background = models.ImageField(upload_to='site/', blank=True, help_text="Hero background image")
 
     # Stats

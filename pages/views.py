@@ -274,6 +274,13 @@ _SIDEBAR_I18N = {
     '9-module configuration of the FL M-series floodlight family.':  {'fr': 'Configuration 9 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 9 módulos de la familia de proyectores FL Serie M.', 'de': '9-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 9 وحدات من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 9 модулей семейства прожекторов FL M-серии.'},
     '12-module configuration of the FL M-series floodlight family.': {'fr': 'Configuration 12 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 12 módulos de la familia de proyectores FL Serie M.', 'de': '12-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 12 وحدة من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 12 модулей семейства прожекторов FL M-серии.'},
     '16-module configuration of the FL M-series floodlight family.': {'fr': 'Configuration 16 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 16 módulos de la familia de proyectores FL Serie M.', 'de': '16-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 16 وحدة من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 16 модулей семейства прожекторов FL M-серии.'},
+    # SiteConfig — hero & section text
+    'The Next Generation Lighting Systems For Every Area': {'fr': 'Les Systèmes d\'Éclairage de Nouvelle Génération Pour Tous les Espaces', 'es': 'Los Sistemas de Iluminación de Próxima Generación Para Cada Área', 'de': 'Die Lichtsysteme der nächsten Generation für jeden Bereich', 'ar': 'أنظمة الإضاءة من الجيل الجديد لكل مساحة', 'ru': 'Осветительные системы нового поколения для любой площадки'},
+    'Professional SolarOne sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.': {'fr': 'Solutions d\'éclairage sportif SolarOne professionnelles, reconnues dans plus de 50 pays. Des terrains communautaires aux stades prêts pour la télévision, conçues pour la performance et la durabilité.', 'es': 'Soluciones profesionales de iluminación deportiva SolarOne confiables en más de 50 países. Desde campos comunitarios hasta estadios listos para retransmisión, diseñadas para el rendimiento y la durabilidad.', 'de': 'Professionelle SolarOne-Sportbeleuchtungslösungen, die in über 50 Ländern vertraut werden. Von Gemeindepätzen bis zu sendebereiten Stadien — für Leistung und Langlebigkeit entwickelt.', 'ar': 'حلول إضاءة رياضية احترافية من SolarOne موثوقة في أكثر من 50 دولة. من الملاعب المجتمعية إلى الملاعب الجاهزة للبث، مصممة للأداء والمتانة.', 'ru': 'Профессиональные решения для спортивного освещения SolarOne, которым доверяют в более чем 50 странах. От местных площадок до стадионов, готовых к телетрансляции — созданы для производительности и долговечности.'},
+    'Our Products': {'fr': 'Nos Produits', 'es': 'Nuestros Productos', 'de': 'Unsere Produkte', 'ar': 'منتجاتنا', 'ru': 'Наши продукты'},
+    'From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.': {'fr': 'Des luminaires modulaires compacts aux systèmes high bay de qualité stade. Optiques de précision, architecture modulaire et fiabilité éprouvée sur chaque gamme.', 'es': 'Desde luminarias modulares compactas hasta sistemas high bay de grado estadio. Ópticas de precisión, arquitectura modular y fiabilidad probada en cada línea.', 'de': 'Von kompakten modularen Leuchten bis zu stadiontauglichen High-Bay-Systemen. Präzisionsoptik, modulare Architektur und bewährte Zuverlässigkeit in jeder Produktlinie.', 'ar': 'من الإضاءات المعيارية المدمجة إلى أنظمة الإضاءة العالية بمستوى الملاعب. بصريات دقيقة، بنية معيارية، وموثوقية مثبتة في كل خط منتج.', 'ru': 'От компактных модульных светильников до систем High-Bay стадионного класса. Прецизионная оптика, модульная архитектура и проверенная надёжность в каждой линейке.'},
+    'Trusted Worldwide': {'fr': 'Reconnu Mondialement', 'es': 'Confianza Mundial', 'de': 'Weltweit Vertraut', 'ar': 'موثوق عالميًا', 'ru': 'Нам доверяют по всему миру'},
+    'Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.': {'fr': 'Installations réelles sur cinq continents. Des centres d\'entraînement olympiques aux terrains de football communautaires, nos luminaires offrent des performances fiables dans les conditions les plus difficiles.', 'es': 'Instalaciones reales en cinco continentes. Desde centros de entrenamiento olímpicos hasta campos de fútbol comunitarios, nuestros luminarios ofrecen un rendimiento fiable en las condiciones más difíciles.', 'de': 'Echte Installationen auf fünf Kontinenten. Vom Olympia-Trainingszentrum bis zum kommunalen Fußballplatz — unsere Leuchten liefern zuverlässige Leistung unter den härtesten Bedingungen.', 'ar': 'تركيبات حقيقية عبر خمس قارات. من مراكز التدريب الأولمبية إلى ملاعب كرة القدم المجتمعية، توفر إضاءاتنا أداءً موثوقًا في أصعب الظروف.', 'ru': 'Реальные установки на пяти континентах. От олимпийских тренировочных центров до местных футбольных полей — наши светильники обеспечивают надёжную работу в самых суровых условиях.'},
 }
 
 
@@ -427,6 +434,15 @@ def get_common_context():
         config.logo_url = static(logo_name)
     else:
         config.logo_url = static('images/logo.png')
+
+    # Apply i18n to text fields via _t() lookup
+    lang = get_language()
+    config.hero_title = _t(config.hero_title, lang)
+    config.hero_subtitle = _t(config.hero_subtitle, lang)
+    config.products_title = _t(config.products_title, lang)
+    config.products_subtitle = _t(config.products_subtitle, lang)
+    config.projects_title = _t(config.projects_title, lang)
+    config.projects_subtitle = _t(config.projects_subtitle, lang)
 
     return {'config': config}
 
