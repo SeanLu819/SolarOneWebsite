@@ -6,8 +6,12 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <div class="hero-bg">
-    <img src="{{ config.hero_bg_url }}" alt="">
+  <div class="hero-bg hero-carousel" data-carousel>
+    <div class="hero-carousel-track">
+      <img src="{% static 'images/hero-main-1.png' %}" alt="" class="hero-slide active">
+      <img src="{% static 'images/hero-main-2.png' %}" alt="" class="hero-slide">
+      <img src="{% static 'images/hero-main-3.png' %}" alt="" class="hero-slide">
+    </div>
   </div>
   <div class="hero-grid"></div>
   <div class="hero-noise"></div>
@@ -21,8 +25,8 @@
       <span class="divider"></span>
       <span>{% trans "Since 2007" %}</span>
     </div>
-    <h1 class="hero-title">{% trans "Precision LED systems for every arena." %}</h1>
-    <p class="hero-lede">{% trans "Professional sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast." %}</p>
+    <h1 class="hero-title">{{ config.hero_title }}</h1>
+    <p class="hero-lede">{{ config.hero_subtitle }}</p>
     <div class="hero-actions">
       <a href="{% url 'products' %}" class="btn-primary">{% trans "View Products" %}</a>
       <a href="{% url 'contact' %}" class="btn-ghost">{% trans "Contact Us" %}</a>
@@ -36,13 +40,13 @@
         <span class="hero-stat-num">{{ config.stat_countries|safe }}</span>
         <span class="hero-stat-label">{% trans "Countries" %}</span>
       </div>
+      <div class="hero-stat hero-stat--warranty">
+        <span class="hero-stat-num">{{ config.stat_support|safe }}</span>
+        <span class="hero-stat-num-sub">{% trans "years warranty" %}</span>
+      </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_energy|safe }}</span>
         <span class="hero-stat-label">{% trans "Energy Save" %}</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hero-stat-num">{{ config.stat_support|safe }}</span>
-        <span class="hero-stat-label">{% trans "Support" %}</span>
       </div>
     </div>
   </div>
@@ -57,8 +61,8 @@
       </div>
       <div class="home-preview-text">
         <span class="home-preview-tag">{% trans "Products" %}</span>
-        <h2>{% trans "Professional LED Lighting Systems" %}</h2>
-        <p>{% trans "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line." %}</p>
+        <h2>{{ config.products_title }}</h2>
+        <p>{{ config.products_subtitle }}</p>
         <a href="{% url 'products' %}" class="home-preview-link">
           {% trans "View All Products" %} <span class="link-arrow">&#8250;</span>
         </a>
@@ -77,7 +81,7 @@
       <div class="home-preview-text">
         <span class="home-preview-tag">{% trans "Projects" %}</span>
         <h2>{% trans "Trusted Worldwide" %}</h2>
-        <p>{% trans "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience." %}</p>
+        <p>{{ config.projects_subtitle }}</p>
         <a href="{% url 'projects' %}" class="home-preview-link">
           {% trans "View All Projects" %} <span class="link-arrow">&#8250;</span>
         </a>
@@ -87,6 +91,22 @@
 </section>
 
 <style>
+  /* Force hero slides to fill the entire background.
+     Inlined here so it overrides any cached base.css that still
+     uses contain + max-width:825px (which shrinks 16:9 images). */
+  .hero-slide {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    /* Lower the focal point in fullscreen Chrome so the nav never clips
+       the top of product/product shots, while keeping stadium shots balanced. */
+    object-position: center 58% !important;
+    position: absolute !important;
+    inset: 0 !important;
+    margin: 0 !important;
+  }
   .home-preview-section {
     padding: 48px 0 0;
   }

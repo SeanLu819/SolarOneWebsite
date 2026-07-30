@@ -5,16 +5,16 @@
 {% block content %}
 
 <!-- Products page with sidebar -->
-<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+<section class="page-with-sidebar products-page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 270px 1fr; gap: 20px; align-items: start;">
 
       <!-- ===== LEFT SIDEBAR ===== -->
       <aside class="sidebar-nav" style="position: sticky; top: 100px;">
-        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <div class="sidebar-nav-header">{% trans "Product Categories" %}</div>
         <nav class="sidebar-nav-list">
           {% for cat in product_categories %}
-          <div class="sidebar-nav-group" style="margin-bottom: 3px;">
+          <div class="sidebar-nav-group">
             <div class="sidebar-nav-parent{% if active_category == cat.key %} active{% endif %}">
               {{ cat.label }}
             </div>
@@ -22,7 +22,6 @@
               {% for sub in cat.series %}
               {% if sub.subseries %}
               <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
-                <span class="sidebar-nav-dot"></span>
                 <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
                 <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
               </div>
@@ -33,7 +32,6 @@
               </div>
               {% else %}
               <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
-                <span class="sidebar-nav-dot"></span>
                 {{ sub.label }}
               </a>
               {% endif %}
@@ -44,15 +42,15 @@
         </nav>
 
         <!-- View all link -->
-        <a href="{% url 'products' %}" class="sidebar-nav-all{% if not active_series %} active{% endif %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+        <a href="{% url 'products' %}" class="sidebar-nav-all{% if not active_series %} active{% endif %}">{% trans "View All Products" %}</a>
       </aside>
 
       <!-- ===== MAIN CONTENT ===== -->
       <div class="sidebar-content">
         <div class="sidebar-content-header" style="margin-bottom: 40px;">
           <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "LED Lighting Products" %}</span>
-          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Professional LED Lighting Systems" %}</h1>
-          <p class="section-body" style="max-width: none;">{% trans "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line." %}</p>
+          <h1 class="section-title" style="margin-bottom: 8px;">{{ config.products_title }}</h1>
+          <p class="section-body" style="max-width: none;">{{ config.products_subtitle }}</p>
         </div>
 
         <div class="products-grid">
@@ -61,7 +59,7 @@
             <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_t }}</span></div>
             <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
               {% if product.image_url %}
-              <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}"></div>
+              <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}"{% if product.slug == 'm-series' %} class="m-series-img"{% endif %}></div>
               {% endif %}
             </a>
             <h3 class="product-card-title">{{ product.name_t }}</h3>
@@ -84,6 +82,23 @@
 
 <style>
   /* Sidebar nav styles inherited from base.html */
+
+  /* Product card specs: smaller values, keep on one line */
+  .product-card-specs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .product-card-specs::-webkit-scrollbar {
+    display: none;
+  }
+  .product-spec {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .product-spec-value {
+    font-size: clamp(16px, 1.55vw, 21px);
+  }
 </style>
 
 {% endblock %}

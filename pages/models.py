@@ -119,10 +119,10 @@ class SiteConfig(models.Model):
     stat_projects_label = models.CharField(max_length=100, default="Projects")
     stat_countries = models.CharField(max_length=100, default="50+")
     stat_countries_label = models.CharField(max_length=100, default="Countries")
-    stat_energy = models.CharField(max_length=100, default="60%")
+    stat_energy = models.CharField(max_length=100, default="50%+")
     stat_energy_label = models.CharField(max_length=100, default="Energy Save")
-    stat_support = models.CharField(max_length=100, default="24/7")
-    stat_support_label = models.CharField(max_length=100, default="Support")
+    stat_support = models.CharField(max_length=100, default="5+")
+    stat_support_label = models.CharField(max_length=100, default="warranty")
 
     # About Section
     about_title = models.CharField(max_length=500, default="Trusted worldwide for a reason.")

@@ -22,7 +22,6 @@
               {% for sub in cat.series %}
               {% if sub.subseries %}
               <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
-                <span class="sidebar-nav-dot"></span>
                 <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
                 <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
               </div>
@@ -33,7 +32,6 @@
               </div>
               {% else %}
               <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
-                <span class="sidebar-nav-dot"></span>
                 {{ sub.label }}
               </a>
               {% endif %}
@@ -57,9 +55,37 @@
         </div>
 
         <div class="detail-grid">
-          <!-- Left: Image -->
-          <div class="detail-image">
-            {% if product.image_url %}
+          <!-- Left: Image / Carousel -->
+          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
+            {% if gallery %}
+            <div class="ps-carousel" id="psCarousel" data-interval="3000">
+              <div class="ps-carousel-track">
+                {% for img in gallery %}
+                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
+                  <img src="{{ img.src }}" alt="{{ img.alt }}">
+                </div>
+                {% endfor %}
+              </div>
+
+              {% if gallery|length > 1 %}
+              <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              {% endif %}
+            </div>
+
+            <div class="ps-thumbnails">
+              {% for img in gallery %}
+              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+                <img src="{{ img.src }}" alt="{{ img.alt }}">
+              </button>
+              {% endfor %}
+            </div>
+
+            {% elif product.image_url %}
             <img src="{{ product.image_url }}" alt="{{ product.name_t }}">
             {% else %}
             <div class="detail-image-placeholder">
@@ -79,6 +105,13 @@
               {% if product.output %}<div class="detail-spec"><span class="detail-spec-value">{{ product.output }}</span><span class="detail-spec-label">{% trans "Output" %}</span></div>{% endif %}
               {% if product.beam_angle %}<div class="detail-spec"><span class="detail-spec-value">{{ product.beam_angle }}</span><span class="detail-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
               {% if product.protection %}<div class="detail-spec"><span class="detail-spec-value">{{ product.protection }}</span><span class="detail-spec-label">{% trans "Protection" %}</span></div>{% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Certification badges — M Series only -->
+            {% if active_series == 'M_SERIES' %}
+            <div class="detail-cert-image">
+              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'M Series Certifications' %}">
             </div>
             {% endif %}
           </div>
@@ -101,8 +134,8 @@
   /* === Detail page two-column layout === */
   .detail-grid {
     display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    gap: 56px;
+    grid-template-columns: 1.9fr 1fr;
+    gap: 32px;
     align-items: center;
     margin-top: 40px;
   }
@@ -130,6 +163,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .detail-cert-image {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 32px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: transparent;
+  }
+  .detail-cert-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
   }
   .detail-desc {
     font-size: 1.05rem;
@@ -161,6 +209,103 @@
     color: var(--ink-subtle);
   }
 
+  /* === Carousel (M Series gallery) === */
+  .ps-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ps-carousel-track {
+    position: absolute;
+    inset: 0;
+  }
+  .ps-carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ps-carousel-slide.active {
+    opacity: 1;
+  }
+  .ps-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Arrow buttons */
+  .ps-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 2;
+  }
+  .ps-carousel-arrow:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .ps-prev { left: 12px; }
+  .ps-next { right: 12px; }
+  .ps-prev:hover { transform: translateY(-50%) scale(1.06); }
+  .ps-next:hover { transform: translateY(-50%) scale(1.06); }
+
+  /* Thumbnail strip */
+  .ps-thumbnails {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    max-width: 760px;
+    width: 100%;
+  }
+  .ps-thumb {
+    flex: 1;
+    height: 72px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-soft);
+    padding: 0;
+    transition: border-color 0.2s, opacity 0.2s;
+    opacity: 0.55;
+  }
+  .ps-thumb:hover {
+    opacity: 0.85;
+  }
+  .ps-thumb.active {
+    border-color: var(--accent);
+    opacity: 1;
+  }
+  .ps-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    background: transparent;
+    border-radius: 0;
+  }
+
   /* Responsive */
   @media (max-width: 900px) {
     .sidebar-layout {
@@ -179,5 +324,68 @@
     }
   }
 </style>
+
+<script>
+  (function () {
+    const carousel = document.getElementById('psCarousel');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll('.ps-carousel-slide');
+    const thumbs = carousel.parentElement.querySelectorAll('.ps-thumb');
+    const prevBtn = carousel.querySelector('.ps-prev');
+    const nextBtn = carousel.querySelector('.ps-next');
+    const interval = parseInt(carousel.dataset.interval, 10) || 3000;
+
+    if (slides.length === 0) return;
+    let current = 0;
+    let timer = null;
+    let resumeTimer = null;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === current));
+    }
+
+    function next() { show(current + 1); }
+    function prev() { show(current - 1); }
+
+    function startAuto() {
+      stopAuto();
+      if (slides.length > 1) {
+        timer = setInterval(next, interval);
+      }
+    }
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    function handleUserSwitch(fn) {
+      return function () {
+        stopAuto();
+        fn();
+        // Resume auto-play after user inactivity
+        if (resumeTimer) clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(startAuto, 5000);
+      };
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', handleUserSwitch(prev));
+    if (nextBtn) nextBtn.addEventListener('click', handleUserSwitch(next));
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', handleUserSwitch(() => {
+        show(parseInt(thumb.dataset.index, 10));
+      }));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { handleUserSwitch(prev)(); }
+      else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
+    });
+
+    // Start auto-play on page load
+    startAuto();
+  })();
+</script>
 
 {% endblock %}

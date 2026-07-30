@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
+from django.core.cache import cache
 from .models import Product, Project, ContactMessage, SiteConfig, Visitor, DailyStats
 
 # Admin branding with version
@@ -8,8 +9,27 @@ admin.site.site_title = f'SolarOne Admin v{settings.APP_VERSION}'
 admin.site.index_title = f'Administration (v{settings.APP_VERSION})'
 
 
+class CacheClearMixin:
+    """Mixin that clears cached frontend data after any save/delete in admin."""
+    def _clear_cache(self):
+        cache.delete('site_config')
+        cache.delete('seed_data_json')
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        self._clear_cache()
+
+    def delete_model(self, request, obj):
+        super().delete_model(request, obj)
+        self._clear_cache()
+
+    def save_formset(self, request, form, formset, change):
+        super().save_formset(request, form, formset, change)
+        self._clear_cache()
+
+
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     list_display = ('name', 'category', 'power', 'order')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
@@ -17,7 +37,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
     list_display = ('title', 'location', 'order')
     prepopulated_fields = {'slug': ('title',)}
     list_editable = ['order']
@@ -34,7 +54,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
 
 @admin.register(SiteConfig)
-class SiteConfigAdmin(admin.ModelAdmin):
+class SiteConfigAdmin(CacheClearMixin, admin.ModelAdmin):
     fieldsets = (
         ('Brand & Meta', {
             'fields': ('brand_name', 'logo', 'meta_title', 'meta_description', 'og_image')

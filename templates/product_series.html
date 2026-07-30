@@ -22,7 +22,6 @@
               {% for sub in cat.series %}
               {% if sub.subseries %}
               <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
-                <span class="sidebar-nav-dot"></span>
                 <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
                 <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
               </div>
@@ -33,7 +32,6 @@
               </div>
               {% else %}
               <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
-                <span class="sidebar-nav-dot"></span>
                 {{ sub.label }}
               </a>
               {% endif %}
@@ -276,7 +274,7 @@
     display: block;
   }
 
-  /* Full-width banner image */
+  /* Full-width banner image (dimension drawings) */
   .ps-banner {
     margin-top: 32px;
     width: 100%;
@@ -288,6 +286,12 @@
     width: 100%;
     height: auto;
     display: block;
+    background: #fff;
+  }
+  /* Dark mode: invert white-background CAD drawings so lines stay visible */
+  [data-theme="dark"] .ps-banner img {
+    filter: invert(1);
+    background: transparent;
   }
 
   /* Responsive */
@@ -326,6 +330,7 @@
     if (slides.length === 0) return;
     let current = 0;
     let timer = null;
+    let resumeTimer = null;
 
     function show(index) {
       // Wrap around
@@ -351,23 +356,30 @@
       startAuto();
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', () => { prev(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { next(); });
+    function handleUserSwitch(fn) {
+      return function () {
+        stopAuto();
+        fn();
+        if (resumeTimer) clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(startAuto, 5000);
+      };
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', handleUserSwitch(prev));
+    if (nextBtn) nextBtn.addEventListener('click', handleUserSwitch(next));
     thumbs.forEach((thumb) => {
-      thumb.addEventListener('click', () => {
+      thumb.addEventListener('click', handleUserSwitch(() => {
         show(parseInt(thumb.dataset.index, 10));
-      });
+      }));
     });
 
-    // Autoplay only on hover — keeps the first image (front view) stable by default
-    carousel.addEventListener('mouseenter', startAuto);
-    carousel.addEventListener('mouseleave', stopAuto);
-
-    // Keyboard navigation when carousel is focused or in viewport
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { prev(); }
-      else if (e.key === 'ArrowRight') { next(); }
+      if (e.key === 'ArrowLeft') { handleUserSwitch(prev)(); }
+      else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
     });
+
+    // Start auto-play on page load
+    startAuto();
   })();
 </script>
 

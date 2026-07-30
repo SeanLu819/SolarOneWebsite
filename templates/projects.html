@@ -7,21 +7,20 @@
 <!-- Projects page with sidebar -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 270px 1fr; gap: 20px; align-items: start;">
 
       <!-- ===== LEFT SIDEBAR ===== -->
       <aside class="sidebar-nav" style="position: sticky; top: 100px;">
-        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Filter by Sport" %}</div>
+        <div class="sidebar-nav-header">{% trans "Filter by Sport" %}</div>
         <nav class="sidebar-nav-list">
           {% for vt in venue_types %}
-          <div class="sidebar-nav-group" style="margin-bottom: 8px;">
+          <div class="sidebar-nav-group">
             <div class="sidebar-nav-parent{% if active_venue_type == vt.key %} active{% endif %}">
               {{ vt.label }}
             </div>
             <div class="sidebar-nav-children">
               {% for st in vt.sports %}
               <a href="{% url 'projects' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
-                <span class="sidebar-nav-dot"></span>
                 {{ st.label }}
               </a>
               {% endfor %}
@@ -31,7 +30,7 @@
         </nav>
 
         <!-- View all link -->
-        <a href="{% url 'projects' %}" class="sidebar-nav-all{% if not active_sport_type %} active{% endif %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Projects" %}</a>
+        <a href="{% url 'projects' %}" class="sidebar-nav-all{% if not active_sport_type %} active{% endif %}">{% trans "View All Projects" %}</a>
       </aside>
 
       <!-- ===== MAIN CONTENT ===== -->

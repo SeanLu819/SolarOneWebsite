@@ -240,15 +240,21 @@ _SIDEBAR_I18N = {
     'Multi-Sport Arena':{'fr': 'Complexe Multi-Sports', 'es': 'Pista Polideportiva', 'de': 'Mehrzweckhalle', 'ar': 'صالة متعددة الرياضات', 'ru': 'Универсальный спортивный зал'},
     'Airport':          {'fr': 'Aéroport', 'es': 'Aeropuerto', 'de': 'Flughafen', 'ar': 'مطار', 'ru': 'Аэропорт'},
     'Seaport':          {'fr': 'Port Maritime', 'es': 'Puerto', 'de': 'Seehafen', 'ar': 'ميناء بحري', 'ru': 'Морской порт'},
-    # Products — categories
+    # Products — categories (new structure)
+    'Area and Site':            {'fr': 'Zone et Site', 'es': 'Área y Sitio', 'de': 'Bereich und Standort', 'ar': 'المنطقة والموقع', 'ru': 'Территория и площадка'},
+    'Sports Lighting System': {'fr': 'Système d\'Éclairage Sportif', 'es': 'Sistema de Iluminación Deportiva', 'de': 'Sportbeleuchtungssystem', 'ar': 'نظام إضاءة رياضية', 'ru': 'Система спортивного освещения'},
+    'Floodlighting':            {'fr': 'Projecteurs', 'es': 'Proyectores', 'de': 'Flutlicht', 'ar': 'إضاءة فيضانية', 'ru': 'Прожекторное освещение'},
+    'Highbay & Low Bay':        {'fr': 'Haute & Basse Baie', 'es': 'Alta & Baja Bahía', 'de': 'Highbay & Lowbay', 'ar': 'إضاءة عالية ومنخفضة', 'ru': 'Высокий и низкий пролёт'},
+    'Roadway':                  {'fr': 'Éclairage Routier', 'es': 'Alumbrado Vial', 'de': 'Straßenbeleuchtung', 'ar': 'إنارة الطرق', 'ru': 'Дорожное освещение'},
+    'Accessory':                {'fr': 'Accessoire', 'es': 'Accesorio', 'de': 'Zubehör', 'ar': 'ملحق', 'ru': 'Аксессуар'},
+    # Products — categories (legacy, kept for backward compatibility)
     'Flood Lighting':   {'fr': 'Éclairage de Stade', 'es': 'Iluminación Deportiva', 'de': 'Flutlicht', 'ar': 'إضاءة الملاعب', 'ru': 'Спортивное освещение'},
     'High Bay':         {'fr': 'Éclairage Haut', 'es': 'Iluminación Alta', 'de': 'Hallenleuchte', 'ar': 'إضاءة مرتفعة', 'ru': 'Промышленный свет'},
     'Street Lighting':  {'fr': 'Éclairage Routier', 'es': 'Alumbrado Público', 'de': 'Straßenbeleuchtung', 'ar': 'إنارة الشوارع', 'ru': 'Уличное освещение'},
     # Products — series
     'M Series':         {'fr': 'Série M', 'es': 'Serie M', 'de': 'M-Serie', 'ar': 'سلسلة M', 'ru': 'Серия M'},
     'RT410 Series':     {'fr': 'Série RT410', 'es': 'Serie RT410', 'de': 'RT410-Serie', 'ar': 'سلسلة RT410', 'ru': 'Серия RT410'},
-    'RT400 Series':     {'fr': 'Série RT400', 'es': 'Serie RT400', 'de': 'RT400-Serie', 'ar': 'سلسلة RT400', 'ru': 'Серия RT400'},
-    'RT500 Series':     {'fr': 'Série RT500', 'es': 'Serie RT500', 'de': 'RT500-Serie', 'ar': 'سلسلة RT500', 'ru': 'Серия RT500'},
+    'HB Series':        {'fr': 'Série HB', 'es': 'Serie HB', 'de': 'HB-Serie', 'ar': 'سلسلة HB', 'ru': 'Серия HB'},
     'RT750 Series':     {'fr': 'Série RT750', 'es': 'Serie RT750', 'de': 'RT750-Serie', 'ar': 'سلسلة RT750', 'ru': 'Серия RT750'},
     'RT1060 Series':    {'fr': 'Série RT1060', 'es': 'Serie RT1060', 'de': 'RT1060-Serie', 'ar': 'سلسلة RT1060', 'ru': 'Серия RT1060'},
 }
@@ -301,8 +307,8 @@ def _get_projects_sidebar(lang='en'):
 def _get_products_sidebar(lang='en'):
     return [
         {
-            'key': 'FLOODLIGHT',
-            'label': _t('Flood Lighting', lang),
+            'key': 'AREA_SITE',
+            'label': _t('Area and Site', lang),
             'series': [
                 {
                     'key': 'M_SERIES',
@@ -315,27 +321,47 @@ def _get_products_sidebar(lang='en'):
                         {'key': 'FL9M',  'slug': 'fl9m',  'label': 'FL9M'},
                         {'key': 'FL12M', 'slug': 'fl12m', 'label': 'FL12M'},
                         {'key': 'FL16M', 'slug': 'fl16m', 'label': 'FL16M'},
-                        {'key': 'VSP_SYSTEM',     'slug': 'vsp-system',     'label': 'VSP SYSTEM'},
-                        {'key': 'RGB_RGBW_SERIES','slug': 'rgb-rgbw-series','label': 'RGB/RGBW Series'},
                     ],
                 },
-                {'key': 'RT410_SERIES', 'slug': 'rt410-series', 'label': _t('RT410 Series', lang)},
+                {'key': 'RT410_SERIES', 'slug': 'rt410-series', 'label': 'RT410FL-S'},
+                {'key': 'ACCESSORY', 'slug': 'accessory', 'label': _t('Accessory', lang)},
             ],
         },
         {
-            'key': 'HIGH_BAY',
-            'label': _t('High Bay', lang),
+            'key': 'SPORTS_LIGHTING_SYSTEM',
+            'label': _t('Sports Lighting System', lang),
             'series': [
-                {'key': 'RT400_SERIES', 'slug': 'rt400-series', 'label': _t('RT400 Series', lang)},
-                {'key': 'RT500_SERIES', 'slug': 'rt500-series', 'label': _t('RT500 Series', lang)},
+                {'key': 'VSP_9M_YP',  'slug': 'vsp-xxxxw-9m-yp',  'label': 'VSP-XXXXW-9M-YP'},
+                {'key': 'VSP_12M_YP', 'slug': 'vsp-xxxxw-12m-yp', 'label': 'VSP-XXXXW-12M-YP'},
             ],
         },
         {
-            'key': 'STREET_LIGHTING',
-            'label': _t('Street Lighting', lang),
+            'key': 'FLOODLIGHTING',
+            'label': _t('Floodlighting', lang),
             'series': [
-                {'key': 'RT750_SERIES', 'slug': 'rt750-series', 'label': _t('RT750 Series', lang)},
-                {'key': 'RT1060_SERIES', 'slug': 'rt1060-series', 'label': _t('RT1060 Series', lang)},
+                {'key': 'RT590FL_S', 'slug': 'rt590fl-s', 'label': 'RT590FL-S'},
+                {'key': 'RT390FL',   'slug': 'rt390fl',   'label': 'RT390FL'},
+                {'key': 'RT220UB',   'slug': 'rt220ub',   'label': 'RT220UB'},
+                {'key': 'RT420FS_S', 'slug': 'rt420fs-s', 'label': 'RT420FS-S'},
+                {'key': 'RT370FS_S', 'slug': 'rt370fs-s', 'label': 'RT370FS-S'},
+                {'key': 'RT300FS_S', 'slug': 'rt300fs-s', 'label': 'RT300FS-S'},
+                {'key': 'RT180FS_S', 'slug': 'rt180fs-s', 'label': 'RT180FS-S'},
+            ],
+        },
+        {
+            'key': 'HIGHBAY_LOWBAY',
+            'label': _t('Highbay & Low Bay', lang),
+            'series': [
+                {'key': 'RT400HB', 'slug': 'rt400hb', 'label': 'RT400HB'},
+                {'key': 'RT500HB', 'slug': 'rt500hb', 'label': 'RT500HB'},
+            ],
+        },
+        {
+            'key': 'ROADWAY',
+            'label': _t('Roadway', lang),
+            'series': [
+                {'key': 'RT600SL_T', 'slug': 'rt600sl-t', 'label': 'RT600SL-T'},
+                {'key': 'RT820SL_T', 'slug': 'rt820sl-t', 'label': 'RT820SL-T'},
             ],
         },
     ]
@@ -605,13 +631,22 @@ def product_detail(request, slug):
     if product:
         context['product'] = product
 
+    # M Series main page uses a carousel gallery like sub-series pages
+    if slug == 'm-series':
+        context['gallery'] = [
+            {'src': static('images/products/m-series/m-series-01.webp'), 'alt': 'M Series — view 1'},
+            {'src': static('images/products/m-series/m-series-02.webp'), 'alt': 'M Series — view 2'},
+            {'src': static('images/products/m-series/m-series-03.webp'), 'alt': 'M Series — view 3'},
+            {'src': static('images/products/m-series/m-series-04.webp'), 'alt': 'M Series — view 4'},
+        ]
+
     return render(request, 'product_detail.html', context)
 
 
 # ============ Sub-series pages (FL1M, FL4M, ...) ============
-# Static catalog of sub-series detail pages under M Series. Each entry can
-# define a gallery of images and specs. For now FL1M has real images; the
-# others render a placeholder gallery so the navigation tree is complete.
+# Static catalog of sub-series detail pages under M Series (Area and Site).
+# Only FL1M–FL16M are linked from the sidebar; VSP/RGB entries are kept
+# for backward-compatible URLs.
 
 _SUBSERIES_CATALOG = {
     'fl1m': {
