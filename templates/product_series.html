@@ -48,9 +48,14 @@
       <!-- ===== MAIN CONTENT — Two-column (carousel + info) ===== -->
       <div class="detail-content">
 
-        <div class="detail-hero">
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "M Series" %}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;">{{ series_title }}</h1>
+        <!-- Hero with banner image as background, title at top-left -->
+        <div class="series-hero">
+          <img src="{% static 'images/products/fl4m/fl4m-bar-1.webp' %}" alt="{{ series_title }} application" class="series-hero-bg">
+          <div class="series-hero-overlay"></div>
+          <div class="series-hero-content">
+            <span class="series-hero-label">{% trans "M Series" %}</span>
+            <h1 class="section-title">{{ series_title }}</h1>
+          </div>
         </div>
 
         <div class="detail-grid">
@@ -133,7 +138,7 @@
     grid-template-columns: 1.35fr 1fr;
     gap: 56px;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 24px;
   }
   .detail-image {
     display: flex;
@@ -243,7 +248,7 @@
   .ps-thumbnails {
     display: flex;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 8px;
     max-width: 760px;
     width: 100%;
   }
@@ -276,7 +281,7 @@
 
   /* Full-width banner image (dimension drawings) */
   .ps-banner {
-    margin-top: 32px;
+    margin-top: 20px;
     width: 100%;
     border-radius: 12px;
     overflow: hidden;
@@ -292,6 +297,55 @@
   [data-theme="dark"] .ps-banner img {
     filter: invert(1);
     background: transparent;
+  }
+
+  /* Series hero — banner image as title background */
+  .series-hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: var(--bg-soft);
+  }
+  .series-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .series-hero-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%);
+  }
+  .series-hero-content {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    z-index: 2;
+  }
+  .series-hero-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #fff;
+    display: block;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  .series-hero-content .section-title {
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
+  }
+  @media (max-width: 900px) {
+    .series-hero { height: 160px; }
+    .series-hero-content { top: 20px; left: 20px; }
   }
 
   /* Responsive */

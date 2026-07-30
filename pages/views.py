@@ -257,6 +257,23 @@ _SIDEBAR_I18N = {
     'HB Series':        {'fr': 'Série HB', 'es': 'Serie HB', 'de': 'HB-Serie', 'ar': 'سلسلة HB', 'ru': 'Серия HB'},
     'RT750 Series':     {'fr': 'Série RT750', 'es': 'Serie RT750', 'de': 'RT750-Serie', 'ar': 'سلسلة RT750', 'ru': 'Серия RT750'},
     'RT1060 Series':    {'fr': 'Série RT1060', 'es': 'Serie RT1060', 'de': 'RT1060-Serie', 'ar': 'سلسلة RT1060', 'ru': 'Серия RT1060'},
+    # Sub-series spec labels
+    'Illumination':         {'fr': 'Illumination', 'es': 'Iluminación', 'de': 'Beleuchtung', 'ar': 'الإضاءة', 'ru': 'Освещение'},
+    'Lumens Delivered':     {'fr': 'Lumens Livrés', 'es': 'Lúmenes Entregados', 'de': 'Gelieferte Lumen', 'ar': 'اللومن المُسلَّم', 'ru': 'Выходной световой поток'},
+    'CRI':                  {'fr': 'IRC', 'es': 'IRC', 'de': 'CRI', 'ar': 'مؤشر تجسيد الألوان', 'ru': 'CRI'},
+    'Color Temperature':    {'fr': 'Température de Couleur', 'es': 'Temperatura de Color', 'de': 'Farbtemperatur', 'ar': 'درجة حرارة اللون', 'ru': 'Цветовая температура'},
+    'Protection':           {'fr': 'Protection', 'es': 'Protección', 'de': 'Schutzart', 'ar': 'الحماية', 'ru': 'Защита'},
+    'Controllable':         {'fr': 'Contrôlable', 'es': 'Controlable', 'de': 'Steuerbar', 'ar': 'قابل للتحكم', 'ru': 'Управление'},
+    'Power':                {'fr': 'Puissance', 'es': 'Potencia', 'de': 'Leistung', 'ar': 'القدرة', 'ru': 'Мощность'},
+    'Efficacy':             {'fr': 'Efficacité', 'es': 'Eficacia', 'de': 'Effizienz', 'ar': 'الكفاءة', 'ru': 'Эффективность'},
+    'Beam Angle':           {'fr': 'Angle de Faisceau', 'es': 'Ángulo de Haz', 'de': 'Abstrahlwinkel', 'ar': 'زاوية الشعاع', 'ru': 'Угол луча'},
+    'Output':               {'fr': 'Sortie', 'es': 'Salida', 'de': 'Ausgang', 'ar': 'الإخراج', 'ru': 'Выход'},
+    # Sub-series subtitles
+    '4-module configuration of the FL M-series floodlight family.':  {'fr': 'Configuration 4 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 4 módulos de la familia de proyectores FL Serie M.', 'de': '4-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 4 وحدات من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 4 модулей семейства прожекторов FL M-серии.'},
+    '6-module configuration of the FL M-series floodlight family.':  {'fr': 'Configuration 6 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 6 módulos de la familia de proyectores FL Serie M.', 'de': '6-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 6 وحدات من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 6 модулей семейства прожекторов FL M-серии.'},
+    '9-module configuration of the FL M-series floodlight family.':  {'fr': 'Configuration 9 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 9 módulos de la familia de proyectores FL Serie M.', 'de': '9-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 9 وحدات من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 9 модулей семейства прожекторов FL M-серии.'},
+    '12-module configuration of the FL M-series floodlight family.': {'fr': 'Configuration 12 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 12 módulos de la familia de proyectores FL Serie M.', 'de': '12-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 12 وحدة من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 12 модулей семейства прожекторов FL M-серии.'},
+    '16-module configuration of the FL M-series floodlight family.': {'fr': 'Configuration 16 modules de la famille de projecteurs FL Série M.', 'es': 'Configuración de 16 módulos de la familia de proyectores FL Serie M.', 'de': '16-Modul-Konfiguration der FL M-Serie Flutlichtfamilie.', 'ar': 'تكوين 16 وحدة من عائلة كشافات FL سلسلة M.', 'ru': 'Конфигурация из 16 модулей семейства прожекторов FL M-серии.'},
 }
 
 
@@ -669,7 +686,7 @@ _SUBSERIES_CATALOG = {
     },
     'fl4m': {
         'title': 'FL4M Series',
-        'subtitle': '',
+        'subtitle': '4-module configuration of the FL M-series floodlight family.',
         'images': [
             {'src': 'images/products/fl4m/fl4m-01.png', 'alt': 'FL4M Series — view 1'},
             {'src': 'images/products/fl4m/fl4m-02.png', 'alt': 'FL4M Series — view 2'},
@@ -776,7 +793,7 @@ def product_series(request, slug):
         context['specs'] = []
     else:
         context['series_title'] = series_data.get('title', '')
-        context['series_subtitle'] = series_data.get('subtitle', '')
+        context['series_subtitle'] = _t(series_data.get('subtitle', ''), lang)
         # Resolve static URLs for gallery images
         gallery = []
         for img in series_data.get('images', []):
@@ -785,7 +802,14 @@ def product_series(request, slug):
                 'alt': img.get('alt', ''),
             })
         context['gallery'] = gallery
-        context['specs'] = series_data.get('specs', [])
+        # Translate spec labels (values are technical, kept as-is)
+        specs = []
+        for spec in series_data.get('specs', []):
+            specs.append({
+                'value': spec['value'],
+                'label': _t(spec['label'], lang),
+            })
+        context['specs'] = specs
         banner_img = series_data.get('banner_image', '')
         context['banner_image'] = static(banner_img) if banner_img else ''
 
