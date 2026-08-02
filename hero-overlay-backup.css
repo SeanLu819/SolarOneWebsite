@@ -1,0 +1,180 @@
+/* ============================================================
+   Hero 区域原始遮罩与装饰层参数备份
+   用途：当需要恢复首页 Hero 底图上的渐变遮罩、网格、噪点、
+        光晕、场线、角落标记等效果时，将下方内容覆盖回
+        static/css/base.css 对应位置即可。
+   ============================================================ */
+
+/* 1. 默认（深色主题）Hero 渐变遮罩 */
+.hero-bg::after {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 11, 0.05) 0%,
+    rgba(8, 8, 11, 0.12) 50%,
+    rgba(8, 8, 11, 0.35) 85%,
+    var(--bg) 100%
+  );
+}
+
+/* 2. 浅色主题 Hero 渐变遮罩 */
+[data-theme="light"] .hero-bg::after {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 247, 250, 0.3) 0%,
+    var(--bg) 100%
+  );
+}
+
+/* 3. Hero 网格装饰层（含径向遮罩） */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0, 0, 0, 1), transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0, 0, 0, 1), transparent 85%);
+}
+
+/* 浅色主题网格 */
+[data-theme="light"] .hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* 4. Hero 噪点层 */
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+[data-theme="light"] .hero-noise {
+  opacity: 0.02;
+}
+
+/* 5. Hero 角落标记 */
+.hero-corner-marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-corner-marks::before,
+.hero-corner-marks::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 1px solid var(--accent);
+  opacity: 0.6;
+}
+.hero-corner-marks::before {
+  top: 100px;
+  left: 32px;
+  border-right: none;
+  border-bottom: none;
+}
+.hero-corner-marks::after {
+  bottom: 60px;
+  right: 32px;
+  border-left: none;
+  border-top: none;
+}
+
+[data-theme="light"] .hero-corner-marks::before,
+[data-theme="light"] .hero-corner-marks::after {
+  border-color: var(--accent);
+  opacity: 0.5;
+}
+
+@media (max-width: 767px) {
+  .hero-corner-marks::before,
+  .hero-corner-marks::after {
+    display: none;
+  }
+}
+
+/* 6. Hero 底部光晕 */
+.hero-field-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 60%, rgba(0, 119, 237, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 30% 70%, rgba(0, 119, 237, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 70% 70%, rgba(0, 119, 237, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="light"] .hero-field-glow {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 60%, rgba(0, 98, 196, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 30% 70%, rgba(0, 98, 196, 0.02) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 70% 70%, rgba(0, 98, 196, 0.02) 0%, transparent 60%);
+}
+
+/* 7. Hero 底部场线 */
+.hero-field-lines {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1100px;
+  height: 45%;
+  border: 1px solid rgba(0, 119, 237, 0.06);
+  border-top: 2px solid rgba(0, 119, 237, 0.12);
+  border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-field-lines::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: rgba(0, 119, 237, 0.08);
+}
+.hero-field-lines::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  height: 40%;
+  border: 1px solid rgba(0, 119, 237, 0.06);
+  border-radius: 50%;
+}
+
+[data-theme="light"] .hero-field-lines {
+  border-color: rgba(0, 98, 196, 0.06);
+  border-top-color: rgba(0, 98, 196, 0.1);
+}
+[data-theme="light"] .hero-field-lines::before {
+  background: rgba(0, 98, 196, 0.06);
+}
+[data-theme="light"] .hero-field-lines::after {
+  border-color: rgba(0, 98, 196, 0.05);
+}
+
+/* 8. 当前隐藏上述装饰层的规则（如需恢复，请删除 base.css 中对应内容） */
+/*
+.hero-grid,
+.hero-noise,
+.hero-field-glow,
+.hero-field-lines,
+.hero-corner-marks,
+.hero-field-lines::before,
+.hero-field-lines::after,
+.hero-corner-marks::before,
+.hero-corner-marks::after {
+  display: none !important;
+}
+*/

@@ -49,12 +49,23 @@
       <div class="detail-content">
 
         {% if product %}
+        {% if banner_image %}
+        <div class="series-hero">
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg">
+          <div class="series-hero-overlay"></div>
+          <div class="series-hero-content">
+            <span class="series-hero-label">{{ banner_label }}</span>
+            <h1 class="section-title">{{ product.name_t }}</h1>
+          </div>
+        </div>
+        {% else %}
         <div class="detail-hero">
           <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
           <h1 class="section-title" style="margin-bottom: 16px;">{{ product.name_t }}</h1>
         </div>
+        {% endif %}
 
-        <div class="detail-grid">
+        <div class="detail-grid{% if active_series == 'RT410_SERIES' or active_series == 'M_SERIES' %} detail-grid-bottom-align{% endif %}">
           <!-- Left: Image / Carousel -->
           <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
             {% if gallery %}
@@ -108,14 +119,22 @@
             </div>
             {% endif %}
 
-            <!-- Certification badges — M Series only -->
-            {% if active_series == 'M_SERIES' %}
+            <!-- Certification badges -- M Series & RT410 Series -->
+            {% if active_series == 'M_SERIES' or active_series == 'RT410_SERIES' %}
             <div class="detail-cert-image">
-              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'M Series Certifications' %}">
+              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'Product Certifications' %}">
             </div>
             {% endif %}
           </div>
         </div>
+
+        <!-- Product dimension diagram -->
+        {% if product.dimension_image_url %}
+        <div class="detail-dimension">
+          <span class="detail-dimension-label">{% trans "Dimensions" %}</span>
+          <img src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}">
+        </div>
+        {% endif %}
 
         {% else %}
         <h1 class="section-title">{% trans "Product Not Found" %}</h1>
@@ -138,6 +157,15 @@
     gap: 32px;
     align-items: center;
     margin-top: 40px;
+  }
+  .detail-grid-bottom-align {
+    align-items: end;
+  }
+  .detail-grid-bottom-align .detail-desc {
+    margin-bottom: 20px;
+  }
+  .detail-grid-bottom-align .detail-cert-image {
+    margin-top: 16px;
   }
   .detail-image {
     display: flex;
@@ -164,6 +192,56 @@
     align-items: center;
     justify-content: center;
   }
+
+  /* === Series hero banner (RT410, etc.) === */
+  .series-hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: var(--bg-soft);
+    margin-bottom: 0;
+  }
+  .series-hero + .detail-grid {
+    margin-top: 24px;
+  }
+  .series-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .series-hero-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%);
+  }
+  .series-hero-content {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    z-index: 2;
+  }
+  .series-hero-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    display: block;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  .series-hero-content .section-title {
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
+  }
+
   .detail-cert-image {
     width: 100%;
     max-width: 420px;
@@ -179,6 +257,33 @@
     object-fit: contain;
     object-position: center;
   }
+
+  /* === Dimension diagram === */
+  .detail-dimension {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .detail-dimension-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .detail-dimension img {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+
   .detail-desc {
     font-size: 1.05rem;
     line-height: 1.7;
@@ -322,6 +427,8 @@
     .detail-image {
       min-height: 240px;
     }
+    .series-hero { height: 160px; }
+    .series-hero-content { top: 20px; left: 20px; }
   }
 </style>
 

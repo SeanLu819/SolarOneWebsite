@@ -51,7 +51,7 @@
 
         <div class="projects-grid">
           {% for project in projects %}
-          <div class="project-card reveal">
+          <a href="{% url 'project_detail' project.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
             <div class="project-card-img">
               {% if project.image_url %}
               <img src="{{ project.image_url }}" alt="{{ project.title }}">
@@ -66,8 +66,9 @@
               <h3 class="project-card-title">{{ project.title_t }}</h3>
               <p class="project-card-desc">{{ project.description_t }}</p>
               {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
+              <span class="project-card-link">{% trans "View project" %} →</span>
             </div>
-          </div>
+          </a>
           {% endfor %}
         </div>
       </div>
@@ -78,6 +79,22 @@
 
 <style>
   /* Sidebar nav styles inherited from base.html */
+  .project-card {
+    display: block;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+  }
+  .project-card-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
 </style>
 
 {% endblock %}

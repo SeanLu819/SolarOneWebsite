@@ -21,7 +21,7 @@
   else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}?v=2">
 <style>
   /* === Dynamic typography from admin ===
      All admin-controlled values are injected as CSS custom properties,
@@ -53,10 +53,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
   <ul class="mobile-panel-links">
+    <li><a href="{% url 'home' %}" id="mobileLinkHome">{% trans "Home" %}</a></li>
     <li><a href="{% url 'products' %}" id="mobileLinkProducts">{% trans "Products" %}</a></li>
     <li><a href="{% url 'projects' %}" id="mobileLinkProjects">{% trans "Projects" %}</a></li>
     <li><a href="{% url 'about' %}" id="mobileLinkAbout">{% trans "About" %}</a></li>
-    <li><a href="{% url 'contact' %}" id="mobileLinkContact">{% trans "Contact" %}</a></li>
   </ul>
 </div>
 
@@ -67,6 +67,7 @@
       <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)">{{ config.brand_name }}</span>
     </a>
     <div class="nav-links">
+      <a href="{% url 'home' %}">{% trans "Home" %}</a>
       <a href="{% url 'products' %}">{% trans "Products" %}</a>
       <a href="{% url 'projects' %}">{% trans "Projects" %}</a>
       <a href="{% url 'about' %}">{% trans "About" %}</a>

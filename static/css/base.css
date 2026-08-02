@@ -78,7 +78,7 @@
 
   /* Light theme hero */
   [data-theme="light"] .hero-bg::after {
-    background: linear-gradient(180deg, rgba(245,247,250,0.3) 0%, var(--bg) 100%);
+    background: transparent;
   }
   [data-theme="light"] .hero-grid {
     background-image:
@@ -373,7 +373,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(8,8,11,0.05) 0%, rgba(8,8,11,0.12) 50%, rgba(8,8,11,0.35) 85%, var(--bg) 100%);
+    background: transparent;
     z-index: 2;
   }
   /* Hero carousel */
@@ -479,6 +479,19 @@
     border-radius: 50%;
   }
 
+  /* Hide decorative overlays so the hero background image is fully visible */
+  .hero-grid,
+  .hero-noise,
+  .hero-field-glow,
+  .hero-field-lines,
+  .hero-corner-marks,
+  .hero-field-lines::before,
+  .hero-field-lines::after,
+  .hero-corner-marks::before,
+  .hero-corner-marks::after {
+    display: none !important;
+  }
+
   .hero-content {
     position: relative;
     z-index: 2;
@@ -531,6 +544,22 @@
   .hero-title .bracket {
     color: var(--accent);
     font-weight: 400;
+  }
+
+  /* Text shadow for readability over any hero background image */
+  .hero-title,
+  .hero-lede,
+  .hero-meta,
+  .hero-stat-label,
+  .hero-stat-num-sub {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  [data-theme="light"] .hero-title,
+  [data-theme="light"] .hero-lede,
+  [data-theme="light"] .hero-meta,
+  [data-theme="light"] .hero-stat-label,
+  [data-theme="light"] .hero-stat-num-sub {
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.7), 0 1px 1px rgba(255, 255, 255, 0.9);
   }
 
   .hero-lede {
@@ -767,11 +796,11 @@
     height: auto;
     object-fit: contain;
     object-position: center;
-    transform: scale(1.2);
+    transform: scale(1.20);
     transition: transform 0.4s ease;
   }
   .product-card:hover .product-card-img img.m-series-img {
-    transform: scale(1.3);
+    transform: scale(1.30);
   }
   .product-card-title {
     font-family: var(--ff-display);

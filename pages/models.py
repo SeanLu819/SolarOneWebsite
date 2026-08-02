@@ -4,9 +4,12 @@ from django.db.models import JSONField
 
 class Product(models.Model):
     CATEGORY_CHOICES = [
+        ('AREA_SITE', 'Area and Site'),
+        ('SPORTS_LIGHTING', 'Sports Lighting System'),
         ('FLOODLIGHT', 'Flood Lighting'),
-        ('HIGH_BAY', 'High Bay'),
-        ('STREET_LIGHTING', 'Street Lighting'),
+        ('HIGHBAY_LOWBAY', 'Highbay & Low Bay'),
+        ('ROADWAY', 'Roadway'),
+        ('ACCESSORY', 'Accessory'),
         ('MODULAR', 'Modular'),
         ('OTHER', 'Other'),
     ]
@@ -20,16 +23,41 @@ class Product(models.Model):
     protection = models.CharField(max_length=50, blank=True)
     output = models.CharField(max_length=100, blank=True)
     beam_angle = models.CharField(max_length=100, blank=True)
-    image = models.ImageField(upload_to='products/', blank=True)
+    image = models.ImageField(
+        upload_to='products/',
+        blank=True,
+        help_text='产品卡片/详情主图。建议 1280×720 像素（16:9，最小 640×360）。'
+    )
+    banner_image = models.ImageField(
+        upload_to='products/banners/',
+        blank=True,
+        help_text='产品页顶部 banner。建议 1920×442 像素（最小 1200×280）。'
+    )
+    dimension_image = models.ImageField(
+        upload_to='products/dimensions/',
+        blank=True,
+        help_text='产品尺寸图。建议 1920×1080 像素（16:9，最小 960×540），会在详情页规格下方单独展示。'
+    )
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='children',
+        verbose_name='父级系列',
+        help_text='用于子系列（如 FL1M 属于 M Series）。'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"name": "...", "description": "...", "category": "..."}, "es": {...}, ...}
     translations = JSONField(default=dict, blank=True)
 
     class Meta:
-        ordering = ['order']
+        ordering = ['order', 'pk']
 
     def __str__(self):
+        if self.parent:
+            return f"{self.parent.name} › {self.name}"
         return self.name
 
     def t(self, field_name, lang='en'):
@@ -39,6 +67,29 @@ class Product(models.Model):
         lang_data = self.translations.get(lang, {})
         val = lang_data.get(field_name, '')
         return val if val else getattr(self, field_name, '')
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='产品'
+    )
+    image = models.ImageField(
+        upload_to='products/gallery/',
+        help_text='轮播图。建议 1280×720 像素（16:9，最小 640×360）。'
+    )
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt 文本')
+    order = models.IntegerField(default=0, verbose_name='排序')
+
+    class Meta:
+        ordering = ['order', 'pk']
+        verbose_name = '产品轮播图'
+        verbose_name_plural = '产品轮播图'
+
+    def __str__(self):
+        return f"{self.product.name} — {self.alt_text or self.image.name}"
 
 
 class Project(models.Model):
@@ -69,14 +120,18 @@ class Project(models.Model):
     sport_type = models.CharField(max_length=50, choices=SPORT_TYPE_CHOICES, default='OTHER')
     description = models.TextField()
     results = models.TextField(blank=True)
-    image = models.ImageField(upload_to='projects/', blank=True)
+    image = models.ImageField(
+        upload_to='projects/',
+        blank=True,
+        help_text='项目卡片封面图。建议 1280×720 像素（16:9，最小 640×360）。'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"title": "...", "description": "...", "location": "...", "results": "..."}, ...}
     translations = JSONField(default=dict, blank=True)
 
     class Meta:
-        ordering = ['order']
+        ordering = ['order', 'pk']
 
     def __str__(self):
         return self.title
@@ -88,6 +143,29 @@ class Project(models.Model):
         lang_data = self.translations.get(lang, {})
         val = lang_data.get(field_name, '')
         return val if val else getattr(self, field_name, '')
+
+
+class ProjectImage(models.Model):
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='项目'
+    )
+    image = models.ImageField(
+        upload_to='projects/gallery/',
+        help_text='项目详情轮播图。建议 1280×720 像素（16:9，最小 640×360）。'
+    )
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt 文本')
+    order = models.IntegerField(default=0, verbose_name='排序')
+
+    class Meta:
+        ordering = ['order', 'pk']
+        verbose_name = '项目轮播图'
+        verbose_name_plural = '项目轮播图'
+
+    def __str__(self):
+        return f"{self.project.title} — {self.alt_text or self.image.name}"
 
 
 class ContactMessage(models.Model):

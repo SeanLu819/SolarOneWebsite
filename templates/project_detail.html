@@ -4,37 +4,25 @@
 
 {% block content %}
 
-<!-- Sub-series detail page — mirrors product_detail layout, image side becomes a carousel -->
+<!-- Project detail page with sidebar and carousel -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
     <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
 
       <!-- ===== LEFT SIDEBAR ===== -->
       <aside class="sidebar-nav" style="position: sticky; top: 100px;">
-        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Project Categories" %}</div>
         <nav class="sidebar-nav-list">
-          {% for cat in product_categories %}
+          {% for vt in venue_types %}
           <div class="sidebar-nav-group" style="margin-bottom: 3px;">
-            <div class="sidebar-nav-parent{% if active_series == cat.key %} active{% endif %}">
-              {{ cat.label }}
+            <div class="sidebar-nav-parent{% if active_venue_type == vt.key %} active{% endif %}">
+              {{ vt.label }}
             </div>
             <div class="sidebar-nav-children">
-              {% for sub in cat.series %}
-              {% if sub.subseries %}
-              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
-                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
-                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
-              </div>
-              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
-                {% for grandchild in sub.subseries %}
-                <a href="{% url 'product_series' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
-                {% endfor %}
-              </div>
-              {% else %}
-              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
-                {{ sub.label }}
+              {% for st in vt.sports %}
+              <a href="{% url 'projects' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
+                {{ st.label }}
               </a>
-              {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -42,28 +30,23 @@
         </nav>
 
         <!-- View all link -->
-        <a href="{% url 'products' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+        <a href="{% url 'projects' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Projects" %}</a>
       </aside>
 
-      <!-- ===== MAIN CONTENT — Two-column (carousel + info) ===== -->
+      <!-- ===== MAIN CONTENT ===== -->
       <div class="detail-content">
 
-        <!-- Hero with banner image as background, title at top-left -->
-        {% static 'images/products/fl4m/fl4m-bar-1.webp' as fl4m_hero_fallback %}
-        <div class="series-hero">
-          <img src="{{ series_hero_image|default:fl4m_hero_fallback }}" alt="{{ series_title }} application" class="series-hero-bg">
-          <div class="series-hero-overlay"></div>
-          <div class="series-hero-content">
-            <span class="series-hero-label">{% trans "M Series" %}</span>
-            <h1 class="section-title">{{ series_title }}</h1>
-          </div>
+        {% if project %}
+        <div class="detail-hero">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ project.location_t }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;">{{ project.title_t }}</h1>
         </div>
 
         <div class="detail-grid">
           <!-- Left: Carousel -->
-          <div class="detail-image">
+          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
             {% if gallery %}
-            <div class="ps-carousel" id="psCarousel" data-interval="3000">
+            <div class="ps-carousel" id="psCarousel" data-interval="4000">
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
@@ -72,7 +55,6 @@
                 {% endfor %}
               </div>
 
-              <!-- Arrow controls -->
               {% if gallery|length > 1 %}
               <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -80,12 +62,9 @@
               <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
                 <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
-
               {% endif %}
             </div>
 
-            <!-- Thumbnail strip -->
-            {% if gallery %}
             <div class="ps-thumbnails">
               {% for img in gallery %}
               <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
@@ -93,37 +72,47 @@
               </button>
               {% endfor %}
             </div>
-            {% endif %}
 
+            {% elif project.image_url %}
+            <img src="{{ project.image_url }}" alt="{{ project.title_t }}">
             {% else %}
             <div class="detail-image-placeholder">
-              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
+              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Project Image" %}</span>
             </div>
             {% endif %}
           </div>
 
-          <!-- Right: Text + Specs -->
+          <!-- Right: Text + Results -->
           <div class="detail-info">
-            <p class="detail-desc">{{ series_subtitle }}</p>
+            <p class="detail-desc">{{ project.description_t }}</p>
 
-            {% if specs %}
-            <div class="detail-specs">
-              {% for spec in specs %}
-              <div class="detail-spec">
-                <span class="detail-spec-value">{{ spec.value }}</span>
-                <span class="detail-spec-label">{{ spec.label }}</span>
-              </div>
-              {% endfor %}
+            {% if project.results_t %}
+            <div class="detail-results">
+              <span class="detail-results-label">{% trans "Project Results" %}</span>
+              <p class="detail-results-text">{{ project.results_t|safe }}</p>
             </div>
             {% endif %}
+
+            <div class="detail-meta">
+              <div class="detail-meta-item">
+                <span class="detail-meta-label">{% trans "Venue" %}</span>
+                <span class="detail-meta-value">{{ active_venue_type_label }}</span>
+              </div>
+              <div class="detail-meta-item">
+                <span class="detail-meta-label">{% trans "Sport" %}</span>
+                <span class="detail-meta-value">{{ active_sport_type_label }}</span>
+              </div>
+              <div class="detail-meta-item">
+                <span class="detail-meta-label">{% trans "Location" %}</span>
+                <span class="detail-meta-value">{{ project.location_t }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Full-width banner image below carousel + specs -->
-        {% if banner_image %}
-        <div class="ps-banner">
-          <img src="{{ banner_image }}" alt="{{ series_title }} — 3D View">
-        </div>
+        {% else %}
+        <h1 class="section-title">{% trans "Project Not Found" %}</h1>
+        <p class="section-body"><a href="{% url 'projects' %}" style="color: var(--accent);">{% trans "Back to Projects" %}</a></p>
         {% endif %}
 
       </div>
@@ -133,61 +122,93 @@
 </section>
 
 <style>
-  /* === Sub-series detail layout (inherits detail-grid from product_detail) === */
+  /* Detail page two-column layout */
   .detail-grid {
     display: grid;
-    grid-template-columns: 1.35fr 1fr;
-    gap: 56px;
-    align-items: center;
-    margin-top: 24px;
+    grid-template-columns: 1.9fr 1fr;
+    gap: 32px;
+    align-items: start;
+    margin-top: 40px;
   }
   .detail-image {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 320px;
+  }
+  .detail-image img {
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
   }
   .detail-image-placeholder {
     width: 100%;
-    min-height: 320px;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
     background: var(--bg-soft);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .detail-desc {
+
+  /* Results box */
+  .detail-results {
+    padding: 24px;
+    border-radius: 12px;
+    background: var(--bg-soft);
+    margin-bottom: 32px;
+  }
+  .detail-results-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .detail-results-text {
     font-size: 1.05rem;
     line-height: 1.7;
-    color: var(--ink-soft);
-    margin-bottom: 40px;
+    color: var(--ink);
+    margin: 0;
   }
-  .detail-specs {
+
+  /* Meta grid */
+  .detail-meta {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 24px 40px;
-    align-items: start;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
   }
-  .detail-spec {
+  .detail-meta-item {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-  .detail-spec-value {
-    font-family: var(--ff-display);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
-  .detail-spec-label {
+  .detail-meta-label {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink-subtle);
   }
+  .detail-meta-value {
+    font-weight: 600;
+    color: var(--ink);
+  }
 
-  /* === Carousel === */
+  .detail-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+  }
+
+  /* Carousel */
   .ps-carousel {
     position: relative;
     width: 100%;
@@ -218,9 +239,9 @@
     height: 100%;
     object-fit: contain;
     object-position: center;
+    background: transparent;
+    border-radius: 0;
   }
-
-  /* Arrow buttons — semi-transparent black background */
   .ps-carousel-arrow {
     position: absolute;
     top: 50%;
@@ -249,7 +270,7 @@
   .ps-thumbnails {
     display: flex;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 12px;
     max-width: 760px;
     width: 100%;
   }
@@ -278,75 +299,8 @@
     object-fit: contain;
     object-position: center;
     display: block;
-  }
-
-  /* Full-width banner image (dimension drawings) */
-  .ps-banner {
-    margin-top: 20px;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--bg-soft);
-  }
-  .ps-banner img {
-    width: 100%;
-    height: auto;
-    display: block;
-    background: #fff;
-  }
-  /* Dark mode: invert white-background CAD drawings so lines stay visible */
-  [data-theme="dark"] .ps-banner img {
-    filter: invert(1);
     background: transparent;
-  }
-
-  /* Series hero — banner image as title background */
-  .series-hero {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-    background: var(--bg-soft);
-  }
-  .series-hero-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .series-hero-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%);
-  }
-  .series-hero-content {
-    position: absolute;
-    top: 32px;
-    left: 32px;
-    z-index: 2;
-  }
-  .series-hero-label {
-    font-family: var(--ff-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #fff;
-    display: block;
-    margin-bottom: 10px;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
-  }
-  .series-hero-content .section-title {
-    color: #fff;
-    margin: 0;
-    text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
-  }
-  @media (max-width: 900px) {
-    .series-hero { height: 160px; }
-    .series-hero-content { top: 20px; left: 20px; }
+    border-radius: 0;
   }
 
   /* Responsive */
@@ -365,9 +319,6 @@
     .detail-image {
       min-height: 240px;
     }
-    .ps-carousel {
-      max-width: 100%;
-    }
   }
 </style>
 
@@ -380,7 +331,7 @@
     const thumbs = carousel.parentElement.querySelectorAll('.ps-thumb');
     const prevBtn = carousel.querySelector('.ps-prev');
     const nextBtn = carousel.querySelector('.ps-next');
-    const interval = parseInt(carousel.dataset.interval, 10) || 3000;
+    const interval = parseInt(carousel.dataset.interval, 10) || 4000;
 
     if (slides.length === 0) return;
     let current = 0;
@@ -388,7 +339,6 @@
     let resumeTimer = null;
 
     function show(index) {
-      // Wrap around
       current = (index + slides.length) % slides.length;
       slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
       thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === current));
@@ -405,10 +355,6 @@
     }
     function stopAuto() {
       if (timer) { clearInterval(timer); timer = null; }
-    }
-    function restartAuto() {
-      stopAuto();
-      startAuto();
     }
 
     function handleUserSwitch(fn) {
@@ -433,7 +379,6 @@
       else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
     });
 
-    // Start auto-play on page load
     startAuto();
   })();
 </script>

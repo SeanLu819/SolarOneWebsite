@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.conf import settings
 from django.core.cache import cache
-from .models import Product, Project, ContactMessage, SiteConfig, Visitor, DailyStats
+from .models import (
+    Product, ProductImage, Project, ProjectImage,
+    ContactMessage, SiteConfig, Visitor, DailyStats
+)
 
 # Admin branding with version
 admin.site.site_header = f'SolarOne Admin v{settings.APP_VERSION}'
@@ -28,20 +31,63 @@ class CacheClearMixin:
         self._clear_cache()
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+    fields = ('image', 'alt_text', 'order')
+
+
 @admin.register(Product)
 class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
-    list_display = ('name', 'category', 'power', 'order')
+    list_display = ('name', 'category', 'parent', 'power', 'order')
+    list_filter = ('category', 'parent')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
-    search_fields = ['name', 'category']
+    search_fields = ['name', 'category', 'description']
+    inlines = [ProductImageInline]
+    fieldsets = (
+        (None, {
+            'fields': (('name', 'slug'), 'category', 'parent', 'order')
+        }),
+        ('Content', {
+            'fields': ('description', 'translations')
+        }),
+        ('Specs', {
+            'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection'))
+        }),
+        ('Images', {
+            'fields': ('image', 'banner_image', 'dimension_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用“Dimension image”字段，不要在轮播图中重复上传。'
+        }),
+    )
+
+
+class ProjectImageInline(admin.TabularInline):
+    model = ProjectImage
+    extra = 1
+    fields = ('image', 'alt_text', 'order')
 
 
 @admin.register(Project)
 class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
-    list_display = ('title', 'location', 'order')
+    list_display = ('title', 'venue_type', 'sport_type', 'location', 'order')
+    list_filter = ('venue_type', 'sport_type')
     prepopulated_fields = {'slug': ('title',)}
     list_editable = ['order']
-    search_fields = ['title', 'location']
+    search_fields = ['title', 'location', 'description']
+    inlines = [ProjectImageInline]
+    fieldsets = (
+        (None, {
+            'fields': (('title', 'slug'), ('venue_type', 'sport_type'), 'location', 'order')
+        }),
+        ('Content', {
+            'fields': ('description', 'results', 'translations')
+        }),
+        ('Images', {
+            'fields': ('image',),
+            'description': '上传图片时请参考字段下方的尺寸提示；项目详情页轮播图请在下方“项目轮播图”中添加。'
+        }),
+    )
 
 
 @admin.register(ContactMessage)

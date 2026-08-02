@@ -9,14 +9,14 @@ SEED_DATA = {'products': [{'beam_angle': '',
                'category': 'FLOODLIGHT',
                'description': 'Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or '
                               'beyond. Flexible combination configurations to precisely match any project requirement.',
-               'efficacy': '',
+               'efficacy': '125lm/W',
                'image': 'images/processed/rt200-m.webp',
                'name': 'M Series',
                'order': 1,
                'output': '',
                'pk': 1,
                'power': '80~1280W+',
-               'protection': 'IP67',
+               'protection': '',
                'slug': 'm-series',
                'translations': {'ar': {'category': 'معيارية',
                                        'description': 'تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى '
@@ -97,7 +97,81 @@ SEED_DATA = {'products': [{'beam_angle': '',
                'power': '100~300W',
                'protection': 'IP66',
                'slug': 'rt400-series',
-               'translations': {}}],
+               'translations': {}},
+              {'beam_angle': '',
+               'category': 'Sports Lighting System',
+               'description': 'Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion '
+                              'replay with stable, high-frequency drive technology.',
+               'efficacy': '',
+               'image': '',
+               'name': 'VSP-XXXXW-9M-YP',
+               'order': 4,
+               'output': '',
+               'pk': 5,
+               'power': '',
+               'protection': '',
+               'slug': 'vsp-xxxxw-9m-yp',
+               'translations': {'ar': {'category': 'نظام إضاءة رياضية',
+                                       'description': 'نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في ' \
+                                                      'إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.',
+                                       'name': 'VSP-XXXXW-9M-YP'},
+                                'de': {'category': 'Sportbeleuchtungssystem',
+                                       'description': 'Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. '
+                                                      'Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile '
+                                                      'Hochfrequenz-Antriebstechnologie.',
+                                       'name': 'VSP-XXXXW-9M-YP'},
+                                'es': {'category': 'Sistema de Iluminación Deportiva',
+                                       'description': 'Sistema de protección contra parpadeo de visión para recintos '
+                                                      'de broadcast. Elimina el parpadeo en reproducciones a cámara '
+                                                      'lenta con tecnología de accionamiento de alta frecuencia estable.',
+                                       'name': 'VSP-XXXXW-9M-YP'},
+                                'fr': {'category': "Système d'Éclairage Sportif",
+                                       'description': "Système de protection anti-stroboscope pour sites de diffusion. "
+                                                      'Élimine le scintillement des ralentis grâce à une technologie de '
+                                                      "commande haute fréquence stable.",
+                                       'name': 'VSP-XXXXW-9M-YP'},
+                                'ru': {'category': 'Система спортивного освещения',
+                                       'description': 'Система защиты от стробоскопического эффекта для телевизионных '
+                                                      'объектов. Устраняет мерцание при замедленной съемке за счет '
+                                                      'стабильной высокочастотной технологии питания.',
+                                       'name': 'VSP-XXXXW-9M-YP'}}},
+              {'beam_angle': '',
+               'category': 'Sports Lighting System',
+               'description': 'Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion '
+                              'replay with stable, high-frequency drive technology.',
+               'efficacy': '',
+               'image': '',
+               'name': 'VSP-XXXXW-12M-YP',
+               'order': 5,
+               'output': '',
+               'pk': 6,
+               'power': '',
+               'protection': '',
+               'slug': 'vsp-xxxxw-12m-yp',
+               'translations': {'ar': {'category': 'نظام إضاءة رياضية',
+                                       'description': 'نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في ' \
+                                                      'إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.',
+                                       'name': 'VSP-XXXXW-12M-YP'},
+                                'de': {'category': 'Sportbeleuchtungssystem',
+                                       'description': 'Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. '
+                                                      'Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile '
+                                                      'Hochfrequenz-Antriebstechnologie.',
+                                       'name': 'VSP-XXXXW-12M-YP'},
+                                'es': {'category': 'Sistema de Iluminación Deportiva',
+                                       'description': 'Sistema de protección contra parpadeo de visión para recintos '
+                                                      'de broadcast. Elimina el parpadeo en reproducciones a cámara '
+                                                      'lenta con tecnología de accionamiento de alta frecuencia estable.',
+                                       'name': 'VSP-XXXXW-12M-YP'},
+                                'fr': {'category': "Système d'Éclairage Sportif",
+                                       'description': "Système de protection anti-stroboscope pour sites de diffusion. "
+                                                      'Élimine le scintillement des ralentis grâce à une technologie de '
+                                                      "commande haute fréquence stable.",
+                                       'name': 'VSP-XXXXW-12M-YP'},
+                                'ru': {'category': 'Система спортивного освещения',
+                                       'description': 'Система защиты от стробоскопического эффекта для телевизионных '
+                                                      'объектов. Устраняет мерцание при замедленной съемке за счет '
+                                                      'стабильной высокочастотной технологии питания.',
+                                       'name': 'VSP-XXXXW-12M-YP'}}}],
  'projects': [{'description': 'A precision photometric design was completed to ensure that the design specifications '
                               'were met. The design called for replacement of 40 existing 1500W MH light fixtures with '
                               '48 of our FL9M-630W LED performance sports lights.',

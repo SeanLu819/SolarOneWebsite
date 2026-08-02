@@ -7,18 +7,26 @@ from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
 from django.conf import settings
-from pages.models import Product, Project, SiteConfig, ContactMessage
+from pages.models import Product, ProductImage, Project, ProjectImage, SiteConfig, ContactMessage
 
 logger = logging.getLogger(__name__)
 
 # Path to seed data — used as fallback when DB is unavailable (e.g. Vercel ephemeral SQLite)
-# Try multiple candidate locations: BASE_DIR (local + most Vercel setups) and directories
-# relative to this file (in case @vercel/python places the lambda in a subfolder).
 _SEED_CANDIDATES = [
     os.path.join(settings.BASE_DIR, 'seed_data.json'),
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'seed_data.json'),
     os.path.join(os.path.dirname(os.path.abspath(__file__)), 'seed_data.json'),
 ]
+
+
+# Sidebar category keys map to one or more Product.category values
+_SIDEBAR_CAT_TO_PRODUCT_CAT = {
+    'AREA_SITE': ['AREA_SITE', 'ACCESSORY'],
+    'SPORTS_LIGHTING_SYSTEM': ['SPORTS_LIGHTING'],
+    'FLOODLIGHTING': ['FLOODLIGHT'],
+    'HIGHBAY_LOWBAY': ['HIGHBAY_LOWBAY'],
+    'ROADWAY': ['ROADWAY'],
+}
 
 
 def _load_seed():
@@ -28,7 +36,6 @@ def _load_seed():
     truth during development."""
     data = cache.get('seed_data_json')
     if data is None:
-        # Preferred: embedded Python module (works on Vercel)
         try:
             from pages.seed_data import SEED_DATA
             data = SEED_DATA
@@ -36,7 +43,6 @@ def _load_seed():
             logger.warning('Could not import pages.seed_data, trying JSON file', exc_info=True)
             data = None
 
-        # Fallback: read JSON file from disk (local dev)
         if data is None:
             for path in _SEED_CANDIDATES:
                 try:
@@ -52,8 +58,11 @@ def _load_seed():
     return data
 
 
+# ============================================================================
+# Lightweight wrappers that mimic the model interface for seed JSON fallback
+# ============================================================================
+
 class _DictProduct:
-    """Lightweight wrapper that mimics the Product model interface for templates."""
     def __init__(self, item):
         self.slug = item.get('slug', '')
         self.name = item.get('name', '')
@@ -65,8 +74,11 @@ class _DictProduct:
         self.output = item.get('output', '')
         self.beam_angle = item.get('beam_angle', '')
         self.image = item.get('image', '')
+        self.banner_image = item.get('banner_image', '')
         self.order = item.get('order', 0)
         self.translations = item.get('translations', {}) or {}
+        self.parent_slug = item.get('parent_slug', '')
+        self.gallery_paths = item.get('gallery', [])
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
@@ -77,7 +89,6 @@ class _DictProduct:
 
 
 class _DictProject:
-    """Lightweight wrapper that mimics the Project model interface for templates."""
     def __init__(self, item):
         self.slug = item.get('slug', '')
         self.title = item.get('title', '')
@@ -89,6 +100,7 @@ class _DictProject:
         self.image = item.get('image', '')
         self.order = item.get('order', 0)
         self.translations = item.get('translations', {}) or {}
+        self.gallery_paths = item.get('gallery', [])
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
@@ -98,23 +110,114 @@ class _DictProject:
         return val if val else getattr(self, field_name, '')
 
 
-def _get_products_from_db(lang, active_category='', active_series='', active_series_label=''):
-    """Try loading products from DB. Returns None on failure (caller falls back to JSON)."""
+# ============================================================================
+# Enrichment helpers (set translated fields, image URLs, galleries, specs)
+# ============================================================================
+
+def _media_url(field):
+    """Return the URL for an ImageField file, or '' if empty."""
+    if field and field.name:
+        return field.url
+    return ''
+
+
+def _static_url(path):
+    """Return static URL for a non-empty path."""
+    return static(path) if path else ''
+
+
+def _build_specs(obj):
+    """Build a list of spec dicts from a product-like object."""
+    spec_fields = [
+        ('power', _('Power')),
+        ('efficacy', _('Efficacy')),
+        ('output', _('Output')),
+        ('beam_angle', _('Beam Angle')),
+        ('protection', _('Protection')),
+    ]
+    specs = []
+    for field, label in spec_fields:
+        value = getattr(obj, field, '')
+        if value:
+            specs.append({'value': value, 'label': label})
+    return specs
+
+
+def _enrich_product(product, lang):
+    """Add template-friendly attributes to a Product or _DictProduct."""
+    product.name_t = product.t('name', lang)
+    product.description_t = product.t('description', lang)
+    product.category_t = product.t('category', lang)
+    product.specs = _build_specs(product)
+
+    if isinstance(product, Product):
+        product.image_url = _media_url(product.image)
+        product.banner_image_url = _media_url(product.banner_image)
+        product.dimension_image_url = _media_url(product.dimension_image)
+        product.gallery = [
+            {
+                'src': img.image.url,
+                'alt': img.alt_text or f"{product.name_t} — view {i + 1}",
+            }
+            for i, img in enumerate(product.images.all())
+        ]
+        product.parent_slug = product.parent.slug if product.parent else ''
+    else:
+        product.image_url = _static_url(product.image)
+        product.banner_image_url = _static_url(product.banner_image)
+        product.dimension_image_url = ''
+        product.gallery = [
+            {'src': _static_url(p), 'alt': f"{product.name_t} — view {i + 1}"}
+            for i, p in enumerate(product.gallery_paths)
+        ]
+        if not product.parent_slug:
+            product.parent_slug = ''
+
+
+def _enrich_project(project, lang):
+    """Add template-friendly attributes to a Project or _DictProject."""
+    project.title_t = project.t('title', lang)
+    project.description_t = project.t('description', lang)
+    project.location_t = project.t('location', lang)
+    project.results_t = project.t('results', lang)
+
+    if isinstance(project, Project):
+        project.image_url = _media_url(project.image)
+        project.gallery = [
+            {
+                'src': img.image.url,
+                'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
+            }
+            for i, img in enumerate(project.images.all())
+        ]
+    else:
+        project.image_url = _static_url(project.image)
+        project.gallery = [
+            {'src': _static_url(p), 'alt': f"{project.title_t} — view {i + 1}"}
+            for i, p in enumerate(project.gallery_paths)
+        ]
+
+
+# ============================================================================
+# Product list helpers
+# ============================================================================
+
+def _product_category_filter(active_category):
+    """Return a list of Product.category values for a sidebar category key."""
+    return _SIDEBAR_CAT_TO_PRODUCT_CAT.get(active_category, [active_category])
+
+
+def _get_products_from_db(lang, active_category='', active_series=''):
+    """Try loading products from DB. Returns None on failure."""
     try:
-        products_list = Product.objects.all()
+        products_list = Product.objects.filter(parent__isnull=True)
         if active_category:
-            products_list = products_list.filter(category=active_category)
-        if active_series and active_series_label:
-            products_list = products_list.filter(name__icontains=active_series_label.replace(' Series', ''))
+            products_list = products_list.filter(category__in=_product_category_filter(active_category))
+        if active_series:
+            products_list = products_list.filter(slug=active_series)
         result = []
         for p in products_list:
-            if p.image:
-                p.image_url = static(p.image.name)
-            else:
-                p.image_url = ''
-            p.name_t = p.t('name', lang)
-            p.description_t = p.t('description', lang)
-            p.category_t = p.t('category', lang)
+            _enrich_product(p, lang)
             result.append(p)
         return result
     except Exception:
@@ -122,26 +225,55 @@ def _get_products_from_db(lang, active_category='', active_series='', active_ser
         return None
 
 
-def _get_products_from_json(lang, active_category='', active_series='', active_series_label=''):
+def _get_products_from_json(lang, active_category='', active_series=''):
     """Load products from seed_data.json (fallback for Vercel)."""
     data = _load_seed()
     items = data.get('products', [])
     result = []
     for item in items:
-        if active_category and item.get('category') != active_category:
+        if item.get('parent_slug'):
             continue
-        if active_series and active_series_label:
-            series_name = active_series_label.replace(' Series', '')
-            if series_name.lower() not in item.get('name', '').lower():
-                continue
+        if active_category and item.get('category') not in _product_category_filter(active_category):
+            continue
+        if active_series and item.get('slug') != active_series:
+            continue
         p = _DictProduct(item)
-        p.image_url = static(p.image) if p.image else ''
-        p.name_t = p.t('name', lang)
-        p.description_t = p.t('description', lang)
-        p.category_t = p.t('category', lang)
+        _enrich_product(p, lang)
         result.append(p)
     return result
 
+
+# ============================================================================
+# Product detail helpers
+# ============================================================================
+
+def _get_product_detail_from_db(slug, lang):
+    """Try loading a single product from DB. Returns None on failure."""
+    try:
+        product = Product.objects.select_related('parent').prefetch_related('images').get(slug=slug)
+        _enrich_product(product, lang)
+        return product
+    except Product.DoesNotExist:
+        return None
+    except Exception:
+        logger.warning('DB product detail query failed, will fall back to seed JSON', exc_info=True)
+        return None
+
+
+def _get_product_detail_from_json(slug, lang):
+    """Load a single product from seed_data.json (fallback for Vercel)."""
+    data = _load_seed()
+    for item in data.get('products', []):
+        if item.get('slug') == slug:
+            p = _DictProduct(item)
+            _enrich_product(p, lang)
+            return p
+    return None
+
+
+# ============================================================================
+# Project list helpers
+# ============================================================================
 
 def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
     """Try loading projects from DB. Returns None on failure."""
@@ -153,14 +285,7 @@ def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
             projects_list = projects_list.filter(sport_type=active_sport_type)
         result = []
         for proj in projects_list:
-            if proj.image:
-                proj.image_url = static(proj.image.name)
-            else:
-                proj.image_url = ''
-            proj.title_t = proj.t('title', lang)
-            proj.description_t = proj.t('description', lang)
-            proj.location_t = proj.t('location', lang)
-            proj.results_t = proj.t('results', lang)
+            _enrich_project(proj, lang)
             result.append(proj)
         return result
     except Exception:
@@ -179,49 +304,39 @@ def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
         if active_sport_type and item.get('sport_type') != active_sport_type:
             continue
         proj = _DictProject(item)
-        proj.image_url = static(proj.image) if proj.image else ''
-        proj.title_t = proj.t('title', lang)
-        proj.description_t = proj.t('description', lang)
-        proj.location_t = proj.t('location', lang)
-        proj.results_t = proj.t('results', lang)
+        _enrich_project(proj, lang)
         result.append(proj)
     return result
 
 
-def _get_product_detail_from_db(slug, lang):
-    """Try loading a single product from DB. Returns None on failure."""
+def _get_project_detail_from_db(slug, lang):
+    """Try loading a single project from DB. Returns None on failure."""
     try:
-        product = Product.objects.get(slug=slug)
-        if product.image:
-            product.image_url = static(product.image.name)
-        else:
-            product.image_url = ''
-        product.name_t = product.t('name', lang)
-        product.description_t = product.t('description', lang)
-        product.category_t = product.t('category', lang)
-        return product
-    except Product.DoesNotExist:
+        project = Project.objects.prefetch_related('images').get(slug=slug)
+        _enrich_project(project, lang)
+        return project
+    except Project.DoesNotExist:
         return None
     except Exception:
-        logger.warning('DB product detail query failed, will fall back to seed JSON', exc_info=True)
+        logger.warning('DB project detail query failed, will fall back to seed JSON', exc_info=True)
         return None
 
 
-def _get_product_detail_from_json(slug, lang):
-    """Load a single product from seed_data.json (fallback for Vercel)."""
+def _get_project_detail_from_json(slug, lang):
+    """Load a single project from seed_data.json (fallback for Vercel)."""
     data = _load_seed()
-    for item in data.get('products', []):
+    for item in data.get('projects', []):
         if item.get('slug') == slug:
-            p = _DictProduct(item)
-            p.image_url = static(p.image) if p.image else ''
-            p.name_t = p.t('name', lang)
-            p.description_t = p.t('description', lang)
-            p.category_t = p.t('category', lang)
-            return p
+            proj = _DictProject(item)
+            _enrich_project(proj, lang)
+            return proj
     return None
 
 
-# Translation map for sidebar labels
+# ============================================================================
+# Sidebar i18n
+# ============================================================================
+
 _SIDEBAR_I18N = {
     # Projects — venue types
     'Outdoor Sports':  {'fr': 'Sports Extérieur', 'es': 'Deportes Exterior', 'de': 'Outdoor-Sport', 'ar': 'رياضات خارجية', 'ru': 'Спорт на открытом воздухе'},
@@ -240,17 +355,13 @@ _SIDEBAR_I18N = {
     'Multi-Sport Arena':{'fr': 'Complexe Multi-Sports', 'es': 'Pista Polideportiva', 'de': 'Mehrzweckhalle', 'ar': 'صالة متعددة الرياضات', 'ru': 'Универсальный спортивный зал'},
     'Airport':          {'fr': 'Aéroport', 'es': 'Aeropuerto', 'de': 'Flughafen', 'ar': 'مطار', 'ru': 'Аэропорт'},
     'Seaport':          {'fr': 'Port Maritime', 'es': 'Puerto', 'de': 'Seehafen', 'ar': 'ميناء بحري', 'ru': 'Морской порт'},
-    # Products — categories (new structure)
+    # Products — categories
     'Area and Site':            {'fr': 'Zone et Site', 'es': 'Área y Sitio', 'de': 'Bereich und Standort', 'ar': 'المنطقة والموقع', 'ru': 'Территория и площадка'},
     'Sports Lighting System': {'fr': 'Système d\'Éclairage Sportif', 'es': 'Sistema de Iluminación Deportiva', 'de': 'Sportbeleuchtungssystem', 'ar': 'نظام إضاءة رياضية', 'ru': 'Система спортивного освещения'},
-    'Floodlighting':            {'fr': 'Projecteurs', 'es': 'Proyectores', 'de': 'Flutlicht', 'ar': 'إضاءة فيضانية', 'ru': 'Прожекторное освещение'},
+    'Flood Lighting':           {'fr': 'Projecteurs', 'es': 'Proyectores', 'de': 'Flutlicht', 'ar': 'إضاءة فيضانية', 'ru': 'Прожекторное освещение'},
     'Highbay & Low Bay':        {'fr': 'Haute & Basse Baie', 'es': 'Alta & Baja Bahía', 'de': 'Highbay & Lowbay', 'ar': 'إضاءة عالية ومنخفضة', 'ru': 'Высокий и низкий пролёт'},
     'Roadway':                  {'fr': 'Éclairage Routier', 'es': 'Alumbrado Vial', 'de': 'Straßenbeleuchtung', 'ar': 'إنارة الطرق', 'ru': 'Дорожное освещение'},
     'Accessory':                {'fr': 'Accessoire', 'es': 'Accesorio', 'de': 'Zubehör', 'ar': 'ملحق', 'ru': 'Аксессуар'},
-    # Products — categories (legacy, kept for backward compatibility)
-    'Flood Lighting':   {'fr': 'Éclairage de Stade', 'es': 'Iluminación Deportiva', 'de': 'Flutlicht', 'ar': 'إضاءة الملاعب', 'ru': 'Спортивное освещение'},
-    'High Bay':         {'fr': 'Éclairage Haut', 'es': 'Iluminación Alta', 'de': 'Hallenleuchte', 'ar': 'إضاءة مرتفعة', 'ru': 'Промышленный свет'},
-    'Street Lighting':  {'fr': 'Éclairage Routier', 'es': 'Alumbrado Público', 'de': 'Straßenbeleuchtung', 'ar': 'إنارة الشوارع', 'ru': 'Уличное освещение'},
     # Products — series
     'M Series':         {'fr': 'Série M', 'es': 'Serie M', 'de': 'M-Serie', 'ar': 'سلسلة M', 'ru': 'Серия M'},
     'RT410 Series':     {'fr': 'Série RT410', 'es': 'Serie RT410', 'de': 'RT410-Serie', 'ar': 'سلسلة RT410', 'ru': 'Серия RT410'},
@@ -292,7 +403,10 @@ def _t(label, lang='en'):
     return entry.get(lang, label)
 
 
-# Sidebar data for Projects page
+# ============================================================================
+# Sidebar data
+# ============================================================================
+
 def _get_projects_sidebar(lang='en'):
     return [
         {
@@ -327,8 +441,9 @@ def _get_projects_sidebar(lang='en'):
     ]
 
 
-# Sidebar data for Products page
 def _get_products_sidebar(lang='en'):
+    """Sidebar structure for product pages. Series/variant data can be
+    maintained in the admin; the hierarchy here is used for navigation."""
     return [
         {
             'key': 'AREA_SITE',
@@ -361,7 +476,7 @@ def _get_products_sidebar(lang='en'):
         },
         {
             'key': 'FLOODLIGHTING',
-            'label': _t('Floodlighting', lang),
+            'label': _t('Flood Lighting', lang),
             'series': [
                 {'key': 'RT590FL_S', 'slug': 'rt590fl-s', 'label': 'RT590FL-S'},
                 {'key': 'RT390FL',   'slug': 'rt390fl',   'label': 'RT390FL'},
@@ -391,6 +506,50 @@ def _get_products_sidebar(lang='en'):
     ]
 
 
+def _resolve_product_sidebar(slug, lang='en'):
+    """Resolve active_series, active_subseries and parent_slug for a product slug."""
+    active_series = ''
+    active_subseries = ''
+    parent_slug = ''
+    for cat in _get_products_sidebar(lang):
+        for s in cat['series']:
+            if s['slug'] == slug:
+                active_series = s['key']
+                parent_slug = ''
+                break
+            if 'subseries' in s:
+                for sub in s['subseries']:
+                    if sub['slug'] == slug:
+                        active_series = s['key']
+                        active_subseries = sub['key']
+                        parent_slug = s['slug']
+                        break
+                if active_subseries:
+                    break
+        if active_series or active_subseries:
+            break
+    return active_series, active_subseries, parent_slug
+
+
+def _resolve_project_sidebar(sport_type, lang='en'):
+    """Resolve active_venue_type and active_sport_type for a project."""
+    active_venue_type = ''
+    active_sport_type = ''
+    for vt in _get_projects_sidebar(lang):
+        for st in vt['sports']:
+            if st['key'] == sport_type:
+                active_venue_type = vt['key']
+                active_sport_type = st['key']
+                break
+        if active_sport_type:
+            break
+    return active_venue_type, active_sport_type
+
+
+# ============================================================================
+# Common context
+# ============================================================================
+
 def get_common_context():
     """Get context shared across all pages"""
     config = cache.get('site_config')
@@ -401,9 +560,6 @@ def get_common_context():
                 config = SiteConfig.objects.create()
             cache.set('site_config', config, timeout=300)
         except Exception:
-            # DB unavailable — build a minimal config from seed JSON so pages render.
-            # ImageField values are skipped (they are bare strings in the JSON and
-            # would break .name access); hero_background/logo fall back to defaults.
             logger.warning('DB SiteConfig query failed, building from seed JSON', exc_info=True)
             data = _load_seed()
             cfg = data.get('siteconfig', {})
@@ -419,8 +575,6 @@ def get_common_context():
                         pass
             cache.set('site_config', config, timeout=300)
 
-    # Pre-compute static URLs for hero bg and logo.
-    # Guard .name access in case config came from JSON fallback (bare value).
     hero_bg = getattr(config, 'hero_background', '')
     hero_name = getattr(hero_bg, 'name', hero_bg) if hero_bg else ''
     if hero_name:
@@ -435,7 +589,6 @@ def get_common_context():
     else:
         config.logo_url = static('images/logo.png')
 
-    # Apply i18n to text fields via _t() lookup
     lang = get_language()
     config.hero_title = _t(config.hero_title, lang)
     config.hero_subtitle = _t(config.hero_subtitle, lang)
@@ -447,56 +600,47 @@ def get_common_context():
     return {'config': config}
 
 
+# ============================================================================
+# Page views
+# ============================================================================
+
 def home(request):
     return render(request, 'home.html', get_common_context())
 
 
+def about(request):
+    context = get_common_context()
+    return render(request, 'about.html', context)
+
+
 def _get_client_ip(request):
-    """Get the real client IP, accounting for proxies (Vercel, Cloudflare, etc.)."""
     xff = request.META.get('HTTP_X_FORWARDED_FOR')
     if xff:
-        # Left-most entry is the original client
         return xff.split(',')[0].strip()
     return request.META.get('REMOTE_ADDR', '') or '0.0.0.0'
 
 
 def _is_rate_limited(request):
-    """Simple cache-based rate limiter for the contact form.
-
-    Limits per IP+session to CONTACT_RATE_LIMIT submissions per
-    CONTACT_RATE_WINDOW seconds. Returns True if the request should be
-    blocked. Uses the cache backend (works on Vercel via cookie sessions
-    fallback, local dev via LocMem cache)."""
-    window = getattr(settings, 'CONTACT_RATE_WINDOW', 600)  # 10 min default
-    limit = getattr(settings, 'CONTACT_RATE_LIMIT', 3)      # 3 per window
-
+    window = getattr(settings, 'CONTACT_RATE_WINDOW', 600)
+    limit = getattr(settings, 'CONTACT_RATE_LIMIT', 3)
     ip = _get_client_ip(request)
     session_key = request.session.session_key or 'anon'
     key = f'contact_rate:{ip}:{session_key}'
-
     try:
         count = cache.get(key) or 0
         if count >= limit:
             return True
         cache.set(key, count + 1, timeout=window)
     except Exception:
-        # If cache is unavailable, allow the request through (fail-open)
-        # to avoid blocking legitimate submissions.
         logger.warning('Rate limit cache unavailable, failing open', exc_info=True)
         return False
     return False
 
 
 def _send_contact_notification(contact_msg):
-    """Send an email notification to site admins about a new contact message.
-
-    Silently no-ops if EMAIL_BACKEND is not configured (no SMTP credentials).
-    This keeps the contact flow working on Vercel without email setup while
-    enabling email alerts once SMTP env vars are provided."""
     notify_to = getattr(settings, 'CONTACT_NOTIFY_EMAIL', '')
     if not notify_to:
         return False
-
     subject = f'[Contact] New message from {contact_msg.name}'
     body_lines = [
         f'Name:    {contact_msg.name}',
@@ -526,9 +670,7 @@ def _send_contact_notification(contact_msg):
 
 def contact(request):
     context = get_common_context()
-
     if request.method == 'POST':
-        # 1.4 — rate limit check before any DB writes
         if _is_rate_limited(request):
             messages.error(
                 request,
@@ -543,18 +685,13 @@ def contact(request):
         if name and email and message:
             try:
                 contact_msg = ContactMessage.objects.create(
-                    name=name,
-                    email=email,
-                    phone=phone,
-                    message=message
+                    name=name, email=email, phone=phone, message=message
                 )
-                # 7.3 — fire-and-forget email notification to admin
                 _send_contact_notification(contact_msg)
                 messages.success(request, _('Your message has been sent successfully!'))
             except Exception:
                 logger.warning('Failed to save contact message', exc_info=True)
                 messages.error(request, _('Sorry, we could not save your message. Please try again.'))
-
     return render(request, 'contact.html', context)
 
 
@@ -562,17 +699,14 @@ def products(request):
     context = get_common_context()
     lang = get_language()
 
-    # Sidebar data
     product_categories = _get_products_sidebar(lang)
     context['product_categories'] = product_categories
 
-    # Filtering via URL params
     active_category = request.GET.get('category', '')
     active_series = request.GET.get('series', '')
     context['active_category'] = active_category
     context['active_series'] = active_series
 
-    # Resolve labels for active filters
     active_category_label = ''
     active_series_label = ''
     for cat in product_categories:
@@ -586,30 +720,67 @@ def products(request):
     context['active_category_label'] = active_category_label
     context['active_series_label'] = active_series_label
 
-    # Try DB first; fall back to seed JSON if DB unavailable (Vercel cold start)
-    products_list = _get_products_from_db(lang, active_category, active_series, active_series_label)
+    products_list = _get_products_from_db(lang, active_category, active_series)
     if products_list is None:
-        products_list = _get_products_from_json(lang, active_category, active_series, active_series_label)
+        products_list = _get_products_from_json(lang, active_category, active_series)
 
     context['products'] = products_list
     return render(request, 'products.html', context)
+
+
+def product_detail(request, slug):
+    """Unified product detail page for both series and sub-series.
+
+    Content (text, images, banner, gallery) is read from the Product model so
+    it can be edited in the admin. Seed JSON is kept as a fallback for Vercel.
+    """
+    context = get_common_context()
+    lang = get_language()
+
+    product_categories = _get_products_sidebar(lang)
+    context['product_categories'] = product_categories
+
+    product = _get_product_detail_from_db(slug, lang)
+    if product is None:
+        product = _get_product_detail_from_json(slug, lang)
+
+    active_series, active_subseries, parent_slug = _resolve_product_sidebar(slug, lang)
+    context['active_series'] = active_series
+    context['active_subseries'] = active_subseries
+
+    if product:
+        context['product'] = product
+        context['banner_image'] = product.banner_image_url
+        context['banner_label'] = product.category_t
+        context['gallery'] = product.gallery
+        context['is_variant'] = bool(product.parent_slug)
+        context['parent_slug'] = parent_slug or product.parent_slug
+        # Certification badges for M Series / RT410 Series and their variants
+        context['show_certs'] = (
+            product.slug in ('m-series', 'rt410-series') or
+            product.parent_slug == 'm-series'
+        )
+
+    return render(request, 'product_detail.html', context)
+
+
+def product_series(request, slug):
+    """Legacy sub-series URL: now uses the same unified detail template."""
+    return product_detail(request, slug)
 
 
 def projects(request):
     context = get_common_context()
     lang = get_language()
 
-    # Sidebar data
     venue_types = _get_projects_sidebar(lang)
     context['venue_types'] = venue_types
 
-    # Filtering via URL params
     active_venue_type = request.GET.get('venue', '')
     active_sport_type = request.GET.get('sport', '')
     context['active_venue_type'] = active_venue_type
     context['active_sport_type'] = active_sport_type
 
-    # Resolve labels for active filters
     active_venue_type_label = ''
     active_sport_type_label = ''
     for vt in venue_types:
@@ -623,7 +794,6 @@ def projects(request):
     context['active_venue_type_label'] = active_venue_type_label
     context['active_sport_type_label'] = active_sport_type_label
 
-    # Try DB first; fall back to seed JSON
     projects_list = _get_projects_from_db(lang, active_venue_type, active_sport_type)
     if projects_list is None:
         projects_list = _get_projects_from_json(lang, active_venue_type, active_sport_type)
@@ -632,218 +802,28 @@ def projects(request):
     return render(request, 'projects.html', context)
 
 
-def about(request):
-    context = get_common_context()
-    return render(request, 'about.html', context)
-
-
-def product_detail(request, slug):
+def project_detail(request, slug):
+    """Project detail page with backend-managed text and image carousel."""
     context = get_common_context()
     lang = get_language()
 
-    # Sidebar data
-    product_categories = _get_products_sidebar(lang)
-    context['product_categories'] = product_categories
+    venue_types = _get_projects_sidebar(lang)
+    context['venue_types'] = venue_types
 
-    # Try DB first; fall back to seed JSON
-    product = _get_product_detail_from_db(slug, lang)
-    if product is None:
-        product = _get_product_detail_from_json(slug, lang)
+    project = _get_project_detail_from_db(slug, lang)
+    if project is None:
+        project = _get_project_detail_from_json(slug, lang)
 
-    # Resolve active series key from slug
-    active_series = ''
-    for cat in product_categories:
-        for s in cat['series']:
-            if s['slug'] == slug:
-                active_series = s['key']
-                break
-        if active_series:
-            break
-    context['active_series'] = active_series
-
-    if product:
-        context['product'] = product
-
-    # M Series main page uses a carousel gallery like sub-series pages
-    if slug == 'm-series':
-        context['gallery'] = [
-            {'src': static('images/products/m-series/m-series-01.webp'), 'alt': 'M Series — view 1'},
-            {'src': static('images/products/m-series/m-series-02.webp'), 'alt': 'M Series — view 2'},
-            {'src': static('images/products/m-series/m-series-03.webp'), 'alt': 'M Series — view 3'},
-            {'src': static('images/products/m-series/m-series-04.webp'), 'alt': 'M Series — view 4'},
-        ]
-
-    return render(request, 'product_detail.html', context)
-
-
-# ============ Sub-series pages (FL1M, FL4M, ...) ============
-# Static catalog of sub-series detail pages under M Series (Area and Site).
-# Only FL1M–FL16M are linked from the sidebar; VSP/RGB entries are kept
-# for backward-compatible URLs.
-
-_SUBSERIES_CATALOG = {
-    'fl1m': {
-        'title': 'FL1M Series',
-        'subtitle': '',
-        'images': [
-            {'src': 'images/products/fl1m/fl1m-01.png', 'alt': 'FL1M Series — view 1'},
-            {'src': 'images/products/fl1m/fl1m-02.png', 'alt': 'FL1M Series — view 2'},
-            {'src': 'images/products/fl1m/fl1m-03.png', 'alt': 'FL1M Series — view 3'},
-            {'src': 'images/products/fl1m/fl1m-04.png', 'alt': 'FL1M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '80W',               'label': 'Illumination'},
-            {'value': '10,000+',           'label': 'Lumens Delivered'},
-            {'value': '75 ~ 90+',          'label': 'CRI'},
-            {'value': '3000K ~ 5700K',     'label': 'Color Temperature'},
-            {'value': 'IP66',              'label': 'Protection'},
-            {'value': '0-10V, DALI, DMX',   'label': 'Controllable'},
-        ],
-    },
-    'fl4m': {
-        'title': 'FL4M Series',
-        'subtitle': '4-module configuration of the FL M-series floodlight family.',
-        'images': [
-            {'src': 'images/products/fl4m/fl4m-01.png', 'alt': 'FL4M Series — view 1'},
-            {'src': 'images/products/fl4m/fl4m-02.png', 'alt': 'FL4M Series — view 2'},
-            {'src': 'images/products/fl4m/fl4m-03.png', 'alt': 'FL4M Series — view 3'},
-            {'src': 'images/products/fl4m/fl4m-04.png', 'alt': 'FL4M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '320W',              'label': 'Illumination'},
-            {'value': '40,000+',           'label': 'Lumens Delivered'},
-            {'value': '75 ~ 90+',          'label': 'CRI'},
-            {'value': '3000K ~ 5700K',     'label': 'Color Temperature'},
-            {'value': 'IP66',              'label': 'Protection'},
-            {'value': '0-10V, DALI, DMX',   'label': 'Controllable'},
-        ],
-        'banner_image': 'images/products/fl4m/fl4m-3d-view.png',
-    },
-    'fl6m': {
-        'title': 'FL6M Series',
-        'subtitle': '6-module configuration of the FL M-series floodlight family.',
-        'images': [
-            {'src': 'images/products/fl6m/fl6m-01.png', 'alt': 'FL6M Series — view 1'},
-            {'src': 'images/products/fl6m/fl6m-02.png', 'alt': 'FL6M Series — view 2'},
-            {'src': 'images/products/fl6m/fl6m-03.png', 'alt': 'FL6M Series — view 3'},
-            {'src': 'images/products/fl6m/fl6m-04.png', 'alt': 'FL6M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '480W',        'label': 'Power'},
-            {'value': '130 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '15°-60°',     'label': 'Beam Angle'},
-        ],
-    },
-    'fl9m': {
-        'title': 'FL9M Series',
-        'subtitle': '9-module configuration of the FL M-series floodlight family.',
-        'images': [
-            {'src': 'images/products/fl9m/fl9m-01.png', 'alt': 'FL9M Series — view 1'},
-            {'src': 'images/products/fl9m/fl9m-02.png', 'alt': 'FL9M Series — view 2'},
-            {'src': 'images/products/fl9m/fl9m-03.png', 'alt': 'FL9M Series — view 3'},
-            {'src': 'images/products/fl9m/fl9m-04.png', 'alt': 'FL9M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '720W',        'label': 'Power'},
-            {'value': '130 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '15°-60°',     'label': 'Beam Angle'},
-        ],
-    },
-    'fl12m': {
-        'title': 'FL12M Series',
-        'subtitle': '12-module configuration of the FL M-series floodlight family.',
-        'images': [
-            {'src': 'images/products/fl12m/fl12m-01.png', 'alt': 'FL12M Series — view 1'},
-            {'src': 'images/products/fl12m/fl12m-02.png', 'alt': 'FL12M Series — view 2'},
-            {'src': 'images/products/fl12m/fl12m-03.png', 'alt': 'FL12M Series — view 3'},
-            {'src': 'images/products/fl12m/fl12m-04.png', 'alt': 'FL12M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '960W',        'label': 'Power'},
-            {'value': '130 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '15°-60°',     'label': 'Beam Angle'},
-        ],
-    },
-    'fl16m': {
-        'title': 'FL16M Series',
-        'subtitle': '16-module configuration of the FL M-series floodlight family.',
-        'images': [
-            {'src': 'images/products/fl16m/fl16m-01.png', 'alt': 'FL16M Series — view 1'},
-            {'src': 'images/products/fl16m/fl16m-02.png', 'alt': 'FL16M Series — view 2'},
-            {'src': 'images/products/fl16m/fl16m-03.png', 'alt': 'FL16M Series — view 3'},
-            {'src': 'images/products/fl16m/fl16m-04.png', 'alt': 'FL16M Series — view 4'},
-        ],
-        'specs': [
-            {'value': '1280W',       'label': 'Power'},
-            {'value': '130 lm/W',    'label': 'Efficacy'},
-            {'value': 'IP66',        'label': 'Protection'},
-            {'value': '15°-60°',     'label': 'Beam Angle'},
-        ],
-    },
-    'vsp-system':      {'title': 'VSP System',       'subtitle': 'Vision Strobe Protection system for broadcast venues.'},
-    'rgb-rgbw-series': {'title': 'RGB/RGBW Series',  'subtitle': 'Color-tunable RGB/RGBW floodlight for events and façade lighting.'},
-}
-
-
-def product_series(request, slug):
-    """Sub-series detail page (e.g. /products/series/fl1m/).
-
-    Renders a two-column layout with an image carousel on the left and
-    product info/specs on the right, mirroring the product_detail layout
-    but with multiple images (carousel) instead of a single image.
-    """
-    context = get_common_context()
-    lang = get_language()
-
-    product_categories = _get_products_sidebar(lang)
-    context['product_categories'] = product_categories
-
-    series_data = _SUBSERIES_CATALOG.get(slug)
-    if series_data is None:
-        context['series_title'] = _('Product Series Not Found')
-        context['series_subtitle'] = ''
-        context['gallery'] = []
-        context['specs'] = []
+    if project:
+        context['project'] = project
+        context['gallery'] = project.gallery
+        active_venue_type, active_sport_type = _resolve_project_sidebar(getattr(project, 'sport_type', ''), lang)
+        context['active_venue_type'] = active_venue_type
+        context['active_sport_type'] = active_sport_type
+        context['active_venue_type_label'] = _t(active_venue_type, lang)
+        context['active_sport_type_label'] = _t(active_sport_type, lang)
     else:
-        context['series_title'] = series_data.get('title', '')
-        context['series_subtitle'] = _t(series_data.get('subtitle', ''), lang)
-        # Resolve static URLs for gallery images
-        gallery = []
-        for img in series_data.get('images', []):
-            gallery.append({
-                'src': static(img['src']),
-                'alt': img.get('alt', ''),
-            })
-        context['gallery'] = gallery
-        # Translate spec labels (values are technical, kept as-is)
-        specs = []
-        for spec in series_data.get('specs', []):
-            specs.append({
-                'value': spec['value'],
-                'label': _t(spec['label'], lang),
-            })
-        context['specs'] = specs
-        banner_img = series_data.get('banner_image', '')
-        context['banner_image'] = static(banner_img) if banner_img else ''
+        context['active_venue_type'] = ''
+        context['active_sport_type'] = ''
 
-    # Resolve active series + subseries keys for sidebar highlighting
-    context['active_series'] = ''
-    context['active_subseries'] = slug
-    for cat in product_categories:
-        for s in cat['series']:
-            if 'subseries' in s:
-                for sub in s['subseries']:
-                    if sub['slug'] == slug:
-                        context['active_series'] = s['key']
-                        context['active_subseries'] = sub['key']
-                        context['parent_series_slug'] = s['slug']
-                        break
-                if context['active_series']:
-                    break
-        if context['active_series']:
-            break
-
-    return render(request, 'product_series.html', context)
+    return render(request, 'project_detail.html', context)
