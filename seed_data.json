@@ -319,6 +319,7 @@
       "image": "images/products/fl4m/fl4m-01.png",
       "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
       "dimension_image": "images/products/fl4m/fl4m-3d-view.png",
+      "beam_angle_image": "images/products/fl4m/beam_angles_reference.png",
       "order": 12,
       "parent_slug": "m-series",
       "translations": {},
