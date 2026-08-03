@@ -1,10 +1,14 @@
+import json
+
 from django import forms
 from django.contrib import admin
 from django.conf import settings
 from django.core.cache import cache
+from django.utils.html import escape, mark_safe
 from .models import (
     Product, ProductImage, Project, ProjectImage,
-    ContactMessage, SiteConfig, Visitor, DailyStats
+    ContactMessage, SiteConfig, Visitor, DailyStats,
+    NewsArticle,
 )
 
 # Admin branding with version
@@ -13,42 +17,61 @@ admin.site.site_title = f'SolarOne Admin v{settings.APP_VERSION}'
 admin.site.index_title = f'Administration (v{settings.APP_VERSION})'
 
 
+class SpecsWidget(forms.Widget):
+    """Render the flexible specs JSON as 6 label/value input pairs."""
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = []
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except Exception:
+                value = []
+        if not isinstance(value, list):
+            value = []
+        while len(value) < 6:
+            value.append({})
+        value = value[:6]
+
+        inputs = []
+        for i, spec in enumerate(value):
+            label = spec.get('label', '') if isinstance(spec, dict) else ''
+            val = spec.get('value', '') if isinstance(spec, dict) else ''
+            inputs.append(
+                f'<input type="text" name="{name}_{i}_label" value="{escape(label)}" '
+                f'placeholder="Label {i + 1}" style="padding:6px 8px;border:1px solid #ccc;border-radius:4px;width:100%;box-sizing:border-box;">'
+                f'<input type="text" name="{name}_{i}_value" value="{escape(val)}" '
+                f'placeholder="Value {i + 1}" style="padding:6px 8px;border:1px solid #ccc;border-radius:4px;width:100%;box-sizing:border-box;">'
+            )
+        return mark_safe(
+            f'<div style="max-width:900px;">'
+            f'<p style="margin:0 0 10px;color:#666;font-size:12px;">'
+            f'最多 6 组参数，每行 2 组（4 列），共 3 行，与前台显示一致。</p>'
+            f'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px 12px;">'
+            f'{"".join(inputs)}'
+            f'</div></div>'
+        )
+
+    def value_from_datadict(self, data, files, name):
+        specs = []
+        for i in range(6):
+            label = data.get(f'{name}_{i}_label', '').strip()
+            value = data.get(f'{name}_{i}_value', '').strip()
+            if label or value:
+                specs.append({'label': label, 'value': value})
+        return specs
+
+
 class ProductAdminForm(forms.ModelForm):
-    """Custom form that exposes the flexible specs JSON as 6 label/value pairs."""
+    """Custom form that renders specs via SpecsWidget."""
 
     class Meta:
         model = Product
         fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Create 6 pairs of label/value inputs
-        specs = self.instance.specs or []
-        for i in range(6):
-            spec = specs[i] if i < len(specs) else {}
-            self.fields[f'spec_{i + 1}_label'] = forms.CharField(
-                label=f'Spec {i + 1} label',
-                required=False,
-                initial=spec.get('label', ''),
-                widget=forms.TextInput(attrs={'placeholder': 'e.g. Power'}),
-            )
-            self.fields[f'spec_{i + 1}_value'] = forms.CharField(
-                label=f'Spec {i + 1} value',
-                required=False,
-                initial=spec.get('value', ''),
-                widget=forms.TextInput(attrs={'placeholder': 'e.g. 80W'}),
-            )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        specs = []
-        for i in range(6):
-            label = cleaned_data.pop(f'spec_{i + 1}_label', '').strip()
-            value = cleaned_data.pop(f'spec_{i + 1}_value', '').strip()
-            if label or value:
-                specs.append({'label': label, 'value': value})
-        cleaned_data['specs'] = specs
-        return cleaned_data
+        widgets = {
+            'specs': SpecsWidget,
+        }
 
 
 class CacheClearMixin:
@@ -92,16 +115,9 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Content', {
             'fields': ('description', 'translations')
         }),
-        ('Specs (flexible — up to 6, rendered 2 per row)', {
-            'fields': (
-                ('spec_1_label', 'spec_1_value'),
-                ('spec_2_label', 'spec_2_value'),
-                ('spec_3_label', 'spec_3_value'),
-                ('spec_4_label', 'spec_4_value'),
-                ('spec_5_label', 'spec_5_value'),
-                ('spec_6_label', 'spec_6_value'),
-            ),
-            'description': '每个参数包含 label（名称）和 value（数值）。最多 6 组，前台默认每行显示 2 个。'
+        ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
+            'fields': ('specs',),
+            'description': '每个参数包含 label（名称）和 value（数值）。最多 6 组，每行 2 组（4 列），共 3 行，与前台显示一致。'
         }),
         ('Legacy specs (read-only, will be migrated to Specs above)', {
             'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
@@ -140,6 +156,16 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'description': '上传图片时请参考字段下方的尺寸提示；项目详情页轮播图请在下方“项目轮播图”中添加。'
         }),
     )
+
+
+@admin.register(NewsArticle)
+class NewsArticleAdmin(CacheClearMixin, admin.ModelAdmin):
+    list_display = ('title', 'published_at', 'is_published')
+    list_filter = ('is_published',)
+    list_editable = ['is_published']
+    prepopulated_fields = {'slug': ('title',)}
+    search_fields = ['title', 'summary', 'content']
+    date_hierarchy = 'published_at'
 
 
 @admin.register(ContactMessage)

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+        <div class="sidebar-nav-header">{% trans "News" %}</div>
+        <nav class="sidebar-nav-list">
+          <a href="{% url 'news' %}" class="sidebar-nav-child active">{% trans "All News" %}</a>
+        </nav>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="sidebar-content">
+        <div class="sidebar-content-header" style="margin-bottom: 40px;">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "SolarOne News" %}</span>
+          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Latest Updates" %}</h1>
+          <p class="section-body" style="max-width: none;">{% trans "News, product launches, and insights from SolarOne." %}</p>
+        </div>
+
+        <div class="news-grid">
+          {% for article in articles %}
+          <article class="news-card reveal">
+            {% if article.image %}
+            <div class="news-card-img">
+              <img src="{{ article.image.url }}" alt="{{ article.title }}">
+            </div>
+            {% endif %}
+            <div class="news-card-body">
+              <div class="news-card-meta">{{ article.published_at|date:"Y-m-d" }}</div>
+              <h3 class="news-card-title">{{ article.title }}</h3>
+              {% if article.summary %}<p class="news-card-summary">{{ article.summary }}</p>{% endif %}
+              <div class="news-card-content">{{ article.content|linebreaks }}</div>
+            </div>
+          </article>
+          {% empty %}
+          <p class="section-body" style="color: var(--ink-mute);">{% trans "No news articles yet." %}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .news-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .news-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .news-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.35);
+  }
+  .news-card-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-raised);
+  }
+  .news-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .news-card-body {
+    padding: 28px 24px 32px;
+  }
+  .news-card-meta {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .news-card-title {
+    font-family: var(--ff-display);
+    font-size: var(--fs-card-title);
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .news-card-summary {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .news-card-content {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--ink-mute);
+  }
+  .news-card-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 900px) {
+    .sidebar-layout {
+      grid-template-columns: 1fr !important;
+    }
+    .sidebar-nav {
+      position: relative !important;
+      top: auto !important;
+    }
+  }
+</style>
+
+{% endblock %}

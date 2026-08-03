@@ -1,8 +1,10 @@
 import os
 import json
 import logging
+from pathlib import Path
 from django.shortcuts import render
 from django.contrib import messages
+from django.contrib.staticfiles import finders
 from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
@@ -127,6 +129,58 @@ def _static_url(path):
     return static(path) if path else ''
 
 
+def _clean_hashed_name(name: str) -> str:
+    """Strip Django-upload hashed suffix like _yPJsGNE from filename."""
+    stem = name.rsplit('.', 1)[0]
+    ext = name.rsplit('.', 1)[-1]
+    if '_' in stem:
+        stem = stem.rsplit('_', 1)[0]
+    return f'{stem}.{ext}'
+
+
+def _map_project_image(db_path: str) -> str:
+    """Map DB media path to static path for a project main image."""
+    if not db_path:
+        return ''
+    if db_path.startswith('images/'):
+        return db_path
+    name = Path(db_path).name
+    clean_name = _clean_hashed_name(name)
+    if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
+        return f'images/processed/{clean_name}'
+    if clean_name in ('home-project.webp',):
+        return f'images/{clean_name}'
+    return f'images/processed/{clean_name}'
+
+
+def _map_project_gallery(db_path: str) -> str:
+    """Map DB media path to static path for a project gallery image."""
+    if not db_path:
+        return ''
+    if db_path.startswith('images/'):
+        return db_path
+    name = Path(db_path).name
+    clean_name = _clean_hashed_name(name)
+    if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
+        return f'images/processed/{clean_name}'
+    if clean_name in ('home-project.webp',):
+        return f'images/{clean_name}'
+    return f'images/processed/{clean_name}'
+
+
+def _project_image_url(field):
+    """Return image URL, preferring committed static assets when available."""
+    if not field or not field.name:
+        return ''
+    mapped = _map_project_image(field.name)
+    if mapped and finders.find(mapped):
+        return static(mapped)
+    media_full = os.path.join(settings.MEDIA_ROOT, field.name)
+    if os.path.exists(media_full):
+        return field.url
+    return field.url
+
+
 def _build_specs(obj):
     """Build a list of spec dicts from a product-like object."""
     spec_fields = [
@@ -193,10 +247,10 @@ def _enrich_project(project, lang):
     project.results_t = project.t('results', lang)
 
     if isinstance(project, Project):
-        project.image_url = _media_url(project.image)
+        project.image_url = _project_image_url(project.image)
         project.gallery = [
             {
-                'src': img.image.url,
+                'src': _project_image_url(img.image),
                 'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
             }
             for i, img in enumerate(project.images.all())
@@ -778,6 +832,17 @@ def product_detail(request, slug):
 def product_series(request, slug):
     """Legacy sub-series URL: now uses the same unified detail template."""
     return product_detail(request, slug)
+
+
+def news(request):
+    context = get_common_context()
+    articles = []
+    try:
+        articles = list(NewsArticle.objects.filter(is_published=True).order_by('-published_at'))
+    except Exception:
+        logger.warning('DB news query failed', exc_info=True)
+    context['articles'] = articles
+    return render(request, 'news.html', context)
 
 
 def projects(request):

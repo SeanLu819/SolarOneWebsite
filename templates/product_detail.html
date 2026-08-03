@@ -132,8 +132,46 @@
         <!-- Product dimension diagram -->
         {% if product.dimension_image_url %}
         <div class="detail-dimension">
-          <span class="detail-dimension-label">{% trans "Dimensions" %}</span>
+          <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
           <img src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}">
+        </div>
+        {% endif %}
+
+        <!-- Ordering information — FL4M only -->
+        {% if product.slug == 'fl4m' %}
+        <div class="detail-ordering">
+          <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
+          <p class="detail-ordering-model">Model Number: FL4M-320W-30K-S</p>
+          <div class="detail-ordering-table-wrap">
+            <table class="detail-ordering-table">
+              <thead>
+                <tr>
+                  <th>{% trans "Series Name" %}</th>
+                  <th>{% trans "System Power" %}</th>
+                  <th>{% trans "CCT" %}</th>
+                  <th>{% trans "Voltage" %}</th>
+                  <th>{% trans "Beam Angle" %}</th>
+                  <th>{% trans "Fixture Color(option)" %}</th>
+                  <th>{% trans "Controls (Option)" %}</th>
+                  <th>{% trans "Bracket Type (option)" %}</th>
+                  <th>{% trans "Power Driver Location" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{% trans "FL4M" %}<br><span class="ordering-sub">{% trans "(Light With 4 Module)" %}</span></td>
+                  <td>320W</td>
+                  <td>30=3000K<br>40=4000K<br>57=5700K</td>
+                  <td>S=Standard Voltage<br>(110-277VAC)<br>H=High Voltage<br>(347-480VAC)</td>
+                  <td>12=12°<br>18=18°<br>30=30°<br>50=50°</td>
+                  <td>GRY=GREY<br>BLK=Black</td>
+                  <td>1. 0-10V<br>2. DMX<br>3. Dali<br>4. Zigbee</td>
+                  <td>U = Hang Mount Bracket<br>L = sitting Mount Bracket</td>
+                  <td>W = With Fixture<br>S = Separated from Fixture</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         {% endif %}
 
@@ -246,7 +284,7 @@
   .detail-cert-image {
     width: 100%;
     max-width: 420px;
-    margin-top: 32px;
+    margin-top: 20px;
     border-radius: 10px;
     overflow: hidden;
     background: transparent;
@@ -268,7 +306,7 @@
   .detail-dimension-label {
     display: block;
     font-family: var(--ff-mono);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
@@ -285,25 +323,86 @@
     background: var(--bg-soft);
   }
 
+  /* === Ordering information table === */
+  .detail-ordering {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .detail-ordering-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .detail-ordering-model {
+    font-family: var(--ff-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .detail-ordering-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+  .detail-ordering-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .detail-ordering-table th,
+  .detail-ordering-table td {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid var(--line);
+  }
+  .detail-ordering-table th {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg-raised);
+    text-transform: capitalize;
+    letter-spacing: -0.01em;
+  }
+  .detail-ordering-table td {
+    background: transparent;
+  }
+  .detail-ordering-table .ordering-sub {
+    font-size: 0.7rem;
+    color: var(--ink-mute);
+  }
+
   .detail-desc {
     font-size: 1.05rem;
     line-height: 1.7;
     color: var(--ink-soft);
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
   .detail-specs {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+    gap: 16px 32px;
   }
   .detail-spec {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
   .detail-spec-value {
     font-family: var(--ff-display);
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 600;
     color: var(--ink);
     letter-spacing: -0.02em;
