@@ -77,6 +77,8 @@ class _DictProduct:
         self.beam_angle = item.get('beam_angle', '')
         self.image = item.get('image', '')
         self.banner_image = item.get('banner_image', '')
+        self.dimension_image = item.get('dimension_image', '')
+        self.beam_angle_image = item.get('beam_angle_image', '')
         self.order = item.get('order', 0)
         self.translations = item.get('translations', {}) or {}
         self.parent_slug = item.get('parent_slug', '')
@@ -219,6 +221,7 @@ def _enrich_product(product, lang):
         product.image_url = _media_url(product.image)
         product.banner_image_url = _media_url(product.banner_image)
         product.dimension_image_url = _media_url(product.dimension_image)
+        product.beam_angle_image_url = _media_url(product.beam_angle_image)
         product.gallery = [
             {
                 'src': img.image.url,
@@ -230,7 +233,8 @@ def _enrich_product(product, lang):
     else:
         product.image_url = _static_url(product.image)
         product.banner_image_url = _static_url(product.banner_image)
-        product.dimension_image_url = ''
+        product.dimension_image_url = _static_url(product.dimension_image)
+        product.beam_angle_image_url = _static_url(product.beam_angle_image)
         product.gallery = [
             {'src': _static_url(p), 'alt': f"{product.name_t} — view {i + 1}"}
             for i, p in enumerate(product.gallery_paths)

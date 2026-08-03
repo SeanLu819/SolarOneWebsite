@@ -124,8 +124,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'classes': ('collapse',),
         }),
         ('Images', {
-            'fields': ('image', 'banner_image', 'dimension_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用“Dimension image”字段，不要在轮播图中重复上传。'
+            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用“Dimension image”字段，配光曲线请使用“Beam angle image”字段，不要在轮播图中重复上传。'
         }),
     )
 

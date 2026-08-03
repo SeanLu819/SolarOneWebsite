@@ -38,6 +38,11 @@ class Product(models.Model):
         blank=True,
         help_text='产品尺寸图。建议 1920×1080 像素（16:9，最小 960×540），会在详情页规格下方单独展示。'
     )
+    beam_angle_image = models.ImageField(
+        upload_to='products/beam_angles/',
+        blank=True,
+        help_text='配光曲线/光束角示意图。建议 1920×1080 像素（16:9，最小 960×540），会在尺寸图上方展示。'
+    )
     parent = models.ForeignKey(
         'self',
         null=True,

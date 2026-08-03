@@ -130,10 +130,19 @@
         </div>
 
         <!-- Product dimension diagram -->
-        {% if product.dimension_image_url %}
+        {% if product.dimension_image_url or product.beam_angle_image_url %}
         <div class="detail-dimension">
+          {% if product.beam_angle_image_url %}
+          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
+          <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}">
+          {% elif product.beam_angle %}
+          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
+          <span class="detail-beam-angle-value">{{ product.beam_angle }}</span>
+          {% endif %}
+          {% if product.dimension_image_url %}
           <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
-          <img src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}">
+          <img class="detail-dimension-img" src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}">
+          {% endif %}
         </div>
         {% endif %}
 
@@ -303,6 +312,44 @@
     padding-top: 32px;
     border-top: 1px solid var(--line);
   }
+  .detail-beam-angle-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .detail-beam-angle-value {
+    display: block;
+    font-family: var(--ff-display);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .detail-dimension-img {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+  .detail-beam-angle-img {
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
+    margin: 0 auto 32px;
+  }
   .detail-dimension-label {
     display: block;
     font-family: var(--ff-mono);
@@ -312,15 +359,10 @@
     color: var(--accent);
     margin-bottom: 16px;
   }
-  .detail-dimension img {
-    width: 100%;
-    max-width: 1000px;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 12px;
-    background: var(--bg-soft);
+  /* Dimension / beam-angle diagram dark-mode inversion: black background + white lines */
+  [data-theme="dark"] .detail-dimension-img,
+  [data-theme="dark"] .detail-beam-angle-img {
+    filter: invert(1);
   }
 
   /* === Ordering information table === */
