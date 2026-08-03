@@ -48,6 +48,16 @@
         "images/products/m-series/m-series-02.webp",
         "images/products/m-series/m-series-03.webp",
         "images/products/m-series/m-series-04.webp"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "80~1280W+"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        }
       ]
     },
     {
@@ -57,8 +67,8 @@
       "category": "FLOODLIGHT",
       "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
       "power": "260W",
-      "efficacy": "",
-      "output": "125lm/W",
+      "efficacy": "125lm/W",
+      "output": "32500+lm",
       "beam_angle": "18~100°",
       "protection": "",
       "image": "images/processed/floodlight.webp",
@@ -98,6 +108,24 @@
         "images/products/rt410/rt410fl-s-02.webp",
         "images/products/rt410/rt410fl-s-03.webp",
         "images/products/rt410/rt410fl-s-04.webp"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "260W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "32500+lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~100°"
+        }
       ]
     },
     {
@@ -117,7 +145,21 @@
       "order": 3,
       "parent_slug": "",
       "translations": {},
-      "gallery": []
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "100~300W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "120lm/W"
+        },
+        {
+          "label": "Protection",
+          "value": "IP66"
+        }
+      ]
     },
     {
       "pk": 11,
@@ -167,7 +209,8 @@
         "images/products/vsp12m/vsp12m-02.webp",
         "images/products/vsp12m/vsp12m-03.webp",
         "images/products/vsp12m/vsp12m-04.webp"
-      ]
+      ],
+      "specs": []
     },
     {
       "pk": 12,
@@ -217,7 +260,8 @@
         "images/products/vsp12m/vsp12m-02.webp",
         "images/products/vsp12m/vsp12m-03.webp",
         "images/products/vsp12m/vsp12m-04.webp"
-      ]
+      ],
+      "specs": []
     },
     {
       "pk": 5,
@@ -226,9 +270,9 @@
       "category": "FLOODLIGHT",
       "description": "FL1M modular floodlight configuration — part of the M Series family.",
       "power": "80W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "10k+lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl1m/fl1m-01.png",
       "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
@@ -241,6 +285,24 @@
         "images/products/fl1m/fl1m-02.png",
         "images/products/fl1m/fl1m-03.png",
         "images/products/fl1m/fl1m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "80W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "10k+lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     },
     {
@@ -250,9 +312,9 @@
       "category": "FLOODLIGHT",
       "description": "FL4M modular floodlight configuration — part of the M Series family.",
       "power": "320W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "40K+ lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl4m/fl4m-01.png",
       "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
@@ -265,6 +327,24 @@
         "images/products/fl4m/fl4m-02.png",
         "images/products/fl4m/fl4m-03.png",
         "images/products/fl4m/fl4m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "320W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "40K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     },
     {
@@ -274,9 +354,9 @@
       "category": "FLOODLIGHT",
       "description": "FL6M modular floodlight configuration — part of the M Series family.",
       "power": "480W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "60K+ lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl6m/fl6m-01.png",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
@@ -289,6 +369,24 @@
         "images/products/fl6m/fl6m-02.png",
         "images/products/fl6m/fl6m-03.png",
         "images/products/fl6m/fl6m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "480W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "60K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     },
     {
@@ -298,9 +396,9 @@
       "category": "FLOODLIGHT",
       "description": "FL9M modular floodlight configuration — part of the M Series family.",
       "power": "630W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "90K+ lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl9m/fl9m-01.png",
       "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
@@ -313,6 +411,24 @@
         "images/products/fl9m/fl9m-02.png",
         "images/products/fl9m/fl9m-03.png",
         "images/products/fl9m/fl9m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "630W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "90K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     },
     {
@@ -322,9 +438,9 @@
       "category": "FLOODLIGHT",
       "description": "FL12M modular floodlight configuration — part of the M Series family.",
       "power": "1000W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "120K+ lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl12m/fl12m-01.png",
       "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
@@ -337,6 +453,24 @@
         "images/products/fl12m/fl12m-02.png",
         "images/products/fl12m/fl12m-03.png",
         "images/products/fl12m/fl12m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "1000W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "120K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     },
     {
@@ -346,9 +480,9 @@
       "category": "FLOODLIGHT",
       "description": "FL16M modular floodlight configuration — part of the M Series family.",
       "power": "1280W",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
+      "efficacy": "125lm/W",
+      "output": "160K+ lm",
+      "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl16m/fl16m-01.png",
       "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
@@ -361,6 +495,24 @@
         "images/products/fl16m/fl16m-02.png",
         "images/products/fl16m/fl16m-03.png",
         "images/products/fl16m/fl16m-04.png"
+      ],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "1280W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "160K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
       ]
     }
   ],

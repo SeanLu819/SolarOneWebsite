@@ -109,13 +109,14 @@
           <div class="detail-info">
             <p class="detail-desc">{{ product.description_t }}</p>
 
-            {% if product.power or product.efficacy or product.output or product.beam_angle or product.protection %}
+            {% if product.specs %}
             <div class="detail-specs">
-              {% if product.power %}<div class="detail-spec"><span class="detail-spec-value">{{ product.power }}</span><span class="detail-spec-label">{% trans "Power" %}</span></div>{% endif %}
-              {% if product.efficacy %}<div class="detail-spec"><span class="detail-spec-value">{{ product.efficacy }}</span><span class="detail-spec-label">{% trans "Efficacy" %}</span></div>{% endif %}
-              {% if product.output %}<div class="detail-spec"><span class="detail-spec-value">{{ product.output }}</span><span class="detail-spec-label">{% trans "Output" %}</span></div>{% endif %}
-              {% if product.beam_angle %}<div class="detail-spec"><span class="detail-spec-value">{{ product.beam_angle }}</span><span class="detail-spec-label">{% trans "Beam Angle" %}</span></div>{% endif %}
-              {% if product.protection %}<div class="detail-spec"><span class="detail-spec-value">{{ product.protection }}</span><span class="detail-spec-label">{% trans "Protection" %}</span></div>{% endif %}
+              {% for spec in product.specs %}
+              <div class="detail-spec">
+                <span class="detail-spec-value">{{ spec.value }}</span>
+                <span class="detail-spec-label">{{ spec.label }}</span>
+              </div>
+              {% endfor %}
             </div>
             {% endif %}
 
@@ -291,8 +292,8 @@
     margin-bottom: 40px;
   }
   .detail-specs {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 32px;
   }
   .detail-spec {

@@ -79,6 +79,7 @@ class _DictProduct:
         self.translations = item.get('translations', {}) or {}
         self.parent_slug = item.get('parent_slug', '')
         self.gallery_paths = item.get('gallery', [])
+        self.specs = item.get('specs', []) or []
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
@@ -148,7 +149,17 @@ def _enrich_product(product, lang):
     product.name_t = product.t('name', lang)
     product.description_t = product.t('description', lang)
     product.category_t = product.t('category', lang)
-    product.specs = _build_specs(product)
+
+    # Prefer flexible specs JSON; fall back to legacy fields for old records.
+    raw_specs = getattr(product, 'specs', None)
+    if raw_specs:
+        product.specs = [
+            {'label': str(s.get('label', '')), 'value': str(s.get('value', ''))}
+            for s in raw_specs
+            if s and (s.get('label') or s.get('value'))
+        ]
+    else:
+        product.specs = _build_specs(product)
 
     if isinstance(product, Product):
         product.image_url = _media_url(product.image)

@@ -51,6 +51,14 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"name": "...", "description": "...", "category": "..."}, "es": {...}, ...}
     translations = JSONField(default=dict, blank=True)
+    # Flexible specs: list of up to 6 {"label": "...", "value": "..."} dicts.
+    # Kept as JSON so admins can enter arbitrary labels/values and render 2 per row.
+    specs = JSONField(
+        default=list,
+        blank=True,
+        verbose_name='Product Specs',
+        help_text='产品参数，最多 6 组。格式：[{"label": "Power", "value": "80W"}, ...]。页面默认 2 个一排，共 3 排。'
+    )
 
     class Meta:
         ordering = ['order', 'pk']

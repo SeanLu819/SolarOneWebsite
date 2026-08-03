@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.conf import settings
 from django.core.cache import cache
@@ -10,6 +11,44 @@ from .models import (
 admin.site.site_header = f'SolarOne Admin v{settings.APP_VERSION}'
 admin.site.site_title = f'SolarOne Admin v{settings.APP_VERSION}'
 admin.site.index_title = f'Administration (v{settings.APP_VERSION})'
+
+
+class ProductAdminForm(forms.ModelForm):
+    """Custom form that exposes the flexible specs JSON as 6 label/value pairs."""
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Create 6 pairs of label/value inputs
+        specs = self.instance.specs or []
+        for i in range(6):
+            spec = specs[i] if i < len(specs) else {}
+            self.fields[f'spec_{i + 1}_label'] = forms.CharField(
+                label=f'Spec {i + 1} label',
+                required=False,
+                initial=spec.get('label', ''),
+                widget=forms.TextInput(attrs={'placeholder': 'e.g. Power'}),
+            )
+            self.fields[f'spec_{i + 1}_value'] = forms.CharField(
+                label=f'Spec {i + 1} value',
+                required=False,
+                initial=spec.get('value', ''),
+                widget=forms.TextInput(attrs={'placeholder': 'e.g. 80W'}),
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        specs = []
+        for i in range(6):
+            label = cleaned_data.pop(f'spec_{i + 1}_label', '').strip()
+            value = cleaned_data.pop(f'spec_{i + 1}_value', '').strip()
+            if label or value:
+                specs.append({'label': label, 'value': value})
+        cleaned_data['specs'] = specs
+        return cleaned_data
 
 
 class CacheClearMixin:
@@ -39,7 +78,8 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
-    list_display = ('name', 'category', 'parent', 'power', 'order')
+    form = ProductAdminForm
+    list_display = ('name', 'category', 'parent', 'order')
     list_filter = ('category', 'parent')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
@@ -52,8 +92,20 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Content', {
             'fields': ('description', 'translations')
         }),
-        ('Specs', {
-            'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection'))
+        ('Specs (flexible — up to 6, rendered 2 per row)', {
+            'fields': (
+                ('spec_1_label', 'spec_1_value'),
+                ('spec_2_label', 'spec_2_value'),
+                ('spec_3_label', 'spec_3_value'),
+                ('spec_4_label', 'spec_4_value'),
+                ('spec_5_label', 'spec_5_value'),
+                ('spec_6_label', 'spec_6_value'),
+            ),
+            'description': '每个参数包含 label（名称）和 value（数值）。最多 6 组，前台默认每行显示 2 个。'
+        }),
+        ('Legacy specs (read-only, will be migrated to Specs above)', {
+            'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
+            'classes': ('collapse',),
         }),
         ('Images', {
             'fields': ('image', 'banner_image', 'dimension_image'),
