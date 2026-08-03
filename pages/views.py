@@ -183,6 +183,28 @@ def _project_image_url(field):
     return field.url
 
 
+def _product_image_url(product, field_name):
+    """Return product image URL, preferring committed static assets when available.
+
+    Static fallback path: static/images/products/{slug}/{filename}
+    This lets Vercel deployments serve product dimension/beam-angle images
+    that are committed to the repo, while local dev still uses uploaded media.
+    """
+    field = getattr(product, field_name, None)
+    if not field or not field.name:
+        return ''
+    slug = getattr(product, 'slug', '')
+    filename = Path(field.name).name
+    if slug and filename:
+        static_path = f'images/products/{slug}/{filename}'
+        if finders.find(static_path):
+            return static(static_path)
+    media_full = os.path.join(settings.MEDIA_ROOT, field.name)
+    if os.path.exists(media_full):
+        return field.url
+    return field.url
+
+
 def _build_specs(obj):
     """Build a list of spec dicts from a product-like object."""
     spec_fields = [
@@ -220,8 +242,8 @@ def _enrich_product(product, lang):
     if isinstance(product, Product):
         product.image_url = _media_url(product.image)
         product.banner_image_url = _media_url(product.banner_image)
-        product.dimension_image_url = _media_url(product.dimension_image)
-        product.beam_angle_image_url = _media_url(product.beam_angle_image)
+        product.dimension_image_url = _product_image_url(product, 'dimension_image')
+        product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
         product.gallery = [
             {
                 'src': img.image.url,
