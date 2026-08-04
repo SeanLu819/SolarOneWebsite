@@ -2,15 +2,20 @@
 {% load i18n %}
 {% load static %}
 
+{% block title %}SolarOne — Professional LED Sports Lighting Solutions Since 2007{% endblock %}
+{% block meta_description %}SolarOne designs and manufactures professional LED sports lighting, high bay, and industrial lighting systems. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.{% endblock %}
+{% block og_title %}SolarOne — Professional LED Sports Lighting Since 2007{% endblock %}
+{% block og_description %}SolarOne designs and manufactures professional LED sports lighting, high bay, and industrial lighting systems. Trusted in 50+ countries.{% endblock %}
+
 {% block content %}
 
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-bg hero-carousel" data-carousel>
     <div class="hero-carousel-track">
-      <img src="{% static 'images/hero-main-1.webp' %}" alt="" class="hero-slide active" width="1920" height="1080">
-      <img src="{% static 'images/hero-main-2.webp' %}" alt="" class="hero-slide" loading="lazy" width="1920" height="1078">
-      <img src="{% static 'images/hero-main-3.webp' %}" alt="" class="hero-slide" loading="lazy" width="1920" height="1078">
+      <img src="{% static 'images/hero-main-1.webp' %}" alt="LED sports stadium lighting" class="hero-slide active" width="1920" height="1080">
+      <img src="{% static 'images/hero-main-2.webp' %}" alt="Football field LED lighting" class="hero-slide" loading="lazy" width="1920" height="1078">
+      <img src="{% static 'images/hero-main-3.webp' %}" alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" width="1920" height="1078">
     </div>
   </div>
   <div class="hero-grid"></div>
@@ -34,7 +39,7 @@
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_projects|safe }}</span>
-        <span class="hero-stat-label">{% trans "Projects" %}</span>
+        <span class="hero-stat-label">{% trans "References" %}</span>
       </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_countries|safe }}</span>
@@ -57,7 +62,7 @@
   <div class="container">
     <div class="home-preview-card reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-products.webp' %}" alt="{% trans 'LED Lighting Products' %}">
+        <img src="{% static 'images/home-products.webp' %}" alt="SolarOne LED product lineup including stadium and industrial luminaires">
       </div>
       <div class="home-preview-text">
         <span class="home-preview-tag">{% trans "Products" %}</span>
@@ -76,148 +81,32 @@
   <div class="container">
     <div class="home-preview-card reversed reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-project.webp' %}" alt="{% trans 'SolarOne Projects' %}">
+        <img src="{% static 'images/home-project.webp' %}" alt="{% trans 'SolarOne LED lighting reference projects — sports venues, airports, and industrial facilities' %}">
       </div>
       <div class="home-preview-text">
-        <span class="home-preview-tag">{% trans "Projects" %}</span>
+        <span class="home-preview-tag">{% trans "References" %}</span>
         <h2>{% trans "Trusted Worldwide" %}</h2>
         <p>{{ config.projects_subtitle }}</p>
-        <a href="{% url 'projects' %}" class="home-preview-link">
-          {% trans "View All Projects" %} <span class="link-arrow">&#8250;</span>
+        <a href="{% url 'references' %}" class="home-preview-link">
+          {% trans "View All References" %} <span class="link-arrow">&#8250;</span>
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<style>
-  /* Force hero slides to fill the entire background.
-     Inlined here so it overrides any cached base.css that still
-     uses contain + max-width:825px (which shrinks 16:9 images). */
-  .hero-slide {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
-    max-height: none !important;
-    object-fit: cover !important;
-    /* Raise the visible area so the top of fixture/product shots is not
-       cropped under the nav, while keeping stadium shots balanced. */
-    object-position: center 42% !important;
-    position: absolute !important;
-    inset: 0 !important;
-    margin: 0 !important;
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ config.brand_name }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ request.scheme }}://{{ request.get_host }}/en/products/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
   }
-  .home-preview-section {
-    padding: 48px 0 0;
-  }
-  .home-preview-card {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border: 1px solid var(--line);
-    margin-bottom: 0;
-    transition: border-color 0.3s;
-  }
-  .home-preview-card:hover {
-    border-color: var(--line-strong);
-  }
-  .home-preview-img {
-    overflow: hidden;
-    min-height: 320px;
-    background: var(--bg);
-  }
-  .home-preview-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    transition: transform 0.5s ease;
-  }
-  .home-preview-card:hover .home-preview-img img {
-    transform: scale(1.03);
-  }
-  .home-preview-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 48px 48px;
-    gap: 20px;
-  }
-  .home-preview-tag {
-    font-family: var(--ff-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-  .home-preview-text h2 {
-    font-family: var(--ff-display);
-    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1.25;
-    margin-bottom: 0;
-  }
-  .home-preview-text p {
-    font-size: 0.95rem;
-    line-height: 1.75;
-    color: var(--ink-mute);
-    max-width: 480px;
-  }
-  .home-preview-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--ff-mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-    transition: gap 0.2s;
-    margin-top: 4px;
-  }
-  .home-preview-link:hover {
-    gap: 12px;
-  }
-  .home-preview-link .link-arrow {
-    transition: transform 0.2s;
-    font-size: 14px;
-  }
-  .home-preview-link:hover .link-arrow {
-    transform: translateX(4px);
-  }
-  /* Second card reverses order */
-  .home-preview-card.reversed .home-preview-img {
-    order: 2;
-  }
-  .home-preview-card.reversed .home-preview-text {
-    order: 1;
-  }
-
-  @media (max-width: 768px) {
-    .home-preview-card,
-    .home-preview-card.reversed {
-      grid-template-columns: 1fr;
-    }
-    .home-preview-card .home-preview-img,
-    .home-preview-card.reversed .home-preview-img {
-      order: -1;
-      min-height: 220px;
-    }
-    .home-preview-card .home-preview-text,
-    .home-preview-card.reversed .home-preview-text {
-      order: 1;
-      padding: 32px 24px;
-    }
-  }
-</style>
-
-{% if seed_debug %}
-<div style="position:fixed;bottom:0;left:0;right:0;background:#000;color:#0f0;padding:16px;font-family:monospace;font-size:12px;z-index:99999;overflow:auto;max-height:40vh;">
-<pre>{{ seed_debug|json_script:"seed-debug" }}</pre>
-<script>document.getElementById('seed-debug').textContent=''; document.getElementById('seed-debug').textContent=JSON.stringify({{ seed_debug|safe }}, null, 2);</script>
-</div>
-{% endif %}
+}
+</script>
 
 {% endblock %}

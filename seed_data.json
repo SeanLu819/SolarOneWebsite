@@ -520,7 +520,7 @@
   "projects": [
     {
       "pk": 1,
-      "title": "Football Field LED Retrofit",
+      "title": "Bohemia Manor High School",
       "location": "United States",
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
@@ -531,31 +531,31 @@
       "order": 1,
       "translations": {
         "fr": {
-          "title": "Rénovation LED Terrain de Football",
+          "title": "Bohemia Manor High School",
           "location": "États-Unis",
           "description": "Un design photométrique de précision a été réalisé pour garantir que les spécifications de conception soient respectées. Le projet prévoyait le remplacement de 40 projecteurs MH 1500W existants par 48 de nos LED FL9M-630W.",
           "results": "30fc éclairage moyen, uniformité 1.37:1 — dépassant les exigences du projet."
         },
         "es": {
-          "title": "Renovación LED Campo de Fútbol",
+          "title": "Bohemia Manor High School",
           "location": "Estados Unidos",
           "description": "Se completó un diseño fotométrico de precisión para garantizar el cumplimiento de las especificaciones. El proyecto requería el reemplazo de 40 luminarias MH de 1500W por 48 de nuestras LED FL9M-630W.",
           "results": "30fc iluminación promedio, uniformidad 1.37:1 — superando los requisitos del proyecto."
         },
         "de": {
-          "title": "LED-Umrüstung Fußballfeld",
+          "title": "Bohemia Manor High School",
           "location": "Vereinigte Staaten",
           "description": "Ein präzises fotometrisches Design wurde durchgeführt um sicherzustellen, dass die Designspezifikationen erfüllt werden. Das Projekt sah den Ersatz von 40 vorhandenen 1500W MH-Leuchten durch 48 unserer FL9M-630W LED vor.",
           "results": "30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 1.37:1 — übertrifft die Projektanforderungen."
         },
         "ru": {
-          "title": "Модернизация LED футбольного поля",
+          "title": "Bohemia Manor High School",
           "location": "Соединённые Штаты",
           "description": "Был выполнен точный фотометрический расчёт для обеспечения соответствия проектным спецификациям. Проект предусматривал замену 40 существующих светильников МГ 1500Вт на 48 наших LED FL9M-630W.",
           "results": "Средняя освещённость 30фк, равномерность 1.37:1 — превышение требований проекта."
         },
         "ar": {
-          "title": "ترقية LED لملاعب كرة القدم",
+          "title": "Bohemia Manor High School",
           "location": "الولايات المتحدة",
           "description": "تم إكمال تصميم ضوئي دقيق لضمان توافق المواصفات. تضمن المشروع استبدال 40 مصابيح MH بقدرة 1500 وات بـ 48 من مصابيح LED FL9M-630W.",
           "results": "متوسط إضاءة 30fc، uniformity 1.37:1 — تجاوز متطلبات المشروع."
@@ -748,7 +748,7 @@
     "about_stat_clients_label": "Happy Clients",
     "products_title": "Our Products",
     "products_subtitle": "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.",
-    "projects_title": "Featured Projects",
+    "projects_title": "Featured References",
     "projects_subtitle": "Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.",
     "contact_title": "Get in Touch",
     "contact_subtitle": "Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.",

@@ -153,7 +153,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
         ('Images', {
             'fields': ('image',),
-            'description': '上传图片时请参考字段下方的尺寸提示；项目详情页轮播图请在下方“项目轮播图”中添加。'
+            'description': 'Upload images following the size hints below. Add reference detail carousel images in the "Reference images" section below.'
         }),
     )
 
@@ -208,7 +208,7 @@ class SiteConfigAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Products Section', {
             'fields': ('products_title', 'products_subtitle')
         }),
-        ('Projects Section', {
+        ('References Section', {
             'fields': ('projects_title', 'projects_subtitle')
         }),
         ('About Section', {

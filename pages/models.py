@@ -154,7 +154,7 @@ class Project(models.Model):
     image = models.ImageField(
         upload_to='projects/',
         blank=True,
-        help_text='项目卡片封面图。建议 1280×720 像素（16:9，最小 640×360）。'
+        help_text='Reference card cover image. Recommended 1280×720 px (16:9, min 640×360).'
     )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -163,6 +163,8 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['order', 'pk']
+        verbose_name = 'Reference'
+        verbose_name_plural = 'References'
 
     def __str__(self):
         return self.title
@@ -181,19 +183,19 @@ class ProjectImage(models.Model):
         Project,
         on_delete=models.CASCADE,
         related_name='images',
-        verbose_name='项目'
+        verbose_name='Reference'
     )
     image = models.ImageField(
         upload_to='projects/gallery/',
-        help_text='项目详情轮播图。建议 1280×720 像素（16:9，最小 640×360）。'
+        help_text='Reference detail carousel image. Recommended 1280×720 px (16:9, min 640×360).'
     )
-    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt 文本')
-    order = models.IntegerField(default=0, verbose_name='排序')
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt text')
+    order = models.IntegerField(default=0, verbose_name='Order')
 
     class Meta:
         ordering = ['order', 'pk']
-        verbose_name = '项目轮播图'
-        verbose_name_plural = '项目轮播图'
+        verbose_name = 'Reference image'
+        verbose_name_plural = 'Reference images'
 
     def __str__(self):
         return f"{self.project.title} — {self.alt_text or self.image.name}"
@@ -250,8 +252,8 @@ class SiteConfig(models.Model):
     products_title = models.CharField(max_length=500, default="Our Products")
     products_subtitle = models.TextField(default="From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.")
 
-    # Projects Section
-    projects_title = models.CharField(max_length=500, default="Featured Projects")
+    # References Section
+    projects_title = models.CharField(max_length=500, default="Featured References")
     projects_subtitle = models.TextField(default="Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.")
 
     # Contact Section

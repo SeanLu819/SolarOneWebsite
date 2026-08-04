@@ -16,6 +16,12 @@ msgstr "المنتجات"
 msgid "Projects"
 msgstr "المشاريع"
 
+msgid "References"
+msgstr ""
+
+msgid "Reference Categories"
+msgstr ""
+
 msgid "About"
 msgstr "حولنا"
 
@@ -86,8 +92,17 @@ msgstr ""
 msgid "View All Projects"
 msgstr "عرض جميع المشاريع"
 
+msgid "View All References"
+msgstr ""
+
 msgid "SolarOne Projects"
 msgstr "مشاريع SolarOne"
+
+msgid "SolarOne References"
+msgstr ""
+
+msgid "Back to References"
+msgstr ""
 
 msgid "Sending..."
 msgstr "جاري الإرسال..."
@@ -182,6 +197,18 @@ msgstr "النتائج:"
 
 msgid "Project Image"
 msgstr "صورة المشروع"
+
+msgid "Reference Image"
+msgstr ""
+
+msgid "Reference Results"
+msgstr ""
+
+msgid "Reference Not Found"
+msgstr ""
+
+msgid "View reference"
+msgstr ""
 
 msgid "Power"
 msgstr "الطاقة"

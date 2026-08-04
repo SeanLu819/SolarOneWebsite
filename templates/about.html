@@ -2,18 +2,23 @@
 {% load i18n %}
 {% load static %}
 
+{% block title %}About SolarOne — LED Lighting Manufacturer Since 2007{% endblock %}
+{% block meta_description %}Learn about SolarOne, a professional LED lighting manufacturer since 2007. Specializing in sports lighting, high bay, roadway, and industrial lighting solutions for 50+ countries.{% endblock %}
+{% block og_title %}About SolarOne — LED Lighting Manufacturer Since 2007{% endblock %}
+{% block og_description %}Learn about SolarOne, a professional LED lighting manufacturer since 2007. Specializing in sports lighting and industrial lighting solutions for 50+ countries.{% endblock %}
+
 {% block content %}
 
 <!-- ============ OUR STORY ============ -->
 <section style="padding: 100px 0 80px; border-top: 1px solid var(--line);">
   <div class="container">
-    <div style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 64px; align-items: center;" class="about-story-grid">
+    <div class="about-story-grid">
       <!-- Left: Text -->
       <div class="reveal">
-        <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 20px;">{% trans "Our Story" %}</span>
-        <h2 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 32px;">
+        <span class="section-accent-label">{% trans "Our Story" %}</span>
+        <h1 style="font-family: var(--ff-display); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 32px;">
           {% trans "Innovative lighting solutions that protect the environment and inspire life." %}
-        </h2>
+        </h1>
         <p style="font-size: 1.05rem; line-height: 1.85; color: var(--ink-soft); margin-bottom: 20px;">
           {% trans "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences." %}
         </p>
@@ -24,40 +29,40 @@
       <!-- Right: Image -->
       <div class="about-story-image reveal" style="position: relative;">
         <div style="border-radius: 16px; overflow: hidden; border: 1px solid var(--line);">
-          <img src="{% static 'images/about-main.webp' %}" alt="{% trans 'About SolarOne' %}" style="width: 100%; height: auto; display: block;">
+          <img src="{% static 'images/about-main.webp' %}" alt="{% trans 'SolarOne LED lighting engineering and manufacturing headquarters in Beijing, China' %}" style="width: 100%; height: auto; display: block;">
         </div>
       </div>
     </div>
 
     <!-- Stats circles row -->
-    <div class="about-story-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; max-width: 900px; margin: 48px auto 0;">
-      <div class="reveal" style="text-align: center;">
-        <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_years|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "YEARS" %}</span>
+    <div class="about-story-stats">
+      <div class="about-stat-circle-wrap reveal">
+        <div class="about-stat-circle">
+          <span class="about-stat-circle-value">{{ config.about_stat_years|safe }}</span>
+          <span class="about-stat-circle-unit">{% trans "YEARS" %}</span>
         </div>
-        <span style="font-size: 0.85rem; color: var(--ink-mute);">{% trans "Years Experience" %}</span>
+        <span class="about-stat-circle-label">{% trans "Years Experience" %}</span>
       </div>
-      <div class="reveal" style="text-align: center;">
-        <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_projects|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "PROJECTS" %}</span>
+      <div class="about-stat-circle-wrap reveal">
+        <div class="about-stat-circle">
+          <span class="about-stat-circle-value">{{ config.about_stat_projects|safe }}</span>
+          <span class="about-stat-circle-unit">{% trans "PROJECTS" %}</span>
         </div>
-        <span style="font-size: 0.85rem; color: var(--ink-mute);">{% trans "Projects Delivered" %}</span>
+        <span class="about-stat-circle-label">{% trans "Projects Delivered" %}</span>
       </div>
-      <div class="reveal" style="text-align: center;">
-        <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_countries|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "COUNTRIES" %}</span>
+      <div class="about-stat-circle-wrap reveal">
+        <div class="about-stat-circle">
+          <span class="about-stat-circle-value">{{ config.about_stat_countries|safe }}</span>
+          <span class="about-stat-circle-unit">{% trans "COUNTRIES" %}</span>
         </div>
-        <span style="font-size: 0.85rem; color: var(--ink-mute);">{% trans "Countries Served" %}</span>
+        <span class="about-stat-circle-label">{% trans "Countries Served" %}</span>
       </div>
-      <div class="reveal" style="text-align: center;">
-        <div style="width: 100px; height: 100px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <span style="font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); line-height: 1;">{{ config.about_stat_clients|safe }}</span>
-          <span style="font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin-top: 4px;">{% trans "CLIENTS" %}</span>
+      <div class="about-stat-circle-wrap reveal">
+        <div class="about-stat-circle">
+          <span class="about-stat-circle-value">{{ config.about_stat_clients|safe }}</span>
+          <span class="about-stat-circle-unit">{% trans "CLIENTS" %}</span>
         </div>
-        <span style="font-size: 0.85rem; color: var(--ink-mute);">{% trans "Happy Clients" %}</span>
+        <span class="about-stat-circle-label">{% trans "Happy Clients" %}</span>
       </div>
     </div>
   </div>
@@ -66,18 +71,18 @@
 <!-- ============ TECHNICAL ADVANTAGES ============ -->
 <section style="padding: 80px 0;">
   <div class="container">
-    <div style="text-align: center; max-width: 800px; margin: 0 auto 40px;" class="reveal">
-      <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 16px;">{% trans "Engineering Excellence" %}</span>
+    <div class="about-tech-header reveal">
+      <span class="section-accent-label">{% trans "Engineering Excellence" %}</span>
       <h2 class="section-title" style="margin-bottom: 20px;">{% trans "Technical Advantages" %}</h2>
       <p class="section-body" style="text-align: center; margin-left: auto; margin-right: auto;">
         {% trans "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance." %}
       </p>
     </div>
 
-    <div class="about-tech-pillars" style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1100px; margin: 0 auto;">
+    <div class="about-tech-pillars">
       <!-- Pillar 1 -->
-      <div class="about-pillar reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-deep));"></div>
+      <div class="about-pillar reveal">
+        <div class="about-pillar-accent"></div>
         <div style="width: 72px; height: 72px; margin: 0 auto 28px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center;">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </div>
@@ -87,8 +92,8 @@
         </p>
       </div>
       <!-- Pillar 2 -->
-      <div class="about-pillar reveal" style="background: var(--bg-soft); border: 1px solid var(--line); border-radius: 16px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent-deep), var(--accent));"></div>
+      <div class="about-pillar reveal">
+        <div class="about-pillar-accent"></div>
         <div style="width: 72px; height: 72px; margin: 0 auto 28px; border-radius: 50%; background: var(--accent-soft); display: flex; align-items: center; justify-content: center;">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
@@ -114,7 +119,7 @@
       <!-- Optics 1: Image on top -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-ledchip.webp' %}" alt="{% trans 'COB LED Chip' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-ledchip.webp' %}" alt="{% trans 'COB LED Chip' %}" class="about-pillar-icon">
         </div>
         <div style="padding: 32px 28px;">
           <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 01" %}</div>
@@ -127,7 +132,7 @@
       <!-- Optics 2 -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-reflector.webp' %}" alt="{% trans 'Proprietary Reflector' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-reflector.webp' %}" alt="{% trans 'Proprietary Reflector' %}" class="about-pillar-icon">
         </div>
         <div style="padding: 32px 28px;">
           <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 02" %}</div>
@@ -140,7 +145,7 @@
       <!-- Optics 3 -->
       <div class="about-optic-card reveal" style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;">
         <div style="height: 220px; background: var(--bg-raised); display: flex; align-items: center; justify-content: center; overflow: hidden;">
-          <img src="{% static 'images/optics-lens1.webp' %}" alt="{% trans 'Glass Fresnel Lens' %}" style="max-height: 180px; max-width: 90%; object-fit: contain;">
+          <img src="{% static 'images/optics-lens1.webp' %}" alt="{% trans 'Glass Fresnel Lens' %}" class="about-pillar-icon">
         </div>
         <div style="padding: 32px 28px;">
           <div style="font-family: var(--ff-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px;">{% trans "Layer 03" %}</div>

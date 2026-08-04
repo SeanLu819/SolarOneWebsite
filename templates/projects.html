@@ -2,9 +2,24 @@
 {% load i18n %}
 {% load static %}
 
-{% block content %}
+{% block title %}LED Lighting References — SolarOne Projects Worldwide{% endblock %}
+{% block meta_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities worldwide.{% endblock %}
+{% block og_title %}LED Lighting References — SolarOne{% endblock %}
+{% block og_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities.{% endblock %}
 
-<!-- Projects page with sidebar -->
+{% block content %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "{% trans 'References' %}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'references' %}"}
+  ]
+}
+</script>
+
+<!-- References page with sidebar -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
     <div class="sidebar-layout" style="display: grid; grid-template-columns: 270px 1fr; gap: 20px; align-items: start;">
@@ -20,7 +35,7 @@
             </div>
             <div class="sidebar-nav-children">
               {% for st in vt.sports %}
-              <a href="{% url 'projects' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
+              <a href="{% url 'references' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
                 {{ st.label }}
               </a>
               {% endfor %}
@@ -30,20 +45,20 @@
         </nav>
 
         <!-- View all link -->
-        <a href="{% url 'projects' %}" class="sidebar-nav-all{% if not active_sport_type %} active{% endif %}">{% trans "View All Projects" %}</a>
+        <a href="{% url 'references' %}" class="sidebar-nav-all{% if not active_sport_type %} active{% endif %}">{% trans "View All References" %}</a>
       </aside>
 
       <!-- ===== MAIN CONTENT ===== -->
       <div class="sidebar-content">
-        <div class="sidebar-content-header" style="margin-bottom: 20px;">
+        <div class="sidebar-content-header" style="margin-bottom: 12px;">
           {% if active_sport_type_label %}
           <h1 class="section-title" style="margin-bottom: 8px;">{{ active_sport_type_label }}</h1>
           <p class="section-body" style="max-width: none;">{{ active_sport_type_label }} {% trans "lighting projects delivered worldwide." %}</p>
           {% elif active_venue_type_label %}
-          <h1 class="section-title" style="margin-bottom: 8px;">{{ active_venue_type_label }} {% trans "Projects" %}</h1>
+          <h1 class="section-title" style="margin-bottom: 8px;">{{ active_venue_type_label }} {% trans "References" %}</h1>
           <p class="section-body" style="max-width: none;">{% trans "Professional lighting solutions for outdoor venues." %}</p>
           {% else %}
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "SolarOne Projects" %}</span>
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{% trans "SolarOne References" %}</span>
           <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Trusted Worldwide" %}</h1>
           <p class="section-body" style="max-width: none;">{% trans "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience." %}</p>
           {% endif %}
@@ -51,13 +66,13 @@
 
         <div class="projects-grid">
           {% for project in projects %}
-          <a href="{% url 'project_detail' project.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
+          <a href="{% url 'reference_detail' project.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
             <div class="project-card-img">
               {% if project.image_url %}
               <img src="{{ project.image_url }}" alt="{{ project.title }}">
               {% else %}
               <div class="project-card-img-placeholder stadium">
-                <span class="field-label">{% trans "Project Image" %}</span>
+                <span class="field-label">{% trans "Reference Image" %}</span>
               </div>
               {% endif %}
             </div>
@@ -65,8 +80,8 @@
               <div class="project-card-location">{{ project.location_t }}</div>
               <h3 class="project-card-title">{{ project.title_t }}</h3>
               <p class="project-card-desc">{{ project.description_t }}</p>
-              {% if project.results %}<p class="project-card-desc" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
-              <span class="project-card-link">{% trans "View project" %} →</span>
+              {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
+              <span class="project-card-link">{% trans "View reference" %} →</span>
             </div>
           </a>
           {% endfor %}
@@ -77,11 +92,23 @@
   </div>
 </section>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "{{ config.projects_title }}",
+  "itemListElement": [
+    {% for project in projects %}{% if not forloop.last %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'reference_detail' project.slug %}", "headline": "{{ project.title_t }}"},
+    {% else %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'reference_detail' project.slug %}", "headline": "{{ project.title_t }}"}{% endif %}{% endfor %}
+  ]
+}
+</script>
+
 <style>
   /* Sidebar nav styles inherited from base.html */
   .project-card-link {
     display: inline-block;
-    margin-top: 16px;
+    margin-top: 8px;
     font-family: var(--ff-mono);
     font-size: 11px;
     letter-spacing: 0.1em;

@@ -16,6 +16,12 @@ msgstr "Productos"
 msgid "Projects"
 msgstr "Proyectos"
 
+msgid "References"
+msgstr ""
+
+msgid "Reference Categories"
+msgstr ""
+
 msgid "About"
 msgstr "Nosotros"
 
@@ -88,8 +94,17 @@ msgstr ""
 msgid "View All Projects"
 msgstr "Ver todos los proyectos"
 
+msgid "View All References"
+msgstr ""
+
 msgid "SolarOne Projects"
 msgstr "Proyectos SolarOne"
+
+msgid "SolarOne References"
+msgstr ""
+
+msgid "Back to References"
+msgstr ""
 
 msgid "Sending..."
 msgstr "Enviando..."
@@ -184,6 +199,18 @@ msgstr "Resultados:"
 
 msgid "Project Image"
 msgstr "Imagen del proyecto"
+
+msgid "Reference Image"
+msgstr ""
+
+msgid "Reference Results"
+msgstr ""
+
+msgid "Reference Not Found"
+msgstr ""
+
+msgid "View reference"
+msgstr ""
 
 msgid "Power"
 msgstr "Potencia"

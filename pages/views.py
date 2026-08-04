@@ -3,13 +3,14 @@ import json
 import logging
 from pathlib import Path
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
 from django.conf import settings
-from pages.models import Product, ProductImage, Project, ProjectImage, SiteConfig, ContactMessage
+from pages.models import Product, ProductImage, Project, ProjectImage, SiteConfig, ContactMessage, NewsArticle
 
 logger = logging.getLogger(__name__)
 
@@ -922,10 +923,26 @@ def project_detail(request, slug):
         active_venue_type, active_sport_type = _resolve_project_sidebar(getattr(project, 'sport_type', ''), lang)
         context['active_venue_type'] = active_venue_type
         context['active_sport_type'] = active_sport_type
-        context['active_venue_type_label'] = _t(active_venue_type, lang)
-        context['active_sport_type_label'] = _t(active_sport_type, lang)
+
+        active_venue_type_label = ''
+        active_sport_type_label = ''
+        for vt in venue_types:
+            if vt['key'] == active_venue_type:
+                active_venue_type_label = vt['label']
+                for s in vt['sports']:
+                    if s['key'] == active_sport_type:
+                        active_sport_type_label = s['label']
+                        break
+                break
+        context['active_venue_type_label'] = active_venue_type_label
+        context['active_sport_type_label'] = active_sport_type_label
     else:
         context['active_venue_type'] = ''
         context['active_sport_type'] = ''
 
     return render(request, 'project_detail.html', context)
+
+
+def robots_txt(request):
+    """Render robots.txt."""
+    return render(request, 'robots.txt', content_type='text/plain')

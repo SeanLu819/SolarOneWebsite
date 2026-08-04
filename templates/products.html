@@ -2,7 +2,22 @@
 {% load i18n %}
 {% load static %}
 
+{% block title %}LED Lighting Products — SolarOne Professional Lighting Solutions{% endblock %}
+{% block meta_description %}Explore SolarOne's range of LED lighting products: sports lighting, flood lighting, high bay, roadway, and area lighting. Precision optics, modular architecture, field-proven reliability.{% endblock %}
+{% block og_title %}LED Lighting Products — SolarOne{% endblock %}
+{% block og_description %}Explore SolarOne's range of LED lighting products: sports lighting, flood lighting, high bay, roadway, and area lighting solutions.{% endblock %}
+
 {% block content %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "{% trans 'Products' %}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'products' %}"}
+  ]
+}
+</script>
 
 <!-- Products page with sidebar -->
 <section class="page-with-sidebar products-page-with-sidebar" style="padding: 100px 0 80px;">
@@ -48,8 +63,8 @@
       <!-- ===== MAIN CONTENT ===== -->
       <div class="sidebar-content">
         <div class="products-banner">
-          <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'Products banner' %}" class="products-banner-img products-banner-dark">
-          <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'Products banner' %}" class="products-banner-img products-banner-light">
+          <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark">
+          <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light">
           <div class="products-banner-overlay"></div>
           <div class="products-banner-content">
             <span class="products-banner-label">{% trans "LED Lighting Products" %}</span>
@@ -85,6 +100,18 @@
     </div>
   </div>
 </section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "{{ config.products_title }}",
+  "itemListElement": [
+    {% for product in products %}{% if not forloop.last %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t }}"},
+    {% else %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t }}"}{% endif %}{% endfor %}
+  ]
+}
+</script>
 
 <style>
   /* Sidebar nav styles inherited from base.html */

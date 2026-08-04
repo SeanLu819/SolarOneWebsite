@@ -2,16 +2,34 @@
 {% load i18n %}
 {% load static %}
 
-{% block content %}
+{% block title %}{% if project %}{{ project.title_t }} — SolarOne LED Lighting Reference{% else %}{% trans "Reference Not Found" %} — SolarOne{% endif %}{% endblock %}
+{% block meta_description %}{% if project %}{{ project.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block og_title %}{% if project %}{{ project.title_t }} — SolarOne LED Lighting Reference{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
+{% block og_description %}{% if project %}{{ project.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
 
-<!-- Project detail page with sidebar and carousel -->
+{% block content %}
+{% if project %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ request.scheme }}://{{ request.get_host }}/"},
+    {"@type": "ListItem", "position": 2, "name": "{% trans 'References' %}", "item": "{{ request.scheme }}://{{ request.get_host }}{% url 'references' %}"},
+    {"@type": "ListItem", "position": 3, "name": "{{ project.title_t|escapejs }}", "item": "{{ request.build_absolute_uri }}"}
+  ]
+}
+</script>
+{% endif %}
+
+<!-- Reference detail page with sidebar and carousel -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
     <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
 
       <!-- ===== LEFT SIDEBAR ===== -->
       <aside class="sidebar-nav" style="position: sticky; top: 100px;">
-        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Project Categories" %}</div>
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Reference Categories" %}</div>
         <nav class="sidebar-nav-list">
           {% for vt in venue_types %}
           <div class="sidebar-nav-group" style="margin-bottom: 3px;">
@@ -20,7 +38,7 @@
             </div>
             <div class="sidebar-nav-children">
               {% for st in vt.sports %}
-              <a href="{% url 'projects' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
+              <a href="{% url 'references' %}?venue={{ vt.key }}&sport={{ st.key }}" class="sidebar-nav-child{% if active_sport_type == st.key %} active{% endif %}">
                 {{ st.label }}
               </a>
               {% endfor %}
@@ -30,7 +48,7 @@
         </nav>
 
         <!-- View all link -->
-        <a href="{% url 'projects' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Projects" %}</a>
+        <a href="{% url 'references' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All References" %}</a>
       </aside>
 
       <!-- ===== MAIN CONTENT ===== -->
@@ -39,80 +57,78 @@
         {% if project %}
         <div class="detail-hero">
           <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ project.location_t }}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;">{{ project.title_t }}</h1>
+          <h1 class="section-title" style="margin-bottom: 16px; font-size: 20px;">{{ project.title_t }}</h1>
         </div>
 
-        <div class="detail-grid">
-          <!-- Left: Carousel -->
-          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
-            {% if gallery %}
-            <div class="ps-carousel" id="psCarousel" data-interval="4000">
-              <div class="ps-carousel-track">
-                {% for img in gallery %}
-                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}">
-                </div>
-                {% endfor %}
-              </div>
-
-              {% if gallery|length > 1 %}
-              <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
-                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
-                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              {% endif %}
-            </div>
-
-            <div class="ps-thumbnails">
+        <!-- Full-width carousel -->
+        <div class="detail-image-full">
+          {% if gallery %}
+          <div class="ps-carousel" id="psCarousel" data-interval="4000">
+            <div class="ps-carousel-track">
               {% for img in gallery %}
-              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+              <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
                 <img src="{{ img.src }}" alt="{{ img.alt }}">
-              </button>
+              </div>
               {% endfor %}
             </div>
 
-            {% elif project.image_url %}
-            <img src="{{ project.image_url }}" alt="{{ project.title_t }}">
-            {% else %}
-            <div class="detail-image-placeholder">
-              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Project Image" %}</span>
-            </div>
+            {% if gallery|length > 1 %}
+            <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
             {% endif %}
           </div>
 
-          <!-- Right: Text + Results -->
-          <div class="detail-info">
-            <p class="detail-desc">{{ project.description_t }}</p>
+          <div class="ps-thumbnails">
+            {% for img in gallery %}
+            <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+              <img src="{{ img.src }}" alt="{{ img.alt }}">
+            </button>
+            {% endfor %}
+          </div>
 
-            {% if project.results_t %}
-            <div class="detail-results">
-              <span class="detail-results-label">{% trans "Project Results" %}</span>
-              <p class="detail-results-text">{{ project.results_t|safe }}</p>
+          {% elif project.image_url %}
+          <img src="{{ project.image_url }}" alt="{{ project.title_t }}" class="detail-single-img">
+          {% else %}
+          <div class="detail-image-placeholder">
+            <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Reference Image" %}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Text content below image -->
+        <div class="detail-info">
+          <p class="detail-desc">{{ project.description_t }}</p>
+
+          {% if project.results_t %}
+          <div class="detail-results">
+            <span class="detail-results-label">{% trans "Reference Results" %}</span>
+            <p class="detail-results-text">{{ project.results_t|safe }}</p>
+          </div>
+          {% endif %}
+
+          <div class="detail-meta">
+            <div class="detail-meta-item">
+              <span class="detail-meta-label">{% trans "Venue" %}</span>
+              <span class="detail-meta-value">{{ active_venue_type_label }}</span>
             </div>
-            {% endif %}
-
-            <div class="detail-meta">
-              <div class="detail-meta-item">
-                <span class="detail-meta-label">{% trans "Venue" %}</span>
-                <span class="detail-meta-value">{{ active_venue_type_label }}</span>
-              </div>
-              <div class="detail-meta-item">
-                <span class="detail-meta-label">{% trans "Sport" %}</span>
-                <span class="detail-meta-value">{{ active_sport_type_label }}</span>
-              </div>
-              <div class="detail-meta-item">
-                <span class="detail-meta-label">{% trans "Location" %}</span>
-                <span class="detail-meta-value">{{ project.location_t }}</span>
-              </div>
+            <div class="detail-meta-item">
+              <span class="detail-meta-label">{% trans "Sport" %}</span>
+              <span class="detail-meta-value">{{ active_sport_type_label }}</span>
+            </div>
+            <div class="detail-meta-item">
+              <span class="detail-meta-label">{% trans "Location" %}</span>
+              <span class="detail-meta-value">{{ project.location_t }}</span>
             </div>
           </div>
         </div>
 
         {% else %}
-        <h1 class="section-title">{% trans "Project Not Found" %}</h1>
-        <p class="section-body"><a href="{% url 'projects' %}" style="color: var(--accent);">{% trans "Back to Projects" %}</a></p>
+        <h1 class="section-title">{% trans "Reference Not Found" %}</h1>
+        <p class="section-body"><a href="{% url 'references' %}" style="color: var(--accent);">{% trans "Back to References" %}</a></p>
         {% endif %}
 
       </div>
@@ -122,38 +138,33 @@
 </section>
 
 <style>
-  /* Detail page two-column layout */
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1.9fr 1fr;
-    gap: 32px;
-    align-items: start;
-    margin-top: 40px;
-  }
-  .detail-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 320px;
-  }
-  .detail-image img {
+  /* Full-width image section */
+  .detail-image-full {
     width: 100%;
-    max-width: 760px;
+    margin-top: 32px;
+  }
+  .detail-single-img {
+    width: 100%;
     aspect-ratio: 16 / 9;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     border-radius: 12px;
     background: var(--bg-soft);
   }
   .detail-image-placeholder {
     width: 100%;
-    max-width: 760px;
     aspect-ratio: 16 / 9;
     background: var(--bg-soft);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Text content below image */
+  .detail-info {
+    margin-top: 40px;
+    max-width: 900px;
   }
 
   /* Results box */
@@ -208,11 +219,10 @@
     margin-bottom: 32px;
   }
 
-  /* Carousel */
+  /* Carousel — full width */
   .ps-carousel {
     position: relative;
     width: 100%;
-    max-width: 760px;
     aspect-ratio: 16 / 9;
     background: var(--bg-soft);
     border-radius: 12px;
@@ -237,7 +247,7 @@
   .ps-carousel-slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     background: transparent;
     border-radius: 0;
@@ -266,12 +276,11 @@
   .ps-prev:hover { transform: translateY(-50%) scale(1.06); }
   .ps-next:hover { transform: translateY(-50%) scale(1.06); }
 
-  /* Thumbnail strip */
+  /* Thumbnail strip — full width */
   .ps-thumbnails {
     display: flex;
     gap: 8px;
     margin-top: 12px;
-    max-width: 760px;
     width: 100%;
   }
   .ps-thumb {
@@ -296,7 +305,7 @@
   .ps-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     display: block;
     background: transparent;
@@ -311,13 +320,6 @@
     .sidebar-nav {
       position: relative !important;
       top: auto !important;
-    }
-    .detail-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .detail-image {
-      min-height: 240px;
     }
   }
 </style>
@@ -379,8 +381,33 @@
       else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
     });
 
-    startAuto();
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+      startAuto();
+    }
   })();
 </script>
+
+{% if project %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ project.title_t|escapejs }}",
+  "description": "{{ project.description_t|default:''|escapejs }}",
+  "image": "{{ project.image_url|default:'' }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ config.brand_name }}"
+  }{% if project.location_t %},
+  "contentLocation": {
+    "@type": "Place",
+    "name": "{{ project.location_t|escapejs }}"
+  }{% endif %}
+}
+</script>
+{% endif %}
 
 {% endblock %}
