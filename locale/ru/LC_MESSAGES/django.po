@@ -17,10 +17,10 @@ msgid "Projects"
 msgstr "Проекты"
 
 msgid "References"
-msgstr ""
+msgstr "Объекты"
 
 msgid "Reference Categories"
-msgstr ""
+msgstr "Категории объектов"
 
 msgid "About"
 msgstr "О нас"
@@ -95,16 +95,16 @@ msgid "View All Projects"
 msgstr "Все проекты"
 
 msgid "View All References"
-msgstr ""
+msgstr "Смотреть все объекты"
 
 msgid "SolarOne Projects"
 msgstr "Проекты SolarOne"
 
 msgid "SolarOne References"
-msgstr ""
+msgstr "Объекты SolarOne"
 
 msgid "Back to References"
-msgstr ""
+msgstr "Вернуться к объектам"
 
 msgid "Sending..."
 msgstr "Отправка..."
@@ -201,16 +201,16 @@ msgid "Project Image"
 msgstr "Изображение проекта"
 
 msgid "Reference Image"
-msgstr ""
+msgstr "Изображение объекта"
 
 msgid "Reference Results"
-msgstr ""
+msgstr "Результаты объектов"
 
 msgid "Reference Not Found"
-msgstr ""
+msgstr "Объект не найден"
 
 msgid "View reference"
-msgstr ""
+msgstr "Смотреть объект"
 
 msgid "Power"
 msgstr "Мощность"
@@ -497,3 +497,207 @@ msgstr "С 2007 года"
 
 msgid "Address"
 msgstr "Адрес"
+
+msgid "ENERGY AND PERFORMANCE DATA:"
+msgstr "ДАННЫЕ ОБ ЭНЕРГИИ И ПРОИЗВОДИТЕЛЬНОСТИ:"
+
+msgid "ORDERING INFORMATION:"
+msgstr "ИНФОРМАЦИЯ ДЛЯ ЗАКАЗА:"
+
+msgid "Series Name"
+msgstr "Название серии"
+
+msgid "Lumen Output"
+msgstr "Световой поток"
+
+msgid "System Wattage"
+msgstr "Мощность системы"
+
+msgid "CRI"
+msgstr "CRI"
+
+msgid "Color Temperature (Kevin)"
+msgstr "Цветовая температура (Кельвин)"
+
+msgid "Input Voltage (High Voltage)"
+msgstr "Входное напряжение (Высокое)"
+
+msgid "Input Voltage (Low Voltage)"
+msgstr "Входное напряжение (Низкое)"
+
+msgid "L70 Hours"
+msgstr "Часы L70"
+
+msgid "Operating Temperature Range"
+msgstr "Диапазон рабочих температур"
+
+msgid "Surge (Common Mode / Differential Mode)"
+msgstr "Перенапряжение (Синфазное / Дифференциальное)"
+
+msgid "IP Rating"
+msgstr "Класс защиты IP"
+
+msgid "Effective Projected Area (EPA) at 90°"
+msgstr "Эффективная площадь проекции (EPA) при 90°"
+
+msgid "Approximate Weight"
+msgstr "Приблизительный вес"
+
+msgid "Material"
+msgstr "Материал"
+
+msgid "LED Brand"
+msgstr "Марка LED"
+
+msgid "LED Driver"
+msgstr "LED-драйвер"
+
+msgid "System Power"
+msgstr "Мощность системы"
+
+msgid "CCT"
+msgstr "CCT"
+
+msgid "Voltage"
+msgstr "Напряжение"
+
+msgid "Fixture Color(option)"
+msgstr "Цвет светильника (опция)"
+
+msgid "Controls (Option)"
+msgstr "Управление (Опция)"
+
+msgid "Bracket Type (option)"
+msgstr "Тип кронштейна (опция)"
+
+msgid "Power Driver Location"
+msgstr "Расположение драйвера"
+
+msgid "(Light With 4 Module)"
+msgstr "(Светильник с 4 модулями)"
+
+msgid "News"
+msgstr "Новости"
+
+msgid "Model Number:"
+msgstr "Номер модели:"
+
+msgid "Beam Angle Type:"
+msgstr "Тип угла луча:"
+
+msgid "Dimensions:"
+msgstr "Габариты:"
+
+msgid "Product Categories"
+msgstr "Категории продуктов"
+
+msgid "Product Not Found"
+msgstr "Продукт не найден"
+
+msgid "Product Image"
+msgstr "Изображение продукта"
+
+msgid "Back to Products"
+msgstr "Вернуться к продуктам"
+
+msgid "FL4M"
+msgstr "FL4M"
+
+msgid "M Series"
+msgstr "Серия M"
+
+msgid "years warranty"
+msgstr "лет гарантии"
+
+msgid "Home"
+msgstr "Главная"
+
+msgid "All News"
+msgstr "Все новости"
+
+msgid "SolarOne News"
+msgstr "Новости SolarOne"
+
+msgid "Latest Updates"
+msgstr "Последние обновления"
+
+msgid "News, product launches, and insights from SolarOne."
+msgstr "Новости, запуски продуктов и инсайты от SolarOne."
+
+msgid "No news articles yet."
+msgstr "Статей пока нет."
+
+msgid "Filter by Sport"
+msgstr "Фильтр по виду спорта"
+
+msgid "Venue"
+msgstr "Место"
+
+msgid "Sport"
+msgstr "Спорт"
+
+msgid "Location"
+msgstr "Расположение"
+
+msgid "Innovative lighting solutions that protect the environment and inspire life."
+msgstr "Инновационные решения по освещению, которые защищают окружающую среду и вдохновляют жизнь."
+
+msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
+msgstr "Предоставляя инновационные решения по освещению для рекреационных, школьных, университетских и полупрофессиональных спортивных объектов, аэропортов, морских портов и других промышленных предприятий, SolarOne защищает окружающую среду, снижает энергопотребление и обеспечивает удовлетворительный и вдохновляющий опыт освещения."
+
+msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
+msgstr "Мы привносим непосредственные знания и опыт для новых проектов и проектов модернизации — от небольших проектов, требующих нескольких светильников, до профессиональных объектов высокого уровня, мы вас охватим."
+
+msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
+msgstr "Наши светодиодные осветительные приборы разработаны для создания наибольшего визуального комфорта при обеспечении максимальной output на цели — Повышает производительность человека."
+
+msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
+msgstr "Более низкий индекс ослепления и большая равномерная яркость благодаря передовой технологии COB-светового двигателя и точной оптике."
+
+msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
+msgstr "Более высокий световой поток на больших расстояниях благодаря фирменным отражателям и стеклянным линзам Френеля с 99% пропусканием света."
+
+msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
+msgstr "Наш COB-световой двигатель имеет более низкий индекс ослепления и большую равномерную яркость, чем отдельные LED-световые двигатели, обеспечивая более плавное и комфортное освещение каждой поверхности."
+
+msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
+msgstr "Единый полированный алюминиевый отражатель направляет весь COB-свет в равномерном распределении с четкими границами — далеко превосходит пластиковые линзы на нескольких SMD-чипах."
+
+msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
+msgstr "Фирменное стекло достигает 99% пропускания света с рисунком Френеля для уменьшения ослепления. В отличие от поликарбонатных линз, наша стеклянная линза никогда не пожелтеет со временем."
+
+msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
+msgstr "Мы рассматриваем каждый проект как уникальную возможность превзойти ожидания в плане улучшенного освещения, визуального комфорта и эксплуатационной экономии."
+
+msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
+msgstr "От первоначальных идей до детальных планов мы можем предоставить консультации в рамках нашего пакета."
+
+msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
+msgstr "Специальные строительные решения с экспертами, предоставляющими как световые (Dialux), так и конструктивные инженерные проекты по требованию заказчика."
+
+msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgstr "Эксперты, предоставляющие как световые, так и конструктивные инженерные проекты с точным производством."
+
+msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
+msgstr "Опытные монтажные команды на месте, обеспечивающие безопасный и надежный монтаж по всему миру."
+
+msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgstr "Защита ваших инвестиций и обеспечение долгосрочной блестящей производительности."
+
+msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgstr "Индивидуальные финансовые решения — напр. Контракт на управление энергопотреблением (EMC) в соответствии с вашим бюджетом."
+
+msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgstr "Свяжитесь с нами, и наша инженерная команда ответит с полным фотометрическим предложением в течение 48 часов."
+
+msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+msgstr "№10-15 Индустриальный парк Сиша, г. Бэйцзицзя, р-н Чанпин, Пекин, Китай"
+
+msgid "lighting projects delivered worldwide."
+msgstr "осветительных проектов реализовано по всему миру."
+
+msgid "Professional lighting solutions for outdoor venues."
+msgstr "Профессиональные решения по освещению для открытых площадок."
+
+msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
+msgstr "Более 500 проектов реализовано в более чем 50 странах. От профессиональных спортивных объектов до промышленных предприятий, аэропортов и морских портов — мы привносим непосредственные знания и опыт."

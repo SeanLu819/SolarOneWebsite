@@ -230,10 +230,12 @@ def _enrich_product(product, lang):
     product.category_t = product.t('category', lang)
 
     # Prefer flexible specs JSON; fall back to legacy fields for old records.
+    # Spec labels are stored in English in seed data; translate them via _()
+    # so they render in the active language.
     raw_specs = getattr(product, 'specs', None)
     if raw_specs:
         product.specs = [
-            {'label': str(s.get('label', '')), 'value': str(s.get('value', ''))}
+            {'label': str(_(s.get('label', ''))), 'value': str(s.get('value', ''))}
             for s in raw_specs
             if s and (s.get('label') or s.get('value'))
         ]

@@ -322,13 +322,13 @@
       "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
-      "translations": {},
-      "gallery": [
-        "images/products/fl4m/fl4m-01.png",
-        "images/products/fl4m/fl4m-02.png",
-        "images/products/fl4m/fl4m-03.png",
-        "images/products/fl4m/fl4m-04.png"
-      ],
+      "translations": {
+        "fr": {"description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."},
+        "es": {"description": "Configuración modular de proyector FL4M — parte de la familia Serie M."},
+        "de": {"description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."},
+        "ru": {"description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."},
+        "ar": {"description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."}
+      },
       "specs": [
         {
           "label": "Power",

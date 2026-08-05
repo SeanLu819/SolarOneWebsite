@@ -17,10 +17,10 @@ msgid "Projects"
 msgstr "المشاريع"
 
 msgid "References"
-msgstr ""
+msgstr "المراجع"
 
 msgid "Reference Categories"
-msgstr ""
+msgstr "فئات المراجع"
 
 msgid "About"
 msgstr "حولنا"
@@ -93,16 +93,16 @@ msgid "View All Projects"
 msgstr "عرض جميع المشاريع"
 
 msgid "View All References"
-msgstr ""
+msgstr "عرض كل المراجع"
 
 msgid "SolarOne Projects"
 msgstr "مشاريع SolarOne"
 
 msgid "SolarOne References"
-msgstr ""
+msgstr "مراجع SolarOne"
 
 msgid "Back to References"
-msgstr ""
+msgstr "العودة إلى المراجع"
 
 msgid "Sending..."
 msgstr "جاري الإرسال..."
@@ -199,16 +199,16 @@ msgid "Project Image"
 msgstr "صورة المشروع"
 
 msgid "Reference Image"
-msgstr ""
+msgstr "صورة المرجع"
 
 msgid "Reference Results"
-msgstr ""
+msgstr "نتائج المراجع"
 
 msgid "Reference Not Found"
-msgstr ""
+msgstr "المرجع غير موجود"
 
 msgid "View reference"
-msgstr ""
+msgstr "عرض المرجع"
 
 msgid "Power"
 msgstr "الطاقة"
@@ -474,3 +474,207 @@ msgstr "منذ 2007"
 
 msgid "Address"
 msgstr "العنوان"
+
+msgid "ENERGY AND PERFORMANCE DATA:"
+msgstr "بيانات الطاقة والأداء:"
+
+msgid "ORDERING INFORMATION:"
+msgstr "معلومات الطلب:"
+
+msgid "Series Name"
+msgstr "اسم السلسلة"
+
+msgid "Lumen Output"
+msgstr "التدفق الضوئي"
+
+msgid "System Wattage"
+msgstr "قدرة النظام"
+
+msgid "CRI"
+msgstr "CRI"
+
+msgid "Color Temperature (Kevin)"
+msgstr "درجة حرارة اللون (كلفن)"
+
+msgid "Input Voltage (High Voltage)"
+msgstr "جهد الدخل (جهد عالي)"
+
+msgid "Input Voltage (Low Voltage)"
+msgstr "جهد الدخل (جهد منخفض)"
+
+msgid "L70 Hours"
+msgstr "ساعات L70"
+
+msgid "Operating Temperature Range"
+msgstr "نطاق درجة حرارة التشغيل"
+
+msgid "Surge (Common Mode / Differential Mode)"
+msgstr "ارتفاع الجهد (الوضع المشترك / الوضع التفاضلي)"
+
+msgid "IP Rating"
+msgstr "تصنيف IP"
+
+msgid "Effective Projected Area (EPA) at 90°"
+msgstr "المساحة المسقطة الفعالة (EPA) عند 90°"
+
+msgid "Approximate Weight"
+msgstr "الوزن التقريبي"
+
+msgid "Material"
+msgstr "المادة"
+
+msgid "LED Brand"
+msgstr "علامة LED"
+
+msgid "LED Driver"
+msgstr "مشغل LED"
+
+msgid "System Power"
+msgstr "قدرة النظام"
+
+msgid "CCT"
+msgstr "CCT"
+
+msgid "Voltage"
+msgstr "الجهد"
+
+msgid "Fixture Color(option)"
+msgstr "لون التركيب (خيار)"
+
+msgid "Controls (Option)"
+msgstr "أدوات التحكم (خيار)"
+
+msgid "Bracket Type (option)"
+msgstr "نوع الحامل (خيار)"
+
+msgid "Power Driver Location"
+msgstr "موقع المشغل"
+
+msgid "(Light With 4 Module)"
+msgstr "(إضاءة بـ 4 وحدات)"
+
+msgid "News"
+msgstr "الأخبار"
+
+msgid "Model Number:"
+msgstr "رقم الطراز:"
+
+msgid "Beam Angle Type:"
+msgstr "نوع زاوية الشعاع:"
+
+msgid "Dimensions:"
+msgstr "الأبعاد:"
+
+msgid "Product Categories"
+msgstr "فئات المنتجات"
+
+msgid "Product Not Found"
+msgstr "المنتج غير موجود"
+
+msgid "Product Image"
+msgstr "صورة المنتج"
+
+msgid "Back to Products"
+msgstr "العودة إلى المنتجات"
+
+msgid "FL4M"
+msgstr "FL4M"
+
+msgid "M Series"
+msgstr "سلسلة M"
+
+msgid "years warranty"
+msgstr "سنوات ضمان"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "All News"
+msgstr "كل الأخبار"
+
+msgid "SolarOne News"
+msgstr "أخبار SolarOne"
+
+msgid "Latest Updates"
+msgstr "أحدث التحديثات"
+
+msgid "News, product launches, and insights from SolarOne."
+msgstr "أخبار وإطلاقات منتجات ورؤى من SolarOne."
+
+msgid "No news articles yet."
+msgstr "لا توجد مقالات بعد."
+
+msgid "Filter by Sport"
+msgstr "تصفية حسب الرياضة"
+
+msgid "Venue"
+msgstr "المكان"
+
+msgid "Sport"
+msgstr "الرياضة"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Innovative lighting solutions that protect the environment and inspire life."
+msgstr "حلول إضاءة مبتكرة تحمي البيئة وتلهم الحياة."
+
+msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
+msgstr "من خلال تقديم حلول إضاءة مبتكرة للأماكن الرياضية الترفيهية والمدرسية والجامعية وشبه المهنية والمطارات والموانئ البحرية والمرافق الصناعية الأخرى، تحمي SolarOne البيئة وتقلل استهلاك الطاقة وتقدم تجارب إضاءة مرضية وملهمة."
+
+msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
+msgstr "نقدم معرفة وخبرة مباشرة للمشاريع الجديدة ومشاريع التجديد — من المشاريع الصغيرة التي تتطلب بعض الأضواء إلى المرافق المهنية عالية المستوى، نحن نغطي احتياجاتك."
+
+msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
+msgstr "تم تصميم منتجات إضاءة LED لدينا لخلق أكبر راحة بصرية مع تقديم أعلى إخراج في الهدف — يحسن الأداء البشري."
+
+msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
+msgstr "مؤشر وهج أقل وإضاءة موحدة أكبر من خلال تقنية محرك ضوء COB المتقدمة والبصريات الدقيقة."
+
+msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
+msgstr "إخراج ضوء أعلى في مسافات أبعد من خلال عاكسات مسجلة الملكية وعدسات Fresnel زجاجية بنسبة 99% لنقل الضوء."
+
+msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
+msgstr "محرك ضوء COB لديه مؤشر وهج أقل وإضاءة موحدة أكبر من محركات LED المنفصلة، مما يوفر إضاءة أكثر سلاسة وراحة على كل سطح."
+
+msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
+msgstr "يعكس الألمنيوم المصقول الفردي جميع ضوء COB في توزيع موحد مع حواف حادة — متفوق بكثير على العدسات البلاستيكية على رقائق SMD متعددة."
+
+msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
+msgstr "الزجاج المسجل يحقق نسبة 99% لنقل الضوء مع نمط Fresnel لتقليل الوهج. على عكس عدسات البولي كربونات، لن تتغير عدستنا الزجاجية إلى اللون الأصفر بمرور الوقت."
+
+msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
+msgstr "نتعامل مع كل مشروع كفرصة فريدة لتجاوز التوقعات من حيث الإضاءة المحسنة والراحة البصرية والمدخرات التشغيلية."
+
+msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
+msgstr "من الأفكار الأولية إلى الخطط التفصيلية يمكننا تقديم الاستشارات كجزء من باقتنا."
+
+msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
+msgstr "حلول بناء خاصة مع خبراء يقدمون تصاميم الإضاءة (Dialux) والهندسة الإنشائية حسب طلب العميل."
+
+msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgstr "خبراء يقدمون تصاميم الإضاءة والهندسة الإنشائية مع التصنيع الدقيق."
+
+msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
+msgstr "فرق تركيب ميدانية ذوو خبرة تضمن تركيبات آمنة وموثوقة في جميع أنحاء العالم."
+
+msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgstr "حماية استثمارك وضمان أداء لامع طويل الأمد."
+
+msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgstr "حلول مالية مخصصة — مثلاً عقد إدارة الطاقة (EMC) لتناسب ميزانيتك."
+
+msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgstr "تواصل معنا وسيرد فريق الهندسة لدينا بمقترح ضوئي كامل خلال 48 ساعة."
+
+msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+msgstr "رقم 10-15 مدينة شيخا الصناعية، بلدة بي تشي جيا، منطقة تشانغ بينغ، بكين، الصين"
+
+msgid "lighting projects delivered worldwide."
+msgstr "مشروع إضاءة تم تسليمه في جميع أنحاء العالم."
+
+msgid "Professional lighting solutions for outdoor venues."
+msgstr "حلول إضاءة احترافية للأماكن الخارجية."
+
+msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
+msgstr "أكثر من 500 مشروع تم تسليمه في أكثر من 50 دولة. من الأماكن الرياضية المهنية إلى المرافق الصناعية والمطارات والموانئ البحرية — نحن نقدم معرفة وخبرة مباشرة."

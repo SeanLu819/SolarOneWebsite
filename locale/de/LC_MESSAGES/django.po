@@ -17,10 +17,10 @@ msgid "Projects"
 msgstr "Projekte"
 
 msgid "References"
-msgstr ""
+msgstr "Referenzen"
 
 msgid "Reference Categories"
-msgstr ""
+msgstr "Referenzkategorien"
 
 msgid "About"
 msgstr "Über uns"
@@ -95,16 +95,16 @@ msgid "View All Projects"
 msgstr "Alle Projekte ansehen"
 
 msgid "View All References"
-msgstr ""
+msgstr "Alle Referenzen ansehen"
 
 msgid "SolarOne Projects"
 msgstr "SolarOne Projekte"
 
 msgid "SolarOne References"
-msgstr ""
+msgstr "SolarOne Referenzen"
 
 msgid "Back to References"
-msgstr ""
+msgstr "Zurück zu Referenzen"
 
 msgid "Sending..."
 msgstr "Wird gesendet..."
@@ -201,16 +201,16 @@ msgid "Project Image"
 msgstr "Projektbild"
 
 msgid "Reference Image"
-msgstr ""
+msgstr "Referenzbild"
 
 msgid "Reference Results"
-msgstr ""
+msgstr "Referenzergebnisse"
 
 msgid "Reference Not Found"
-msgstr ""
+msgstr "Referenz nicht gefunden"
 
 msgid "View reference"
-msgstr ""
+msgstr "Referenz ansehen"
 
 msgid "Power"
 msgstr "Leistung"
@@ -316,7 +316,7 @@ msgid "CPG-Optics System"
 msgstr "CPG-Optik-System"
 
 msgid "Three layers of precision-engineered optics working in harmony."
-msgstr ""
+msgstr "Drei Schichten präzisionsgefertigter Optik, die harmonisch zusammenwirken."
 "Drei Schichten präzisionsgefertigter Optik, die harmonisch zusammenarbeiten."
 
 msgid "Layer 01"
@@ -496,3 +496,207 @@ msgstr "Seit 2007"
 
 msgid "Address"
 msgstr "Adresse"
+
+msgid "ENERGY AND PERFORMANCE DATA:"
+msgstr "ENERGIE- UND LEISTUNGSDATEN:"
+
+msgid "ORDERING INFORMATION:"
+msgstr "BESTELLINFORMATIONEN:"
+
+msgid "Series Name"
+msgstr "Serienname"
+
+msgid "Lumen Output"
+msgstr "Lichtstrom"
+
+msgid "System Wattage"
+msgstr "Systemleistung"
+
+msgid "CRI"
+msgstr "CRI"
+
+msgid "Color Temperature (Kevin)"
+msgstr "Farbtemperatur (Kelvin)"
+
+msgid "Input Voltage (High Voltage)"
+msgstr "Eingangsspannung (Hochspannung)"
+
+msgid "Input Voltage (Low Voltage)"
+msgstr "Eingangsspannung (Niederspannung)"
+
+msgid "L70 Hours"
+msgstr "L70-Stunden"
+
+msgid "Operating Temperature Range"
+msgstr "Betriebstemperaturbereich"
+
+msgid "Surge (Common Mode / Differential Mode)"
+msgstr "Überspannung (Gleichtakt / Gegentakt)"
+
+msgid "IP Rating"
+msgstr "IP-Schutzklasse"
+
+msgid "Effective Projected Area (EPA) at 90°"
+msgstr "Effektive projizierte Fläche (EPA) bei 90°"
+
+msgid "Approximate Weight"
+msgstr "Gewicht ca."
+
+msgid "Material"
+msgstr "Material"
+
+msgid "LED Brand"
+msgstr "LED-Marke"
+
+msgid "LED Driver"
+msgstr "LED-Treiber"
+
+msgid "System Power"
+msgstr "Systemleistung"
+
+msgid "CCT"
+msgstr "CCT"
+
+msgid "Voltage"
+msgstr "Spannung"
+
+msgid "Fixture Color(option)"
+msgstr "Leuchtenfarbe (Option)"
+
+msgid "Controls (Option)"
+msgstr "Steuerung (Option)"
+
+msgid "Bracket Type (option)"
+msgstr "Halterungstyp (Option)"
+
+msgid "Power Driver Location"
+msgstr "Treiberposition"
+
+msgid "(Light With 4 Module)"
+msgstr "(Leuchte mit 4 Modulen)"
+
+msgid "News"
+msgstr "Nachrichten"
+
+msgid "Model Number:"
+msgstr "Modellnummer:"
+
+msgid "Beam Angle Type:"
+msgstr "Strahlwinkeltyp:"
+
+msgid "Dimensions:"
+msgstr "Abmessungen:"
+
+msgid "Product Categories"
+msgstr "Produktkategorien"
+
+msgid "Product Not Found"
+msgstr "Produkt nicht gefunden"
+
+msgid "Product Image"
+msgstr "Produktbild"
+
+msgid "Back to Products"
+msgstr "Zurück zu Produkten"
+
+msgid "FL4M"
+msgstr "FL4M"
+
+msgid "M Series"
+msgstr "M-Serie"
+
+msgid "years warranty"
+msgstr "Jahre Garantie"
+
+msgid "Home"
+msgstr "Startseite"
+
+msgid "All News"
+msgstr "Alle Nachrichten"
+
+msgid "SolarOne News"
+msgstr "SolarOne Nachrichten"
+
+msgid "Latest Updates"
+msgstr "Neueste Updates"
+
+msgid "News, product launches, and insights from SolarOne."
+msgstr "Nachrichten, Produkteinführungen und Insights von SolarOne."
+
+msgid "No news articles yet."
+msgstr "Noch keine Artikel vorhanden."
+
+msgid "Filter by Sport"
+msgstr "Nach Sport filtern"
+
+msgid "Venue"
+msgstr "Spielstätte"
+
+msgid "Sport"
+msgstr "Sport"
+
+msgid "Location"
+msgstr "Standort"
+
+msgid "Innovative lighting solutions that protect the environment and inspire life."
+msgstr "Innovative Beleuchtungslösungen, die die Umwelt schützen und Leben inspirieren."
+
+msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
+msgstr "Durch die Lieferung innovativer Beleuchtungslösungen für Freizeit-, Schul-, College- und semiprofessionelle Sportstätten, Flughäfen, Seehäfen und andere industrielle Anlagen schützt SolarOne die Umwelt, reduziert den Energieverbrauch und liefert zufriedenstellende und inspirierende Beleuchtungserlebnisse."
+
+msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
+msgstr "Wir bringen direkte Kenntnisse und Erfahrung für Neu- und Retrofit-Projekte — von kleinen Projekten mit wenigen Leuchten bis zu professionellen Anlagen auf hohem Niveau, wir decken alles ab."
+
+msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
+msgstr "Unsere LED-Beleuchtungsprodukte sind so konzipiert, dass sie den größtmöglichen visuellen Komfort bieten und gleichzeitig die höchste Leistung am Ziel liefern — Verbessert die menschliche Leistung."
+
+msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
+msgstr "Niedrigerer Blendindex und gleichmäßigere Leuchtdichte durch fortschrittliche COB-Lichtmaschinentechnologie und Präzisionsoptik."
+
+msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
+msgstr "Höhere Lichtausbeute bei größeren Entfernungen durch proprietäre Reflektoren und Glas-Fresnel-Linsen mit 99% Lichtdurchlässigkeit."
+
+msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
+msgstr "Unsere COB-Lichtmaschine hat einen niedrigeren Blendindex und eine gleichmäßigere Leuchtdichte als getrennte LED-Lichtmaschinen und liefert eine gleichmäßigere, angenehmere Beleuchtung auf jeder Oberfläche."
+
+msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
+msgstr "Der einzelne polierte Aluminiumreflektor richtet das gesamte COB-Licht in einer gleichmäßigen Verteilung mit scharfen Randabschnitten aus — weit überlegen gegenüber Kunststofflinsen über mehreren SMD-Chips."
+
+msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
+msgstr "Proprietäres Glas erreicht 99% Lichtdurchlässigkeit mit einem Fresnel-Muster zur Blendreduzierung. Im Gegensatz zu Polycarbonat-Linsen wird unsere Glaslinse mit der Zeit niemals vergilben."
+
+msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
+msgstr "Wir betrachten jedes Projekt als eine einzigartige Gelegenheit, die Erwartungen in Bezug auf verbesserte Beleuchtung, visuellen Komfort und betriebliche Einsparungen zu übertreffen."
+
+msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
+msgstr "Von ersten Ideen bis zu detaillierten Plänen können wir Beratung als Teil unseres Pakets anbieten."
+
+msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
+msgstr "Spezielle Baulösungen mit Experten, die sowohl Beleuchtungs- (Dialux) als auch Strukturmaschineningenieurentwürfe nach Kundenwunsch liefern."
+
+msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgstr "Experten, die sowohl Beleuchtungs- als auch Strukturmaschineningenieurentwürfe mit Präzisionsfertigung liefern."
+
+msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
+msgstr "Erfahrene Vor-Ort-Installationsteams, die sichere und zuverlässige Installationen weltweit gewährleisten."
+
+msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgstr "Schutz Ihrer Investition und Gewährleistung langfristiger brillanter Leistung."
+
+msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgstr "Maßgeschneiderte Finanzlösungen — z. B. Energiemanagementvertrag (EMC), der zu Ihrem Budget passt."
+
+msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgstr "Kontaktieren Sie uns und unser Ingenieurteam antwortet innerhalb von 48 Stunden mit einem vollständigen photometrischen Vorschlag."
+
+msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
+msgstr "Nr. 10-15 Xisha Industriepark, Beiqijia Stadt, Changping Bezirk, Peking, China"
+
+msgid "lighting projects delivered worldwide."
+msgstr "Beleuchtungsprojekte weltweit geliefert."
+
+msgid "Professional lighting solutions for outdoor venues."
+msgstr "Professionelle Beleuchtungslösungen für Außenbereiche."
+
+msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
+msgstr "Über 500 Projekte in über 50 Ländern geliefert. Von professionellen Sportstätten bis zu Industrieanlagen, Flughäfen und Seehäfen — wir bringen direkte Kenntnisse und Erfahrung."
