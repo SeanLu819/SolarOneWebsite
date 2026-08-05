@@ -164,6 +164,87 @@
         </div>
         {% endif %}
 
+        <!-- Energy and Performance Data — FL4M only -->
+        {% if product.slug == 'fl4m' %}
+        <div class="detail-energy-data">
+          <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
+          <div class="detail-energy-table-wrap">
+            <table class="detail-energy-table">
+              <tbody>
+                <tr>
+                  <th>{% trans "Series Name" %}</th>
+                  <td>FL4M-320W</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Lumen Output" %}</th>
+                  <td>>41,600lm</td>
+                </tr>
+                <tr>
+                  <th>{% trans "System Wattage" %}</th>
+                  <td>320W</td>
+                </tr>
+                <tr>
+                  <th>{% trans "CRI" %}</th>
+                  <td>70-95</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Color Temperature (Kevin)" %}</th>
+                  <td>3000K-3500K, 4000K-4500K, 5000K, 5700K</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Input Voltage (High Voltage)" %}</th>
+                  <td>347-480VAC</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Input Voltage (Low Voltage)" %}</th>
+                  <td>110-277VAC</td>
+                </tr>
+                <tr>
+                  <th>{% trans "L70 Hours" %}</th>
+                  <td>>100,000 at 25°C</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Operating Temperature Range" %}</th>
+                  <td>-40°C to 55°C</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Surge (Common Mode / Differential Mode)" %}</th>
+                  <td>10kV</td>
+                </tr>
+                <tr>
+                  <th>{% trans "IP Rating" %}</th>
+                  <td>IP66</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Effective Projected Area (EPA) at 90°" %}</th>
+                  <td>1.05 (sq. ft.)</td>
+                </tr>
+                <tr>
+                  <th>{% trans "L\" × W\" × H\"" %}</th>
+                  <td>14.5" × 14.5" × 8.1" / 368 × 368 × 343mm</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Approximate Weight" %}</th>
+                  <td>(24.5 lbs) 11.00 kgs</td>
+                </tr>
+                <tr>
+                  <th>{% trans "Material" %}</th>
+                  <td>Aluminum / Glass</td>
+                </tr>
+                <tr>
+                  <th>{% trans "LED Brand" %}</th>
+                  <td>Bridgelux</td>
+                </tr>
+                <tr>
+                  <th>{% trans "LED Driver" %}</th>
+                  <td>Inventronics or Equal</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endif %}
+
         <!-- Ordering information — FL4M only -->
         {% if product.slug == 'fl4m' %}
         <div class="detail-ordering">
@@ -381,6 +462,56 @@
   [data-theme="dark"] .detail-dimension-img,
   [data-theme="dark"] .detail-beam-angle-img {
     filter: invert(1);
+  }
+
+  /* === Energy and Performance Data table === */
+  .detail-energy-data {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .detail-energy-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .detail-energy-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+  .detail-energy-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .detail-energy-table th,
+  .detail-energy-table td {
+    padding: 7px 12px;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid var(--line);
+  }
+  .detail-energy-table th {
+    width: 42%;
+    font-family: var(--ff-display);
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--bg-raised);
+    text-transform: capitalize;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .detail-energy-table td {
+    background: transparent;
   }
 
   /* === Ordering information table === */
