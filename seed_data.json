@@ -11,7 +11,7 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/processed/rt200-m.webp",
+      "image": "images/products/m-series/rt200-m.webp",
       "banner_image": "images/products/m-series/m-series-bar-1.webp",
       "dimension_image": "",
       "order": 1,
@@ -71,8 +71,8 @@
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
-      "image": "images/processed/floodlight.webp",
-      "banner_image": "images/products/rt410/rt410-bar-1.webp",
+      "image": "images/products/rt410-series/floodlight.webp",
+      "banner_image": "images/products/rt410-series/rt410-bar-1.webp",
       "dimension_image": "",
       "order": 2,
       "parent_slug": "",
@@ -104,10 +104,10 @@
         }
       },
       "gallery": [
-        "images/products/rt410/rt410fl-s-01.webp",
-        "images/products/rt410/rt410fl-s-02.webp",
-        "images/products/rt410/rt410fl-s-03.webp",
-        "images/products/rt410/rt410fl-s-04.webp"
+        "images/products/rt410-series/rt410fl-s-01.webp",
+        "images/products/rt410-series/rt410fl-s-02.webp",
+        "images/products/rt410-series/rt410fl-s-03.webp",
+        "images/products/rt410-series/rt410fl-s-04.webp"
       ],
       "specs": [
         {
@@ -135,7 +135,7 @@
       "output": "",
       "beam_angle": "",
       "protection": "IP66",
-      "image": "images/processed/HB.webp",
+      "image": "images/products/rt400-series/HB.webp",
       "banner_image": "",
       "dimension_image": "",
       "order": 5,
@@ -168,8 +168,8 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp12m/vsp12m-01.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
+      "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
       "dimension_image": "",
       "order": 3,
       "parent_slug": "",
@@ -201,10 +201,10 @@
         }
       },
       "gallery": [
-        "images/products/vsp12m/vsp12m-01.webp",
-        "images/products/vsp12m/vsp12m-02.webp",
-        "images/products/vsp12m/vsp12m-03.webp",
-        "images/products/vsp12m/vsp12m-04.webp"
+        "images/products/vsp-xxxxw-9m-yp/VSP9M-01.webp",
+        "images/products/vsp-xxxxw-9m-yp/VSP9M-02.webp",
+        "images/products/vsp-xxxxw-9m-yp/VSP9M-03.webp",
+        "images/products/vsp-xxxxw-9m-yp/VSP9M-04.webp"
       ],
       "specs": []
     },
@@ -219,8 +219,8 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp12m/vsp12m-01.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/vsp-xxxxw-12m-yp/rt590.webp",
+      "banner_image": "images/products/vsp-xxxxw-12m-yp/vsp-bar-1.webp",
       "dimension_image": "",
       "order": 15,
       "parent_slug": "vsp-xxxxw-9m-yp",
@@ -252,10 +252,10 @@
         }
       },
       "gallery": [
-        "images/products/vsp12m/vsp12m-01.webp",
-        "images/products/vsp12m/vsp12m-02.webp",
-        "images/products/vsp12m/vsp12m-03.webp",
-        "images/products/vsp12m/vsp12m-04.webp"
+        "images/products/vsp-xxxxw-12m-yp/vsp12m-01.webp",
+        "images/products/vsp-xxxxw-12m-yp/vsp12m-02.webp",
+        "images/products/vsp-xxxxw-12m-yp/vsp12m-03.webp",
+        "images/products/vsp-xxxxw-12m-yp/vsp12m-04.webp"
       ],
       "specs": []
     },
@@ -271,7 +271,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "images/products/rt590fl-s/rt590.webp",
-      "banner_image": "",
+      "banner_image": "images/products/rt590fl-s/vsp-bar-1.webp",
       "dimension_image": "",
       "order": 4,
       "parent_slug": "",
@@ -293,7 +293,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "images/products/rt600sl-t/RT600SL-T.webp",
-      "banner_image": "",
+      "banner_image": "images/products/rt600sl-t/fl1m-bar-1.webp",
       "dimension_image": "",
       "order": 6,
       "parent_slug": "",
@@ -314,17 +314,17 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/fl1m-01.webp",
+      "image": "images/products/fl1m/RT600SL-T.webp",
       "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
       "dimension_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl1m/fl1m-01.webp",
-        "images/products/fl1m/fl1m-02.webp",
-        "images/products/fl1m/fl1m-03.webp",
-        "images/products/fl1m/fl1m-04.webp"
+        "images/products/fl1m/fl1m-01.png",
+        "images/products/fl1m/fl1m-02.png",
+        "images/products/fl1m/fl1m-03.png",
+        "images/products/fl1m/fl1m-04.png"
       ],
       "specs": [
         {
@@ -356,9 +356,9 @@
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m-01.webp",
+      "image": "images/products/fl4m/fl4m-01.png",
       "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
-      "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
+      "dimension_image": "images/products/fl4m/fl4m-3d-view.png",
       "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
@@ -466,6 +466,12 @@
           "label": "LED Driver",
           "value": "Inventronics or Equal"
         }
+      ],
+      "gallery": [
+        "images/products/fl4m/fl4m-01.png",
+        "images/products/fl4m/fl4m-02.png",
+        "images/products/fl4m/fl4m-03.png",
+        "images/products/fl4m/fl4m-04.png"
       ]
     },
     {
@@ -479,17 +485,17 @@
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m-01.webp",
+      "image": "images/products/fl6m/fl6m-01.png",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
       "dimension_image": "",
       "order": 13,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl6m/fl6m-01.webp",
-        "images/products/fl6m/fl6m-02.webp",
-        "images/products/fl6m/fl6m-03.webp",
-        "images/products/fl6m/fl6m-04.webp"
+        "images/products/fl6m/fl6m-01.png",
+        "images/products/fl6m/fl6m-02.png",
+        "images/products/fl6m/fl6m-03.png",
+        "images/products/fl6m/fl6m-04.png"
       ],
       "specs": [
         {
@@ -521,17 +527,17 @@
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m-01.webp",
+      "image": "images/products/fl9m/fl9m-01.png",
       "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
       "dimension_image": "",
       "order": 14,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl9m/fl9m-01.webp",
-        "images/products/fl9m/fl9m-02.webp",
-        "images/products/fl9m/fl9m-03.webp",
-        "images/products/fl9m/fl9m-04.webp"
+        "images/products/fl9m/fl9m-01.png",
+        "images/products/fl9m/fl9m-02.png",
+        "images/products/fl9m/fl9m-03.png",
+        "images/products/fl9m/fl9m-04.png"
       ],
       "specs": [
         {
@@ -563,17 +569,17 @@
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m-01.webp",
+      "image": "images/products/fl12m/fl12m-01.png",
       "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
       "dimension_image": "",
       "order": 15,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl12m/fl12m-01.webp",
-        "images/products/fl12m/fl12m-02.webp",
-        "images/products/fl12m/fl12m-03.webp",
-        "images/products/fl12m/fl12m-04.webp"
+        "images/products/fl12m/fl12m-01.png",
+        "images/products/fl12m/fl12m-02.png",
+        "images/products/fl12m/fl12m-03.png",
+        "images/products/fl12m/fl12m-04.png"
       ],
       "specs": [
         {
@@ -605,17 +611,17 @@
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m-01.webp",
+      "image": "images/products/fl16m/fl16m-01.png",
       "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
       "dimension_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl16m/fl16m-01.webp",
-        "images/products/fl16m/fl16m-02.webp",
-        "images/products/fl16m/fl16m-03.webp",
-        "images/products/fl16m/fl16m-04.webp"
+        "images/products/fl16m/fl16m-01.png",
+        "images/products/fl16m/fl16m-02.png",
+        "images/products/fl16m/fl16m-03.png",
+        "images/products/fl16m/fl16m-04.png"
       ],
       "specs": [
         {
@@ -683,11 +689,11 @@
         }
       },
       "gallery": [
-        "images/processed/bmhs-football-field-01.webp",
-        "images/processed/bmhs-football-field-02.webp",
-        "images/processed/bmhs-football-field-03.webp",
-        "images/processed/bmhs-football-field-04.webp",
-        "images/processed/bmhs-football-field-05.webp"
+        "images/projects/gallery/bmhs-football-field-01.webp",
+        "images/projects/gallery/bmhs-football-field-02.webp",
+        "images/projects/gallery/bmhs-football-field-03.webp",
+        "images/projects/gallery/bmhs-football-field-04.webp",
+        "images/projects/gallery/bmhs-football-field-05.webp"
       ]
     },
     {
@@ -734,11 +740,11 @@
         }
       },
       "gallery": [
-        "images/processed/Baseball.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/basketball.webp",
-        "images/processed/soccerfield.webp",
-        "images/home-project.webp"
+        "images/projects/gallery/CCSC-Baseball-01.webp",
+        "images/projects/gallery/CCSC-Baseball-02.webp",
+        "images/projects/gallery/CCSC-Baseball-03.webp",
+        "images/projects/gallery/CCSC-Baseball-04.webp",
+        "images/projects/gallery/CCSC-Baseball-05.webp"
       ]
     },
     {
@@ -785,11 +791,12 @@
         }
       },
       "gallery": [
-        "images/processed/basketball.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/Baseball.webp",
-        "images/processed/soccerfield.webp",
-        "images/home-project.webp"
+        "images/projects/gallery/choecm-basketball-01.webp",
+        "images/projects/gallery/choecm-basketball-02.webp",
+        "images/projects/gallery/choecm-basketball-03.webp",
+        "images/projects/gallery/choecm-basketball-04.webp",
+        "images/projects/gallery/choecm-basketball-05.webp",
+        "images/projects/gallery/choecm-tennis-01.webp"
       ]
     },
     {
@@ -836,11 +843,11 @@
         }
       },
       "gallery": [
-        "images/processed/soccerfield.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/Baseball.webp",
-        "images/processed/basketball.webp",
-        "images/home-project.webp"
+        "images/projects/gallery/shys-soccer-01.webp",
+        "images/projects/gallery/shys-soccer-02.webp",
+        "images/projects/gallery/shys-soccer-03.webp",
+        "images/projects/gallery/shys-soccer-04.webp",
+        "images/projects/gallery/shys-soccer-05.webp"
       ]
     }
   ],
