@@ -18,8 +18,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/processed/rt200-m.webp",
-      "banner_image": "images/products/m-series/m-series-bar-1.webp",
+      "image": "images/products/rt200-m.webp",
+      "banner_image": "images/products/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 1,
@@ -52,10 +52,10 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/products/m-series/m-series-01.webp",
-        "images/products/m-series/m-series-02.webp",
-        "images/products/m-series/m-series-03.webp",
-        "images/products/m-series/m-series-04.webp"
+        "images/products/gallery/m-series-01.webp",
+        "images/products/gallery/m-series-02.webp",
+        "images/products/gallery/m-series-03.webp",
+        "images/products/gallery/m-series-04.webp"
       ],
       "specs": [
         {
@@ -80,8 +80,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
-      "image": "images/processed/floodlight.webp",
-      "banner_image": "images/products/rt410/rt410-bar-1.webp",
+      "image": "images/products/floodlight.webp",
+      "banner_image": "images/products/rt410-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 2,
@@ -114,10 +114,10 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/products/rt410/rt410fl-s-01.webp",
-        "images/products/rt410/rt410fl-s-02.webp",
-        "images/products/rt410/rt410fl-s-03.webp",
-        "images/products/rt410/rt410fl-s-04.webp"
+        "images/products/gallery/rt410fl-s-01.webp",
+        "images/products/gallery/rt410fl-s-02.webp",
+        "images/products/gallery/rt410fl-s-03.webp",
+        "images/products/gallery/rt410fl-s-04.webp"
       ],
       "specs": [
         {
@@ -150,8 +150,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp12m/vsp12m-01.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/vsp12m-01.webp",
+      "banner_image": "images/products/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 3,
@@ -184,10 +184,10 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/products/vsp12m/vsp12m-01.webp",
-        "images/products/vsp12m/vsp12m-02.webp",
-        "images/products/vsp12m/vsp12m-03.webp",
-        "images/products/vsp12m/vsp12m-04.webp"
+        "images/products/gallery/VSP9M-01.webp",
+        "images/products/gallery/VSP9M-02.webp",
+        "images/products/gallery/VSP9M-03.webp",
+        "images/products/gallery/VSP9M-04.webp"
       ],
       "specs": [],
       "energy_data": []
@@ -203,16 +203,14 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt590fl-s/rt590.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/rt590.webp",
+      "banner_image": "images/products/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 4,
       "parent_slug": "",
       "translations": {},
-      "gallery": [
-        "images/products/rt590fl-s/rt590.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": []
     },
@@ -227,7 +225,7 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "IP66",
-      "image": "images/processed/HB.webp",
+      "image": "images/products/HB.webp",
       "banner_image": "",
       "dimension_image": "",
       "beam_angle_image": "",
@@ -262,16 +260,14 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt600sl-t/RT600SL-T.webp",
-      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
+      "image": "images/products/RT600SL-T.webp",
+      "banner_image": "images/products/fl1m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 6,
       "parent_slug": "",
       "translations": {},
-      "gallery": [
-        "images/products/rt600sl-t/RT600SL-T.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": []
     },
@@ -286,10 +282,10 @@ SEED_DATA = {
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m-01.webp",
-      "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
-      "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
-      "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
+      "image": "images/products/fl4m-01.png",
+      "banner_image": "images/products/fl4m-bar-1.webp",
+      "dimension_image": "images/products/fl4m-3d-view.png",
+      "beam_angle_image": "images/products/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
       "translations": {
@@ -354,18 +350,18 @@ SEED_DATA = {
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m-01.webp",
-      "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
+      "image": "images/products/fl6m-01.png",
+      "banner_image": "images/products/fl6m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 13,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl6m/fl6m-01.webp",
-        "images/products/fl6m/fl6m-02.webp",
-        "images/products/fl6m/fl6m-03.webp",
-        "images/products/fl6m/fl6m-04.webp"
+        "images/products/gallery/fl6m-01.png",
+        "images/products/gallery/fl6m-02.png",
+        "images/products/gallery/fl6m-03.png",
+        "images/products/gallery/fl6m-04.png"
       ],
       "specs": [
         {
@@ -398,18 +394,18 @@ SEED_DATA = {
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m-01.webp",
-      "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
+      "image": "images/products/fl9m-01.png",
+      "banner_image": "images/products/fl9m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 14,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl9m/fl9m-01.webp",
-        "images/products/fl9m/fl9m-02.webp",
-        "images/products/fl9m/fl9m-03.webp",
-        "images/products/fl9m/fl9m-04.webp"
+        "images/products/gallery/fl9m-01.png",
+        "images/products/gallery/fl9m-02.png",
+        "images/products/gallery/fl9m-03.png",
+        "images/products/gallery/fl9m-04.png"
       ],
       "specs": [
         {
@@ -442,18 +438,18 @@ SEED_DATA = {
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m-01.webp",
-      "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
+      "image": "images/products/fl12m-01.png",
+      "banner_image": "images/products/fl12m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl12m/fl12m-01.webp",
-        "images/products/fl12m/fl12m-02.webp",
-        "images/products/fl12m/fl12m-03.webp",
-        "images/products/fl12m/fl12m-04.webp"
+        "images/products/gallery/fl12m-01.png",
+        "images/products/gallery/fl12m-02.png",
+        "images/products/gallery/fl12m-03.png",
+        "images/products/gallery/fl12m-04.png"
       ],
       "specs": [
         {
@@ -486,8 +482,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp12m/vsp12m-01.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/rt590.webp",
+      "banner_image": "images/products/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
@@ -520,10 +516,10 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/products/vsp12m/vsp12m-01.webp",
-        "images/products/vsp12m/vsp12m-02.webp",
-        "images/products/vsp12m/vsp12m-03.webp",
-        "images/products/vsp12m/vsp12m-04.webp"
+        "images/products/gallery/vsp12m-01.webp",
+        "images/products/gallery/vsp12m-02.webp",
+        "images/products/gallery/vsp12m-03.webp",
+        "images/products/gallery/vsp12m-04.webp"
       ],
       "specs": [],
       "energy_data": []
@@ -539,18 +535,18 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/fl1m-01.webp",
-      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
+      "image": "images/products/RT600SL-T.webp",
+      "banner_image": "images/products/fl1m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl1m/fl1m-01.webp",
-        "images/products/fl1m/fl1m-02.webp",
-        "images/products/fl1m/fl1m-03.webp",
-        "images/products/fl1m/fl1m-04.webp"
+        "images/products/gallery/fl1m-01.png",
+        "images/products/gallery/fl1m-02.png",
+        "images/products/gallery/fl1m-03.png",
+        "images/products/gallery/fl1m-04.png"
       ],
       "specs": [
         {
@@ -583,18 +579,18 @@ SEED_DATA = {
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m-01.webp",
-      "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
+      "image": "images/products/fl16m-01.png",
+      "banner_image": "images/products/fl16m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl16m/fl16m-01.webp",
-        "images/products/fl16m/fl16m-02.webp",
-        "images/products/fl16m/fl16m-03.webp",
-        "images/products/fl16m/fl16m-04.webp"
+        "images/products/gallery/fl16m-01.png",
+        "images/products/gallery/fl16m-02.png",
+        "images/products/gallery/fl16m-03.png",
+        "images/products/gallery/fl16m-04.png"
       ],
       "specs": [
         {
@@ -668,7 +664,7 @@ SEED_DATA = {
         "images/processed/bmhs-football-field-04.webp",
         "images/processed/bmhs-football-field-05.webp"
       ],
-      "pdf_url": "files/bmhs-case-study.pdf"
+      "pdf_url": "projects/pdfs/football-field-led-retrofit/Bohemia_Manor_High_School_Case_Study_aIcvbD9.pdf"
     },
     {
       "pk": 4,
@@ -714,11 +710,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/soccerfield.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/Baseball.webp",
-        "images/processed/basketball.webp",
-        "images/home-project.webp"
+        "images/processed/shys-soccer-01.webp",
+        "images/processed/shys-soccer-02.webp",
+        "images/processed/shys-soccer-03.webp",
+        "images/processed/shys-soccer-04.webp",
+        "images/processed/shys-soccer-05.webp"
       ],
       "pdf_url": ""
     },
@@ -766,11 +762,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/Baseball.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/basketball.webp",
-        "images/processed/soccerfield.webp",
-        "images/home-project.webp"
+        "images/processed/CCSC-Baseball-01.webp",
+        "images/processed/CCSC-Baseball-02.webp",
+        "images/processed/CCSC-Baseball-03.webp",
+        "images/processed/CCSC-Baseball-04.webp",
+        "images/processed/CCSC-Baseball-05.webp"
       ],
       "pdf_url": ""
     },
@@ -783,15 +779,15 @@ SEED_DATA = {
       "sport_type": "TENNIS_COURTS",
       "description": "Customer Profile\r\nMorgan State University is the premier public urban\r\nresearch university in Maryland, known for its excellence in\r\nteaching, intensive research, effective public service and\r\ncommunity engagement. Morgan prepares diverse and\r\ncompetitive graduates for success in a global,\r\ninterdependent society.",
       "results": "",
-      "image": "images/projects/msu-tennis-01.webp",
+      "image": "images/processed/msu-tennis-01.webp",
       "order": 4,
       "translations": {},
       "gallery": [
-        "images/projects/gallery/msu-tennis-01.webp",
-        "images/projects/gallery/msu-tennis-02.webp",
-        "images/projects/gallery/msu-tennis-03.webp",
-        "images/projects/gallery/msu-tennis-04.webp",
-        "images/projects/gallery/msu-tennis-05.webp"
+        "images/processed/msu-tennis-01.webp",
+        "images/processed/msu-tennis-02.webp",
+        "images/processed/msu-tennis-03.webp",
+        "images/processed/msu-tennis-04.webp",
+        "images/processed/msu-tennis-05.webp"
       ],
       "pdf_url": "projects/pdfs/morgan-state-university-tennis-courts/Morgan_state___university__tennis_case_study.pdf"
     },
@@ -839,11 +835,12 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/basketball.webp",
-        "images/processed/footballfield.webp",
-        "images/processed/Baseball.webp",
-        "images/processed/soccerfield.webp",
-        "images/home-project.webp"
+        "images/processed/choecm-basketball-01.webp",
+        "images/processed/choecm-basketball-02.webp",
+        "images/processed/choecm-basketball-03.webp",
+        "images/processed/choecm-basketball-04.webp",
+        "images/processed/choecm-basketball-05.webp",
+        "images/processed/choecm-tennis-01.webp"
       ],
       "pdf_url": ""
     },
@@ -856,15 +853,15 @@ SEED_DATA = {
       "sport_type": "MULTI_SPORT",
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
-      "image": "images/projects/Narbonne-basketball-04.webp",
+      "image": "images/processed/Narbonne-basketball-04.webp",
       "order": 6,
       "translations": {},
       "gallery": [
-        "images/projects/gallery/Narbonne-basketball-01.webp",
-        "images/projects/gallery/Narbonne-basketball-02.webp",
-        "images/projects/gallery/Narbonne-basketball-03.webp",
-        "images/projects/gallery/Narbonne-basketball-04.webp",
-        "images/projects/gallery/Narbonne-basketball-05.webp"
+        "images/processed/Narbonne-basketball-01.webp",
+        "images/processed/Narbonne-basketball-02.webp",
+        "images/processed/Narbonne-basketball-03.webp",
+        "images/processed/Narbonne-basketball-04.webp",
+        "images/processed/Narbonne-basketball-05.webp"
       ],
       "pdf_url": ""
     }
@@ -894,7 +891,7 @@ SEED_DATA = {
     "about_stat_clients_label": "Happy Clients",
     "products_title": "Our Products",
     "products_subtitle": "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.",
-    "projects_title": "Featured References",
+    "projects_title": "Featured Projects",
     "projects_subtitle": "Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.",
     "contact_title": "Get in Touch",
     "contact_subtitle": "Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.",
