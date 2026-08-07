@@ -742,7 +742,7 @@ SEED_DATA = {
       "slug": "yuanshen-sports-centre-stadium",
       "venue_type": "OUTDOOR",
       "sport_type": "SOCCER_FIELD",
-      "description": "A multipurpose stadium in Shanghai Pudong New Area with 160,000 sqm and 20,000 seats. 320 FL12M-1000W LED sports lights (CCT: 5000-5500K) with networking control system for remote on/off and power monitoring.",
+      "description": "【Customer Profile】\r\nShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】\r\nLighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】\r\nFL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed.\r\nAlso, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
       "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
       "image": "images/processed/soccerfield.webp",
       "order": 2,
