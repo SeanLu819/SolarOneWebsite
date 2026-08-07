@@ -305,6 +305,7 @@ def _enrich_project(project, lang):
 
     if isinstance(project, Project):
         project.image_url = _project_image_url(project.image)
+        project.pdf_url = project.pdf_file.url if project.pdf_file else ''
         project.gallery = [
             {
                 'src': _project_image_url(img.image),
@@ -314,6 +315,7 @@ def _enrich_project(project, lang):
         ]
     else:
         project.image_url = _static_url(project.image)
+        project.pdf_url = ''
         project.gallery = [
             {'src': _static_url(p), 'alt': f"{project.title_t} — view {i + 1}"}
             for i, p in enumerate(project.gallery_paths)

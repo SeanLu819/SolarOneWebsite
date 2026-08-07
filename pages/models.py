@@ -2,6 +2,10 @@ from django.db import models
 from django.db.models import JSONField
 
 
+def project_pdf_upload_path(instance, filename):
+    return f'projects/pdfs/{instance.slug}/{filename}'
+
+
 class Product(models.Model):
     CATEGORY_CHOICES = [
         ('AREA_SITE', 'Area and Site'),
@@ -165,6 +169,11 @@ class Project(models.Model):
         upload_to='projects/',
         blank=True,
         help_text='Reference card cover image. Recommended 1280×720 px (16:9, min 640×360).'
+    )
+    pdf_file = models.FileField(
+        upload_to=project_pdf_upload_path,
+        blank=True,
+        help_text='Optional PDF document for download (e.g. project case study, specification sheet).'
     )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

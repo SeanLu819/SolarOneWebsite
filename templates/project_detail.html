@@ -124,6 +124,15 @@
               <span class="detail-meta-value">{{ project.location_t }}</span>
             </div>
           </div>
+
+          {% if project.pdf_url %}
+          <div class="detail-download">
+            <a href="{{ project.pdf_url }}" download class="detail-download-btn">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {% trans "Download PDF" %}
+            </a>
+          </div>
+          {% endif %}
         </div>
 
         {% else %}
@@ -217,6 +226,30 @@
     line-height: 1.7;
     color: var(--ink-soft);
     margin-bottom: 32px;
+  }
+
+  /* Download button */
+  .detail-download {
+    margin-top: 32px;
+  }
+  .detail-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .detail-download-btn:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
   }
 
   /* Carousel — full width */
