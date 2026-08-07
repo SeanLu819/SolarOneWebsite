@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import logging
 from pathlib import Path
@@ -7,6 +8,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.core.cache import cache
+from django.core.paginator import Paginator
 from django.templatetags.static import static
 from django.utils.translation import get_language, gettext as _
 from django.conf import settings
@@ -954,7 +956,13 @@ def projects(request):
     if not projects_list:
         projects_list = _get_projects_from_json(lang, active_venue_type, active_sport_type)
 
-    context['projects'] = projects_list
+    # Pagination: 10 projects per page
+    paginator = Paginator(projects_list or [], 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context['projects'] = page_obj.object_list
+    context['page_obj'] = page_obj
     return render(request, 'projects.html', context)
 
 

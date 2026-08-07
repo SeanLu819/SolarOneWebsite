@@ -86,6 +86,36 @@
           </a>
           {% endfor %}
         </div>
+
+        {% if page_obj.has_other_pages %}
+        <div class="pagination-wrap" style="display: flex; justify-content: center; gap: 8px; margin-top: 40px; align-items: center;">
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% if active_venue_type %}&venue={{ active_venue_type }}{% endif %}{% if active_sport_type %}&sport={{ active_sport_type }}{% endif %}" class="pagination-btn" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--ff-mono); font-size: 13px; color: var(--ink); text-decoration: none; transition: all 0.2s;">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            {% trans "Previous" %}
+          </a>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+            <span class="pagination-current" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: var(--accent); color: #fff; font-family: var(--ff-mono); font-size: 13px; font-weight: 600;">{{ num }}</span>
+            {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+            <a href="?page={{ num }}{% if active_venue_type %}&venue={{ active_venue_type }}{% endif %}{% if active_sport_type %}&sport={{ active_sport_type }}{% endif %}" class="pagination-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--ff-mono); font-size: 13px; color: var(--ink); text-decoration: none; transition: all 0.2s;">{{ num }}</a>
+            {% elif num == 1 or num == page_obj.paginator.num_pages %}
+            <a href="?page={{ num }}{% if active_venue_type %}&venue={{ active_venue_type }}{% endif %}{% if active_sport_type %}&sport={{ active_sport_type }}{% endif %}" class="pagination-btn" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--ff-mono); font-size: 13px; color: var(--ink); text-decoration: none; transition: all 0.2s;">{{ num }}</a>
+            {% elif num == page_obj.number|add:"-3" or num == page_obj.number|add:"3" %}
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; font-family: var(--ff-mono); font-size: 13px; color: var(--ink-subtle);">…</span>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if active_venue_type %}&venue={{ active_venue_type }}{% endif %}{% if active_sport_type %}&sport={{ active_sport_type }}{% endif %}" class="pagination-btn" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 8px; font-family: var(--ff-mono); font-size: 13px; color: var(--ink); text-decoration: none; transition: all 0.2s;">
+            {% trans "Next" %}
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
 
     </div>
