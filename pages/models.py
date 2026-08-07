@@ -64,6 +64,16 @@ class Product(models.Model):
         verbose_name='Product Specs',
         help_text='产品参数，最多 6 组。格式：[{"label": "Power", "value": "80W"}, ...]。页面默认 2 个一排，共 3 排。'
     )
+    # Energy & Performance Data: list of {"label": "...", "value": "..."} dicts.
+    # Rendered as the ENERGY AND PERFORMANCE DATA table on product detail page.
+    energy_data = JSONField(
+        default=list,
+        blank=True,
+        verbose_name='Energy & Performance Data',
+        help_text='产品能效参数表，用于详情页 ENERGY AND PERFORMANCE DATA 表格。'
+                  '格式：[{"label": "Series Name", "value": "FL4M-320W"}, ...]。'
+                  'label 为参数名称，value 为参数值。不填或留空数组则不显示该行。'
+    )
 
     class Meta:
         ordering = ['order', 'pk']

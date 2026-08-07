@@ -39,7 +39,7 @@
     <div class="hero-stats">
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_projects|safe }}</span>
-        <span class="hero-stat-label">{% trans "References" %}</span>
+        <span class="hero-stat-label">{% trans "Projects" %}</span>
       </div>
       <div class="hero-stat">
         <span class="hero-stat-num">{{ config.stat_countries|safe }}</span>
@@ -62,7 +62,7 @@
   <div class="container">
     <div class="home-preview-card reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-products.webp' %}" alt="SolarOne LED product lineup including stadium and industrial luminaires">
+        <img src="{% static 'images/home-products.webp' %}" alt="SolarOne LED product lineup including stadium and industrial luminaires" loading="lazy">
       </div>
       <div class="home-preview-text">
         <span class="home-preview-tag">{% trans "Products" %}</span>
@@ -81,13 +81,13 @@
   <div class="container">
     <div class="home-preview-card reversed reveal">
       <div class="home-preview-img">
-        <img src="{% static 'images/home-project.webp' %}" alt="{% trans 'SolarOne LED lighting reference projects — sports venues, airports, and industrial facilities' %}">
+        <img src="{% static 'images/home-project.webp' %}" alt="{% trans 'SolarOne LED lighting reference projects — sports venues, airports, and industrial facilities' %}" loading="lazy">
       </div>
       <div class="home-preview-text">
-        <span class="home-preview-tag">{% trans "References" %}</span>
+        <span class="home-preview-tag">{% trans "Projects" %}</span>
         <h2>{% trans "Trusted Worldwide" %}</h2>
         <p>{{ config.projects_subtitle }}</p>
-        <a href="{% url 'references' %}" class="home-preview-link">
+        <a href="{% url 'projects' %}" class="home-preview-link">
           {% trans "View All References" %} <span class="link-arrow">&#8250;</span>
         </a>
       </div>

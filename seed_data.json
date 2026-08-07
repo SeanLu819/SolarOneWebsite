@@ -68,7 +68,7 @@
       "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
       "power": "260W",
       "efficacy": "125lm/W",
-      "output": "32500+lm",
+      "output": "",
       "beam_angle": "18~100°",
       "protection": "",
       "image": "images/processed/floodlight.webp",
@@ -119,10 +119,6 @@
           "value": "125lm/W"
         },
         {
-          "label": "Output",
-          "value": "32500+lm"
-        },
-        {
           "label": "Beam Angle",
           "value": "18~100°"
         }
@@ -142,7 +138,7 @@
       "image": "images/processed/HB.webp",
       "banner_image": "",
       "dimension_image": "",
-      "order": 3,
+      "order": 5,
       "parent_slug": "",
       "translations": {},
       "gallery": [],
@@ -172,10 +168,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/vsp12m/vsp12m-01.webp",
       "banner_image": "images/products/vsp/vsp-bar-1.webp",
       "dimension_image": "",
-      "order": 4,
+      "order": 3,
       "parent_slug": "",
       "translations": {
         "ar": {
@@ -226,8 +222,8 @@
       "image": "images/products/vsp12m/vsp12m-01.webp",
       "banner_image": "images/products/vsp/vsp-bar-1.webp",
       "dimension_image": "",
-      "order": 5,
-      "parent_slug": "",
+      "order": 15,
+      "parent_slug": "vsp-xxxxw-9m-yp",
       "translations": {
         "ar": {
           "category": "نظام إضاءة رياضية",
@@ -264,6 +260,56 @@
       "specs": []
     },
     {
+      "pk": 13,
+      "name": "RT590FL-S",
+      "slug": "rt590fl-s",
+      "category": "FLOODLIGHT",
+      "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/vsp12m/vsp12m-01.webp",
+      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "dimension_image": "",
+      "order": 4,
+      "parent_slug": "",
+      "translations": {},
+      "gallery": [
+        "images/products/vsp12m/vsp12m-01.webp",
+        "images/products/vsp12m/vsp12m-02.webp",
+        "images/products/vsp12m/vsp12m-03.webp",
+        "images/products/vsp12m/vsp12m-04.webp"
+      ],
+      "specs": []
+    },
+    {
+      "pk": 14,
+      "name": "RT600SL-T",
+      "slug": "rt600sl-t",
+      "category": "ROADWAY",
+      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/fl1m/fl1m-01.webp",
+      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
+      "dimension_image": "",
+      "order": 6,
+      "parent_slug": "",
+      "translations": {},
+      "gallery": [
+        "images/products/fl1m/fl1m-01.webp",
+        "images/products/fl1m/fl1m-02.webp",
+        "images/products/fl1m/fl1m-03.webp",
+        "images/products/fl1m/fl1m-04.webp"
+      ],
+      "specs": []
+    },
+    {
       "pk": 5,
       "name": "FL1M",
       "slug": "fl1m",
@@ -274,17 +320,17 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/fl1m-01.png",
+      "image": "images/products/fl1m/fl1m-01.webp",
       "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
       "dimension_image": "",
-      "order": 11,
-      "parent_slug": "",
+      "order": 16,
+      "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl1m/fl1m-01.png",
-        "images/products/fl1m/fl1m-02.png",
-        "images/products/fl1m/fl1m-03.png",
-        "images/products/fl1m/fl1m-04.png"
+        "images/products/fl1m/fl1m-01.webp",
+        "images/products/fl1m/fl1m-02.webp",
+        "images/products/fl1m/fl1m-03.webp",
+        "images/products/fl1m/fl1m-04.webp"
       ],
       "specs": [
         {
@@ -316,9 +362,9 @@
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m-01.png",
+      "image": "images/products/fl4m/fl4m-01.webp",
       "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
-      "dimension_image": "images/products/fl4m/fl4m-3d-view.png",
+      "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
       "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
@@ -346,6 +392,25 @@
           "label": "Beam Angle",
           "value": "18~50°"
         }
+      ],
+      "energy_data": [
+        {"label": "Series Name", "value": "FL4M-320W"},
+        {"label": "Lumen Output", "value": ">41,600lm"},
+        {"label": "System Wattage", "value": "320W"},
+        {"label": "CRI", "value": "70-95"},
+        {"label": "Color Temperature (Kevin)", "value": "3000K-3500K, 4000K-4500K, 5000K, 5700K"},
+        {"label": "Input Voltage (High Voltage)", "value": "347-480VAC"},
+        {"label": "Input Voltage (Low Voltage)", "value": "110-277VAC"},
+        {"label": "L70 Hours", "value": ">100,000 at 25\u00b0C"},
+        {"label": "Operating Temperature Range", "value": "-40\u00b0C to 55\u00b0C"},
+        {"label": "Surge (Common Mode / Differential Mode)", "value": "10kV"},
+        {"label": "IP Rating", "value": "IP66"},
+        {"label": "Effective Projected Area (EPA) at 90\u00b0", "value": "1.05 (sq. ft.)"},
+        {"label": "L\" × W\" × H\"", "value": "14.5\" × 14.5\" × 8.1\" / 368 × 368 × 343mm"},
+        {"label": "Approximate Weight", "value": "(24.5 lbs) 11.00 kgs"},
+        {"label": "Material", "value": "Aluminum / Glass"},
+        {"label": "LED Brand", "value": "Bridgelux"},
+        {"label": "LED Driver", "value": "Inventronics or Equal"}
       ]
     },
     {
@@ -359,17 +424,17 @@
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m-01.png",
+      "image": "images/products/fl6m/fl6m-01.webp",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
       "dimension_image": "",
       "order": 13,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl6m/fl6m-01.png",
-        "images/products/fl6m/fl6m-02.png",
-        "images/products/fl6m/fl6m-03.png",
-        "images/products/fl6m/fl6m-04.png"
+        "images/products/fl6m/fl6m-01.webp",
+        "images/products/fl6m/fl6m-02.webp",
+        "images/products/fl6m/fl6m-03.webp",
+        "images/products/fl6m/fl6m-04.webp"
       ],
       "specs": [
         {
@@ -401,17 +466,17 @@
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m-01.png",
+      "image": "images/products/fl9m/fl9m-01.webp",
       "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
       "dimension_image": "",
       "order": 14,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl9m/fl9m-01.png",
-        "images/products/fl9m/fl9m-02.png",
-        "images/products/fl9m/fl9m-03.png",
-        "images/products/fl9m/fl9m-04.png"
+        "images/products/fl9m/fl9m-01.webp",
+        "images/products/fl9m/fl9m-02.webp",
+        "images/products/fl9m/fl9m-03.webp",
+        "images/products/fl9m/fl9m-04.webp"
       ],
       "specs": [
         {
@@ -443,17 +508,17 @@
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m-01.png",
+      "image": "images/products/fl12m/fl12m-01.webp",
       "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
       "dimension_image": "",
       "order": 15,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl12m/fl12m-01.png",
-        "images/products/fl12m/fl12m-02.png",
-        "images/products/fl12m/fl12m-03.png",
-        "images/products/fl12m/fl12m-04.png"
+        "images/products/fl12m/fl12m-01.webp",
+        "images/products/fl12m/fl12m-02.webp",
+        "images/products/fl12m/fl12m-03.webp",
+        "images/products/fl12m/fl12m-04.webp"
       ],
       "specs": [
         {
@@ -485,17 +550,17 @@
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m-01.png",
+      "image": "images/products/fl16m/fl16m-01.webp",
       "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
       "dimension_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
       "gallery": [
-        "images/products/fl16m/fl16m-01.png",
-        "images/products/fl16m/fl16m-02.png",
-        "images/products/fl16m/fl16m-03.png",
-        "images/products/fl16m/fl16m-04.png"
+        "images/products/fl16m/fl16m-01.webp",
+        "images/products/fl16m/fl16m-02.webp",
+        "images/products/fl16m/fl16m-03.webp",
+        "images/products/fl16m/fl16m-04.webp"
       ],
       "specs": [
         {

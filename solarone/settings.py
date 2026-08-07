@@ -164,6 +164,15 @@ STATIC_ROOT = '/tmp/staticfiles' if IS_RUNTIME else BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/tmp/media' if IS_RUNTIME else BASE_DIR / 'media'
 
+# ============ WHITENOISE (Static File Compression & Caching) ============
+# Enable gzip/brotli compression and aggressive caching for static assets
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_MAX_AGE = 31536000  # 1 year cache for versioned static files
+# Allow Whitenoise to compress files even without a manifest
+WHITENOISE_ALLOW_ALL_ORIGINS = True
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
 # ============ CACHE ============
 # Local dev uses LocMem (in-process). On Vercel there's no persistent cache
 # backend available without extra services, so we also fall back to LocMem

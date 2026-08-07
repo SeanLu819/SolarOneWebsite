@@ -42,7 +42,7 @@ website/
 │   ├── home.html         # 首页
 │   ├── products.html     # 产品列表
 │   ├── product_detail.html # 产品详情
-│   ├── projects.html     # 项目列表
+│   ├── projects.html    # 项目列表
 │   ├── about.html        # 关于我们
 │   └── contact.html      # 联系我们
 │

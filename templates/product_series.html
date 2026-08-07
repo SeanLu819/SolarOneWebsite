@@ -83,7 +83,7 @@
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}">
+                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
                 </div>
                 {% endfor %}
               </div>
@@ -138,7 +138,7 @@
         <!-- Full-width banner image below carousel + specs -->
         {% if banner_image %}
         <div class="ps-banner">
-          <img src="{{ banner_image }}" alt="{{ series_title }} — 3D View">
+          <img src="{{ banner_image }}" alt="{{ series_title }} — 3D View" loading="lazy">
         </div>
         {% endif %}
 

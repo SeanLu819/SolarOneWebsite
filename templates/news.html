@@ -34,7 +34,7 @@
           <article class="news-card reveal">
             {% if article.image %}
             <div class="news-card-img">
-              <img src="{{ article.image.url }}" alt="{{ article.title }}">
+              <img src="{{ article.image.url }}" alt="{{ article.title }}" loading="lazy">
             </div>
             {% endif %}
             <div class="news-card-body">

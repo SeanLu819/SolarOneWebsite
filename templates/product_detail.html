@@ -91,7 +91,7 @@
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}">
+                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
                 </div>
                 {% endfor %}
               </div>
@@ -109,13 +109,13 @@
             <div class="ps-thumbnails">
               {% for img in gallery %}
               <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-                <img src="{{ img.src }}" alt="{{ img.alt }}">
+                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
               </button>
               {% endfor %}
             </div>
 
             {% elif product.image_url %}
-            <img src="{{ product.image_url }}" alt="{{ product.name_t }}">
+            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" loading="lazy">
             {% else %}
             <div class="detail-image-placeholder">
               <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
@@ -141,115 +141,123 @@
             <!-- Certification badges -- M Series & RT410 Series -->
             {% if active_series == 'M_SERIES' or active_series == 'RT410_SERIES' %}
             <div class="detail-cert-image">
-              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'Product Certifications' %}">
+              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'Product Certifications' %}" loading="lazy">
             </div>
             {% endif %}
           </div>
         </div>
 
-        <!-- Product dimension diagram -->
-        {% if product.dimension_image_url or product.beam_angle_image_url %}
+        <!-- Product dimension diagram — unified for all products -->
         <div class="detail-dimension">
+          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
           {% if product.beam_angle_image_url %}
-          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
-          <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}">
-          {% elif product.beam_angle %}
-          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
-          <span class="detail-beam-angle-value">{{ product.beam_angle }}</span>
+          <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}" loading="lazy">
+          {% else %}
+          <img class="detail-beam-angle-img" src="{% static 'images/products/fl4m/beamangle-12183050.webp' %}" alt="{% trans 'beam angle' %}" loading="lazy">
           {% endif %}
-          {% if product.dimension_image_url %}
+
           <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
-          <img class="detail-dimension-img" src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}">
+          {% if product.dimension_image_url %}
+          <img class="detail-dimension-img" src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}" loading="lazy">
+          {% else %}
+          <div class="detail-dimension-placeholder">
+            <span class="detail-placeholder">{% trans "Dimensions" %}</span>
+          </div>
           {% endif %}
         </div>
-        {% endif %}
 
-        <!-- Energy and Performance Data — FL4M only -->
-        {% if product.slug == 'fl4m' %}
+        <!-- Energy and Performance Data — from product.energy_data -->
         <div class="detail-energy-data">
           <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
           <div class="detail-energy-table-wrap">
             <table class="detail-energy-table">
               <tbody>
-                <tr>
-                  <th>{% trans "Series Name" %}</th>
-                  <td>FL4M-320W</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Lumen Output" %}</th>
-                  <td>>41,600lm</td>
-                </tr>
-                <tr>
-                  <th>{% trans "System Wattage" %}</th>
-                  <td>320W</td>
-                </tr>
-                <tr>
-                  <th>{% trans "CRI" %}</th>
-                  <td>70-95</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Color Temperature (Kevin)" %}</th>
-                  <td>3000K-3500K, 4000K-4500K, 5000K, 5700K</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Input Voltage (High Voltage)" %}</th>
-                  <td>347-480VAC</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Input Voltage (Low Voltage)" %}</th>
-                  <td>110-277VAC</td>
-                </tr>
-                <tr>
-                  <th>{% trans "L70 Hours" %}</th>
-                  <td>>100,000 at 25°C</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Operating Temperature Range" %}</th>
-                  <td>-40°C to 55°C</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Surge (Common Mode / Differential Mode)" %}</th>
-                  <td>10kV</td>
-                </tr>
-                <tr>
-                  <th>{% trans "IP Rating" %}</th>
-                  <td>IP66</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Effective Projected Area (EPA) at 90°" %}</th>
-                  <td>1.05 (sq. ft.)</td>
-                </tr>
-                <tr>
-                  <th>{% trans "L\" × W\" × H\"" %}</th>
-                  <td>14.5" × 14.5" × 8.1" / 368 × 368 × 343mm</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Approximate Weight" %}</th>
-                  <td>(24.5 lbs) 11.00 kgs</td>
-                </tr>
-                <tr>
-                  <th>{% trans "Material" %}</th>
-                  <td>Aluminum / Glass</td>
-                </tr>
-                <tr>
-                  <th>{% trans "LED Brand" %}</th>
-                  <td>Bridgelux</td>
-                </tr>
-                <tr>
-                  <th>{% trans "LED Driver" %}</th>
-                  <td>Inventronics or Equal</td>
-                </tr>
+                {% if product.energy_data %}
+                  {% for item in product.energy_data %}
+                  <tr>
+                    <th>{% trans item.label %}</th>
+                    <td>{{ item.value }}</td>
+                  </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <th>{% trans "Series Name" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Lumen Output" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "System Wattage" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "CRI" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Color Temperature (Kevin)" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Input Voltage (High Voltage)" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Input Voltage (Low Voltage)" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "L70 Hours" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Operating Temperature Range" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Surge (Common Mode / Differential Mode)" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "IP Rating" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Effective Projected Area (EPA) at 90°" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "L\" × W\" × H\"" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Approximate Weight" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "Material" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "LED Brand" %}</th>
+                    <td>—</td>
+                  </tr>
+                  <tr>
+                    <th>{% trans "LED Driver" %}</th>
+                    <td>—</td>
+                  </tr>
+                {% endif %}
               </tbody>
             </table>
           </div>
         </div>
-        {% endif %}
 
-        <!-- Ordering information — FL4M only -->
-        {% if product.slug == 'fl4m' %}
+        <!-- Ordering information — unified for all products -->
         <div class="detail-ordering">
           <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
-          <p class="detail-ordering-model">{% trans "Model Number:" %} FL4M-320W-30K-S</p>
+          <p class="detail-ordering-model">{% trans "Model Number:" %} {% if product.slug == 'fl4m' %}FL4M-320W-30K-S{% else %}—{% endif %}</p>
           <div class="detail-ordering-table-wrap">
             <table class="detail-ordering-table">
               <thead>
@@ -267,21 +275,20 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{% trans "FL4M" %}<br><span class="ordering-sub">{% trans "(Light With 4 Module)" %}</span></td>
-                  <td>320W</td>
-                  <td>30=3000K<br>40=4000K<br>57=5700K</td>
-                  <td>S=Standard Voltage<br>(110-277VAC)<br>H=High Voltage<br>(347-480VAC)</td>
-                  <td>12=12°<br>18=18°<br>30=30°<br>50=50°</td>
-                  <td>GRY=GREY<br>BLK=Black</td>
-                  <td>1. 0-10V<br>2. DMX<br>3. Dali<br>4. Zigbee</td>
-                  <td>U = Hang Mount Bracket<br>L = sitting Mount Bracket</td>
-                  <td>W = With Fixture<br>S = Separated from Fixture</td>
+                  <td>{% if product.slug == 'fl4m' %}{% trans "FL4M" %}<br><span class="ordering-sub">{% trans "(Light With 4 Module)" %}</span>{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}320W{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}30=3000K<br>40=4000K<br>57=5700K{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}S=Standard Voltage<br>(110-277VAC)<br>H=High Voltage<br>(347-480VAC){% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}12=12°<br>18=18°<br>30=30°<br>50=50°{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}GRY=GREY<br>BLK=Black{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}1. 0-10V<br>2. DMX<br>3. Dali<br>4. Zigbee{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}U = Hang Mount Bracket<br>L = sitting Mount Bracket{% else %}—{% endif %}</td>
+                  <td>{% if product.slug == 'fl4m' %}W = With Fixture<br>S = Separated from Fixture{% else %}—{% endif %}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-        {% endif %}
 
         {% else %}
         <h1 class="section-title">{% trans "Product Not Found" %}</h1>
@@ -427,6 +434,22 @@
     font-weight: 500;
     color: var(--ink);
     margin-bottom: 20px;
+  }
+  .detail-placeholder {
+    color: var(--ink-subtle);
+    font-style: italic;
+    font-size: 0.85rem;
+  }
+  .detail-dimension-placeholder {
+    width: 100%;
+    max-width: 1000px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    border: 1px dashed var(--line);
   }
   .detail-dimension-img {
     width: 100%;

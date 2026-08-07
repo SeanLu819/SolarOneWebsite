@@ -66,7 +66,7 @@
   <ul class="mobile-panel-links">
     <li><a href="{% url 'home' %}" id="mobileLinkHome">{% trans "Home" %}</a></li>
     <li><a href="{% url 'products' %}" id="mobileLinkProducts">{% trans "Products" %}</a></li>
-    <li><a href="{% url 'references' %}" id="mobileLinkReferences">{% trans "References" %}</a></li>
+    <li><a href="{% url 'projects' %}" id="mobileLinkReferences">{% trans "Projects" %}</a></li>
     <li><a href="{% url 'news' %}" id="mobileLinkNews">{% trans "News" %}</a></li>
     <li><a href="{% url 'about' %}" id="mobileLinkAbout">{% trans "About" %}</a></li>
   </ul>
@@ -81,7 +81,7 @@
     <div class="nav-links">
       <a href="{% url 'home' %}">{% trans "Home" %}</a>
       <a href="{% url 'products' %}">{% trans "Products" %}</a>
-      <a href="{% url 'references' %}">{% trans "References" %}</a>
+      <a href="{% url 'projects' %}">{% trans "Projects" %}</a>
       <a href="{% url 'news' %}">{% trans "News" %}</a>
       <a href="{% url 'about' %}">{% trans "About" %}</a>
     </div>
@@ -124,7 +124,8 @@
         <div class="footer-col-label">{% trans "Quick Links" %}</div>
         <ul class="footer-list">
           <li><a href="{% url 'products' %}">{% trans "Products" %}</a></li>
-          <li><a href="{% url 'references' %}">{% trans "References" %}</a></li>
+          <li><a href="{% url 'projects' %}">{% trans "Projects" %}</a></li>
+          <li><a href="{% url 'news' %}">{% trans "News" %}</a></li>
           <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
           <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
         </ul>
@@ -170,15 +171,15 @@
           <li><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></li>
           <li><a href="tel:{{ config.contact_phone_1 }}">{{ config.contact_phone_1 }}</a></li>
           <li><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">{% trans "WhatsApp:" %} {{ config.contact_whatsapp }}</a></li>
-          <li><a href="#">{{ config.contact_address }}</a></li>
+          <li><span>{{ config.contact_address }}</span></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. {% trans "All rights reserved." %}</span>
       <div class="footer-legal">
-        <a href="#">{% trans "Privacy Policy" %}</a>
-        <a href="#">{% trans "Terms of Service" %}</a>
+        <span>{% trans "Privacy Policy" %}</span>
+        <span>{% trans "Terms of Service" %}</span>
       </div>
     </div>
   </div>

@@ -22,6 +22,31 @@ _SEED_CANDIDATES = [
 ]
 
 
+# Product card display labels (per slug, matching sidebar category names)
+# Maps each product slug to its card label. Falls back to category-based label.
+_PRODUCT_CARD_LABELS = {
+    'm-series': 'Area and Site',
+    'rt410-series': 'Area and Site',
+    'rt400-series': 'Highbay & Low Bay',
+    'vsp-xxxxw-9m-yp': 'Sports Lighting System',
+    'vsp-xxxxw-12m-yp': 'Flood Lighting',
+    'fl1m': 'Roadway',
+    'rt590fl-s': 'Flood Lighting',
+    'rt600sl-t': 'Roadway',
+}
+
+# Product category → sidebar category display label mapping
+# Reverses _SIDEBAR_CAT_TO_PRODUCT_CAT for display on product cards.
+_PRODUCT_CAT_TO_SIDEBAR_LABEL = {
+    'AREA_SITE': 'Area and Site',
+    'ACCESSORY': 'Area and Site',
+    'SPORTS_LIGHTING': 'Sports Lighting System',
+    'FLOODLIGHT': 'Flood Lighting',
+    'HIGHBAY_LOWBAY': 'Highbay & Low Bay',
+    'ROADWAY': 'Roadway',
+}
+
+
 # Sidebar category keys map to one or more Product.category values
 _SIDEBAR_CAT_TO_PRODUCT_CAT = {
     'AREA_SITE': ['AREA_SITE', 'ACCESSORY'],
@@ -228,6 +253,9 @@ def _enrich_product(product, lang):
     product.name_t = product.t('name', lang)
     product.description_t = product.t('description', lang)
     product.category_t = product.t('category', lang)
+    # Use per-slug label if defined, otherwise fall back to category-based label
+    card_label = _PRODUCT_CARD_LABELS.get(product.slug) or _PRODUCT_CAT_TO_SIDEBAR_LABEL.get(product.category, product.category_t)
+    product.category_display = _t(card_label, lang)
 
     # Prefer flexible specs JSON; fall back to legacy fields for old records.
     # Spec labels are stored in English in seed data; translate them via _()
@@ -436,12 +464,14 @@ _SIDEBAR_I18N = {
     'Outdoor Sports':  {'fr': 'Sports Extérieur', 'es': 'Deportes Exterior', 'de': 'Outdoor-Sport', 'ar': 'رياضات خارجية', 'ru': 'Спорт на открытом воздухе'},
     'Indoor Sports':   {'fr': 'Sports Intérieur', 'es': 'Deportes Interior', 'de': 'Indoor-Sport', 'ar': 'رياضات داخلية', 'ru': 'Спорт в закрытом помещении'},
     'Airports and Ports': {'fr': 'Aéroports et Ports', 'es': 'Aeropuertos y Puertos', 'de': 'Flughäfen und Häfen', 'ar': 'المطارات والموانئ', 'ru': 'Аэропорты и порты'},
+    'Winter Sports':    {'fr': 'Sports d\'Hiver', 'es': 'Deportes de Invierno', 'de': 'Wintersport', 'ar': 'الرياضات الشتوية', 'ru': 'Зимние виды спорта'},
     # Projects — sport types
     'Football Field':   {'fr': 'Terrain de Football', 'es': 'Campo de Fútbol', 'de': 'Fußballplatz', 'ar': 'ملعب كرة قدم', 'ru': 'Футбольное поле'},
     'Soccer Field':     {'fr': 'Terrain de Soccer', 'es': 'Campo de Fútbol', 'de': 'Fußballplatz', 'ar': 'ملعب كرة القدم', 'ru': 'Футбольное поле'},
     'Baseball Field':   {'fr': 'Terrain de Baseball', 'es': 'Campo de Béisbol', 'de': 'Baseballfeld', 'ar': 'ملعب بيسبول', 'ru': 'Бейсбольное поле'},
     'Tennis Courts':    {'fr': 'Courts de Tennis', 'es': 'Canchas de Tenis', 'de': 'Tennisplätze', 'ar': 'ملعب تنس', 'ru': 'Теннисные корты'},
-    'Track and Field':  {'fr': 'Piste d\'Athlétisme', 'es': 'Pista de Atletismo', 'de': 'Leichtathletikanlage', 'ar': 'مضمار وميدان', 'ru': 'Легкоатлетическая площадка'},
+    'Ice Arena':        {'fr': 'Patinoire', 'es': 'Pista de Hielo', 'de': 'Eisarena', 'ar': 'حلبة جليدية', 'ru': 'Ледовая арена'},
+    'Ski Area':         {'fr': 'Domaine skiable', 'es': 'Área de Esquí', 'de': 'Skigebiet', 'ar': 'منطقة التزلج', 'ru': 'Горнолыжный курорт'},
     'Stadium':          {'fr': 'Stade', 'es': 'Estadio', 'de': 'Stadion', 'ar': 'استاد', 'ru': 'Стадион'},
     'Basketball':       {'fr': 'Basketball', 'es': 'Baloncesto', 'de': 'Basketball', 'ar': 'كرة السلة', 'ru': 'Баскетбол'},
     'Volleyball':       {'fr': 'Volleyball', 'es': 'Voleibol', 'de': 'Volleyball', 'ar': 'كرة الطائرة', 'ru': 'Волейбол'},
@@ -511,17 +541,18 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'SOCCER_FIELD', 'label': _t('Soccer Field', lang)},
                 {'key': 'BASEBALL_FIELD', 'label': _t('Baseball Field', lang)},
                 {'key': 'TENNIS_COURTS', 'label': _t('Tennis Courts', lang)},
-                {'key': 'TRACK_FIELD', 'label': _t('Track and Field', lang)},
+                {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
+                {'key': 'SKI_AREA', 'label': _t('Ski Area', lang)},
             ],
         },
         {
             'key': 'INDOOR',
             'label': _t('Indoor Sports', lang),
             'sports': [
+                {'key': 'MULTI_SPORT', 'label': _t('Multi-Sport Arena', lang)},
                 {'key': 'BASKETBALL', 'label': _t('Basketball', lang)},
                 {'key': 'VOLLEYBALL', 'label': _t('Volleyball', lang)},
                 {'key': 'TENNIS', 'label': _t('Tennis', lang)},
-                {'key': 'MULTI_SPORT', 'label': _t('Multi-Sport Arena', lang)},
             ],
         },
         {
@@ -948,3 +979,61 @@ def project_detail(request, slug):
 def robots_txt(request):
     """Render robots.txt."""
     return render(request, 'robots.txt', content_type='text/plain')
+
+
+def sitemap_xml(request):
+    """Generate sitemap.xml listing all public URLs."""
+    from django.urls import reverse
+    from pages.seed_data import SEED_DATA
+
+    data = _load_seed()
+    products = data.get('products', [])
+    projects = data.get('projects', [])
+
+    scheme = 'https'
+    host = request.get_host()
+
+    urls = []
+
+    # Static pages
+    static_pages = [
+        ('home', None, '0.9'),
+        ('products', None, '0.9'),
+        ('projects', None, '0.9'),
+        ('news', None, '0.7'),
+        ('about', None, '0.7'),
+        ('contact', None, '0.7'),
+    ]
+    for name, _, priority in static_pages:
+        path = reverse(name)
+        urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>{priority}</priority></url>')
+
+    # Product detail pages
+    for p in products:
+        slug = p.get('slug', '')
+        if slug:
+            path = reverse('product_detail', args=[slug])
+            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.7</priority></url>')
+
+    # Product series pages (deduplicated)
+    seen_series = set()
+    for p in products:
+        parent_slug = p.get('parent_slug', '')
+        if parent_slug and parent_slug not in seen_series:
+            seen_series.add(parent_slug)
+            series_slug = f'{parent_slug}-series'
+            path = reverse('product_series', args=[series_slug])
+            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.6</priority></url>')
+
+    # Project detail pages
+    for p in projects:
+        slug = p.get('slug', '')
+        if slug:
+            path = reverse('project_detail', args=[slug])
+            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.8</priority></url>')
+
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml += '\n'.join(urls)
+    xml += '\n</urlset>'
+
+    return HttpResponse(xml, content_type='application/xml')

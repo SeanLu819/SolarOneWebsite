@@ -63,14 +63,85 @@ class SpecsWidget(forms.Widget):
         return specs
 
 
+ENERGY_DATA_FIELDS = [
+    'Series Name',
+    'Lumen Output',
+    'System Wattage',
+    'CRI',
+    'Color Temperature (Kevin)',
+    'Input Voltage (High Voltage)',
+    'Input Voltage (Low Voltage)',
+    'L70 Hours',
+    'Operating Temperature Range',
+    'Surge (Common Mode / Differential Mode)',
+    'IP Rating',
+    'Effective Projected Area (EPA) at 90°',
+    'L" × W" × H"',
+    'Approximate Weight',
+    'Material',
+    'LED Brand',
+    'LED Driver',
+]
+
+
+class EnergyDataWidget(forms.Widget):
+    """Render the energy & performance data JSON as 17 pre-labeled input rows."""
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = []
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except Exception:
+                value = []
+        if not isinstance(value, list):
+            value = []
+
+        # Build a dict from existing data for quick lookup
+        data_dict = {}
+        for item in value:
+            if isinstance(item, dict) and item.get('label'):
+                data_dict[item['label']] = item.get('value', '')
+
+        rows = []
+        for i, label in enumerate(ENERGY_DATA_FIELDS):
+            val = escape(data_dict.get(label, ''))
+            rows.append(
+                f'<div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">'
+                f'<input type="hidden" name="{name}_{i}_label" value="{escape(label)}">'
+                f'<span style="width:320px;font-size:12px;color:#333;flex-shrink:0;">{escape(label)}</span>'
+                f'<input type="text" name="{name}_{i}_value" value="{val}" '
+                f'placeholder="输入值…" style="flex:1;padding:5px 8px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;font-size:12px;">'
+                f'</div>'
+            )
+        return mark_safe(
+            f'<div style="max-width:760px;padding:8px 0;">'
+            f'<p style="margin:0 0 10px;color:#666;font-size:12px;">'
+            f'以下是 17 个标准参数，填写 value（值）即可。留空则不显示该行。</p>'
+            f'{"".join(rows)}'
+            f'</div>'
+        )
+
+    def value_from_datadict(self, data, files, name):
+        specs = []
+        for i in range(len(ENERGY_DATA_FIELDS)):
+            label = data.get(f'{name}_{i}_label', '').strip()
+            value = data.get(f'{name}_{i}_value', '').strip()
+            if value:  # Only include rows that have a value filled in
+                specs.append({'label': label, 'value': value})
+        return specs
+
+
 class ProductAdminForm(forms.ModelForm):
-    """Custom form that renders specs via SpecsWidget."""
+    """Custom form that renders specs and energy_data via custom widgets."""
 
     class Meta:
         model = Product
         fields = '__all__'
         widgets = {
             'specs': SpecsWidget,
+            'energy_data': EnergyDataWidget,
         }
 
 
@@ -118,6 +189,10 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
             'fields': ('specs',),
             'description': '每个参数包含 label（名称）和 value（数值）。最多 6 组，每行 2 组（4 列），共 3 行，与前台显示一致。'
+        }),
+        ('Energy & Performance Data (17 standard parameters)', {
+            'fields': ('energy_data',),
+            'description': '详情页 ENERGY AND PERFORMANCE DATA 表格的 17 个标准参数。填写 value（值）即可，留空的行不会显示。'
         }),
         ('Legacy specs (read-only, will be migrated to Specs above)', {
             'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
