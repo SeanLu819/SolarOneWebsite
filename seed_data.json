@@ -354,7 +354,7 @@
       "power": "320W",
       "efficacy": "125lm/W",
       "output": "40K+ lm",
-      "beam_angle": "18~50°",
+      "beam_angle": "12~50°",
       "protection": "",
       "image": "images/products/fl4m/fl4m-01.png",
       "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
@@ -394,7 +394,7 @@
         },
         {
           "label": "Beam Angle",
-          "value": "18~50°"
+          "value": "12~50°"
         }
       ],
       "energy_data": [
@@ -651,7 +651,7 @@
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "A precision photometric design was completed to ensure that the design specifications were met. The design called for replacement of 40 existing 1500W MH light fixtures with 48 of our FL9M-630W LED performance sports lights.",
+      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school operated\r\nby Cecil County Public Schools located approximately one\r\nmile south of the small town of Chesapeake City in Cecil\r\nCounty, MD. This is a small school of 685 students which\r\nshares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.\"\r\n\r\n【Scope of Work】\r\nThe original lighting at the \"Bo Manor\" field was inefficient,\r\nunder lit, and hassle to maintain. Also, the specifications of\r\nthe project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure\r\nthat the design specifications were met. The design called\r\nfor replacement (40 total) of the existing 1500W MH light\r\nfixtures to (48 total) of our FL9M -630W LED performance\r\nsports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "pdf_url": "files/bmhs-case-study.pdf",

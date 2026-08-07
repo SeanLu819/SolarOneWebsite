@@ -326,7 +326,7 @@ SEED_DATA = {
         },
         {
           "label": "Beam Angle",
-          "value": "18~50°"
+          "value": "12~50°"
         },
         {
           "label": "CCT",
@@ -337,7 +337,76 @@ SEED_DATA = {
           "value": "70~95"
         }
       ],
-      "energy_data": []
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL4M-320W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">41,600lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "320W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.05 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "14.5\" X 14.5\"X 8.1\" / 368*368*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 24.5 lbs) 11.00 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
     },
     {
       "pk": 7,
@@ -621,7 +690,7 @@ SEED_DATA = {
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "Customer Profile\r\nBohemia Manor High School is a public school operated\r\nby Cecil County Public Schools located approximately one\r\nmile south of the small town of Chesapeake City in Cecil\r\nCounty, MD. This is a small school of 685 students which\r\nshares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.“\r\n\r\nScope of Work\r\nThe original lighting at the “Bo Manor” field was inefficient,\r\nunder lit, and hassle to maintain. Also, the specifications of\r\nthe project required use of the existing poles and structures.\r\n\r\nThe Solution\r\nA precision photometric design was completed to ensure\r\nthat the design specifications were met. The design called\r\nfor replacement (40 total) of the existing 1500W MH light\r\nfixtures to (48 total) of our FL9M -630W LED performance\r\nsports lights.",
+      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school operated\r\nby Cecil County Public Schools located approximately one\r\nmile south of the small town of Chesapeake City in Cecil\r\nCounty, MD. This is a small school of 685 students which\r\nshares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.\"\r\n\r\n【Scope of Work】\r\nThe original lighting at the \"Bo Manor\" field was inefficient,\r\nunder lit, and hassle to maintain. Also, the specifications of\r\nthe project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure\r\nthat the design specifications were met. The design called\r\nfor replacement (40 total) of the existing 1500W MH light\r\nfixtures to (48 total) of our FL9M -630W LED performance\r\nsports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
@@ -777,7 +846,7 @@ SEED_DATA = {
       "slug": "morgan-state-university-tennis-courts",
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
-      "description": "Customer Profile\r\nMorgan State University is the premier public urban\r\nresearch university in Maryland, known for its excellence in\r\nteaching, intensive research, effective public service and\r\ncommunity engagement. Morgan prepares diverse and\r\ncompetitive graduates for success in a global,\r\ninterdependent society.",
+      "description": "【Customer Profile】\r\nMorgan State University is the premier public urban\r\nresearch university in Maryland, known for its excellence in\r\nteaching, intensive research, effective public service and\r\ncommunity engagement. Morgan prepares diverse and\r\ncompetitive graduates for success in a global,\r\ninterdependent society.",
       "results": "",
       "image": "images/processed/msu-tennis-01.webp",
       "order": 4,
