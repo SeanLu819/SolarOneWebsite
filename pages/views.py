@@ -110,6 +110,7 @@ class _DictProduct:
         self.parent_slug = item.get('parent_slug', '')
         self.gallery_paths = item.get('gallery', [])
         self.specs = item.get('specs', []) or []
+        self.energy_data = item.get('energy_data', []) or []
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
