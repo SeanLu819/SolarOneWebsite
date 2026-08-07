@@ -101,7 +101,7 @@
 
         <!-- Text content below image -->
         <div class="detail-info">
-          <p class="detail-desc">{{ project.description_t }}</p>
+          <div class="detail-desc">{{ project.description_t|linebreaks }}</div>
 
           {% if project.results_t %}
           <div class="detail-results">
@@ -226,6 +226,12 @@
     line-height: 1.7;
     color: var(--ink-soft);
     margin-bottom: 32px;
+  }
+  .detail-desc p {
+    margin: 0 0 1.2em;
+  }
+  .detail-desc p:last-child {
+    margin-bottom: 0;
   }
 
   /* Download button */
