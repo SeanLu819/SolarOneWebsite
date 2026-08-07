@@ -270,17 +270,14 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp12m/vsp12m-01.webp",
-      "banner_image": "images/products/vsp/vsp-bar-1.webp",
+      "image": "images/products/rt590fl-s/rt590.webp",
+      "banner_image": "",
       "dimension_image": "",
       "order": 4,
       "parent_slug": "",
       "translations": {},
       "gallery": [
-        "images/products/vsp12m/vsp12m-01.webp",
-        "images/products/vsp12m/vsp12m-02.webp",
-        "images/products/vsp12m/vsp12m-03.webp",
-        "images/products/vsp12m/vsp12m-04.webp"
+        "images/products/rt590fl-s/rt590.webp"
       ],
       "specs": []
     },
@@ -295,17 +292,14 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/fl1m-01.webp",
-      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
+      "image": "images/products/rt600sl-t/RT600SL-T.webp",
+      "banner_image": "",
       "dimension_image": "",
       "order": 6,
       "parent_slug": "",
       "translations": {},
       "gallery": [
-        "images/products/fl1m/fl1m-01.webp",
-        "images/products/fl1m/fl1m-02.webp",
-        "images/products/fl1m/fl1m-03.webp",
-        "images/products/fl1m/fl1m-04.webp"
+        "images/products/rt600sl-t/RT600SL-T.webp"
       ],
       "specs": []
     },
@@ -369,11 +363,21 @@
       "order": 12,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {"description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."},
-        "es": {"description": "Configuración modular de proyector FL4M — parte de la familia Serie M."},
-        "de": {"description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."},
-        "ru": {"description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."},
-        "ar": {"description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."}
+        "fr": {
+          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
+        },
+        "es": {
+          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
+        },
+        "de": {
+          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
+        },
+        "ru": {
+          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
+        },
+        "ar": {
+          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
+        }
       },
       "specs": [
         {
@@ -394,23 +398,74 @@
         }
       ],
       "energy_data": [
-        {"label": "Series Name", "value": "FL4M-320W"},
-        {"label": "Lumen Output", "value": ">41,600lm"},
-        {"label": "System Wattage", "value": "320W"},
-        {"label": "CRI", "value": "70-95"},
-        {"label": "Color Temperature (Kevin)", "value": "3000K-3500K, 4000K-4500K, 5000K, 5700K"},
-        {"label": "Input Voltage (High Voltage)", "value": "347-480VAC"},
-        {"label": "Input Voltage (Low Voltage)", "value": "110-277VAC"},
-        {"label": "L70 Hours", "value": ">100,000 at 25\u00b0C"},
-        {"label": "Operating Temperature Range", "value": "-40\u00b0C to 55\u00b0C"},
-        {"label": "Surge (Common Mode / Differential Mode)", "value": "10kV"},
-        {"label": "IP Rating", "value": "IP66"},
-        {"label": "Effective Projected Area (EPA) at 90\u00b0", "value": "1.05 (sq. ft.)"},
-        {"label": "L\" × W\" × H\"", "value": "14.5\" × 14.5\" × 8.1\" / 368 × 368 × 343mm"},
-        {"label": "Approximate Weight", "value": "(24.5 lbs) 11.00 kgs"},
-        {"label": "Material", "value": "Aluminum / Glass"},
-        {"label": "LED Brand", "value": "Bridgelux"},
-        {"label": "LED Driver", "value": "Inventronics or Equal"}
+        {
+          "label": "Series Name",
+          "value": "FL4M-320W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">41,600lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "320W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K, 4000K-4500K, 5000K, 5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.05 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "14.5\" × 14.5\" × 8.1\" / 368 × 368 × 343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "(24.5 lbs) 11.00 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics or Equal"
+        }
       ]
     },
     {
