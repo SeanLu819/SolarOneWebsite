@@ -146,22 +146,35 @@ class ProductAdminForm(forms.ModelForm):
 
 
 class CacheClearMixin:
-    """Mixin that clears cached frontend data after any save/delete in admin."""
+    """Mixin that clears cached frontend data and syncs seed files after any save/delete in admin."""
     def _clear_cache(self):
         cache.delete('site_config')
         cache.delete('seed_data_json')
 
+    def _sync_seed_files(self):
+        """Sync database data to seed_data.py and seed_data.json for Vercel deployment."""
+        try:
+            from pages.seed_sync import sync_seed_data
+            sync_seed_data()
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f'Failed to sync seed files: {e}', exc_info=True)
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         self._clear_cache()
+        self._sync_seed_files()
 
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
         self._clear_cache()
+        self._sync_seed_files()
 
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
         self._clear_cache()
+        self._sync_seed_files()
 
 
 class ProductImageInline(admin.TabularInline):
