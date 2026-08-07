@@ -132,6 +132,7 @@ class _DictProject:
         self.order = item.get('order', 0)
         self.translations = item.get('translations', {}) or {}
         self.gallery_paths = item.get('gallery', [])
+        self.pdf_url = item.get('pdf_url', '')
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
@@ -315,7 +316,7 @@ def _enrich_project(project, lang):
         ]
     else:
         project.image_url = _static_url(project.image)
-        project.pdf_url = ''
+        project.pdf_url = _static_url(project.pdf_url) if project.pdf_url else ''
         project.gallery = [
             {'src': _static_url(p), 'alt': f"{project.title_t} — view {i + 1}"}
             for i, p in enumerate(project.gallery_paths)
@@ -339,6 +340,7 @@ def _get_products_from_db(lang, active_category='', active_series=''):
             products_list = products_list.filter(category__in=_product_category_filter(active_category))
         if active_series:
             products_list = products_list.filter(slug=active_series)
+        products_list = products_list.order_by('order')
         result = []
         for p in products_list:
             _enrich_product(p, lang)
@@ -364,6 +366,7 @@ def _get_products_from_json(lang, active_category='', active_series=''):
         p = _DictProduct(item)
         _enrich_product(p, lang)
         result.append(p)
+    result.sort(key=lambda p: getattr(p, 'order', 0) or 0)
     return result
 
 
