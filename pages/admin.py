@@ -231,8 +231,8 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'description': 'Upload images following the size hints below. Add reference detail carousel images in the "Reference images" section below.'
         }),
         ('PDF Document', {
-            'fields': ('pdf_file',),
-            'description': 'Optional: upload a PDF (e.g. case study, spec sheet) that users can download from the project detail page.',
+            'fields': ('pdf_file', 'pdf_static'),
+            'description': 'Upload PDF for local use, or enter a static path (e.g. "files/bmhs.pdf") for persistent Vercel deployment. Static PDFs must be placed in the static/files/ directory.',
             'classes': ('collapse',),
         }),
     )

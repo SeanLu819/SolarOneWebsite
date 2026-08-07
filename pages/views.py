@@ -154,8 +154,17 @@ def _media_url(field):
 
 
 def _static_url(path):
-    """Return static URL for a non-empty path."""
-    return static(path) if path else ''
+    """Return static URL for a non-empty path.
+    Strips 'images/' prefix from paths like 'images/processed/xxx.webp'
+    so they resolve correctly under /static/images/ on Vercel.
+    """
+    if not path:
+        return ''
+    if path.startswith('images/'):
+        return static(path)
+    if path.startswith('products/'):
+        return static(path)
+    return static(path)
 
 
 def _clean_hashed_name(name: str) -> str:
@@ -306,7 +315,12 @@ def _enrich_project(project, lang):
 
     if isinstance(project, Project):
         project.image_url = _project_image_url(project.image)
-        project.pdf_url = project.pdf_file.url if project.pdf_file else ''
+        if project.pdf_file:
+            project.pdf_url = project.pdf_file.url
+        elif getattr(project, 'pdf_static', ''):
+            project.pdf_url = static(project.pdf_static)
+        else:
+            project.pdf_url = ''
         project.gallery = [
             {
                 'src': _project_image_url(img.image),

@@ -175,6 +175,11 @@ class Project(models.Model):
         blank=True,
         help_text='Optional PDF document for download (e.g. project case study, specification sheet).'
     )
+    pdf_static = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='Static PDF path relative to /static/ (e.g. "files/project-case-study.pdf"). Used as persistent fallback on Vercel where uploaded files are ephemeral.'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"title": "...", "description": "...", "location": "...", "results": "..."}, ...}
