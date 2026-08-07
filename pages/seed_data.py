@@ -658,11 +658,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/bmhs-football-field-01.webp",
-        "images/processed/bmhs-football-field-02.webp",
-        "images/processed/bmhs-football-field-03.webp",
-        "images/processed/bmhs-football-field-04.webp",
-        "images/processed/bmhs-football-field-05.webp"
+        "images/projects/gallery/bmhs-football-field-01.webp",
+        "images/projects/gallery/bmhs-football-field-02.webp",
+        "images/projects/gallery/bmhs-football-field-03.webp",
+        "images/projects/gallery/bmhs-football-field-04.webp",
+        "images/projects/gallery/bmhs-football-field-05.webp"
       ],
       "pdf_url": "projects/pdfs/football-field-led-retrofit/Bohemia_Manor_High_School_Case_Study_aIcvbD9.pdf"
     },
@@ -710,11 +710,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/shys-soccer-01.webp",
-        "images/processed/shys-soccer-02.webp",
-        "images/processed/shys-soccer-03.webp",
-        "images/processed/shys-soccer-04.webp",
-        "images/processed/shys-soccer-05.webp"
+        "images/projects/gallery/shys-soccer-01.webp",
+        "images/projects/gallery/shys-soccer-02.webp",
+        "images/projects/gallery/shys-soccer-03.webp",
+        "images/projects/gallery/shys-soccer-04.webp",
+        "images/projects/gallery/shys-soccer-05.webp"
       ],
       "pdf_url": ""
     },
@@ -762,11 +762,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/CCSC-Baseball-01.webp",
-        "images/processed/CCSC-Baseball-02.webp",
-        "images/processed/CCSC-Baseball-03.webp",
-        "images/processed/CCSC-Baseball-04.webp",
-        "images/processed/CCSC-Baseball-05.webp"
+        "images/projects/gallery/CCSC-Baseball-01.webp",
+        "images/projects/gallery/CCSC-Baseball-02.webp",
+        "images/projects/gallery/CCSC-Baseball-03.webp",
+        "images/projects/gallery/CCSC-Baseball-04.webp",
+        "images/projects/gallery/CCSC-Baseball-05.webp"
       ],
       "pdf_url": ""
     },
@@ -783,11 +783,11 @@ SEED_DATA = {
       "order": 4,
       "translations": {},
       "gallery": [
-        "images/processed/msu-tennis-01.webp",
-        "images/processed/msu-tennis-02.webp",
-        "images/processed/msu-tennis-03.webp",
-        "images/processed/msu-tennis-04.webp",
-        "images/processed/msu-tennis-05.webp"
+        "images/projects/gallery/msu-tennis-01.webp",
+        "images/projects/gallery/msu-tennis-02.webp",
+        "images/projects/gallery/msu-tennis-03.webp",
+        "images/projects/gallery/msu-tennis-04.webp",
+        "images/projects/gallery/msu-tennis-05.webp"
       ],
       "pdf_url": "projects/pdfs/morgan-state-university-tennis-courts/Morgan_state___university__tennis_case_study.pdf"
     },
@@ -835,12 +835,12 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/processed/choecm-basketball-01.webp",
-        "images/processed/choecm-basketball-02.webp",
-        "images/processed/choecm-basketball-03.webp",
-        "images/processed/choecm-basketball-04.webp",
-        "images/processed/choecm-basketball-05.webp",
-        "images/processed/choecm-tennis-01.webp"
+        "images/projects/gallery/choecm-basketball-01.webp",
+        "images/projects/gallery/choecm-basketball-02.webp",
+        "images/projects/gallery/choecm-basketball-03.webp",
+        "images/projects/gallery/choecm-basketball-04.webp",
+        "images/projects/gallery/choecm-basketball-05.webp",
+        "images/projects/gallery/choecm-tennis-01.webp"
       ],
       "pdf_url": ""
     },
@@ -857,11 +857,11 @@ SEED_DATA = {
       "order": 6,
       "translations": {},
       "gallery": [
-        "images/processed/Narbonne-basketball-01.webp",
-        "images/processed/Narbonne-basketball-02.webp",
-        "images/processed/Narbonne-basketball-03.webp",
-        "images/processed/Narbonne-basketball-04.webp",
-        "images/processed/Narbonne-basketball-05.webp"
+        "images/projects/gallery/Narbonne-basketball-01.webp",
+        "images/projects/gallery/Narbonne-basketball-02.webp",
+        "images/projects/gallery/Narbonne-basketball-03.webp",
+        "images/projects/gallery/Narbonne-basketball-04.webp",
+        "images/projects/gallery/Narbonne-basketball-05.webp"
       ],
       "pdf_url": ""
     }
