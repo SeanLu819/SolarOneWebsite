@@ -848,7 +848,7 @@ def products(request):
     context['active_series_label'] = active_series_label
 
     products_list = _get_products_from_db(lang, active_category, active_series)
-    if products_list is None:
+    if not products_list:
         products_list = _get_products_from_json(lang, active_category, active_series)
 
     context['products'] = products_list
@@ -933,7 +933,7 @@ def projects(request):
     context['active_sport_type_label'] = active_sport_type_label
 
     projects_list = _get_projects_from_db(lang, active_venue_type, active_sport_type)
-    if projects_list is None:
+    if not projects_list:
         projects_list = _get_projects_from_json(lang, active_venue_type, active_sport_type)
 
     context['projects'] = projects_list
