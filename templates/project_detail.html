@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load text_filters %}
 
 {% block title %}{% if project %}{{ project.title_t }} — SolarOne LED Lighting Project{% else %}{% trans "Project Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if project %}{{ project.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
@@ -101,7 +102,8 @@
 
         <!-- Text content below image -->
         <div class="detail-info">
-          <div class="detail-desc">{{ project.description_t|linebreaks }}</div>
+          {# Normalize intra-paragraph line breaks: admins paste from Word/PDF with hard wraps every ~40 chars, which `linebreaks` turns into <br> and forces a narrow column. Replace any <br> with a space so the browser wraps the text naturally across the full width. Paragraph splits (blank lines) are still preserved because `linebreaks` converts \n\n to </p><p> first. #}
+          <div class="detail-desc">{{ project.description_t|linebreaks|linebreaktospaces|safe }}</div>
 
           {% if project.results_t %}
           <div class="detail-results">
