@@ -1,4 +1,6 @@
 import json
+import os
+import shutil
 
 from django import forms
 from django.contrib import admin
@@ -358,11 +360,29 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'description': '主图。轮播图片请在下方 "Reference images" 区域添加。'
         }),
         ('PDF Document', {
-            'fields': ('pdf_file', 'pdf_static'),
-            'description': 'Upload PDF for local use, or enter a static path (e.g. "files/bmhs.pdf") for persistent Vercel deployment. Static PDFs must be placed in the static/files/ directory.',
+            'fields': ('pdf_static', 'pdf_file'),
+            'description': '推荐使用 pdf_static 字段（输入路径如 "files/project-name.pdf"），文件请手动放入 static/files/ 目录。pdf_file 仅供本地开发预览使用，上传后 Vercel 无法访问。',
             'classes': ('collapse',),
         }),
     )
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        # If a new PDF was uploaded via pdf_file, copy it to static/files/ and
+        # set pdf_static so it's accessible on Vercel.
+        if obj.pdf_file and not getattr(obj, '_pdf_copied', False):
+            src = obj.pdf_file.path
+            dst_dir = os.path.join(settings.BASE_DIR, 'static', 'files')
+            os.makedirs(dst_dir, exist_ok=True)
+            # Build a clean filename from the slug
+            safe_name = obj.slug.replace('-', '_')
+            _, ext = os.path.splitext(os.path.basename(src))
+            dst_name = f'{safe_name}{ext}'
+            dst = os.path.join(dst_dir, dst_name)
+            shutil.copy2(src, dst)
+            obj.pdf_static = f'files/{dst_name}'
+            obj.save(update_fields=['pdf_static'])
+            obj._pdf_copied = True
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
