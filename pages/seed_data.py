@@ -216,7 +216,7 @@ SEED_DATA = {
       "order": 4,
       "parent_slug": "",
       "translations": {},
-      "gallery": [],
+      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
       "specs": [],
       "energy_data": [],
       "ordering_info": [],
@@ -240,7 +240,7 @@ SEED_DATA = {
       "order": 5,
       "parent_slug": "",
       "translations": {},
-      "gallery": [],
+      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
       "specs": [
         {
           "label": "Power",
@@ -277,7 +277,7 @@ SEED_DATA = {
       "order": 6,
       "parent_slug": "",
       "translations": {},
-      "gallery": [],
+      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
       "specs": [],
       "energy_data": [],
       "ordering_info": [],
@@ -821,7 +821,7 @@ SEED_DATA = {
         "images/projects/gallery/shys-soccer-04.webp",
         "images/projects/gallery/shys-soccer-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 2,
@@ -873,7 +873,7 @@ SEED_DATA = {
         "images/projects/gallery/CCSC-Baseball-04.webp",
         "images/projects/gallery/CCSC-Baseball-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 6,
@@ -973,7 +973,7 @@ SEED_DATA = {
         "images/projects/gallery/choecm-basketball-05.webp",
         "images/projects/gallery/choecm-tennis-01.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 5,
@@ -994,7 +994,7 @@ SEED_DATA = {
         "images/projects/gallery/Narbonne-basketball-04.webp",
         "images/projects/gallery/Narbonne-basketball-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 7,
@@ -1005,7 +1005,7 @@ SEED_DATA = {
       "sport_type": "SKI_AREA",
       "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
       "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "",
+      "image": "images/projects/nanshan-ski-village/nanshan-ski-01.webp",
       "order": 10,
       "translations": {
         "fr": {
@@ -1034,8 +1034,8 @@ SEED_DATA = {
           "location": "بكين، الصين"
         }
       },
-      "gallery": [],
-      "pdf_url": ""
+      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
+      "pdf_url": "files/nanshan_ski_village.pdf"
     }
   ],
   "siteconfig": {
