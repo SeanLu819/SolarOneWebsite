@@ -366,6 +366,23 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
     )
 
+    def _update_seed_pdf_url(slug, pdf_static):
+        """Update pdf_url in seed_data.json for the given project slug."""
+        import json
+        seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+        try:
+            with open(seed_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            for p in data.get('projects', []):
+                if p.get('slug') == slug:
+                    p['pdf_url'] = pdf_static
+                    break
+            with open(seed_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write('\n')
+        except Exception:
+            pass
+
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         # If a new PDF was uploaded via pdf_file, copy it to static/files/ and
@@ -374,7 +391,6 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             src = obj.pdf_file.path
             dst_dir = os.path.join(settings.BASE_DIR, 'static', 'files')
             os.makedirs(dst_dir, exist_ok=True)
-            # Build a clean filename from the slug
             safe_name = obj.slug.replace('-', '_')
             _, ext = os.path.splitext(os.path.basename(src))
             dst_name = f'{safe_name}{ext}'
@@ -383,6 +399,9 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             obj.pdf_static = f'files/{dst_name}'
             obj.save(update_fields=['pdf_static'])
             obj._pdf_copied = True
+        # Sync pdf_static to seed_data.json so Vercel uses the correct path
+        if obj.pdf_static:
+            _update_seed_pdf_url(obj.slug, obj.pdf_static)
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
