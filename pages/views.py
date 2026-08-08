@@ -334,10 +334,13 @@ def _enrich_project(project, lang):
 
     if isinstance(project, Project):
         project.image_url = _project_image_url(project.image)
-        if project.pdf_file:
+        # pdf_static lives in static/files/ (deployed with the app — preferred on Vercel).
+        # pdf_file lives in media/ (not served on Vercel).
+        pdf_static = getattr(project, 'pdf_static', '') or ''
+        if pdf_static:
+            project.pdf_url = static(pdf_static)
+        elif project.pdf_file:
             project.pdf_url = project.pdf_file.url
-        elif getattr(project, 'pdf_static', ''):
-            project.pdf_url = static(project.pdf_static)
         else:
             project.pdf_url = ''
         project.gallery = [
