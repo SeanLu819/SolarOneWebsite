@@ -17,6 +17,7 @@ from django.conf import settings
 _PRODUCT_TEXT_FIELDS = [
     'description', 'power', 'efficacy', 'output', 'beam_angle',
     'protection', 'specs', 'energy_data', 'translations',
+    'ordering_info', 'model_number',
 ]
 
 _PROJECT_TEXT_FIELDS = [

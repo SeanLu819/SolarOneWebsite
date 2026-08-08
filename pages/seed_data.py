@@ -67,7 +67,9 @@ SEED_DATA = {
           "value": "125lm/W"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 2,
@@ -137,7 +139,9 @@ SEED_DATA = {
           "value": "18~100°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 11,
@@ -190,7 +194,9 @@ SEED_DATA = {
         "images/products/vsp-xxxxw-9m-yp/VSP9M-04.webp"
       ],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 13,
@@ -212,7 +218,9 @@ SEED_DATA = {
       "translations": {},
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 4,
@@ -247,7 +255,9 @@ SEED_DATA = {
           "value": "IP66"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 14,
@@ -269,7 +279,9 @@ SEED_DATA = {
       "translations": {},
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 6,
@@ -406,7 +418,19 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ]
+      ],
+      "ordering_info": [
+        "FL4M\r\n(Light With 4 Module)",
+        "320W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage\r\n(110-277VAC)\r\nH=High Voltage\r\n(347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1. 0-10V\r\n2. DMX\r\n3. Dali\r\n4. Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL4M-320W-30K-S"
     },
     {
       "pk": 7,
@@ -450,7 +474,9 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 8,
@@ -494,7 +520,9 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 9,
@@ -538,7 +566,9 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 12,
@@ -591,7 +621,9 @@ SEED_DATA = {
         "images/products/vsp-xxxxw-12m-yp/vsp12m-04.webp"
       ],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 5,
@@ -635,7 +667,9 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 10,
@@ -679,7 +713,9 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     }
   ],
   "projects": [
