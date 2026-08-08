@@ -581,8 +581,6 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'FOOTBALL_FIELD', 'label': _t('Football Field', lang)},
                 {'key': 'SOCCER_FIELD', 'label': _t('Soccer Field', lang)},
                 {'key': 'BASEBALL_FIELD', 'label': _t('Baseball Field', lang)},
-                {'key': 'TENNIS_COURTS', 'label': _t('Tennis Courts', lang)},
-                {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
                 {'key': 'SKI_AREA', 'label': _t('Ski Area', lang)},
             ],
         },
@@ -594,6 +592,7 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'BASKETBALL', 'label': _t('Basketball', lang)},
                 {'key': 'VOLLEYBALL', 'label': _t('Volleyball', lang)},
                 {'key': 'TENNIS', 'label': _t('Tennis', lang)},
+                {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
             ],
         },
         {

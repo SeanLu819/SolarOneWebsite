@@ -401,7 +401,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             obj._pdf_copied = True
         # Sync pdf_static to seed_data.json so Vercel uses the correct path
         if obj.pdf_static:
-            _update_seed_pdf_url(obj.slug, obj.pdf_static)
+            self._update_seed_pdf_url(obj.slug, obj.pdf_static)
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
