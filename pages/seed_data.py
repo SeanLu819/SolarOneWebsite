@@ -769,7 +769,7 @@ SEED_DATA = {
         "images/projects/gallery/bmhs-football-field-04.webp",
         "images/projects/gallery/bmhs-football-field-05.webp"
       ],
-      "pdf_url": "projects/pdfs/football-field-led-retrofit/Bohemia_Manor_High_School_Case_Study_aIcvbD9.pdf"
+      "pdf_url": "files/bmhs-case-study.pdf"
     },
     {
       "pk": 4,
