@@ -4,7 +4,10 @@ from django import forms
 from django.contrib import admin
 from django.conf import settings
 from django.core.cache import cache
+from django.http import JsonResponse
 from django.utils.html import escape, mark_safe
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from .models import (
     Product, ProductImage, Project, ProjectImage,
     ContactMessage, SiteConfig, Visitor, DailyStats,
@@ -133,8 +136,94 @@ class EnergyDataWidget(forms.Widget):
         return specs
 
 
+ORDERING_COLUMNS = [
+    'Series Name',
+    'System Power',
+    'CCT',
+    'Voltage',
+    'Beam Angle',
+    'Fixture Color(option)',
+    'Controls (Option)',
+    'Bracket Type (option)',
+    'Power Driver Location',
+]
+
+
+class OrderingInfoWidget(forms.Widget):
+    """Render the ordering_info JSON as 9 columns matching the frontend table layout."""
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if value is None:
+            value = []
+        if isinstance(value, str):
+            try:
+                value = json.loads(value)
+            except Exception:
+                value = []
+        if not isinstance(value, list):
+            value = []
+        while len(value) < 9:
+            value.append('')
+
+        columns_html = []
+        for i, header in enumerate(ORDERING_COLUMNS):
+            val = escape(value[i] if i < len(value) else '')
+            columns_html.append(
+                f'<div style="min-width:110px;flex:1;">'
+                f'<div style="font-size:10px;font-weight:700;color:#333;text-align:center;margin-bottom:4px;min-height:28px;display:flex;align-items:flex-end;justify-content:center;">{escape(header)}</div>'
+                f'<textarea name="{name}_{i}" rows="4" '
+                f'style="width:100%;padding:4px 6px;border:1px solid #ccc;border-radius:3px;'
+                f'box-sizing:border-box;font-size:11px;font-family:monospace;resize:vertical;text-align:center;">{val}</textarea>'
+                f'</div>'
+            )
+        return mark_safe(
+            f'<div style="max-width:100%;padding:8px 0;overflow-x:auto;">'
+            f'<p style="margin:0 0 10px;color:#666;font-size:12px;">'
+            f'每列支持多行（换行分隔），留空列不显示。横向滚动查看全部 9 列。</p>'
+            f'<div style="display:flex;gap:6px;min-width:1000px;">'
+            f'{"".join(columns_html)}'
+            f'</div></div>'
+        )
+
+    def value_from_datadict(self, data, files, name):
+        values = []
+        for i in range(9):
+            val = data.get(f'{name}_{i}', '').strip()
+            values.append(val)
+        while values and not values[-1]:
+            values.pop()
+        return values
+
+
+class TranslationsWidget(forms.Textarea):
+    """Custom textarea that includes an auto-translate button right after it."""
+
+    def __init__(self, attrs=None):
+        default_attrs = {
+            'rows': 12,
+            'style': 'width:100%;max-width:900px;min-height:240px;'
+                     'box-sizing:border-box;font-family:monospace;font-size:12px;',
+        }
+        if attrs:
+            default_attrs.update(attrs)
+        super().__init__(attrs=default_attrs)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        textarea_html = super().render(name, value, attrs, renderer)
+        attrs = attrs or {}
+        target_id = attrs.get('id', 'id_translations')
+        return mark_safe(
+            f'{textarea_html}'
+            f'<div class="auto-translate-row" style="margin:8px 0 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
+            f'<button type="button" class="button auto-translate-btn" data-target-id="{target_id}" '
+            f'style="white-space:nowrap;">🔄 Auto-Translate Description</button>'
+            f'<span class="auto-translate-status" style="font-size:12px;color:#666;"></span>'
+            f'</div>'
+        )
+
+
 class ProductAdminForm(forms.ModelForm):
-    """Custom form that renders specs and energy_data via custom widgets."""
+    """Custom form that renders specs, energy_data, and ordering_info via custom widgets."""
 
     class Meta:
         model = Product
@@ -142,6 +231,9 @@ class ProductAdminForm(forms.ModelForm):
         widgets = {
             'specs': SpecsWidget,
             'energy_data': EnergyDataWidget,
+            'ordering_info': OrderingInfoWidget,
+            'description': forms.Textarea(attrs={'rows': 4, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'translations': TranslationsWidget(),
         }
 
 
@@ -197,7 +289,11 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': (('name', 'slug'), 'category', 'parent', 'order')
         }),
         ('Content', {
-            'fields': ('description', 'translations')
+            'fields': ('description', 'model_number', 'translations')
+        }),
+        ('Images', {
+            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用\u201cDimension image\u201d字段，配光曲线请使用\u201cBeam angle image\u201d字段，不要在轮播图中重复上传。'
         }),
         ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
             'fields': ('specs',),
@@ -207,15 +303,19 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': ('energy_data',),
             'description': '详情页 ENERGY AND PERFORMANCE DATA 表格的 17 个标准参数。填写 value（值）即可，留空的行不会显示。'
         }),
+        ('Ordering Information (订购信息表格)', {
+            'fields': ('ordering_info',),
+            'description': '产品详情页 ORDERING INFORMATION 表格，共 9 列。每列可输入多行（换行分隔）。留空则整列不显示。'
+        }),
         ('Legacy specs (read-only, will be migrated to Specs above)', {
             'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
             'classes': ('collapse',),
         }),
-        ('Images', {
-            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用“Dimension image”字段，配光曲线请使用“Beam angle image”字段，不要在轮播图中重复上传。'
-        }),
     )
+
+    class Media:
+        css = {'all': ('admin/css/admin_overrides.css',)}
+        js = ('admin/js/auto_translate.js',)
 
 
 class ProjectImageInline(admin.TabularInline):
@@ -224,8 +324,22 @@ class ProjectImageInline(admin.TabularInline):
     fields = ('image', 'alt_text', 'order')
 
 
+class ProjectAdminForm(forms.ModelForm):
+    """Custom form: smaller results textarea, wider translations with auto-translate button."""
+
+    class Meta:
+        model = Project
+        fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'results': forms.Textarea(attrs={'rows': 3, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'translations': TranslationsWidget(attrs={'rows': 10}),
+        }
+
+
 @admin.register(Project)
 class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
+    form = ProjectAdminForm
     list_display = ('title', 'venue_type', 'sport_type', 'location', 'order')
     list_filter = ('venue_type', 'sport_type')
     prepopulated_fields = {'slug': ('title',)}
@@ -241,7 +355,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
         ('Images', {
             'fields': ('image',),
-            'description': 'Upload images following the size hints below. Add reference detail carousel images in the "Reference images" section below.'
+            'description': '主图。轮播图片请在下方 "Reference images" 区域添加。'
         }),
         ('PDF Document', {
             'fields': ('pdf_file', 'pdf_static'),
@@ -249,6 +363,10 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'classes': ('collapse',),
         }),
     )
+
+    class Media:
+        css = {'all': ('admin/css/admin_overrides.css',)}
+        js = ('admin/js/auto_translate.js',)
 
 
 @admin.register(NewsArticle)
@@ -377,3 +495,102 @@ class DailyStatsAdmin(admin.ModelAdmin):
         rate = ((obj.total_visits - obj.unique_visits) / obj.total_visits) * 100
         return f"{rate:.1f}%"
     bounce_rate.short_description = "Return Rate"
+
+
+# ---------------------------------------------------------------------------
+# Auto-translate admin view
+# ---------------------------------------------------------------------------
+TARGET_LANGS = ['fr', 'es', 'de', 'ru', 'ar']
+
+LANG_NAMES = {
+    'fr': 'French',
+    'es': 'Spanish',
+    'de': 'German',
+    'ru': 'Russian',
+    'ar': 'Arabic',
+}
+
+
+@require_POST
+@csrf_exempt
+def admin_translate(request):
+    """Translate text to all target languages using MyMemory (free, no API key)."""
+    import json as _json
+    import logging
+    logger = logging.getLogger(__name__)
+
+    try:
+        data = _json.loads(request.body)
+        fields = data.get('fields', {})
+    except Exception:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if not fields:
+        return JsonResponse({'error': 'No fields to translate'}, status=400)
+
+    from deep_translator import MyMemoryTranslator
+
+    LANG_MAP = {
+        'fr': 'fr-FR',
+        'es': 'es-ES',
+        'de': 'de-DE',
+        'ru': 'ru-RU',
+        'ar': 'ar-SA',
+    }
+
+    def _split_text(text, max_len=480):
+        """Split text into chunks at sentence boundaries, max 480 chars each."""
+        if len(text) <= max_len:
+            return [text]
+        chunks = []
+        while text:
+            if len(text) <= max_len:
+                chunks.append(text)
+                break
+            split_at = text.rfind('. ', 0, max_len)
+            if split_at == -1:
+                split_at = text.rfind('; ', 0, max_len)
+            if split_at == -1:
+                split_at = text.rfind(' ', 0, max_len)
+            if split_at == -1:
+                split_at = max_len
+            chunks.append(text[:split_at + 1])
+            text = text[split_at + 1:].lstrip()
+        return chunks
+
+    def _translate_chunk(translator, text):
+        """Translate a single chunk, auto-splitting if needed."""
+        chunks = _split_text(text)
+        translated_parts = []
+        for chunk in chunks:
+            for attempt in range(2):
+                try:
+                    translated_parts.append(translator.translate(chunk))
+                    break
+                except Exception as e:
+                    if attempt == 0:
+                        import time
+                        time.sleep(1)
+                        continue
+                    logger.error(f'Chunk translate error: {e}')
+                    translated_parts.append(f'[Error: {str(e)[:60]}]')
+        return ' '.join(translated_parts)
+
+    result = {}
+    for lang in TARGET_LANGS:
+        result[lang] = {}
+        target_code = LANG_MAP.get(lang, lang)
+        for field_name, text in fields.items():
+            text = (text or '').strip()
+            if not text:
+                result[lang][field_name] = ''
+                continue
+            try:
+                translator = MyMemoryTranslator(source='en-GB', target=target_code)
+                translated = _translate_chunk(translator, text)
+                result[lang][field_name] = translated
+            except Exception as e:
+                logger.error(f'Translate error [{lang}/{field_name}]: {e}')
+                result[lang][field_name] = f'[Error: {str(e)[:80]}]'
+
+    return JsonResponse({'translations': result})

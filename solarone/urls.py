@@ -3,11 +3,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
+from pages.admin import admin_translate
 
 # Use prefix_default_language=False so only non-default languages get a prefix
 # Default language (en) uses unprefixed URLs: /products/
 # Other languages use prefixed URLs: /fr/products/, /es/products/, etc.
 urlpatterns = i18n_patterns(
+    path('admin/translate/', admin_translate, name='admin_translate'),
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
     prefix_default_language=False,

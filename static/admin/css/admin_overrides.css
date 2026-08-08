@@ -1,0 +1,47 @@
+/* SolarOne Admin overrides - wider content fields */
+
+/* Wider textareas for translations, description, results */
+#id_translations,
+#id_description,
+#id_results {
+    width: 100% !important;
+    max-width: 900px !important;
+    box-sizing: border-box !important;
+}
+
+#id_translations {
+    min-height: 240px !important;
+    font-family: monospace !important;
+    font-size: 12px !important;
+}
+
+#id_description {
+    min-height: 120px !important;
+}
+
+#id_results {
+    min-height: 80px !important;
+}
+
+/* Wider form rows for content fields */
+.form-row.field-description,
+.form-row.field-results,
+.form-row.field-translations,
+.form-row.field-model_number {
+    max-width: 960px !important;
+}
+
+/* Auto-translate button container */
+.auto-translate-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 12px;
+    flex-wrap: wrap;
+}
+
+/* Ordering info widget horizontal scroll */
+.ordering-info-container {
+    overflow-x: auto;
+    padding-bottom: 8px;
+}

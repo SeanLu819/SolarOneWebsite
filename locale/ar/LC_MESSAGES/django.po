@@ -616,59 +616,128 @@ msgstr "الرياضة"
 msgid "Location"
 msgstr "الموقع"
 
-msgid "Innovative lighting solutions that protect the environment and inspire life."
+msgid ""
+"Innovative lighting solutions that protect the environment and inspire life."
 msgstr "حلول إضاءة مبتكرة تحمي البيئة وتلهم الحياة."
 
-msgid "Through delivering innovative lighting solutions for recreational, high school, college and semi-professional sports venues, airports, seaports and other industrial facilities, SolarOne protects the environment, reduces energy consumption, and delivers satisfying and inspiring lighting experiences."
-msgstr "من خلال تقديم حلول إضاءة مبتكرة للأماكن الرياضية الترفيهية والمدرسية والجامعية وشبه المهنية والمطارات والموانئ البحرية والمرافق الصناعية الأخرى، تحمي SolarOne البيئة وتقلل استهلاك الطاقة وتقدم تجارب إضاءة مرضية وملهمة."
+msgid ""
+"Through delivering innovative lighting solutions for recreational, high "
+"school, college and semi-professional sports venues, airports, seaports and "
+"other industrial facilities, SolarOne protects the environment, reduces "
+"energy consumption, and delivers satisfying and inspiring lighting "
+"experiences."
+msgstr ""
+"من خلال تقديم حلول إضاءة مبتكرة للأماكن الرياضية الترفيهية والمدرسية "
+"والجامعية وشبه المهنية والمطارات والموانئ البحرية والمرافق الصناعية الأخرى، "
+"تحمي SolarOne البيئة وتقلل استهلاك الطاقة وتقدم تجارب إضاءة مرضية وملهمة."
 
-msgid "We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we’ve got you covered."
-msgstr "نقدم معرفة وخبرة مباشرة للمشاريع الجديدة ومشاريع التجديد — من المشاريع الصغيرة التي تتطلب بعض الأضواء إلى المرافق المهنية عالية المستوى، نحن نغطي احتياجاتك."
+msgid ""
+"We bring first-hand knowledge and experience for new and retrofit projects —"
+" from small projects requiring a few lights to professional high-level "
+"facilities, we’ve got you covered."
+msgstr ""
+"نقدم معرفة وخبرة مباشرة للمشاريع الجديدة ومشاريع التجديد — من المشاريع "
+"الصغيرة التي تتطلب بعض الأضواء إلى المرافق المهنية عالية المستوى، نحن نغطي "
+"احتياجاتك."
 
-msgid "Our LED lighting products are designed to create the greatest visual comfort while delivering the highest output at the target — Improves Human Performance."
-msgstr "تم تصميم منتجات إضاءة LED لدينا لخلق أكبر راحة بصرية مع تقديم أعلى إخراج في الهدف — يحسن الأداء البشري."
+msgid ""
+"Our LED lighting products are designed to create the greatest visual comfort"
+" while delivering the highest output at the target — Improves Human "
+"Performance."
+msgstr ""
+"تم تصميم منتجات إضاءة LED لدينا لخلق أكبر راحة بصرية مع تقديم أعلى إخراج في "
+"الهدف — يحسن الأداء البشري."
 
-msgid "Lower glare index and greater uniform luminance through advanced COB light engine technology and precision optics."
-msgstr "مؤشر وهج أقل وإضاءة موحدة أكبر من خلال تقنية محرك ضوء COB المتقدمة والبصريات الدقيقة."
+msgid ""
+"Lower glare index and greater uniform luminance through advanced COB light "
+"engine technology and precision optics."
+msgstr ""
+"مؤشر وهج أقل وإضاءة موحدة أكبر من خلال تقنية محرك ضوء COB المتقدمة والبصريات"
+" الدقيقة."
 
-msgid "Higher light output at farther distances through proprietary reflectors and 99% light transmission glass Fresnel lenses."
-msgstr "إخراج ضوء أعلى في مسافات أبعد من خلال عاكسات مسجلة الملكية وعدسات Fresnel زجاجية بنسبة 99% لنقل الضوء."
+msgid ""
+"Higher light output at farther distances through proprietary reflectors and "
+"99% light transmission glass Fresnel lenses."
+msgstr ""
+"إخراج ضوء أعلى في مسافات أبعد من خلال عاكسات مسجلة الملكية وعدسات Fresnel "
+"زجاجية بنسبة 99% لنقل الضوء."
 
-msgid "Our COB light engine has a lower glare index and greater uniform luminance than separated LED light engines, delivering smoother, more comfortable illumination across every surface."
-msgstr "محرك ضوء COB لديه مؤشر وهج أقل وإضاءة موحدة أكبر من محركات LED المنفصلة، مما يوفر إضاءة أكثر سلاسة وراحة على كل سطح."
+msgid ""
+"Our COB light engine has a lower glare index and greater uniform luminance "
+"than separated LED light engines, delivering smoother, more comfortable "
+"illumination across every surface."
+msgstr ""
+"محرك ضوء COB لديه مؤشر وهج أقل وإضاءة موحدة أكبر من محركات LED المنفصلة، مما"
+" يوفر إضاءة أكثر سلاسة وراحة على كل سطح."
 
-msgid "The single polished aluminum reflector directs all COB light in a uniform distribution with crisp edge cutoffs — far superior to plastic lens over multiple SMD chips."
-msgstr "يعكس الألمنيوم المصقول الفردي جميع ضوء COB في توزيع موحد مع حواف حادة — متفوق بكثير على العدسات البلاستيكية على رقائق SMD متعددة."
+msgid ""
+"The single polished aluminum reflector directs all COB light in a uniform "
+"distribution with crisp edge cutoffs — far superior to plastic lens over "
+"multiple SMD chips."
+msgstr ""
+"يعكس الألمنيوم المصقول الفردي جميع ضوء COB في توزيع موحد مع حواف حادة — "
+"متفوق بكثير على العدسات البلاستيكية على رقائق SMD متعددة."
 
-msgid "Proprietary glass achieves 99% light transmission with a Fresnel pattern to cut glare. Unlike polycarbonate lenses, our glass lens will never yellow over time."
-msgstr "الزجاج المسجل يحقق نسبة 99% لنقل الضوء مع نمط Fresnel لتقليل الوهج. على عكس عدسات البولي كربونات، لن تتغير عدستنا الزجاجية إلى اللون الأصفر بمرور الوقت."
+msgid ""
+"Proprietary glass achieves 99% light transmission with a Fresnel pattern to "
+"cut glare. Unlike polycarbonate lenses, our glass lens will never yellow "
+"over time."
+msgstr ""
+"الزجاج المسجل يحقق نسبة 99% لنقل الضوء مع نمط Fresnel لتقليل الوهج. على عكس "
+"عدسات البولي كربونات، لن تتغير عدستنا الزجاجية إلى اللون الأصفر بمرور الوقت."
 
-msgid "We approach each project as a unique opportunity to exceed expectations in terms of improved lighting, visual comfort and operational savings."
-msgstr "نتعامل مع كل مشروع كفرصة فريدة لتجاوز التوقعات من حيث الإضاءة المحسنة والراحة البصرية والمدخرات التشغيلية."
+msgid ""
+"We approach each project as a unique opportunity to exceed expectations in "
+"terms of improved lighting, visual comfort and operational savings."
+msgstr ""
+"نتعامل مع كل مشروع كفرصة فريدة لتجاوز التوقعات من حيث الإضاءة المحسنة "
+"والراحة البصرية والمدخرات التشغيلية."
 
-msgid "From initial ideas through to detailed plans we are able to supply consultancy as part of our package."
-msgstr "من الأفكار الأولية إلى الخطط التفصيلية يمكننا تقديم الاستشارات كجزء من باقتنا."
+msgid ""
+"From initial ideas through to detailed plans we are able to supply "
+"consultancy as part of our package."
+msgstr ""
+"من الأفكار الأولية إلى الخطط التفصيلية يمكننا تقديم الاستشارات كجزء من "
+"باقتنا."
 
-msgid "Special build solutions with experts providing both lighting (Dialux) and structural engineering designs according to customer demand."
-msgstr "حلول بناء خاصة مع خبراء يقدمون تصاميم الإضاءة (Dialux) والهندسة الإنشائية حسب طلب العميل."
+msgid ""
+"Special build solutions with experts providing both lighting (Dialux) and "
+"structural engineering designs according to customer demand."
+msgstr ""
+"حلول بناء خاصة مع خبراء يقدمون تصاميم الإضاءة (Dialux) والهندسة الإنشائية "
+"حسب طلب العميل."
 
-msgid "Experts providing both lighting and structural engineering designs with precision manufacturing."
+msgid ""
+"Experts providing both lighting and structural engineering designs with "
+"precision manufacturing."
 msgstr "خبراء يقدمون تصاميم الإضاءة والهندسة الإنشائية مع التصنيع الدقيق."
 
-msgid "Experienced on-site install teams ensuring safe and reliable installations worldwide."
-msgstr "فرق تركيب ميدانية ذوو خبرة تضمن تركيبات آمنة وموثوقة في جميع أنحاء العالم."
+msgid ""
+"Experienced on-site install teams ensuring safe and reliable installations "
+"worldwide."
+msgstr ""
+"فرق تركيب ميدانية ذوو خبرة تضمن تركيبات آمنة وموثوقة في جميع أنحاء العالم."
 
-msgid "Safeguarding your investment and ensuring long-term brilliant performance."
+msgid ""
+"Safeguarding your investment and ensuring long-term brilliant performance."
 msgstr "حماية استثمارك وضمان أداء لامع طويل الأمد."
 
-msgid "Customized financial solutions — e.g. Energy Management Contract (EMC) to fit your budget."
+msgid ""
+"Customized financial solutions — e.g. Energy Management Contract (EMC) to "
+"fit your budget."
 msgstr "حلول مالية مخصصة — مثلاً عقد إدارة الطاقة (EMC) لتناسب ميزانيتك."
 
-msgid "Get in touch and our engineering team will respond with a full photometric proposal within 48 hours."
+msgid ""
+"Get in touch and our engineering team will respond with a full photometric "
+"proposal within 48 hours."
 msgstr "تواصل معنا وسيرد فريق الهندسة لدينا بمقترح ضوئي كامل خلال 48 ساعة."
 
-msgid "No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, China"
-msgstr "رقم 10-15 مدينة شيخا الصناعية، بلدة بي تشي جيا، منطقة تشانغ بينغ، بكين، الصين"
+msgid ""
+"No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, "
+"China"
+msgstr ""
+"رقم 10-15 مدينة شيخا الصناعية، بلدة بي تشي جيا، منطقة تشانغ بينغ، بكين، "
+"الصين"
 
 msgid "lighting projects delivered worldwide."
 msgstr "مشروع إضاءة تم تسليمه في جميع أنحاء العالم."
@@ -676,5 +745,158 @@ msgstr "مشروع إضاءة تم تسليمه في جميع أنحاء الع�
 msgid "Professional lighting solutions for outdoor venues."
 msgstr "حلول إضاءة احترافية للأماكن الخارجية."
 
-msgid "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience."
-msgstr "أكثر من 500 مشروع تم تسليمه في أكثر من 50 دولة. من الأماكن الرياضية المهنية إلى المرافق الصناعية والمطارات والموانئ البحرية — نحن نقدم معرفة وخبرة مباشرة."
+msgid ""
+"Over 500+ projects delivered across 50+ countries. From professional sports "
+"venues to industrial facilities, airports and seaports — we bring first-hand"
+" knowledge and experience."
+msgstr ""
+"أكثر من 500 مشروع تم تسليمه في أكثر من 50 دولة. من الأماكن الرياضية المهنية "
+"إلى المرافق الصناعية والمطارات والموانئ البحرية — نحن نقدم معرفة وخبرة "
+"مباشرة."
+
+msgid "Request a Sample"
+msgstr "طلب عينة"
+
+msgid "Experience the quality and performance of our"
+msgstr "اختبر جودة وأداء منتجاتنا"
+
+msgid ""
+"firsthand. Contact our team today for a free sample and technical "
+"consultation."
+msgstr "بنفسك. اتصل بفريقنا اليوم للحصول على عينة مجانية واستشارة تقنية."
+
+msgid "Request a Product Sample"
+msgstr "طلب عينة منتج"
+
+msgid "Thank you for your interest in"
+msgstr "شكراً لاهتمامك بـ"
+
+msgid ""
+"Fill out the form below and our team will contact you shortly with sample "
+"availability and shipping details."
+msgstr ""
+"املأ النموذج أدناه وسيتواصل فريقك معك قريباً بشأن توفر العينات وتفاصيل "
+"الشحن."
+
+msgid "Product of Interest"
+msgstr "المنتج المهتم به"
+
+msgid "Request Sample"
+msgstr "طلب عينة"
+
+msgid "I would like to request a sample of the"
+msgstr "أود طلب عينة من المنتج"
+
+msgid "Please provide availability, pricing, and shipping details. Thank you."
+msgstr "يرجى توفير التوفر والأسعار وتفاصيل الشحن. شكراً لك."
+
+msgid "View project"
+msgstr "عرض المشروع"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "Project Categories"
+msgstr "فئات المشاريع"
+
+msgid "Project Results"
+msgstr "نتائج المشروع"
+
+msgid "Project Not Found"
+msgstr "المشروع غير موجود"
+
+msgid "Back to Projects"
+msgstr "العودة إلى المشاريع"
+
+msgid "Download PDF"
+msgstr "تحميل PDF"
+
+msgid "Toggle subcategories"
+msgstr "تبديل الفئات الفرعية"
+
+msgid "Explore All Products"
+msgstr "استكشف جميع المنتجات"
+
+msgid "View image"
+msgstr "عرض الصورة"
+
+msgid "L\" × W\" × H\""
+msgstr "طول × عرض × ارتفاع"
+
+msgid "News product launches and insights from SolarOne."
+msgstr "إطلاقات المنتجات الجديدة ورؤى من SolarOne."
+
+msgid "Dimensions"
+msgstr "الأبعاد"
+
+msgid "Product Certifications"
+msgstr "شهادات المنتج"
+
+msgid ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing "
+"China"
+msgstr "المقر الرئيسي لهندسة وتصنيع إضاءة LED SolarOne في بكين، الصين"
+
+msgid "SolarOne LED lighting product categories overview"
+msgstr "نظرة عامة على فئات منتجات إضاءة LED SolarOne"
+
+msgid ""
+"SolarOne LED lighting reference projects — sports venues airports and "
+"industrial facilities"
+msgstr ""
+"مشاريع إضاءة LED SolarOne المرجعية — الملاعب الرياضية والمطارات والمنشآت "
+"الصناعية"
+
+msgid "View image %(counter)s"
+msgstr "عرض الصورة %(counter)s"
+
+msgid "beam angle"
+msgstr "زاوية الشعاع"
+
+msgid "dimensions"
+msgstr "الأبعاد"
+
+msgid ""
+"SolarOne LED lighting reference projects — sports venues, airports, and "
+"industrial facilities"
+msgstr ""
+"مشاريع إضاءة LED SolarOne المرجعية — الملاعب الرياضية والمطارات والمنشآت "
+"الصناعية"
+
+msgid ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing,"
+" China"
+msgstr "المقر الرئيسي لهندسة وتصنيع إضاءة LED SolarOne في بكين، الصين"
+
+msgid "S=Standard Voltage"
+msgstr "S=الجهد القياسي"
+
+msgid "(110-277VAC)"
+msgstr "(110-277VAC)"
+
+msgid "H=High Voltage"
+msgstr "H=الجهد العالي"
+
+msgid "(347-480VAC)"
+msgstr "(347-480VAC)"
+
+msgid "GRY=GREY"
+msgstr "GRY=رمادي"
+
+msgid "BLK=Black"
+msgstr "BLK=أسود"
+
+msgid "U = Hang Mount Bracket"
+msgstr "U = حامل تعليق"
+
+msgid "L = sitting Mount Bracket"
+msgstr "L = حامل أرضي"
+
+msgid "W = With Fixture"
+msgstr "W = مع الوحدة"
+
+msgid "S = Separated from Fixture"
+msgstr "S = منفصل عن الوحدة"

@@ -494,3 +494,306 @@ msgstr "Address"
 
 msgid "Since 2007"
 msgstr "Since 2007"
+
+msgid "Request a Sample"
+msgstr "Request a Sample"
+
+msgid "Experience the quality and performance of our"
+msgstr "Experience the quality and performance of our"
+
+msgid ""
+"firsthand. Contact our team today for a free sample and technical "
+"consultation."
+msgstr ""
+"firsthand. Contact our team today for a free sample and technical "
+"consultation."
+
+msgid "Request a Product Sample"
+msgstr "Request a Product Sample"
+
+msgid "Thank you for your interest in"
+msgstr "Thank you for your interest in"
+
+msgid ""
+"Fill out the form below and our team will contact you shortly with sample "
+"availability and shipping details."
+msgstr ""
+"Fill out the form below and our team will contact you shortly with sample "
+"availability and shipping details."
+
+msgid "Product of Interest"
+msgstr "Product of Interest"
+
+msgid "Request Sample"
+msgstr "Request Sample"
+
+msgid "I would like to request a sample of the"
+msgstr "I would like to request a sample of the"
+
+msgid "Please provide availability, pricing, and shipping details. Thank you."
+msgstr ""
+"Please provide availability, pricing, and shipping details. Thank you."
+
+msgid "View project"
+msgstr "View project"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Project Categories"
+msgstr "Project Categories"
+
+msgid "Project Results"
+msgstr "Project Results"
+
+msgid "Project Not Found"
+msgstr "Project Not Found"
+
+msgid "Back to Projects"
+msgstr "Back to Projects"
+
+msgid "Download PDF"
+msgstr "Download PDF"
+
+msgid "Toggle subcategories"
+msgstr "Toggle subcategories"
+
+msgid "Explore All Products"
+msgstr "Explore All Products"
+
+msgid "View image"
+msgstr "View image"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Product Not Found"
+msgstr "Product Not Found"
+
+msgid "Back to Products"
+msgstr "Back to Products"
+
+msgid "Product Categories"
+msgstr "Product Categories"
+
+msgid "Product Image"
+msgstr "Product Image"
+
+msgid "Filter by Sport"
+msgstr "Filter by Sport"
+
+msgid "lighting projects delivered worldwide."
+msgstr "lighting projects delivered worldwide."
+
+msgid "Professional lighting solutions for outdoor venues."
+msgstr "Professional lighting solutions for outdoor venues."
+
+msgid "Venue"
+msgstr "Venue"
+
+msgid "Sport"
+msgstr "Sport"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "Series Name"
+msgstr "Series Name"
+
+msgid "Lumen Output"
+msgstr "Lumen Output"
+
+msgid "System Wattage"
+msgstr "System Wattage"
+
+msgid "CRI"
+msgstr "CRI"
+
+msgid "Color Temperature (Kevin)"
+msgstr "Color Temperature (Kevin)"
+
+msgid "Input Voltage (High Voltage)"
+msgstr "Input Voltage (High Voltage)"
+
+msgid "Input Voltage (Low Voltage)"
+msgstr "Input Voltage (Low Voltage)"
+
+msgid "L70 Hours"
+msgstr "L70 Hours"
+
+msgid "Operating Temperature Range"
+msgstr "Operating Temperature Range"
+
+msgid "Surge (Common Mode / Differential Mode)"
+msgstr "Surge (Common Mode / Differential Mode)"
+
+msgid "IP Rating"
+msgstr "IP Rating"
+
+msgid "Effective Projected Area (EPA) at 90°"
+msgstr "Effective Projected Area (EPA) at 90°"
+
+msgid "L\" × W\" × H\""
+msgstr "L\" × W\" × H\""
+
+msgid "Approximate Weight"
+msgstr "Approximate Weight"
+
+msgid "Material"
+msgstr "Material"
+
+msgid "LED Brand"
+msgstr "LED Brand"
+
+msgid "LED Driver"
+msgstr "LED Driver"
+
+msgid "ENERGY AND PERFORMANCE DATA:"
+msgstr "ENERGY AND PERFORMANCE DATA:"
+
+msgid "ORDERING INFORMATION:"
+msgstr "ORDERING INFORMATION:"
+
+msgid "Model Number:"
+msgstr "Model Number:"
+
+msgid "System Power"
+msgstr "System Power"
+
+msgid "CCT"
+msgstr "CCT"
+
+msgid "Voltage"
+msgstr "Voltage"
+
+msgid "Fixture Color(option)"
+msgstr "Fixture Color(option)"
+
+msgid "Controls (Option)"
+msgstr "Controls (Option)"
+
+msgid "Bracket Type (option)"
+msgstr "Bracket Type (option)"
+
+msgid "Power Driver Location"
+msgstr "Power Driver Location"
+
+msgid "FL4M"
+msgstr "FL4M"
+
+msgid "(Light With 4 Module)"
+msgstr "(Light With 4 Module)"
+
+msgid "Beam Angle Type:"
+msgstr "Beam Angle Type:"
+
+msgid "Dimensions:"
+msgstr "Dimensions:"
+
+msgid "M Series"
+msgstr "M Series"
+
+msgid "years warranty"
+msgstr "years warranty"
+
+msgid ""
+"Innovative lighting solutions that protect the environment and inspire life."
+msgstr ""
+"Innovative lighting solutions that protect the environment and inspire life."
+
+msgid "News"
+msgstr "News"
+
+msgid "All News"
+msgstr "All News"
+
+msgid "Latest Updates"
+msgstr "Latest Updates"
+
+msgid "SolarOne News"
+msgstr "SolarOne News"
+
+msgid "News product launches and insights from SolarOne."
+msgstr "News product launches and insights from SolarOne."
+
+msgid "No news articles yet."
+msgstr "No news articles yet."
+
+msgid "Dimensions"
+msgstr "Dimensions"
+
+msgid "Product Certifications"
+msgstr "Product Certifications"
+
+msgid ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing "
+"China"
+msgstr ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing "
+"China"
+
+msgid "SolarOne LED lighting product categories overview"
+msgstr "SolarOne LED lighting product categories overview"
+
+msgid ""
+"SolarOne LED lighting reference projects — sports venues airports and "
+"industrial facilities"
+msgstr ""
+"SolarOne LED lighting reference projects — sports venues airports and "
+"industrial facilities"
+
+msgid "View image %(counter)s"
+msgstr "View image %(counter)s"
+
+msgid "beam angle"
+msgstr "beam angle"
+
+msgid "dimensions"
+msgstr "dimensions"
+
+msgid ""
+"SolarOne LED lighting reference projects — sports venues, airports, and "
+"industrial facilities"
+msgstr ""
+"SolarOne LED lighting reference projects — sports venues, airports, and "
+"industrial facilities"
+
+msgid ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing,"
+" China"
+msgstr ""
+"SolarOne LED lighting engineering and manufacturing headquarters in Beijing,"
+" China"
+
+msgid "S=Standard Voltage"
+msgstr "S=Standard Voltage"
+
+msgid "(110-277VAC)"
+msgstr "(110-277VAC)"
+
+msgid "H=High Voltage"
+msgstr "H=High Voltage"
+
+msgid "(347-480VAC)"
+msgstr "(347-480VAC)"
+
+msgid "GRY=GREY"
+msgstr "GRY=GREY"
+
+msgid "BLK=Black"
+msgstr "BLK=Black"
+
+msgid "U = Hang Mount Bracket"
+msgstr "U = Hang Mount Bracket"
+
+msgid "L = sitting Mount Bracket"
+msgstr "L = sitting Mount Bracket"
+
+msgid "W = With Fixture"
+msgstr "W = With Fixture"
+
+msgid "S = Separated from Fixture"
+msgstr "S = Separated from Fixture"

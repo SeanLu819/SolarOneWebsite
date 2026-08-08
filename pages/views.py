@@ -113,6 +113,8 @@ class _DictProduct:
         self.gallery_paths = item.get('gallery', [])
         self.specs = item.get('specs', []) or []
         self.energy_data = item.get('energy_data', []) or []
+        self.model_number = item.get('model_number', '')
+        self.ordering_info = item.get('ordering_info', []) or []
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
@@ -307,6 +309,20 @@ def _enrich_product(product, lang):
         ]
         if not product.parent_slug:
             product.parent_slug = ''
+
+    # Pre-process ordering_info for template rendering.
+    # Each column is rendered as a single <td>; multi-line values use <br>.
+    raw_ordering = getattr(product, 'ordering_info', None) or []
+    if raw_ordering:
+        product.ordering_cols = []
+        for col in raw_ordering:
+            if col:
+                lines = [ln.strip() for ln in col.split('\n') if ln.strip()]
+                product.ordering_cols.append(lines)
+            else:
+                product.ordering_cols.append([])
+    else:
+        product.ordering_cols = []
 
 
 def _enrich_project(project, lang):
@@ -817,6 +833,16 @@ def _send_contact_notification(contact_msg):
 
 def contact(request):
     context = get_common_context()
+
+    prefill_product = request.GET.get('product', '').strip()
+    prefill_product_name = request.GET.get('product_name', '').strip()
+    prefill_ref = request.GET.get('ref', '').strip()
+
+    if prefill_product:
+        context['prefill_product'] = prefill_product
+        context['prefill_product_name'] = prefill_product_name
+        context['prefill_ref'] = prefill_ref
+
     if request.method == 'POST':
         if _is_rate_limited(request):
             messages.error(
@@ -829,6 +855,7 @@ def contact(request):
         email = request.POST.get('email', '').strip()
         phone = request.POST.get('phone', '').strip()
         message = request.POST.get('message', '').strip()
+        product_name = request.POST.get('product_name', '').strip()
         if name and email and message:
             try:
                 contact_msg = ContactMessage.objects.create(

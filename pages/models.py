@@ -78,6 +78,22 @@ class Product(models.Model):
                   '格式：[{"label": "Series Name", "value": "FL4M-320W"}, ...]。'
                   'label 为参数名称，value 为参数值。不填或留空数组则不显示该行。'
     )
+    # Ordering Information table
+    model_number = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Model Number',
+        help_text='示例：FL4M-320W-30K-S'
+    )
+    ordering_info = JSONField(
+        default=list,
+        blank=True,
+        verbose_name='Ordering Information',
+        help_text='订购信息表格，9 列，每列支持多行（换行分隔）。'
+                  '格式：["Series Value", "Power Value", "CCT Value", "Voltage Value", '
+                  '"Beam Angle Value", "Color Value", "Controls Value", '
+                  '"Bracket Value", "Driver Location Value"]'
+    )
 
     class Meta:
         ordering = ['order', 'pk']

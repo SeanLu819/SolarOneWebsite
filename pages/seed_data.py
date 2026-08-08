@@ -690,40 +690,40 @@ SEED_DATA = {
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school operated\r\nby Cecil County Public Schools located approximately one\r\nmile south of the small town of Chesapeake City in Cecil\r\nCounty, MD. This is a small school of 685 students which\r\nshares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.“\r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient,\r\nunder lit, and hassle to maintain. Also, the specifications of\r\nthe project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure\r\nthat the design specifications were met. The design called\r\nfor replacement (40 total) of the existing 1500W MH light\r\nfixtures to (48 total) of our FL9M -630W LED performance\r\nsports lights.",
+      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school operated by Cecil County Public Schools located approximately one mile south of the small town of Chesapeake City in Cecil County, MD. This is a small school of 685 students which shares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.“\r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
       "translations": {
         "fr": {
-          "title": "Rénovation LED Terrain de Football",
+          "title": "Lycée Bohemia Manor",
           "location": "États-Unis",
-          "description": "Un design photométrique de précision a été réalisé pour garantir que les spécifications de conception soient respectées. Le projet prévoyait le remplacement de 40 projecteurs MH 1500W existants par 48 de nos LED FL9M-630W.",
-          "results": "30fc éclairage moyen, uniformité 1.37:1 — dépassant les exigences du projet."
+          "description": "【Profil du client】\nBohemia Manor High School est une école publique gérée par Cecil County Public Schools située à environ 1,6 km au sud de la petite ville de Chesapeake City dans le comté de Cecil, MD. Il s'agit d'une petite école de 685 élèves qui partage son campus avec le collège Bohemia Manor.\nl'école est également connue sous le surnom de « Bo Manor ».\n\n【Étendue des travaux】\nL'éclairage d'origine du champ « Bo Manor » était inefficace, sous-éclairé et difficile à entretenir. En outre, les spécifications du projet nécessitaient l'utilisation des poteaux et des structures existants.\n\n【La solution】\nUne conception photométrique de précision a été réalisée pour s'assurer que les spécifications de conception étaient respectées. La conception a nécessité le remplacement (40 au total) des luminaires 1500W MH existants par (48 au total) de nos lampes de sport à LED FL9M -630W.",
+          "results": "<strong>Éclairage</strong> moyen de 30 fc, <strong>uniformité 1,37 : 1</strong> — dépassant les exigences du projet."
         },
         "es": {
-          "title": "Renovación LED Campo de Fútbol",
+          "title": "Escuela Secundaria Bohemia Manor",
           "location": "Estados Unidos",
-          "description": "Se completó un diseño fotométrico de precisión para garantizar el cumplimiento de las especificaciones. El proyecto requería el reemplazo de 40 luminarias MH de 1500W por 48 de nuestras LED FL9M-630W.",
-          "results": "30fc iluminación promedio, uniformidad 1.37:1 — superando los requisitos del proyecto."
+          "description": "Perfil 【del cliente】\nBohemia Manor High School es una escuela pública operada por las Escuelas Públicas del Condado de Cecil ubicada aproximadamente a una milla al sur de la pequeña ciudad de Chesapeake City en el Condado de Cecil, MD. Esta es una pequeña escuela de 685 estudiantes que comparte su campus con Bohemia Manor Middle School.\nla escuela también es conocida con el apodo de \"Bo Manor\".\n\n【Alcance del trabajo】\nLa iluminación original en el campo \"Bo Manor\" era ineficiente, poco iluminada y molesta de mantener. Además, las especificaciones del proyecto requerían el uso de los postes y estructuras existentes.\n\n【La solución】\nSe completó un diseño fotométrico de precisión para garantizar que se cumplieran las especificaciones de diseño. El diseño requería el reemplazo (40 en total) de los accesorios de iluminación existentes de 1500W MH a (48 en total) de nuestras luces deportivas de rendimiento LED FL9M -630W.",
+          "results": "<strong>30</strong> fc iluminancia media, <strong>uniformidad 1.37 : 1</strong> — excediendo los requisitos del proyecto."
         },
         "de": {
-          "title": "LED-Umrüstung Fußballfeld",
-          "location": "Vereinigte Staaten",
-          "description": "Ein präzises fotometrisches Design wurde durchgeführt um sicherzustellen, dass die Designspezifikationen erfüllt werden. Das Projekt sah den Ersatz von 40 vorhandenen 1500W MH-Leuchten durch 48 unserer FL9M-630W LED vor.",
-          "results": "30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 1.37:1 — übertrifft die Projektanforderungen."
+          "title": "Bohemia Manor Gymnasium",
+          "location": "Vereinigte Staaten von Amerika",
+          "description": "【Kundenprofil】\nDie Bohemia Manor High School ist eine öffentliche Schule, die von Cecil County Public Schools betrieben wird und etwa eine Meile südlich der kleinen Stadt Chesapeake City in Cecil County, MD, liegt. Dies ist eine kleine Schule mit 685 Schülern, die ihren Campus mit der Bohemia Manor Middle School teilt. Die\nschule ist auch unter dem Spitznamen „Bo Manor“ bekannt.\n\n【Arbeitsumfang】\nDie ursprüngliche Beleuchtung im Feld \"Bo Manor\" war ineffizient, unterleuchtet und musste mühsam gewartet werden. Außerdem erforderten die Spezifikationen des Projekts die Nutzung der vorhandenen Pole und Strukturen.\n\n【Die Lösung】\nEin präzises photometrisches Design wurde fertiggestellt, um sicherzustellen, dass die Konstruktionsspezifikationen eingehalten wurden. Das Design sah den Austausch (insgesamt 40) der vorhandenen 1500-W-MH-Leuchten an (insgesamt 48) unserer FL9M-630-W-LED-Leistungssportleuchten vor.",
+          "results": "<strong>30fc</strong> mittlere Beleuchtungsstärke, <strong>Gleichmäßigkeit 1,37 : 1</strong> — die Projektanforderungen übertreffend."
         },
         "ru": {
-          "title": "Модернизация LED футбольного поля",
-          "location": "Соединённые Штаты",
-          "description": "Был выполнен точный фотометрический расчёт для обеспечения соответствия проектным спецификациям. Проект предусматривал замену 40 существующих светильников МГ 1500Вт на 48 наших LED FL9M-630W.",
-          "results": "Средняя освещённость 30фк, равномерность 1.37:1 — превышение требований проекта."
+          "title": "Средняя школа Bohemia Manor",
+          "location": "Соединенные Штаты Америки",
+          "description": "Профиль 【клиента】\nСредняя школа Bohemia Manor - это государственная школа, управляемая государственными школами округа Сесил, расположенная примерно в одной миле к югу от небольшого городка Чесапик-Сити в округе Сесил, штат Мэриленд. Это небольшая школа на 685 учеников, которая делит свой кампус со средней школой Bohemia Manor.\nшкола также известна под прозвищем «Усадьба Бо».\n\n【Объем работ】\nПервоначальное освещение на месторождении «Усадьба Бо» было неэффективным, недостаточно освещенным и требовало хлопот в обслуживании. Также спецификации проекта требовали использования существующих опор и конструкций.\n\n【Решение】\nДля обеспечения соответствия проектным спецификациям была завершена точная фотометрическая конструкция. Дизайн предусматривал замену (всего 40) существующих светильников 1500 Вт MH на (всего 48) наших светодиодных спортивных светильников FL9M -630W.",
+          "results": "<strong>30fc</strong> средняя освещенность, <strong>равномерность 1,37 : 1</strong> — превышение проектных требований."
         },
         "ar": {
-          "title": "ترقية LED لملاعب كرة القدم",
-          "location": "الولايات المتحدة",
-          "description": "تم إكمال تصميم ضوئي دقيق لضمان توافق المواصفات. تضمن المشروع استبدال 40 مصابيح MH بقدرة 1500 وات بـ 48 من مصابيح LED FL9M-630W.",
-          "results": "متوسط إضاءة 30fc، uniformity 1.37:1 — تجاوز متطلبات المشروع."
+          "title": "مدرسة بوهيميا مانور الثانوية",
+          "location": "الولايات المتحدة الأمريكية",
+          "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
+          "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
       },
       "gallery": [
