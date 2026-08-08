@@ -753,7 +753,7 @@ def get_common_context():
     if logo_name:
         config.logo_url = static(logo_name)
     else:
-        config.logo_url = static('images/logo.png')
+        config.logo_url = static('images/logo.webp')
 
     lang = get_language()
     config.hero_title = _t(config.hero_title, lang)
