@@ -882,11 +882,37 @@ SEED_DATA = {
       "slug": "morgan-state-university-tennis-courts",
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nMorgan State University is the premier public urban\r\nresearch university in Maryland, known for its excellence in\r\nteaching, intensive research, effective public service and\r\ncommunity engagement. Morgan prepares diverse and\r\ncompetitive graduates for success in a global,\r\ninterdependent society.",
+      "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
       "results": "",
       "image": "images/processed/msu-tennis-01.webp",
       "order": 4,
-      "translations": {},
+      "translations": {
+        "fr": {
+          "title": "Courts de tennis de l'Université Morgan State",
+          "description": "【Profil du client】\nMorgan State University est la première université publique de recherche urbaine du Maryland, connue pour son excellence en matière d'enseignement, de recherche intensive, de service public efficace et d'engagement communautaire. Morgan prépare les diplômés diversifiés et compétitifs à réussir dans une société mondiale et interdépendante.",
+          "location": "États-Unis"
+        },
+        "es": {
+          "title": "Pistas de tenis de la Universidad Estatal Morgan",
+          "description": "Perfil 【del cliente】\nMorgan State University es la principal universidad pública de investigación urbana en Maryland, conocida por su excelencia en la enseñanza, la investigación intensiva, el servicio público efectivo y la participación de la comunidad. Morgan prepara graduados diversos y competitivos para el éxito en una sociedad global e interdependiente.",
+          "location": "Estados Unidos"
+        },
+        "de": {
+          "title": "Tennisplätze der Morgan State University",
+          "description": "【Kundenprofil】\nDie Morgan State University ist die führende öffentliche Stadtforschungsuniversität in Maryland, die für ihre Exzellenz in der Lehre, intensive Forschung, effektiven öffentlichen Dienst und soziales Engagement bekannt ist. Morgan bereitet vielfältige und wettbewerbsfähige Absolventen auf den Erfolg in einer globalen, voneinander abhängigen Gesellschaft vor.",
+          "location": "Vereinigte Staaten von Amerika"
+        },
+        "ru": {
+          "title": "Теннисные корты Morgan State University",
+          "description": "Профиль 【клиента】\nГосударственный университет Моргана является ведущим государственным городским исследовательским университетом в Мэриленде, известным своим превосходством в обучении, интенсивных исследованиях, эффективной государственной службе и вовлечении сообщества. Morgan готовит разнообразных и конкурентоспособных выпускников к успеху в глобальном, взаимозависимом обществе.",
+          "location": "Соединенные Штаты Америки"
+        },
+        "ar": {
+          "title": "ملاعب التنس بجامعة ولاية مورغان",
+          "description": "الملف الشخصي 【للعميل】\nجامعة ولاية مورغان هي الجامعة البحثية الحضرية العامة الرائدة في ولاية ماريلاند، والمعروفة بتميزها في التدريس والبحث المكثف والخدمة العامة الفعالة والمشاركة المجتمعية. تعد مورغان خريجين متنوعين وتنافسين للنجاح في مجتمع عالمي مترابط.",
+          "location": "الولايات المتحدة الأمريكية"
+        }
+      },
       "gallery": [
         "images/projects/gallery/msu-tennis-01.webp",
         "images/projects/gallery/msu-tennis-02.webp",
@@ -894,7 +920,7 @@ SEED_DATA = {
         "images/projects/gallery/msu-tennis-04.webp",
         "images/projects/gallery/msu-tennis-05.webp"
       ],
-      "pdf_url": "projects/pdfs/morgan-state-university-tennis-courts/Morgan_state___university__tennis_case_study.pdf"
+      "pdf_url": "files/morgan_state_university_tennis_courts.pdf"
     },
     {
       "pk": 3,
