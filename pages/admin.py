@@ -366,7 +366,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
     )
 
-    def _update_seed_pdf_url(slug, pdf_static):
+    def _update_seed_pdf_url(self, slug, pdf_static):
         """Update pdf_url in seed_data.json for the given project slug."""
         import json
         seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')

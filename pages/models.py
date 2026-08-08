@@ -165,12 +165,14 @@ class Project(models.Model):
         ('SOCCER_FIELD', 'Soccer Field'),
         ('BASEBALL_FIELD', 'Baseball Field'),
         ('TENNIS_COURTS', 'Tennis Courts'),
+        ('SKI_AREA', 'Ski Area'),
         ('BASKETBALL', 'Basketball'),
         ('VOLLEYBALL', 'Volleyball'),
         ('TRACK_FIELD', 'Track and Field'),
         ('MULTI_SPORT', 'Multi-Sport Arena'),
         ('AIRPORT', 'Airport'),
         ('SEAPORT', 'Seaport'),
+        ('ICE_ARENA', 'Ice Arena'),
         ('OTHER', 'Other'),
     ]
 

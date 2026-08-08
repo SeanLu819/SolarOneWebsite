@@ -581,6 +581,7 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'FOOTBALL_FIELD', 'label': _t('Football Field', lang)},
                 {'key': 'SOCCER_FIELD', 'label': _t('Soccer Field', lang)},
                 {'key': 'BASEBALL_FIELD', 'label': _t('Baseball Field', lang)},
+                {'key': 'TENNIS_COURTS', 'label': _t('Tennis Courts', lang)},
                 {'key': 'SKI_AREA', 'label': _t('Ski Area', lang)},
             ],
         },
