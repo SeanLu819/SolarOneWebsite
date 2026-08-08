@@ -367,9 +367,9 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
     )
 
     def _update_seed_pdf_url(self, slug, pdf_static):
-        """Update pdf_url in seed_data.json for the given project slug."""
         import json
         seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+        seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
         try:
             with open(seed_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -380,13 +380,102 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             with open(seed_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
                 f.write('\n')
+            try:
+                import importlib
+                from pages import seed_data as sd_mod
+                importlib.reload(sd_mod)
+                sd_data = sd_mod.SEED_DATA
+                for p in sd_data.get('projects', []):
+                    if p.get('slug') == slug:
+                        p['pdf_url'] = pdf_static
+                        break
+                with open(seed_py_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                import re
+                pattern = re.compile(
+                    r'("pdf_url":\s*")[^"]*(")',
+                    re.DOTALL
+                )
+                idx = content.find(f'"slug": "{slug}"')
+                if idx >= 0:
+                    next_idx = content.find('"pdf_url"', idx)
+                    if next_idx >= 0:
+                        start = content.find('"', next_idx) + 1
+                        end = content.find('"', start)
+                        content = content[:start] + pdf_static + content[end:]
+                        with open(seed_py_path, 'w', encoding='utf-8') as f:
+                            f.write(content)
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+    def _sync_project_images(self, obj):
+        import json
+        import re
+        slug = obj.slug
+        static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'projects', slug)
+        os.makedirs(static_dir, exist_ok=True)
+        media_root = settings.MEDIA_ROOT
+
+        cover_rel = ''
+        if obj.image:
+            src_cover = os.path.join(media_root, str(obj.image))
+            if os.path.exists(src_cover):
+                dst_cover = os.path.join(static_dir, os.path.basename(src_cover))
+                shutil.copy2(src_cover, dst_cover)
+                cover_rel = f'images/projects/{slug}/{os.path.basename(src_cover)}'
+
+        gallery_paths = []
+        for img in obj.images.all():
+            src = os.path.join(media_root, str(img.image))
+            if os.path.exists(src):
+                dst = os.path.join(static_dir, os.path.basename(src))
+                shutil.copy2(src, dst)
+                gallery_paths.append(f'images/projects/{slug}/{os.path.basename(src)}')
+
+        seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+        seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
+
+        try:
+            with open(seed_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            for p in data.get('projects', []):
+                if p.get('slug') == slug:
+                    if cover_rel:
+                        p['image'] = cover_rel
+                    p['gallery'] = gallery_paths
+                    break
+            with open(seed_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write('\n')
+        except Exception:
+            pass
+
+        try:
+            with open(seed_py_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            idx = content.find(f'"slug": "{slug}"')
+            if idx >= 0:
+                img_match = re.search(r'"image":\s*"([^"]*)"', content[idx:])
+                if img_match:
+                    i_start = img_match.start() + idx
+                    val_start = content.find('"', i_start) + 1
+                    val_end = content.find('"', val_start)
+                    if cover_rel:
+                        content = content[:val_start] + cover_rel + content[val_end:]
+                gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', content[idx:])
+                if gal_match:
+                    g_start = gal_match.start() + idx
+                    g_end = gal_match.end()
+                    content = content[:g_start] + json.dumps(gallery_paths) + content[g_end:]
+                with open(seed_py_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
         except Exception:
             pass
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        # If a new PDF was uploaded via pdf_file, copy it to static/files/ and
-        # set pdf_static so it's accessible on Vercel.
         if obj.pdf_file and not getattr(obj, '_pdf_copied', False):
             src = obj.pdf_file.path
             dst_dir = os.path.join(settings.BASE_DIR, 'static', 'files')
@@ -399,9 +488,9 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             obj.pdf_static = f'files/{dst_name}'
             obj.save(update_fields=['pdf_static'])
             obj._pdf_copied = True
-        # Sync pdf_static to seed_data.json so Vercel uses the correct path
         if obj.pdf_static:
             self._update_seed_pdf_url(obj.slug, obj.pdf_static)
+        self._sync_project_images(obj)
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}

@@ -1,5 +1,12 @@
 from django.db import models
 from django.db.models import JSONField
+import json
+import os
+import shutil
+import re
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.conf import settings
 
 
 def project_pdf_upload_path(instance, filename):
@@ -446,3 +453,90 @@ class DailyStats(models.Model):
 
     def __str__(self):
         return str(self.date)
+
+
+@receiver(post_save, sender=ProjectImage)
+def sync_project_image_on_save(sender, instance, **kwargs):
+    project = instance.project
+    if not project:
+        return
+    static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'projects', project.slug)
+    os.makedirs(static_dir, exist_ok=True)
+    media_root = settings.MEDIA_ROOT
+    src = os.path.join(media_root, str(instance.image)) if instance.image else ''
+    if src and os.path.exists(src):
+        dst = os.path.join(static_dir, os.path.basename(src))
+        shutil.copy2(src, dst)
+    _update_seed_project(project)
+
+
+@receiver(post_delete, sender=ProjectImage)
+def sync_project_image_on_delete(sender, instance, **kwargs):
+    project = instance.project
+    if not project:
+        return
+    _update_seed_project(project)
+
+
+def _update_seed_project(project):
+    slug = project.slug
+    media_root = settings.MEDIA_ROOT
+    static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'projects', slug)
+
+    cover_rel = ''
+    if project.image:
+        src_cover = os.path.join(media_root, str(project.image))
+        if os.path.exists(src_cover):
+            dst_cover = os.path.join(static_dir, os.path.basename(src_cover))
+            if not os.path.exists(dst_cover):
+                shutil.copy2(src_cover, dst_cover)
+            cover_rel = f'images/projects/{slug}/{os.path.basename(src_cover)}'
+
+    gallery_paths = []
+    for img in project.images.all():
+        src = os.path.join(media_root, str(img.image))
+        if os.path.exists(src):
+            dst = os.path.join(static_dir, os.path.basename(src))
+            if not os.path.exists(dst):
+                shutil.copy2(src, dst)
+            gallery_paths.append(f'images/projects/{slug}/{os.path.basename(src)}')
+
+    seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+    seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
+
+    try:
+        with open(seed_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        for p in data.get('projects', []):
+            if p.get('slug') == slug:
+                if cover_rel:
+                    p['image'] = cover_rel
+                p['gallery'] = gallery_paths
+                break
+        with open(seed_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write('\n')
+    except Exception:
+        pass
+
+    try:
+        with open(seed_py_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        idx = content.find(f'"slug": "{slug}"')
+        if idx >= 0:
+            if cover_rel:
+                img_match = re.search(r'"image":\s*"([^"]*)"', content[idx:])
+                if img_match:
+                    i_start = img_match.start() + idx
+                    val_start = content.find('"', i_start) + 1
+                    val_end = content.find('"', val_start)
+                    content = content[:val_start] + cover_rel + content[val_end:]
+            gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', content[idx:])
+            if gal_match:
+                g_start = gal_match.start() + idx
+                g_end = gal_match.end()
+                content = content[:g_start] + json.dumps(gallery_paths) + content[g_end:]
+            with open(seed_py_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+    except Exception:
+        pass
