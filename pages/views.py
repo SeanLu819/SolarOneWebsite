@@ -241,8 +241,7 @@ def _find_project_gallery_files(slug: str):
     results = []
     slug_dir = f'images/projects/{slug}'
     slug_files = _list_static_dir(slug_dir)
-    exclude = {'old hid lighting.webp', 'new led lighting.webp',
-               'old HID lighting.webp', 'new LED lighting.webp'}
+    exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
     for f in sorted(slug_files):
         fl = f.lower()
         if fl in {e.lower() for e in exclude}:
@@ -279,7 +278,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
                 fl = f.lower()
                 if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
                     continue
-                exclude = {'old hid lighting.webp', 'new led lighting.webp'}
+                exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
                 if fl in exclude:
                     continue
                 stem = fl.rsplit('.', 1)[0]
@@ -291,7 +290,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
             fl = f.lower()
             if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
                 continue
-            exclude = {'old hid lighting.webp', 'new led lighting.webp'}
+            exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
             if fl in exclude:
                 continue
             if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():

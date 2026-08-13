@@ -3,8 +3,8 @@ from pathlib import Path
 import urllib.request
 
 pairs=[
-    ('staticfiles/images/projects/football-field-led-retrofit/new led lighting.webp','http://localhost:8000/static/images/projects/football-field-led-retrofit/new%20led%20lighting.webp'),
-    ('staticfiles/images/projects/football-field-led-retrofit/old hid lighting.webp','http://localhost:8000/static/images/projects/football-field-led-retrofit/old%20hid%20lighting.webp')
+    ('staticfiles/images/projects/football-field-led-retrofit/new-led-lighting.webp','http://localhost:8000/static/images/projects/football-field-led-retrofit/new-led-lighting.webp'),
+    ('staticfiles/images/projects/football-field-led-retrofit/old-hid-lighting.webp','http://localhost:8000/static/images/projects/football-field-led-retrofit/old-hid-lighting.webp')
 ]
 for disk, url in pairs:
     p=Path(disk)

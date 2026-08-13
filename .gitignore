@@ -31,12 +31,15 @@ __pycache__/
 db.sqlite3
 media/
 staticfiles/
+# Vercel build-time generated public/static/ (built from staticfiles + static/
+# in build.sh; MUST NOT be committed as it's regenerated).
+public/
 
-# Unused logo variants (kept locally but not deployed)
+# Unused logo VARIANTS (kept locally but not deployed) — ONLY *.png variants!
+# DO NOT ignore .webp — those are the actual deployed assets!
 static/images/logo-original.png
 static/images/logo.final.png
 static/images/logo.original-compressed.png
-static/images/logo.webp
 
 # Orphan image directory (not under static/, not served)
 /images/
