@@ -2,14 +2,21 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.py",
-      "use": "@vercel/python",
+      "src": "build.sh",
+      "use": "@vercel/static-build",
       "config": {
-        "buildCommand": "bash build.sh"
+        "distDir": "staticfiles"
       }
+    },
+    {
+      "src": "index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/media/(.*)", "dest": "/media/$1" },
+    { "src": "/favicon.ico", "dest": "/static/images/favicon.webp" },
     { "src": "/(.*)", "dest": "/index.py" }
   ]
 }

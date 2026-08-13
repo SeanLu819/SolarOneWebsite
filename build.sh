@@ -11,8 +11,13 @@ set -e
 set -o pipefail
 echo "=== [build.sh] Starting ==="
 
-# 1. Install Python deps
-pip install --break-system-packages -r requirements.txt
+# 1. Install Python deps (use --break-system-packages when available, fallback otherwise)
+set +e
+pip install --break-system-packages -r requirements.txt 2>/dev/null
+if [ $? -ne 0 ]; then
+    pip install -r requirements.txt
+fi
+set -e
 echo "=== [build.sh] pip install done ==="
 
 # 2. Run Django collectstatic -> outputs to ./staticfiles per STATIC_ROOT
