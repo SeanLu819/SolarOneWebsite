@@ -30,12 +30,8 @@ awesome-design-md-main/
 __pycache__/
 db.sqlite3
 media/
-staticfiles/
-# Vercel build-time generated — the public/ directory ITSELF must be committed
-# (otherwise Vercel won't detect it pre-build and CDN won't activate).
-# Only the generated contents are excluded.
-public/static/
-public/favicon.webp
+# staticfiles/ — committed to Git so @vercel/python can serve it via WhiteNoise
+# without needing a build step (collectstatic is run locally before push).
 
 # Unused logo VARIANTS (kept locally but not deployed) — ONLY *.png variants!
 # DO NOT ignore .webp — those are the actual deployed assets!
