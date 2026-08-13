@@ -18,7 +18,6 @@ import whitenoise
 
 STATIC_ROOT_VAL = str(settings.STATIC_ROOT)
 _STATICFILES_DIRS = list(getattr(settings, 'STATICFILES_DIRS', []))
-_BASE = str(BASE_DIR)
 
 _roots = []
 if os.path.isdir(STATIC_ROOT_VAL):
@@ -39,22 +38,12 @@ if _roots:
 else:
     application = whitenoise.WhiteNoise(application, autorefresh=False, prefix='/static/')
 
-for path, prefix in [
-    (os.path.join(_BASE, 'staticfiles', 'images'), '/static/images/'),
-    (os.path.join(_BASE, 'staticfiles', 'css'), '/static/css/'),
-    (os.path.join(_BASE, 'staticfiles', 'files'), '/static/files/'),
-    (os.path.join(_BASE, 'staticfiles', 'admin'), '/static/admin/'),
-    (os.path.join(_BASE, 'static', 'images'), '/static/images/'),
-    (os.path.join(_BASE, 'static', 'css'), '/static/css/'),
-    (os.path.join(_BASE, 'static', 'files'), '/static/files/'),
-    (os.path.join(_BASE, 'static', 'media'), '/media/'),
-    (os.path.join(_BASE, 'media'), '/media/'),
-]:
-    if os.path.isdir(path) and isinstance(application, whitenoise.WhiteNoise):
-        try:
-            application.add_files(path, prefix=prefix)
-        except Exception as exc:
-            sys.stderr.write(f'[whitenoise] WARN add_files {path} -> {prefix}: {exc}\n')
+_media_root = str(settings.MEDIA_ROOT)
+if os.path.isdir(_media_root):
+    try:
+        application.add_files(_media_root, prefix='/media/')
+    except Exception as exc:
+        sys.stderr.write(f'[whitenoise] WARN add_files media {_media_root}: {exc}\n')
 
 if hasattr(application, 'files'):
-    sys.stderr.write(f'[whitenoise] ready with {len(application.files)} static/media files\n')
+    sys.stderr.write(f'[whitenoise] ready with {len(application.files)} static/media files, roots={_roots}\n')

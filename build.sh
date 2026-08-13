@@ -8,6 +8,7 @@
 # WhiteNoise + the route fallback in index.py are retained as safety nets.
 
 set -e
+set -o pipefail
 echo "=== [build.sh] Starting ==="
 
 # 1. Install Python deps

@@ -31,9 +31,11 @@ __pycache__/
 db.sqlite3
 media/
 staticfiles/
-# Vercel build-time generated public/static/ (built from staticfiles + static/
-# in build.sh; MUST NOT be committed as it's regenerated).
-public/
+# Vercel build-time generated — the public/ directory ITSELF must be committed
+# (otherwise Vercel won't detect it pre-build and CDN won't activate).
+# Only the generated contents are excluded.
+public/static/
+public/favicon.webp
 
 # Unused logo VARIANTS (kept locally but not deployed) — ONLY *.png variants!
 # DO NOT ignore .webp — those are the actual deployed assets!
