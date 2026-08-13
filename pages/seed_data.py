@@ -18,8 +18,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/m-series/rt200-m.webp",
-      "banner_image": "images/products/m-series/m-series-bar-1.webp",
+      "image": "products/rt200-m.webp",
+      "banner_image": "products/banners/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 1,
@@ -51,12 +51,7 @@ SEED_DATA = {
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [
-        "images/products/m-series/m-series-01.webp",
-        "images/products/m-series/m-series-02.webp",
-        "images/products/m-series/m-series-03.webp",
-        "images/products/m-series/m-series-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -67,9 +62,7 @@ SEED_DATA = {
           "value": "125lm/W"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 2,
@@ -82,8 +75,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
-      "image": "images/products/rt410-series/floodlight.webp",
-      "banner_image": "images/products/rt410-series/rt410-bar-1.webp",
+      "image": "products/floodlight.webp",
+      "banner_image": "products/banners/rt410-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 2,
@@ -115,12 +108,7 @@ SEED_DATA = {
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [
-        "images/products/rt410-series/rt410fl-s-01.webp",
-        "images/products/rt410-series/rt410fl-s-02.webp",
-        "images/products/rt410-series/rt410fl-s-03.webp",
-        "images/products/rt410-series/rt410fl-s-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -139,9 +127,7 @@ SEED_DATA = {
           "value": "18~100°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 11,
@@ -154,8 +140,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
-      "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
+      "image": "products/vsp12m-01.webp",
+      "banner_image": "products/banners/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 3,
@@ -187,16 +173,9 @@ SEED_DATA = {
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [
-        "images/products/vsp-xxxxw-9m-yp/VSP9M-01.webp",
-        "images/products/vsp-xxxxw-9m-yp/VSP9M-02.webp",
-        "images/products/vsp-xxxxw-9m-yp/VSP9M-03.webp",
-        "images/products/vsp-xxxxw-9m-yp/VSP9M-04.webp"
-      ],
+      "gallery": [],
       "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 13,
@@ -209,18 +188,16 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt590fl-s/rt590.webp",
-      "banner_image": "images/products/rt590fl-s/vsp-bar-1.webp",
+      "image": "products/rt590_eRixs78.webp",
+      "banner_image": "products/vsp/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 4,
       "parent_slug": "",
       "translations": {},
-      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
+      "gallery": [],
       "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 4,
@@ -233,14 +210,14 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "IP66",
-      "image": "images/products/rt400-series/HB.webp",
+      "image": "products/HB.webp",
       "banner_image": "",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 5,
       "parent_slug": "",
       "translations": {},
-      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -255,9 +232,7 @@ SEED_DATA = {
           "value": "IP66"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 14,
@@ -270,18 +245,55 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt600sl-t/RT600SL-T.webp",
-      "banner_image": "images/products/rt600sl-t/fl1m-bar-1.webp",
+      "image": "products/RT600SL-T_yqv89jW.webp",
+      "banner_image": "products/fl1m/fl1m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 6,
       "parent_slug": "",
       "translations": {},
-      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
+      "gallery": [],
       "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
+    },
+    {
+      "pk": 5,
+      "name": "FL1M",
+      "slug": "fl1m",
+      "category": "AREA_SITE",
+      "description": "FL1M modular floodlight configuration — part of the M Series family.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/RT600SL-T.webp",
+      "banner_image": "products/banners/fl1m-bar-1.webp",
+      "dimension_image": "",
+      "beam_angle_image": "",
+      "order": 11,
+      "parent_slug": "m-series",
+      "translations": {},
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "80W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "10k+lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": []
     },
     {
       "pk": 6,
@@ -294,10 +306,10 @@ SEED_DATA = {
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m-01.webp",
-      "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
-      "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
-      "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
+      "image": "products/fl4m-01.png",
+      "banner_image": "products/banners/fl4m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl4m-3d-view.png",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
       "translations": {
@@ -317,12 +329,7 @@ SEED_DATA = {
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [
-        "images/products/fl4m/fl4m-01.webp",
-        "images/products/fl4m/fl4m-02.webp",
-        "images/products/fl4m/fl4m-03.webp",
-        "images/products/fl4m/fl4m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -418,19 +425,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL4M\r\n(Light With 4 Module)",
-        "320W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage\r\n(110-277VAC)\r\nH=High Voltage\r\n(347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1. 0-10V\r\n2. DMX\r\n3. Dali\r\n4. Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL4M-320W-30K-S"
+      ]
     },
     {
       "pk": 7,
@@ -443,19 +438,14 @@ SEED_DATA = {
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m-01.webp",
-      "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
+      "image": "products/fl6m-01.png",
+      "banner_image": "products/banners/fl6m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 13,
       "parent_slug": "m-series",
       "translations": {},
-      "gallery": [
-        "images/products/fl6m/fl6m-01.webp",
-        "images/products/fl6m/fl6m-02.webp",
-        "images/products/fl6m/fl6m-03.webp",
-        "images/products/fl6m/fl6m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -474,9 +464,7 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 8,
@@ -489,19 +477,14 @@ SEED_DATA = {
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m-01.webp",
-      "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
+      "image": "products/fl9m-01.png",
+      "banner_image": "products/banners/fl9m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 14,
       "parent_slug": "m-series",
       "translations": {},
-      "gallery": [
-        "images/products/fl9m/fl9m-01.webp",
-        "images/products/fl9m/fl9m-02.webp",
-        "images/products/fl9m/fl9m-03.webp",
-        "images/products/fl9m/fl9m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -520,9 +503,7 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 9,
@@ -535,19 +516,14 @@ SEED_DATA = {
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m-01.webp",
-      "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
+      "image": "products/fl12m-01.png",
+      "banner_image": "products/banners/fl12m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
       "parent_slug": "m-series",
       "translations": {},
-      "gallery": [
-        "images/products/fl12m/fl12m-01.webp",
-        "images/products/fl12m/fl12m-02.webp",
-        "images/products/fl12m/fl12m-03.webp",
-        "images/products/fl12m/fl12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -566,9 +542,7 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 12,
@@ -581,8 +555,8 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp-xxxxw-12m-yp/rt590.webp",
-      "banner_image": "images/products/vsp-xxxxw-12m-yp/vsp-bar-1.webp",
+      "image": "products/rt590.webp",
+      "banner_image": "products/banners/vsp-bar-1_yPJsGNE.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
@@ -614,62 +588,9 @@ SEED_DATA = {
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [
-        "images/products/vsp-xxxxw-12m-yp/vsp12m-01.webp",
-        "images/products/vsp-xxxxw-12m-yp/vsp12m-02.webp",
-        "images/products/vsp-xxxxw-12m-yp/vsp12m-03.webp",
-        "images/products/vsp-xxxxw-12m-yp/vsp12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
-    },
-    {
-      "pk": 5,
-      "name": "FL1M",
-      "slug": "fl1m",
-      "category": "AREA_SITE",
-      "description": "FL1M modular floodlight configuration — part of the M Series family.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "images/products/fl1m/RT600SL-T.webp",
-      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "",
-      "order": 16,
-      "parent_slug": "m-series",
-      "translations": {},
-      "gallery": [
-        "images/products/fl1m/fl1m-01.webp",
-        "images/products/fl1m/fl1m-02.webp",
-        "images/products/fl1m/fl1m-03.webp",
-        "images/products/fl1m/fl1m-04.webp"
-      ],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "80W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "10k+lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     },
     {
       "pk": 10,
@@ -682,19 +603,14 @@ SEED_DATA = {
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m-01.webp",
-      "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
+      "image": "products/fl16m-01.png",
+      "banner_image": "products/banners/fl16m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {},
-      "gallery": [
-        "images/products/fl16m/fl16m-01.webp",
-        "images/products/fl16m/fl16m-02.webp",
-        "images/products/fl16m/fl16m-03.webp",
-        "images/products/fl16m/fl16m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -713,9 +629,7 @@ SEED_DATA = {
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": []
     }
   ],
   "projects": [
@@ -726,7 +640,7 @@ SEED_DATA = {
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school operated by Cecil County Public Schools located approximately one mile south of the small town of Chesapeake City in Cecil County, MD. This is a small school of 685 students which shares its campus with Bohemia Manor Middle School. The\r\nschool is also known by the nickname \"Bo Manor.“\r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
+      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
@@ -762,14 +676,8 @@ SEED_DATA = {
           "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
       },
-      "gallery": [
-        "images/projects/gallery/bmhs-football-field-01.webp",
-        "images/projects/gallery/bmhs-football-field-02.webp",
-        "images/projects/gallery/bmhs-football-field-03.webp",
-        "images/projects/gallery/bmhs-football-field-04.webp",
-        "images/projects/gallery/bmhs-football-field-05.webp"
-      ],
-      "pdf_url": "files/bmhs-case-study.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 4,
@@ -814,14 +722,8 @@ SEED_DATA = {
           "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
         }
       },
-      "gallery": [
-        "images/projects/gallery/shys-soccer-01.webp",
-        "images/projects/gallery/shys-soccer-02.webp",
-        "images/projects/gallery/shys-soccer-03.webp",
-        "images/projects/gallery/shys-soccer-04.webp",
-        "images/projects/gallery/shys-soccer-05.webp"
-      ],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 2,
@@ -866,14 +768,8 @@ SEED_DATA = {
           "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
         }
       },
-      "gallery": [
-        "images/projects/gallery/CCSC-Baseball-01.webp",
-        "images/projects/gallery/CCSC-Baseball-02.webp",
-        "images/projects/gallery/CCSC-Baseball-03.webp",
-        "images/projects/gallery/CCSC-Baseball-04.webp",
-        "images/projects/gallery/CCSC-Baseball-05.webp"
-      ],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 6,
@@ -884,7 +780,7 @@ SEED_DATA = {
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
       "results": "",
-      "image": "images/processed/msu-tennis-01.webp",
+      "image": "projects/msu-tennis-01.webp",
       "order": 4,
       "translations": {
         "fr": {
@@ -913,14 +809,49 @@ SEED_DATA = {
           "location": "الولايات المتحدة الأمريكية"
         }
       },
-      "gallery": [
-        "images/projects/gallery/msu-tennis-01.webp",
-        "images/projects/gallery/msu-tennis-02.webp",
-        "images/projects/gallery/msu-tennis-03.webp",
-        "images/projects/gallery/msu-tennis-04.webp",
-        "images/projects/gallery/msu-tennis-05.webp"
-      ],
-      "pdf_url": "files/morgan_state_university_tennis_courts.pdf"
+      "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 7,
+      "title": "Nanshan Ski Village",
+      "location": "Beijing, China",
+      "slug": "nanshan-ski-village",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SKI_AREA",
+      "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
+      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "image": "projects/nanshan-ski-01.webp",
+      "order": 5,
+      "translations": {
+        "fr": {
+          "title": "Village de ski de Nanshan",
+          "description": "【Profil du client】\nLe village de ski de Nanshan est situé au nord de la ville de Pékin. Depuis son ouverture en 2001, cette station de ski est devenue la plus grande du genre en Chine, offrant les équipements et les équipements de ski les plus avancés pour tous les amateurs de ski, qu'ils soient touristes ou locaux.\n\n【Étendue des travaux】\nSolarOne Vision Smart RT-410 a été sélectionné pour éclairer le village de ski de Nanshan. Dans tous les sports, l'éclairage LED offre la meilleure scène pour les compétiteurs, et ce n'est pas différent pour les skieurs et les snowboarders. La technologie de contrôle de l'éblouissement équivaut à un éclairage plus uniforme avec moins d'ombres indésirables ou de points chauds qui peuvent distraire les contributeurs pendant leur course. Dans un sport avec peu de marge d'erreur, la technologie LED permet de s'assurer que les lumières ne créent pas une autre variable pour les skieurs et les snowboarders.\n\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. L'éblouissement et la sortie de lumière ont été effectués. Ensuite, nous avons fourni des points de visée exacts pour chaque match. Les lampes d'inondation SolarOne Vision Smart 260W RT410 ont été facilement installées dans le village de ski de Nanshan. Nos solutions d'éclairage LED fournissent une lumière uniforme dans l'air et sur la pente beaucoup plus efficacement que la lumière aux halogénures métalliques et réduisent considérablement le déversement de lumière indésirable et la pollution lumineuse. La durée de vie des LED dépasse généralement 100 000 heures par rapport à une durée de vie traditionnelle des halogénures métalliques de 18 000 heures.",
+          "location": "Pékin, Chine"
+        },
+        "es": {
+          "title": "Nanshan Ski Village",
+          "description": "Perfil 【del cliente】\nNanshan Ski Village se encuentra al norte de la ciudad de Pekín. Desde su apertura en 2001, esta estación de esquí se ha convertido en la más grande de su tipo en China, proporcionando los equipos y servicios de esquí más avanzados para todos los entusiastas del esquí, tanto turistas como lugareños.\n\n【Alcance del trabajo】\nSolarOne Vision Smart RT-410 fue seleccionado para iluminar la estación de esquí de Nanshan. En todos los deportes, la iluminación LED proporciona el mejor escenario para que los competidores se desempeñen, y no es diferente para los esquiadores y snowboarders. La tecnología de control de deslumbramiento equivale a una iluminación más uniforme con menos sombras no deseadas o puntos calientes que pueden distraer a los usuarios durante su carrera. En un deporte con poco margen de error, la tecnología LED ayuda a garantizar que las luces no creen otra variable para los esquiadores y snowboarders.\n\n【La solución】\nSe realizó un diseño fotométrico de ingeniería. Se realizó el deslumbramiento y la salida de luz. Luego proporcionamos puntos de puntería exactos para cada accesorio. La serie de luces de inundación SolarOne Vision Smart 260W RT410 se instaló fácilmente en la estación de esquí de Nanshan. Nuestras soluciones de iluminación LED proporcionan una luz uniforme en el aire y en la pendiente de manera mucho más eficiente que la luz de haluro metálico y reducen significativamente los derrames de luz no deseados y la contaminación lumínica. La vida útil de los LED generalmente supera las 100.000 horas en comparación con una vida útil tradicional de haluro metálico de 18.000 horas.",
+          "location": "Pekin, China"
+        },
+        "de": {
+          "title": "Nanshan Skidorf",
+          "description": "【Kundenprofil】\nDas Skidorf Nanshan liegt nördlich von Peking-Stadt. Seit seiner Eröffnung im Jahr 2001 ist dieses Skigebiet das größte seiner Art in China und bietet die fortschrittlichsten Skiausrüstungen und Annehmlichkeiten für alle Skibegeisterten - sowohl Touristen als auch Einheimische.\n\n【Arbeitsumfang】\nSolarOne Vision Smart RT-410 wurde ausgewählt, um das Nanshan Ski Village zu beleuchten. In allen Sportarten bietet LED-Beleuchtung die beste Bühne für Konkurrenten, und das ist für Ski- und Snowboarder nicht anders. Die Blendschutztechnologie sorgt für eine gleichmäßigere Beleuchtung mit weniger unerwünschten Schatten oder Hotspots, die Patrons während ihres Laufs ablenken können. In einer Sportart mit wenig Spielraum für Fehler sorgt die LED-TECHNOLOGIE dafür, dass die Lichter keine weitere Variable für Skifahrer und Snowboarder darstellen.\n\n【Die Lösung】\nEs wurde ein konstruiertes photometrisches Design durchgeführt. Die Blend- und Lichtleistung wurde durchgeführt. Dann haben wir für jede Vorrichtung genaue Zielpunkte angegeben. Die SolarOne Vision Smart 260W RT410 Flutlicht-Serie wurde einfach im Skidorf Nanshan installiert. Unsere LED-Beleuchtungslösungen liefern gleichmäßiges Licht in der Luft und am Hang viel effizienter als Metallhalogenidlicht und reduzieren unerwünschtes Licht und Lichtverschmutzung erheblich. Die Lebensdauer von LEDs übersteigt im Allgemeinen 100.000 Stunden im Vergleich zu einer herkömmlichen Lebensdauer von 18.000 Stunden.",
+          "location": "Peking, China"
+        },
+        "ru": {
+          "title": "Лыжная деревня Наньшань",
+          "description": "Профиль 【клиента】\nЛыжная деревня Наньшань расположена к северу от Пекина. С момента своего открытия в 2001 году этот горнолыжный курорт стал крупнейшим в своем роде в Китае, предоставляя самое современное горнолыжное оборудование и удобства для всех любителей горнолыжного спорта - как туристов, так и местных жителей.\n\n【Объем работ】\nДля освещения горнолыжной деревни Наньшань был выбран SolarOne Vision Smart RT-410. Во всех видах спорта светодиодное освещение обеспечивает лучшую сцену для выступлений участников, и оно ничем не отличается для лыжников и сноубордистов. Технология управления бликами обеспечивает более равномерное освещение с меньшим количеством нежелательных теней или горячих точек, которые могут отвлекать посетителей во время пробежки. В спорте с небольшим запасом на ошибку СВЕТОДИОДНАЯ технология помогает обеспечить, чтобы огни не создавали еще одну переменную для лыжников и сноубордистов.\n\n【Решение】\nВыполнен инженерный фотометрический расчет. Выполняли ослепление и светоотдачу. Затем мы предоставили точные точки прицеливания для каждого приспособления. SolarOne Vision Smart 260W RT410 Flood Light Series были легко установлены в лыжной деревне Наньшань. Наши светодиодные осветительные решения обеспечивают равномерный свет в воздухе и на склоне гораздо эффективнее, чем свет галогенида металла, и значительно уменьшают нежелательный разлив света и световое загрязнение. Срок службы светодиодов обычно превышает 100 000 часов по сравнению с традиционным сроком службы галогенида металла, составляющим 18 000 часов.",
+          "location": "Пекин, Китай"
+        },
+        "ar": {
+          "title": "قرية نانشان للتزلج",
+          "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
+          "location": "بكين، الصين"
+        }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 3,
@@ -932,7 +863,7 @@ SEED_DATA = {
       "description": "A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.",
       "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
       "image": "images/processed/basketball.webp",
-      "order": 5,
+      "order": 6,
       "translations": {
         "fr": {
           "title": "Arène Multisport HD Broadcast",
@@ -965,15 +896,8 @@ SEED_DATA = {
           "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
         }
       },
-      "gallery": [
-        "images/projects/gallery/choecm-basketball-01.webp",
-        "images/projects/gallery/choecm-basketball-02.webp",
-        "images/projects/gallery/choecm-basketball-03.webp",
-        "images/projects/gallery/choecm-basketball-04.webp",
-        "images/projects/gallery/choecm-basketball-05.webp",
-        "images/projects/gallery/choecm-tennis-01.webp"
-      ],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 5,
@@ -984,115 +908,58 @@ SEED_DATA = {
       "sport_type": "MULTI_SPORT",
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
-      "image": "images/processed/Narbonne-basketball-04.webp",
-      "order": 6,
+      "image": "projects/Narbonne-basketball-04.webp",
+      "order": 7,
       "translations": {},
-      "gallery": [
-        "images/projects/gallery/Narbonne-basketball-01.webp",
-        "images/projects/gallery/Narbonne-basketball-02.webp",
-        "images/projects/gallery/Narbonne-basketball-03.webp",
-        "images/projects/gallery/Narbonne-basketball-04.webp",
-        "images/projects/gallery/Narbonne-basketball-05.webp"
-      ],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
-      "pk": 7,
-      "title": "Nanshan Ski Village",
+      "pk": 8,
+      "title": "Beijing Capital International Airport",
       "location": "Beijing, China",
-      "slug": "nanshan-ski-village",
-      "venue_type": "OUTDOOR",
-      "sport_type": "SKI_AREA",
-      "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "images/projects/nanshan-ski-village/nanshan-ski-01.webp",
+      "slug": "beijing-capital-international-airport",
+      "venue_type": "INFRASTRUCTURE",
+      "sport_type": "AIRPORT",
+      "description": "【Customer Profile】\r\nBeijing Capital International Airport is the 2nd largest airport in the world and is the main international airport serving Beijing. \r\n【Scope of Work】 \r\nSolarOne was contacted to create a lighting solution for Beijing's Capital International Airport apron, terminals and parking lots. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. \r\nAir travel requires lots of travel right here on the ground. SolarOne LED lighting solutions provide bright, even illumination along airport access roads, parking lots, walkways, corridors and concourses, slashing energy consumption and maintenance costs by double digits. Our Vision Smart technology reduces light spillover while enhancing operation safety.\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily used to replace the existing 1000 watt metal HID fixture with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the ground much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
+      "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "image": "projects/bcia-airport-01.webp",
       "order": 10,
       "translations": {
         "fr": {
-          "title": "Village de ski de Nanshan",
-          "description": "【Profil du client】\nLe village de ski de Nanshan est situé au nord de la ville de Pékin. Depuis son ouverture en 2001, cette station de ski est devenue la plus grande du genre en Chine, offrant les équipements et les équipements de ski les plus avancés pour tous les amateurs de ski, qu'ils soient touristes ou locaux.\n\n【Étendue des travaux】\nSolarOne Vision Smart RT-410 a été sélectionné pour éclairer le village de ski de Nanshan. Dans tous les sports, l'éclairage LED offre la meilleure scène pour les compétiteurs, et ce n'est pas différent pour les skieurs et les snowboarders. La technologie de contrôle de l'éblouissement équivaut à un éclairage plus uniforme avec moins d'ombres indésirables ou de points chauds qui peuvent distraire les contributeurs pendant leur course. Dans un sport avec peu de marge d'erreur, la technologie LED permet de s'assurer que les lumières ne créent pas une autre variable pour les skieurs et les snowboarders.\n\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. L'éblouissement et la sortie de lumière ont été effectués. Ensuite, nous avons fourni des points de visée exacts pour chaque match. Les lampes d'inondation SolarOne Vision Smart 260W RT410 ont été facilement installées dans le village de ski de Nanshan. Nos solutions d'éclairage LED fournissent une lumière uniforme dans l'air et sur la pente beaucoup plus efficacement que la lumière aux halogénures métalliques et réduisent considérablement le déversement de lumière indésirable et la pollution lumineuse. La durée de vie des LED dépasse généralement 100 000 heures par rapport à une durée de vie traditionnelle des halogénures métalliques de 18 000 heures.",
-          "location": "Pékin, Chine"
+          "title": "Aéroport international de Beijing",
+          "description": "【Profil du client】\nL'aéroport international de Beijing Capital est le deuxième plus grand aéroport du monde et le principal aéroport international desservant Pékin. \n【Étendue des travaux】 \nSolarOne a été contacté pour créer une solution d'éclairage pour l'aire de trafic, les terminaux et les parkings de l'aéroport international de la capitale de Pékin. Ce projet consistait en un remplacement un pour un des luminaires aux halogénures métalliques de 1 000 watts existants. \nLes voyages en avion nécessitent beaucoup de déplacements ici même au sol. Les solutions d'éclairage LED SolarOne fournissent un éclairage lumineux et uniforme le long des routes d'accès aux aéroports, des parkings, des passerelles, des couloirs et des halls, réduisant ainsi la consommation d'énergie et les coûts d'entretien à deux chiffres. Notre technologie Vision Smart réduit les débordements de lumière tout en améliorant la sécurité de fonctionnement.\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. Nous avons vérifié l'éblouissement et la luminosité. Ensuite, nous avons fourni des points de visée exacts pour chaque match. [Error: Server Error: You made too many requests to the server.Accor]",
+          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         },
         "es": {
-          "title": "Nanshan Ski Village",
-          "description": "Perfil 【del cliente】\nNanshan Ski Village se encuentra al norte de la ciudad de Pekín. Desde su apertura en 2001, esta estación de esquí se ha convertido en la más grande de su tipo en China, proporcionando los equipos y servicios de esquí más avanzados para todos los entusiastas del esquí, tanto turistas como lugareños.\n\n【Alcance del trabajo】\nSolarOne Vision Smart RT-410 fue seleccionado para iluminar la estación de esquí de Nanshan. En todos los deportes, la iluminación LED proporciona el mejor escenario para que los competidores se desempeñen, y no es diferente para los esquiadores y snowboarders. La tecnología de control de deslumbramiento equivale a una iluminación más uniforme con menos sombras no deseadas o puntos calientes que pueden distraer a los usuarios durante su carrera. En un deporte con poco margen de error, la tecnología LED ayuda a garantizar que las luces no creen otra variable para los esquiadores y snowboarders.\n\n【La solución】\nSe realizó un diseño fotométrico de ingeniería. Se realizó el deslumbramiento y la salida de luz. Luego proporcionamos puntos de puntería exactos para cada accesorio. La serie de luces de inundación SolarOne Vision Smart 260W RT410 se instaló fácilmente en la estación de esquí de Nanshan. Nuestras soluciones de iluminación LED proporcionan una luz uniforme en el aire y en la pendiente de manera mucho más eficiente que la luz de haluro metálico y reducen significativamente los derrames de luz no deseados y la contaminación lumínica. La vida útil de los LED generalmente supera las 100.000 horas en comparación con una vida útil tradicional de haluro metálico de 18.000 horas.",
-          "location": "Pekin, China"
+          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
+          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         },
         "de": {
-          "title": "Nanshan Skidorf",
-          "description": "【Kundenprofil】\nDas Skidorf Nanshan liegt nördlich von Peking-Stadt. Seit seiner Eröffnung im Jahr 2001 ist dieses Skigebiet das größte seiner Art in China und bietet die fortschrittlichsten Skiausrüstungen und Annehmlichkeiten für alle Skibegeisterten - sowohl Touristen als auch Einheimische.\n\n【Arbeitsumfang】\nSolarOne Vision Smart RT-410 wurde ausgewählt, um das Nanshan Ski Village zu beleuchten. In allen Sportarten bietet LED-Beleuchtung die beste Bühne für Konkurrenten, und das ist für Ski- und Snowboarder nicht anders. Die Blendschutztechnologie sorgt für eine gleichmäßigere Beleuchtung mit weniger unerwünschten Schatten oder Hotspots, die Patrons während ihres Laufs ablenken können. In einer Sportart mit wenig Spielraum für Fehler sorgt die LED-TECHNOLOGIE dafür, dass die Lichter keine weitere Variable für Skifahrer und Snowboarder darstellen.\n\n【Die Lösung】\nEs wurde ein konstruiertes photometrisches Design durchgeführt. Die Blend- und Lichtleistung wurde durchgeführt. Dann haben wir für jede Vorrichtung genaue Zielpunkte angegeben. Die SolarOne Vision Smart 260W RT410 Flutlicht-Serie wurde einfach im Skidorf Nanshan installiert. Unsere LED-Beleuchtungslösungen liefern gleichmäßiges Licht in der Luft und am Hang viel effizienter als Metallhalogenidlicht und reduzieren unerwünschtes Licht und Lichtverschmutzung erheblich. Die Lebensdauer von LEDs übersteigt im Allgemeinen 100.000 Stunden im Vergleich zu einer herkömmlichen Lebensdauer von 18.000 Stunden.",
-          "location": "Peking, China"
+          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
+          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         },
         "ru": {
-          "title": "Лыжная деревня Наньшань",
-          "description": "Профиль 【клиента】\nЛыжная деревня Наньшань расположена к северу от Пекина. С момента своего открытия в 2001 году этот горнолыжный курорт стал крупнейшим в своем роде в Китае, предоставляя самое современное горнолыжное оборудование и удобства для всех любителей горнолыжного спорта - как туристов, так и местных жителей.\n\n【Объем работ】\nДля освещения горнолыжной деревни Наньшань был выбран SolarOne Vision Smart RT-410. Во всех видах спорта светодиодное освещение обеспечивает лучшую сцену для выступлений участников, и оно ничем не отличается для лыжников и сноубордистов. Технология управления бликами обеспечивает более равномерное освещение с меньшим количеством нежелательных теней или горячих точек, которые могут отвлекать посетителей во время пробежки. В спорте с небольшим запасом на ошибку СВЕТОДИОДНАЯ технология помогает обеспечить, чтобы огни не создавали еще одну переменную для лыжников и сноубордистов.\n\n【Решение】\nВыполнен инженерный фотометрический расчет. Выполняли ослепление и светоотдачу. Затем мы предоставили точные точки прицеливания для каждого приспособления. SolarOne Vision Smart 260W RT410 Flood Light Series были легко установлены в лыжной деревне Наньшань. Наши светодиодные осветительные решения обеспечивают равномерный свет в воздухе и на склоне гораздо эффективнее, чем свет галогенида металла, и значительно уменьшают нежелательный разлив света и световое загрязнение. Срок службы светодиодов обычно превышает 100 000 часов по сравнению с традиционным сроком службы галогенида металла, составляющим 18 000 часов.",
-          "location": "Пекин, Китай"
+          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
+          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         },
         "ar": {
-          "title": "قرية نانشان للتزلج",
-          "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
-          "location": "بكين، الصين"
+          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
+          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         }
       },
-      "gallery": ["images/projects/nanshan-ski-village/nanshan-ski-01.webp", "images/projects/nanshan-ski-village/nanshan-ski-02.webp", "images/projects/nanshan-ski-village/nanshan-ski-03.webp", "images/projects/nanshan-ski-village/nanshan-ski-04.webp", "images/projects/nanshan-ski-village/nanshan-ski-05.webp"],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "gallery": [],
+      "pdf_url": ""
     }
   ],
-  "siteconfig": {
-    "hero_title": "The Next Generation Lighting Systems For Every Area",
-    "hero_subtitle": "Professional SolarOne sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.",
-    "hero_background": "",
-    "stat_projects": "500+",
-    "stat_projects_label": "Projects",
-    "stat_countries": "50+",
-    "stat_countries_label": "Countries",
-    "stat_energy": "50%+",
-    "stat_energy_label": "Energy Save",
-    "stat_support": "5+",
-    "stat_support_label": "warranty",
-    "about_title": "Trusted worldwide for a reason.",
-    "about_text_1": "Since 2007, SolarOne Vision has focused on the design and manufacture of high power LED Sports lighting systems, LED Roadway infrastructure lighting systems, and LED industrial lighting systems. We bring first-hand knowledge and experience for new and retrofit projects — from small projects requiring a few lights to professional high-level facilities, we've got you covered.",
-    "about_text_2": "SolarOne's mission is to deliver innovative outdoor and indoor lighting solutions for recreational, high school, college, and semi-professional sports venues, airports, seaports, and other industrial facilities. We protect the environment, reduce energy consumption, deliver satisfying and inspiring lighting experiences, and add value to people's vision of life.",
-    "about_stat_years": "18+",
-    "about_stat_years_label": "Years Experience",
-    "about_stat_projects": "500+",
-    "about_stat_projects_label": "Projects Delivered",
-    "about_stat_countries": "50+",
-    "about_stat_countries_label": "Countries Served",
-    "about_stat_clients": "1000+",
-    "about_stat_clients_label": "Happy Clients",
-    "products_title": "Our Products",
-    "products_subtitle": "From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.",
-    "projects_title": "Featured Projects",
-    "projects_subtitle": "Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.",
-    "contact_title": "Get in Touch",
-    "contact_subtitle": "Have a project in mind? Send us the details and our engineering team will respond with a full photometric proposal within 48 hours.",
-    "contact_email": "sales@solaronelighting.com",
-    "contact_phone_1": "+8613910887405",
-    "contact_phone_2": "+8613910887405",
-    "contact_whatsapp": "+86 13910887405",
-    "contact_address": "Beijing, China",
-    "social_facebook": "https://facebook.com",
-    "social_instagram": "https://instagram.com",
-    "social_youtube": "https://youtube.com",
-    "social_tiktok": "https://tiktok.com",
-    "social_linkedin": "",
-    "footer_description": "Professional LED lighting systems for sports, industrial, and infrastructure applications. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.",
-    "brand_name": "SolarOne",
-    "logo": "",
-    "meta_title": "SolarOne — Precision LED Lighting Systems",
-    "meta_description": "Professional LED sports lighting, high bay, and modular luminaire solutions. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.",
-    "og_image": "",
-    "font_family_body": "'Inter', 'Helvetica Neue', Arial, sans-serif",
-    "font_family_heading": "'Inter', 'Helvetica Neue', Arial, sans-serif",
-    "font_size_base": "16px",
-    "font_size_nav": "17px",
-    "font_size_hero_title": "3.5rem",
-    "font_size_hero_subtitle": "1.15rem",
-    "font_size_section_title": "2.25rem",
-    "font_size_body": "1.05rem",
-    "font_size_card_title": "1.25rem",
-    "font_size_card_desc": "0.95rem",
-    "accent_color": "#0088FF"
-  }
+  "siteconfig": {}
 }

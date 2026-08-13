@@ -53,6 +53,10 @@
       resetBtn(btn);
       return;
     }
+    // Send single-language translation request to reduce multi-language limits
+    var targetLang = btn.getAttribute('data-lang') || '';
+    var payload = { fields: fields };
+    if (targetLang) payload.target_lang = targetLang;
 
     var csrfToken = getCookie('csrftoken') || '';
     var url = window.location.origin + '/admin/translate/';
@@ -63,7 +67,7 @@
         'Content-Type': 'application/json',
         'X-CSRFToken': csrfToken,
       },
-      body: JSON.stringify({ fields: fields }),
+      body: JSON.stringify(payload),
     })
       .then(function (resp) {
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -72,22 +76,20 @@
       .then(function (data) {
         if (data.error) throw new Error(data.error);
 
+        // Expect data.translations to be an object mapping lang -> { field: text }
+        var lang = targetLang || Object.keys(data.translations || {})[0];
+        if (!lang) throw new Error('No translation returned');
+
+        var translated = data.translations[lang] || {};
+
+        // Try to merge into existing JSON in the per-language textarea
         var existing = {};
         try {
           var raw = textarea.value.trim();
           if (raw) existing = JSON.parse(raw);
         } catch (e) { /* ignore */ }
 
-        var merged = {};
-        var langs = ['fr', 'es', 'de', 'ru', 'ar'];
-        langs.forEach(function (lang) {
-          merged[lang] = Object.assign(
-            {},
-            existing[lang] || {},
-            data.translations[lang] || {}
-          );
-        });
-
+        var merged = Object.assign({}, existing, translated);
         textarea.value = JSON.stringify(merged, null, 2);
         setStatus(status, '✓ Translation complete!', '#080');
         resetBtn(btn);

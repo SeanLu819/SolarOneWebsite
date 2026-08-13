@@ -160,9 +160,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = '/tmp/staticfiles' if IS_RUNTIME else BASE_DIR / 'staticfiles'
 
-# Media files (User uploads) — /tmp on Vercel (ephemeral but writable)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = '/tmp/media' if IS_RUNTIME else BASE_DIR / 'media'
+# Media files (User uploads).
+# On Vercel we keep media under the static tree so WhiteNoise can serve the
+# generated images/PDFs from the deployed app. For local development, serve
+# media at `/media/` to avoid MEDIA_URL being within STATIC_URL (which
+# prevents `runserver` from serving files).
+if IS_VERCEL:
+    MEDIA_URL = '/static/media/'
+    MEDIA_ROOT = BASE_DIR / 'static' / 'media'
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 # ============ WHITENOISE (Static File Compression & Caching) ============
 # Enable gzip/brotli compression and aggressive caching for static assets

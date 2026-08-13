@@ -197,31 +197,76 @@ class OrderingInfoWidget(forms.Widget):
         return values
 
 
-class TranslationsWidget(forms.Textarea):
-    """Custom textarea that includes an auto-translate button right after it."""
+class TranslationsWidget(forms.Widget):
+    """Render translations as one textarea per language with per-language auto-translate buttons.
+
+    Each language textarea contains a small JSON object for that language, e.g.
+    {"title": "..", "description": "..", "results": ".."}
+    Value_from_datadict assembles the per-language JSON into the model's translations dict.
+    """
 
     def __init__(self, attrs=None):
-        default_attrs = {
-            'rows': 12,
-            'style': 'width:100%;max-width:900px;min-height:240px;'
-                     'box-sizing:border-box;font-family:monospace;font-size:12px;',
-        }
-        if attrs:
-            default_attrs.update(attrs)
-        super().__init__(attrs=default_attrs)
+        self.attrs = attrs or {}
+        super().__init__(attrs=self.attrs)
 
     def render(self, name, value, attrs=None, renderer=None):
-        textarea_html = super().render(name, value, attrs, renderer)
-        attrs = attrs or {}
-        target_id = attrs.get('id', 'id_translations')
-        return mark_safe(
-            f'{textarea_html}'
-            f'<div class="auto-translate-row" style="margin:8px 0 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
-            f'<button type="button" class="button auto-translate-btn" data-target-id="{target_id}" '
-            f'style="white-space:nowrap;">🔄 Auto-Translate Description</button>'
-            f'<span class="auto-translate-status" style="font-size:12px;color:#666;"></span>'
-            f'</div>'
-        )
+        # value is expected to be a dict: { 'fr': {...}, 'es': {...} }
+        import json as _json
+        from django.conf import settings as _settings
+
+        val = value or {}
+        try:
+            # if stored as string
+            if isinstance(val, str):
+                val = _json.loads(val)
+        except Exception:
+            val = {}
+
+        parts = []
+        # iterate settings.LANGUAGES but skip English (source)
+        # Render languages in the fixed order preferred for the admin UI
+        desired_order = ['fr', 'es', 'de', 'ru', 'ar']
+        # Build a lookup of language display names from settings.LANGUAGES
+        lang_names = {code: name for code, name in getattr(_settings, 'LANGUAGES', [])}
+        for code in desired_order:
+            lang_name = lang_names.get(code, code)
+            lang_obj = val.get(code) or {}
+            lang_json = _json.dumps(lang_obj, ensure_ascii=False, indent=2)
+            textarea_id = f'id_translations_{code}'
+            parts.append(
+                f'<div class="translation-lang" style="display:block;width:100% !important;max-width:900px;box-sizing:border-box;margin-bottom:14px;">'
+                f'<label for="{textarea_id}" style="display:block;font-weight:700;margin-bottom:6px;">{code} — {escape(lang_name)}</label>'
+                f'<textarea id="{textarea_id}" name="{name}_{code}" rows="6" '
+                f'style="width:100% !important;max-width:900px;box-sizing:border-box;font-family:monospace;font-size:12px;">{escape(lang_json)}</textarea>'
+                f'<div class="auto-translate-row" style="margin:8px 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
+                f'<button type="button" class="button auto-translate-btn" data-lang="{code}" data-target-id="{textarea_id}" '
+                f'style="white-space:nowrap;">🔄 Auto-Translate {escape(lang_name)}</button>'
+                f'<span class="auto-translate-status" style="font-size:12px;color:#666;"></span>'
+                f'</div></div>'
+            )
+
+        return mark_safe(''.join(parts))
+
+    def value_from_datadict(self, data, files, name):
+        # Assemble per-language JSON values into a dict
+        import json as _json
+        from django.conf import settings as _settings
+
+        translations = {}
+        for code, _ in getattr(_settings, 'LANGUAGES', []):
+            if code == 'en':
+                continue
+            raw = data.get(f'{name}_{code}', '').strip()
+            if not raw:
+                continue
+            try:
+                parsed = _json.loads(raw)
+                if isinstance(parsed, dict):
+                    translations[code] = parsed
+            except Exception:
+                # store raw string fallback under 'description' if it's plain text
+                translations[code] = {'description': raw}
+        return translations
 
 
 class ProductAdminForm(forms.ModelForm):
@@ -291,7 +336,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': (('name', 'slug'), 'category', 'parent', 'order')
         }),
         ('Content', {
-            'fields': ('description', 'model_number', 'translations')
+            # Put translations on its own row so it can span full width
+            'fields': (('description', 'model_number'), 'translations')
         }),
         ('Images', {
             'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
@@ -342,6 +388,7 @@ class ProjectAdminForm(forms.ModelForm):
 @admin.register(Project)
 class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
     form = ProjectAdminForm
+    change_form_template = "admin/pages/project/change_form.html"
     list_display = ('title', 'venue_type', 'sport_type', 'location', 'order')
     list_filter = ('venue_type', 'sport_type')
     prepopulated_fields = {'slug': ('title',)}
@@ -352,12 +399,13 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         (None, {
             'fields': (('title', 'slug'), ('venue_type', 'sport_type'), 'location', 'order')
         }),
-        ('Content', {
-            'fields': ('description', 'results', 'translations')
-        }),
         ('Images', {
             'fields': ('image',),
             'description': '主图。轮播图片请在下方 "Reference images" 区域添加。'
+        }),
+        ('Content', {
+            # Put description and results each on their own row so they stack vertically
+            'fields': ('description', 'results', 'translations')
         }),
         ('PDF Document', {
             'fields': ('pdf_static', 'pdf_file'),
@@ -642,7 +690,11 @@ LANG_NAMES = {
 @require_POST
 @csrf_exempt
 def admin_translate(request):
-    """Translate text to all target languages using MyMemory (free, no API key)."""
+    import json as _json
+    import logging
+    import time
+    import random
+    logger = logging.getLogger(__name__)
     import json as _json
     import logging
     logger = logging.getLogger(__name__)
@@ -650,6 +702,7 @@ def admin_translate(request):
     try:
         data = _json.loads(request.body)
         fields = data.get('fields', {})
+        target_lang = data.get('target_lang')
     except Exception:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
@@ -687,25 +740,34 @@ def admin_translate(request):
         return chunks
 
     def _translate_chunk(translator, text):
-        """Translate a single chunk, auto-splitting if needed."""
         chunks = _split_text(text)
         translated_parts = []
         for chunk in chunks:
-            for attempt in range(2):
+            for attempt in range(3):
                 try:
-                    translated_parts.append(translator.translate(chunk))
+                    result = translator.translate(chunk)
+                    translated_parts.append(result)
                     break
                 except Exception as e:
-                    if attempt == 0:
-                        import time
-                        time.sleep(1)
+                    err_msg = str(e).lower()
+                    if 'too many requests' in err_msg or '429' in str(e) or 'quota' in err_msg:
+                        wait = (attempt + 1) * 5 + random.uniform(1, 3)
+                        logger.warning(f'Rate limited, waiting {wait:.1f}s (attempt {attempt+1})')
+                        time.sleep(wait)
+                        if attempt < 2:
+                            continue
+                    elif attempt == 0:
+                        time.sleep(2)
                         continue
                     logger.error(f'Chunk translate error: {e}')
                     translated_parts.append(f'[Error: {str(e)[:60]}]')
         return ' '.join(translated_parts)
 
+    # If a single target_lang is specified, only translate to that language.
+    to_translate = TARGET_LANGS if not target_lang else [target_lang]
+
     result = {}
-    for lang in TARGET_LANGS:
+    for idx, lang in enumerate(to_translate):
         result[lang] = {}
         target_code = LANG_MAP.get(lang, lang)
         for field_name, text in fields.items():
@@ -713,6 +775,8 @@ def admin_translate(request):
             if not text:
                 result[lang][field_name] = ''
                 continue
+            # small spacing between chunks to avoid hammering remote API
+            time.sleep(random.uniform(0.5, 1.2))
             try:
                 translator = MyMemoryTranslator(source='en-GB', target=target_code)
                 translated = _translate_chunk(translator, text)
@@ -720,5 +784,8 @@ def admin_translate(request):
             except Exception as e:
                 logger.error(f'Translate error [{lang}/{field_name}]: {e}')
                 result[lang][field_name] = f'[Error: {str(e)[:80]}]'
+        # only pause between languages when doing multiple targets
+        if not target_lang and idx < len(to_translate) - 1:
+            time.sleep(random.uniform(2.5, 4.5))
 
     return JsonResponse({'translations': result})

@@ -2,6 +2,7 @@ import os
 import re
 import json
 import logging
+from types import SimpleNamespace
 from pathlib import Path
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -225,25 +226,49 @@ def _project_image_url(field):
 
 
 def _product_image_url(product, field_name):
-    """Return product image URL, preferring committed static assets when available.
+    """Return the best image URL for a product field.
 
-    Static fallback path: static/images/products/{slug}/{filename}
-    This lets Vercel deployments serve product dimension/beam-angle images
-    that are committed to the repo, while local dev still uses uploaded media.
+    We prefer committed static assets under static/images/ because those are the
+    canonical images checked into the repo and are stable across local dev and
+    Vercel. If no static asset exists, fall back to the uploaded media file URL.
     """
     field = getattr(product, field_name, None)
-    if not field or not field.name:
+    if not field or not getattr(field, 'name', None):
         return ''
+
     slug = getattr(product, 'slug', '')
-    filename = Path(field.name).name
+    field_name_value = str(field.name).replace('\\', '/')
+    filename = Path(field_name_value).name
+    stem = Path(filename).stem
+
+    candidates = []
+    if field_name_value.startswith('products/'):
+        candidates.append(f'images/{field_name_value}')
     if slug and filename:
-        static_path = f'images/products/{slug}/{filename}'
-        if finders.find(static_path):
-            return static(static_path)
-    media_full = os.path.join(settings.MEDIA_ROOT, field.name)
+        candidates.append(f'images/products/{slug}/{filename}')
+    if filename:
+        candidates.append(f'images/products/{filename}')
+    if slug and stem:
+        candidates.append(f'images/products/{slug}/{stem}.webp')
+    if stem and field_name_value.startswith('products/'):
+        candidates.append(f'images/{field_name_value.rsplit(".", 1)[0]}.webp')
+
+    seen = set()
+    for candidate in candidates:
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        if finders.find(candidate):
+            return static(candidate)
+
+    media_url = getattr(field, 'url', '')
+    if media_url:
+        return media_url
+
+    media_full = os.path.join(settings.MEDIA_ROOT, field_name_value)
     if os.path.exists(media_full):
-        return field.url
-    return field.url
+        return f'/media/{field_name_value.lstrip("/")}'
+    return ''
 
 
 def _build_specs(obj):
@@ -286,13 +311,16 @@ def _enrich_product(product, lang):
         product.specs = _build_specs(product)
 
     if isinstance(product, Product):
-        product.image_url = _media_url(product.image)
-        product.banner_image_url = _media_url(product.banner_image)
+        product.image_url = _product_image_url(product, 'image')
+        product.banner_image_url = _product_image_url(product, 'banner_image')
         product.dimension_image_url = _product_image_url(product, 'dimension_image')
         product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
         product.gallery = [
             {
-                'src': img.image.url,
+                'src': _product_image_url(
+                    SimpleNamespace(slug=getattr(product, 'slug', ''), image=img.image),
+                    'image'
+                ),
                 'alt': img.alt_text or f"{product.name_t} — view {i + 1}",
             }
             for i, img in enumerate(product.images.all())

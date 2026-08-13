@@ -1,26 +1,33 @@
 /* SolarOne Admin overrides - wider content fields */
 
 /* Wider textareas for translations, description, results */
-#id_translations,
+/* Ensure all translation language textareas and content fields share width */
+[id^="id_translations_"] ,
 #id_description,
 #id_results {
     width: 100% !important;
-    max-width: 900px !important;
+    max-width: none !important; /* allow full width */
     box-sizing: border-box !important;
 }
 
-#id_translations {
-    min-height: 240px !important;
+/* Per-language translations: slightly smaller height than before but consistent */
+[id^="id_translations_"] {
+    min-height: 120px !important;
     font-family: monospace !important;
     font-size: 12px !important;
 }
 
+/* Increase description height, reduce results height as requested */
 #id_description {
-    min-height: 120px !important;
+    min-height: 160px !important;
+    width: 100% !important;
+    max-width: none !important;
 }
 
 #id_results {
-    min-height: 80px !important;
+    min-height: 60px !important; /* 半高度 */
+    width: 100% !important;
+    max-width: none !important;
 }
 
 /* Wider form rows for content fields */
@@ -28,7 +35,8 @@
 .form-row.field-results,
 .form-row.field-translations,
 .form-row.field-model_number {
-    max-width: 960px !important;
+    max-width: none !important;
+    width: 100% !important;
 }
 
 /* Auto-translate button container */
@@ -44,4 +52,63 @@
 .ordering-info-container {
     overflow-x: auto;
     padding-bottom: 8px;
+}
+
+/* Stack translations vertically so each language is readable top→bottom */
+.form-row.field-translations .translation-lang {
+    display: block !important;
+    width: 100% !important;
+    clear: both !important;
+    margin-bottom: 14px !important;
+}
+
+/* Stronger rules: ensure translation language blocks stack vertically
+   and their textareas match the width/box-sizing of description/results. */
+.form-row.field-translations,
+.form-row.field-translations .translation-lang {
+    display: block !important;
+    width: 100% !important;
+    max-width: 900px !important;
+    box-sizing: border-box !important;
+    margin-bottom: 14px !important;
+}
+
+.form-row.field-translations .translation-lang textarea,
+[id^="id_translations_"] {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Ensure description/results textareas occupy full width */
+.form-row.field-description textarea,
+.form-row.field-results textarea,
+#id_description,
+#id_results {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Place label above the textarea for description/results so they can use full width */
+.form-row.field-description label,
+.form-row.field-results label {
+    display: block !important;
+    width: auto !important;
+    float: none !important;
+    margin-bottom: 8px !important;
+}
+
+/* Ensure their flex container stacks vertically */
+.form-row.field-description .flex-container,
+.form-row.field-results .flex-container {
+    flex-direction: column !important;
+    align-items: stretch !important;
+}
+
+/* Ensure the flex container that holds translation language blocks stacks them vertically */
+.form-row.field-translations .flex-container {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
 }
