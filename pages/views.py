@@ -229,10 +229,16 @@ def _clean_hashed_name(name: str) -> str:
 
 
 def _list_static_dir(rel_dir: str):
-    """List files in a static directory (relative to static/)."""
+    """List files in a static directory (relative to static/).
+
+    On Vercel the source static/ tree may not be deployed; fall back to
+    STATIC_ROOT (staticfiles/) which is populated by collectstatic."""
     full = os.path.join(settings.BASE_DIR, 'static', rel_dir)
     if os.path.isdir(full):
         return set(os.listdir(full))
+    full2 = os.path.join(str(settings.STATIC_ROOT), rel_dir)
+    if os.path.isdir(full2):
+        return set(os.listdir(full2))
     return set()
 
 
@@ -1317,3 +1323,33 @@ def sitemap_xml(request):
     xml += '\n</urlset>'
 
     return HttpResponse(xml, content_type='application/xml')
+
+
+def diagnostic(request):
+    from django.http import JsonResponse
+    import os
+
+    base_dir = str(settings.BASE_DIR)
+    static_root = str(settings.STATIC_ROOT)
+    static_dirs = [str(d) for d in settings.STATICFILES_DIRS]
+
+    result = {
+        'BASE_DIR': base_dir,
+        'STATIC_ROOT': static_root,
+        'STATIC_ROOT_exists': os.path.isdir(static_root),
+        'STATICFILES_DIRS': static_dirs,
+        'STATICFILES_DIRS_exist': {d: os.path.isdir(d) for d in static_dirs},
+        'root_listing': sorted(os.listdir(base_dir)) if os.path.isdir(base_dir) else 'NOT FOUND',
+    }
+
+    if os.path.isdir(static_root):
+        subdirs = [d for d in os.listdir(static_root) if os.path.isdir(os.path.join(static_root, d))]
+        result['STATIC_ROOT_subdirs'] = sorted(subdirs)
+        result['STATIC_ROOT_file_count'] = len([f for f in os.listdir(static_root) if os.path.isfile(os.path.join(static_root, f))])
+
+    for d in static_dirs:
+        if os.path.isdir(d):
+            subdirs = [s for s in os.listdir(d) if os.path.isdir(os.path.join(d, s))]
+            result[f'{d}_subdirs'] = sorted(subdirs)
+
+    return JsonResponse(result)

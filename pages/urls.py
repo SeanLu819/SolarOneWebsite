@@ -2,6 +2,7 @@ from django.urls import path
 from pages import views
 
 urlpatterns = [
+    path('__diag__/', views.diagnostic, name='diagnostic'),
     path('', views.home, name='home'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),
