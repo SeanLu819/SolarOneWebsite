@@ -26,10 +26,10 @@ run(['add', '-A'])
 run(['status', '--short'])
 
 # Commit
-rc, out, err = subprocess.run([git_exe, '-C', cwd, 'commit', '-m',
+rc = subprocess.run([git_exe, '-C', cwd, 'commit', '-m',
                     'fix: 重写WhiteNoise挂载 + vercel.json静态路由 + 静态路径统一规范化 + favicon/logo/pdf/项目图片全修复'],
                     capture_output=True, text=True, encoding='utf-8', errors='replace')
-lines.append(f'\n>>> commit\n  out: {out.strip()}\n  err: {err.strip()}\n  [exit={rc}]')
+lines.append(f'\n>>> commit\n  out: {rc.stdout.strip()}\n  err: {rc.stderr.strip()}\n  [exit={rc.returncode}]')
 
 # Push
 rp = subprocess.run([git_exe, '-C', cwd, 'push', 'origin', 'main'],
