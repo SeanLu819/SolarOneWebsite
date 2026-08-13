@@ -159,24 +159,59 @@ def _media_url(field):
     return ''
 
 
-def _static_url(path):
-    """Return static URL for a non-empty path.
-    Accepts paths like 'images/processed/xxx.webp', 'products/foo.webp',
-    or raw filenames and resolves them via Django's static finder.
-    """
+def _normalize_static_rel(path):
+    """Rewrite legacy seed paths (projects/x.webp, products/x.webp, ...) into
+    canonical paths under images/ that match the committed static/ directory
+    layout. Returns the first path that actually exists in static finders, or
+    the best guess if nothing matches."""
     if not path:
         return ''
-    if path.startswith(('http://', 'https://')):
+    path = str(path).strip().lstrip('/\\')
+    path = path.replace('\\', '/')
+    # Strip any leading /static/ or /media/ for the normalization step
+    for prefix in ('static/', 'media/'):
+        if path.startswith(prefix):
+            path = path[len(prefix):]
+    # Already canonical
+    if path.startswith(('images/', 'css/', 'files/', 'admin/', 'js/')):
         return path
-    if path.startswith('/static/'):
+    # Map legacy prefixes to the canonical location under images/
+    legacy_map = {
+        'projects/': 'images/projects/',
+        'products/': 'images/products/',
+        'processed/': 'images/processed/',
+    }
+    for old, new in legacy_map.items():
+        if path.startswith(old):
+            return new + path[len(old):]
+    # Bare filename: try images/projects/gallery/NAME, then images/processed/NAME
+    if '/' not in path:
+        probes = [f'images/projects/gallery/{path}', f'images/processed/{path}',
+                  f'images/{path}', f'images/products/{path}']
+        for p in probes:
+            if finders.find(p):
+                return p
+        return probes[0]
+    # Unknown pattern: assume it lives under images/
+    return f'images/{path}'
+
+
+def _static_url(path):
+    """Return static URL for a non-empty path. Accepts a wide variety of
+    legacy or canonical paths and normalizes them to a Django static URL.
+    Falls back gracefully to a URL even if the file is not found (prevents
+    blank src attributes — useful while assets are being added)."""
+    if not path:
+        return ''
+    if isinstance(path, str) and path.startswith(('http://', 'https://')):
         return path
-    if path.startswith('/media/'):
+    if isinstance(path, str) and path.startswith(('/static/', '/media/')):
         return path
-    if finders.find(path):
-        return static(path)
-    if path.startswith('images/') or path.startswith('products/') or path.startswith('files/'):
-        return static(path)
-    return static(path)
+    rel = _normalize_static_rel(path)
+    if finders.find(rel):
+        return static(rel)
+    return static(rel)
+
 
 
 def _clean_hashed_name(name: str) -> str:
@@ -521,7 +556,12 @@ def _enrich_project(project, lang):
                 for i, img in enumerate(project.images.all())
             ]
     else:
-        project.image_url = _static_url(project.image)
+        seed_image = getattr(project, 'image', '')
+        cover = _find_project_cover_path(slug, seed_image) if slug else ''
+        if cover:
+            project.image_url = _static_url(cover)
+        else:
+            project.image_url = _static_url(seed_image)
         if not project.image_url and slug:
             cover = _find_project_cover_path(slug, getattr(project, 'image', ''))
             if cover:
