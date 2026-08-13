@@ -6,9 +6,6 @@ sys.path.insert(0, BASE_DIR)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'solarone.settings')
 
-# On Vercel, use a writable ephemeral SQLite path so Django can at least
-# create tables if needed. Product/project data is served from seed_data.json
-# via the JSON fallback in pages/views.py — DB writes are not relied upon.
 if os.environ.get('VERCEL', '') == '1' and 'DATABASE_URL' not in os.environ:
     os.environ['DATABASE_URL'] = 'sqlite:////tmp/db.sqlite3'
 
@@ -17,19 +14,33 @@ from django.conf import settings
 
 application = get_wsgi_application()
 
-# WhiteNoise: serve static files directly on Vercel
+# WhiteNoise: serve static (+ media shadow) files directly on Vercel.
+#
+# Priority order:
+#   1. STATIC_ROOT  (collectstatic output, vercel.json distDir)
+#   2. STATICFILES_DIRS  (committed source static/, includes images/projects/*)
+#   3. Extra /media/ prefix mapped into static/media/ so images copied there
+#      by the post-save signal (or manually committed) remain reachable at
+#      the canonical MEDIA_URL even on serverless.
 import whitenoise
 
-_serve_root = None
-for d in settings.STATICFILES_DIRS:
-    _d = str(d)
-    if os.path.isdir(_d):
-        _serve_root = _d
-        break
-
-if _serve_root:
-    application = whitenoise.WhiteNoise(application, root=_serve_root, autorefresh=False, prefix='static/')
+_sr = str(settings.STATIC_ROOT)
+if os.path.isdir(_sr):
+    application = whitenoise.WhiteNoise(application, root=_sr, autorefresh=False, prefix='/static/')
 else:
-    _sr = str(settings.STATIC_ROOT)
-    if os.path.isdir(_sr):
-        application = whitenoise.WhiteNoise(application, root=_sr, autorefresh=False, prefix='static/')
+    for d in settings.STATICFILES_DIRS:
+        _d = str(d)
+        if os.path.isdir(_d):
+            application = whitenoise.WhiteNoise(application, root=_d, autorefresh=False, prefix='/static/')
+            break
+
+_media_shadow = os.path.join(str(BASE_DIR), 'static', 'media')
+if os.path.isdir(_media_shadow) and isinstance(application, whitenoise.WhiteNoise):
+    application.add_files(_media_shadow, prefix='/media/')
+
+_media_legacy = os.path.join(str(BASE_DIR), 'media')
+if os.path.isdir(_media_legacy) and isinstance(application, whitenoise.WhiteNoise):
+    try:
+        application.add_files(_media_legacy, prefix='/media/')
+    except Exception:
+        pass

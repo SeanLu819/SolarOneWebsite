@@ -455,67 +455,92 @@ class DailyStats(models.Model):
         return str(self.date)
 
 
-@receiver(post_save, sender=ProjectImage)
-def sync_project_image_on_save(sender, instance, **kwargs):
-    project = instance.project
-    if not project:
-        return
-    static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'projects', project.slug)
-    os.makedirs(static_dir, exist_ok=True)
-    media_root = settings.MEDIA_ROOT
-    src = os.path.join(media_root, str(instance.image)) if instance.image else ''
-    if src and os.path.exists(src):
-        dst = os.path.join(static_dir, os.path.basename(src))
-        shutil.copy2(src, dst)
-    _update_seed_project(project)
+def _sync_project_media_to_static(project):
+    """Copy project cover + all gallery images from media/ to static/images/projects/<slug>/.
 
-
-@receiver(post_delete, sender=ProjectImage)
-def sync_project_image_on_delete(sender, instance, **kwargs):
-    project = instance.project
-    if not project:
-        return
-    _update_seed_project(project)
-
-
-def _update_seed_project(project):
+    Returns (cover_rel_path, gallery_rel_paths) relative to static/.
+    """
+    if not project or not getattr(project, 'slug', None):
+        return '', []
     slug = project.slug
-    media_root = settings.MEDIA_ROOT
-    static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'projects', slug)
+    media_root = str(settings.MEDIA_ROOT)
+    static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'projects', slug)
+    os.makedirs(static_dir, exist_ok=True)
+
+    def _dest_name(src_path):
+        """Stable destination filename: strip Django hash suffix so repeated
+        uploads of the same file don't produce divergent static paths."""
+        base = os.path.basename(src_path)
+        stem, ext = os.path.splitext(base)
+        parts = stem.rsplit('_', 1)
+        if len(parts) == 2 and len(parts[1]) > 0 and any(c.isdigit() for c in parts[1]):
+            return f'{parts[0]}{ext}'
+        return base
 
     cover_rel = ''
-    if project.image:
-        src_cover = os.path.join(media_root, str(project.image))
+    if getattr(project, 'image', None) and project.image.name:
+        src_cover = os.path.join(media_root, str(project.image.name))
         if os.path.exists(src_cover):
-            dst_cover = os.path.join(static_dir, os.path.basename(src_cover))
-            if not os.path.exists(dst_cover):
+            dst_name = _dest_name(src_cover)
+            dst_cover = os.path.join(static_dir, dst_name)
+            try:
                 shutil.copy2(src_cover, dst_cover)
-            cover_rel = f'images/projects/{slug}/{os.path.basename(src_cover)}'
+            except Exception:
+                pass
+            cover_rel = f'images/projects/{slug}/{dst_name}'
 
     gallery_paths = []
-    for img in project.images.all():
-        src = os.path.join(media_root, str(img.image))
-        if os.path.exists(src):
-            dst = os.path.join(static_dir, os.path.basename(src))
-            if not os.path.exists(dst):
-                shutil.copy2(src, dst)
-            gallery_paths.append(f'images/projects/{slug}/{os.path.basename(src)}')
+    try:
+        images_qs = project.images.all()
+    except Exception:
+        images_qs = []
+    for img in images_qs:
+        fname = getattr(img.image, 'name', None)
+        if not fname:
+            continue
+        src = os.path.join(media_root, str(fname))
+        if not os.path.exists(src):
+            continue
+        dst_name = _dest_name(src)
+        dst = os.path.join(static_dir, dst_name)
+        try:
+            shutil.copy2(src, dst)
+        except Exception:
+            pass
+        rel = f'images/projects/{slug}/{dst_name}'
+        if rel not in gallery_paths:
+            gallery_paths.append(rel)
 
-    seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
-    seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
+    return cover_rel, gallery_paths
 
+
+def _rewrite_seed_project(slug, cover_rel, gallery_paths):
+    """Rewrite seed_data.json + pages/seed_data.py with current project image/gallery."""
+    seed_path = os.path.join(str(settings.BASE_DIR), 'seed_data.json')
+    seed_py_path = os.path.join(str(settings.BASE_DIR), 'pages', 'seed_data.py')
+
+    changed = False
     try:
         with open(seed_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         for p in data.get('projects', []):
             if p.get('slug') == slug:
-                if cover_rel:
+                if cover_rel and p.get('image') != cover_rel:
                     p['image'] = cover_rel
-                p['gallery'] = gallery_paths
+                    changed = True
+                gal = list(p.get('gallery', []) or [])
+                new_gal = list(gallery_paths)
+                for g in gal:
+                    if g and g not in new_gal:
+                        new_gal.append(g)
+                if new_gal != gal:
+                    p['gallery'] = new_gal
+                    changed = True
                 break
-        with open(seed_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-            f.write('\n')
+        if changed:
+            with open(seed_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write('\n')
     except Exception:
         pass
 
@@ -524,19 +549,114 @@ def _update_seed_project(project):
             content = f.read()
         idx = content.find(f'"slug": "{slug}"')
         if idx >= 0:
+            new_content = content
             if cover_rel:
-                img_match = re.search(r'"image":\s*"([^"]*)"', content[idx:])
+                img_match = re.search(r'"image":\s*"([^"]*)"', new_content[idx:])
                 if img_match:
                     i_start = img_match.start() + idx
-                    val_start = content.find('"', i_start) + 1
-                    val_end = content.find('"', val_start)
-                    content = content[:val_start] + cover_rel + content[val_end:]
-            gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', content[idx:])
+                    val_start = new_content.find('"', i_start) + 1
+                    val_end = new_content.find('"', val_start)
+                    if new_content[val_start:val_end] != cover_rel:
+                        new_content = new_content[:val_start] + cover_rel + new_content[val_end:]
+            gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', new_content[idx:])
             if gal_match:
                 g_start = gal_match.start() + idx
                 g_end = gal_match.end()
-                content = content[:g_start] + json.dumps(gallery_paths) + content[g_end:]
-            with open(seed_py_path, 'w', encoding='utf-8') as f:
-                f.write(content)
+                existing = gal_match.group(0)
+                try:
+                    old_list = json.loads(existing[existing.find('['):])
+                except Exception:
+                    old_list = []
+                merged = list(gallery_paths)
+                for g in old_list:
+                    if g and g not in merged:
+                        merged.append(g)
+                new_block = '"gallery": ' + json.dumps(merged)
+                if new_block != existing:
+                    new_content = new_content[:g_start] + new_block + new_content[g_end:]
+            if new_content != content:
+                with open(seed_py_path, 'w', encoding='utf-8') as f:
+                    f.write(new_content)
     except Exception:
         pass
+
+
+@receiver(post_save, sender=Project)
+def sync_project_on_save(sender, instance, **kwargs):
+    cover_rel, gallery_rel = _sync_project_media_to_static(instance)
+    _rewrite_seed_project(instance.slug, cover_rel, gallery_rel)
+
+
+@receiver(post_save, sender=ProjectImage)
+def sync_project_image_on_save(sender, instance, **kwargs):
+    project = getattr(instance, 'project', None)
+    if not project:
+        return
+    cover_rel, gallery_rel = _sync_project_media_to_static(project)
+    _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+
+
+@receiver(post_delete, sender=ProjectImage)
+def sync_project_image_on_delete(sender, instance, **kwargs):
+    project = getattr(instance, 'project', None)
+    if not project:
+        return
+    cover_rel, gallery_rel = _sync_project_media_to_static(project)
+    _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+
+
+# Legacy helper retained for external callers.
+def _update_seed_project(project):
+    cover_rel, gallery_rel = _sync_project_media_to_static(project)
+    _rewrite_seed_project(getattr(project, 'slug', ''), cover_rel, gallery_rel)
+
+
+@receiver(post_save, sender=Product)
+def sync_product_on_save(sender, instance, **kwargs):
+    if not getattr(instance, 'slug', None):
+        return
+    slug = instance.slug
+    media_root = str(settings.MEDIA_ROOT)
+    static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'products', slug)
+    os.makedirs(static_dir, exist_ok=True)
+
+    def _copy_to(field_attr):
+        field = getattr(instance, field_attr, None)
+        fname = getattr(field, 'name', None)
+        if not fname:
+            return None
+        src = os.path.join(media_root, str(fname))
+        if not os.path.exists(src):
+            return None
+        dst = os.path.join(static_dir, os.path.basename(fname))
+        try:
+            shutil.copy2(src, dst)
+        except Exception:
+            pass
+        return f'images/products/{slug}/{os.path.basename(fname)}'
+
+    for attr in ('image', 'banner_image', 'dimension_image', 'beam_angle_image'):
+        _copy_to(attr)
+
+    try:
+        for pimg in instance.images.all():
+            fname = getattr(pimg.image, 'name', None)
+            if not fname:
+                continue
+            src = os.path.join(media_root, str(fname))
+            if not os.path.exists(src):
+                continue
+            dst = os.path.join(static_dir, os.path.basename(fname))
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+
+@receiver(post_save, sender=ProductImage)
+def sync_product_image_on_save(sender, instance, **kwargs):
+    product = getattr(instance, 'product', None)
+    if product:
+        sync_product_on_save(type(product), product)

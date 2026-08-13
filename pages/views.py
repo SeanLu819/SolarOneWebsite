@@ -161,68 +161,203 @@ def _media_url(field):
 
 def _static_url(path):
     """Return static URL for a non-empty path.
-    Strips 'images/' prefix from paths like 'images/processed/xxx.webp'
-    so they resolve correctly under /static/images/ on Vercel.
+    Accepts paths like 'images/processed/xxx.webp', 'products/foo.webp',
+    or raw filenames and resolves them via Django's static finder.
     """
     if not path:
         return ''
-    if path.startswith('images/'):
+    if path.startswith(('http://', 'https://')):
+        return path
+    if path.startswith('/static/'):
+        return path
+    if path.startswith('/media/'):
+        return path
+    if finders.find(path):
         return static(path)
-    if path.startswith('products/'):
+    if path.startswith('images/') or path.startswith('products/') or path.startswith('files/'):
         return static(path)
     return static(path)
 
 
 def _clean_hashed_name(name: str) -> str:
     """Strip Django-upload hashed suffix like _yPJsGNE from filename."""
-    stem = name.rsplit('.', 1)[0]
-    ext = name.rsplit('.', 1)[-1]
+    if not name:
+        return ''
+    try:
+        stem = name.rsplit('.', 1)[0]
+        ext = name.rsplit('.', 1)[-1]
+    except (ValueError, IndexError):
+        return name
     if '_' in stem:
         stem = stem.rsplit('_', 1)[0]
     return f'{stem}.{ext}'
 
 
-def _map_project_image(db_path: str) -> str:
-    """Map DB media path to static path for a project main image."""
-    if not db_path:
-        return ''
-    if db_path.startswith('images/'):
-        return db_path
-    name = Path(db_path).name
-    clean_name = _clean_hashed_name(name)
+def _list_static_dir(rel_dir: str):
+    """List files in a static directory (relative to static/)."""
+    full = os.path.join(settings.BASE_DIR, 'static', rel_dir)
+    if os.path.isdir(full):
+        return set(os.listdir(full))
+    return set()
+
+
+def _find_project_gallery_files(slug: str):
+    """Return list of relative static paths for all gallery images of a project slug."""
+    results = []
+    slug_dir = f'images/projects/{slug}'
+    slug_files = _list_static_dir(slug_dir)
+    exclude = {'old hid lighting.webp', 'new led lighting.webp',
+               'old HID lighting.webp', 'new LED lighting.webp'}
+    for f in sorted(slug_files):
+        fl = f.lower()
+        if fl in {e.lower() for e in exclude}:
+            continue
+        if fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+            results.append(f'{slug_dir}/{f}')
+    if not results:
+        gallery_dir = 'images/projects/gallery'
+        gal_files = _list_static_dir(gallery_dir)
+        slug_token = slug.replace('-', '').replace('_', '').lower()
+        matched = []
+        for f in sorted(gal_files):
+            fl = f.lower()
+            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                continue
+            f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
+            if slug_token and slug_token in f_token:
+                matched.append(f'{gallery_dir}/{f}')
+        if matched:
+            results = matched
+    return results
+
+
+def _find_project_cover_path(slug: str, db_path: str = ''):
+    """Find the cover image static path for a project slug."""
+    name = Path(db_path).name if db_path else ''
+    clean_name = _clean_hashed_name(name) if name else ''
+    slug_dir = f'images/projects/{slug}'
+    slug_files = _list_static_dir(slug_dir)
+    priority_prefixes = ['cover', 'main', '01', '1', 'hero']
+    if slug_files:
+        for prefix in priority_prefixes:
+            for f in sorted(slug_files):
+                fl = f.lower()
+                if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                    continue
+                exclude = {'old hid lighting.webp', 'new led lighting.webp'}
+                if fl in exclude:
+                    continue
+                stem = fl.rsplit('.', 1)[0]
+                if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():
+                    return f'{slug_dir}/{f}'
+                if stem.startswith(prefix):
+                    return f'{slug_dir}/{f}'
+        for f in sorted(slug_files):
+            fl = f.lower()
+            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                continue
+            exclude = {'old hid lighting.webp', 'new led lighting.webp'}
+            if fl in exclude:
+                continue
+            if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():
+                return f'{slug_dir}/{f}'
+            return f'{slug_dir}/{f}'
     if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
         return f'images/processed/{clean_name}'
-    if clean_name in ('home-project.webp',):
-        return f'images/{clean_name}'
-    return f'images/processed/{clean_name}'
+    if clean_name:
+        processed = f'images/processed/{clean_name}'
+        if finders.find(processed):
+            return processed
+    gallery_dir = 'images/projects/gallery'
+    gal_files = _list_static_dir(gallery_dir)
+    slug_token = slug.replace('-', '').replace('_', '').lower()
+    for f in sorted(gal_files):
+        fl = f.lower()
+        if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+            continue
+        f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
+        if slug_token and slug_token in f_token:
+            return f'{gallery_dir}/{f}'
+    if db_path and db_path.startswith('images/'):
+        if finders.find(db_path):
+            return db_path
+    return f'images/processed/{clean_name}' if clean_name else ''
 
 
-def _map_project_gallery(db_path: str) -> str:
-    """Map DB media path to static path for a project gallery image."""
-    if not db_path:
+def _project_image_url(field, project_slug: str = ''):
+    """Return image URL, preferring committed static assets when available.
+
+    Resolution order:
+      1. If field has a static-committed image under images/projects/<slug>/
+         or images/processed/ → return its /static/ URL.
+      2. If the uploaded media file physically exists on disk → return its
+         /media/ URL (works in local dev; ephemeral on Vercel).
+      3. Fall back to field.url (may 404 on Vercel if media is missing).
+    """
+    if not field or not getattr(field, 'name', None):
         return ''
+    db_path = str(field.name)
     if db_path.startswith('images/'):
-        return db_path
-    name = Path(db_path).name
-    clean_name = _clean_hashed_name(name)
-    if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
-        return f'images/processed/{clean_name}'
-    if clean_name in ('home-project.webp',):
-        return f'images/{clean_name}'
-    return f'images/processed/{clean_name}'
-
-
-def _project_image_url(field):
-    """Return image URL, preferring committed static assets when available."""
-    if not field or not field.name:
-        return ''
-    mapped = _map_project_image(field.name)
-    if mapped and finders.find(mapped):
-        return static(mapped)
-    media_full = os.path.join(settings.MEDIA_ROOT, field.name)
+        if finders.find(db_path):
+            return static(db_path)
+        return static(db_path)
+    cover = _find_project_cover_path(project_slug, db_path)
+    if cover and finders.find(cover):
+        return static(cover)
+    if cover:
+        return static(cover)
+    media_full = os.path.join(settings.MEDIA_ROOT, db_path)
     if os.path.exists(media_full):
+        try:
+            return field.url
+        except Exception:
+            return f'{settings.MEDIA_URL}{db_path.lstrip("/")}'
+    try:
         return field.url
-    return field.url
+    except Exception:
+        return ''
+
+
+def _project_gallery_urls(project):
+    """Return gallery image URLs for a Project or slug string.
+
+    Always prefers static-committed images so Vercel renders consistently
+    with local dev. For DB records the gallery is augmented with whatever
+    ProjectImage rows exist, but the committed static files win to avoid
+    broken images on serverless platforms.
+    """
+    slug = getattr(project, 'slug', project) if not isinstance(project, str) else project
+    static_gallery = _find_project_gallery_files(slug)
+    urls = [_static_url(p) for p in static_gallery]
+    if not isinstance(project, str) and hasattr(project, 'images'):
+        try:
+            for img in project.images.all():
+                fname = getattr(img.image, 'name', '')
+                if not fname:
+                    continue
+                clean = _clean_hashed_name(Path(fname).name)
+                found = False
+                for u in urls:
+                    if clean and clean in u:
+                        found = True
+                        break
+                    if Path(fname).name and Path(fname).name in u:
+                        found = True
+                        break
+                if not found:
+                    u = _project_image_url(img.image, slug)
+                    if u:
+                        urls.append(u)
+        except Exception:
+            pass
+    seen = set()
+    deduped = []
+    for u in urls:
+        if not u or u in seen:
+            continue
+        seen.add(u)
+        deduped.append(u)
+    return deduped
 
 
 def _product_image_url(product, field_name):
@@ -360,10 +495,10 @@ def _enrich_project(project, lang):
     project.location_t = project.t('location', lang)
     project.results_t = project.t('results', lang)
 
+    slug = getattr(project, 'slug', '')
+
     if isinstance(project, Project):
-        project.image_url = _project_image_url(project.image)
-        # pdf_static lives in static/files/ (deployed with the app — preferred on Vercel).
-        # pdf_file lives in media/ (not served on Vercel).
+        project.image_url = _project_image_url(project.image, slug)
         pdf_static = getattr(project, 'pdf_static', '') or ''
         if pdf_static:
             project.pdf_url = static(pdf_static)
@@ -371,19 +506,39 @@ def _enrich_project(project, lang):
             project.pdf_url = project.pdf_file.url
         else:
             project.pdf_url = ''
-        project.gallery = [
-            {
-                'src': _project_image_url(img.image),
-                'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
-            }
-            for i, img in enumerate(project.images.all())
-        ]
+        static_gal_urls = _project_gallery_urls(project)
+        if static_gal_urls:
+            project.gallery = [
+                {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
+                for i, src in enumerate(static_gal_urls)
+            ]
+        else:
+            project.gallery = [
+                {
+                    'src': _project_image_url(img.image, slug),
+                    'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
+                }
+                for i, img in enumerate(project.images.all())
+            ]
     else:
         project.image_url = _static_url(project.image)
+        if not project.image_url and slug:
+            cover = _find_project_cover_path(slug, getattr(project, 'image', ''))
+            if cover:
+                project.image_url = _static_url(cover)
         project.pdf_url = _static_url(project.pdf_url) if project.pdf_url else ''
+        static_gal_urls = _project_gallery_urls(slug) if slug else []
+        seed_gal_paths = list(getattr(project, 'gallery_paths', []) or [])
+        combined = []
+        for p in static_gal_urls:
+            combined.append(p)
+        for p in seed_gal_paths:
+            u = _static_url(p)
+            if u and u not in combined:
+                combined.append(u)
         project.gallery = [
-            {'src': _static_url(p), 'alt': f"{project.title_t} — view {i + 1}"}
-            for i, p in enumerate(project.gallery_paths)
+            {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
+            for i, src in enumerate(combined)
         ]
 
 

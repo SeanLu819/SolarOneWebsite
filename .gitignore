@@ -46,3 +46,20 @@ solarone-website-preview/
 
 # Trae skill metadata (local only)
 .trae/
+
+# Temp scripts
+GIT_RESULT.txt
+_do_git.py
+_do_git2.py
+_push_git.cmd
+scripts/_git_push.py
+scripts/git2.py
+scripts/git3.py
+scripts/git_do.py
+
+# Temp scripts
+GIT_RESULT.txt
+_do_git*.py
+_push_git.cmd
+scripts/git*.py
+scripts/_git_push.py

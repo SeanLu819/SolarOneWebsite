@@ -635,7 +635,7 @@
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
-      "image": "images/processed/footballfield.webp",
+      "image": "images/projects/football-field-led-retrofit/bmhs-football-field-01.webp",
       "order": 1,
       "translations": {
         "fr": {
@@ -669,7 +669,13 @@
           "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "images/projects/football-field-led-retrofit/bmhs-football-field-01.webp",
+        "images/projects/football-field-led-retrofit/bmhs-football-field-02.webp",
+        "images/projects/football-field-led-retrofit/bmhs-football-field-03.webp",
+        "images/projects/football-field-led-retrofit/bmhs-football-field-04.webp",
+        "images/projects/football-field-led-retrofit/bmhs-football-field-05_D1i9pFd.webp"
+      ],
       "pdf_url": ""
     },
     {

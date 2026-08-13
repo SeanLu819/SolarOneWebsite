@@ -158,18 +158,25 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = '/tmp/staticfiles' if IS_RUNTIME else BASE_DIR / 'staticfiles'
+# STATIC_ROOT must be consistent for both build-time collectstatic and runtime.
+# build.sh outputs to ./staticfiles (per vercel.json distDir: "staticfiles"),
+# and at runtime we also serve from ./staticfiles via WhiteNoise.
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (User uploads).
-# On Vercel we keep media under the static tree so WhiteNoise can serve the
-# generated images/PDFs from the deployed app. For local development, serve
-# media at `/media/` to avoid MEDIA_URL being within STATIC_URL (which
-# prevents `runserver` from serving files).
+# CRITICAL: Vercel's serverless filesystem is ephemeral — files written at
+# runtime disappear after the request. Therefore:
+#   1. Locally: use /media/ + BASE_DIR/media (normal Django behavior)
+#   2. Vercel:  use the SAME /media/ URL namespace so DB-stored paths work
+#      unchanged, but MEDIA_ROOT also points into the static tree so files
+#      committed there (or copied by the post-save signal during a local
+#      admin session before git push) get served by WhiteNoise on Vercel.
+# Admin uploads made ON Vercel will NOT persist — admins must work locally
+# then commit the copied static/images/projects/* files + updated seed JSON.
+MEDIA_URL = '/media/'
 if IS_VERCEL:
-    MEDIA_URL = '/static/media/'
     MEDIA_ROOT = BASE_DIR / 'static' / 'media'
 else:
-    MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
 # ============ WHITENOISE (Static File Compression & Caching) ============
@@ -179,6 +186,11 @@ WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_MAX_AGE = 31536000  # 1 year cache for versioned static files
 # Allow Whitenoise to compress files even without a manifest
 WHITENOISE_ALLOW_ALL_ORIGINS = True
+# Add /media/ as an extra WhiteNoise prefix so MEDIA_URL files committed
+# under static/media/ (Vercel) or served via static() resolution are reachable.
+WHITENOISE_EXTRA_PREFIXES = [
+    ('/media/', str(BASE_DIR / 'static' / 'media')),
+]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # ============ CACHE ============
