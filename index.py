@@ -52,6 +52,19 @@ import whitenoise
 STATIC_ROOT_VAL = str(settings.STATIC_ROOT)
 _STATICFILES_DIRS = list(getattr(settings, 'STATICFILES_DIRS', []))
 
+sys.stderr.write(f'[index.py] BASE_DIR={BASE_DIR}\n')
+sys.stderr.write(f'[index.py] STATIC_ROOT={STATIC_ROOT_VAL} exists={os.path.isdir(STATIC_ROOT_VAL)}\n')
+if os.path.isdir(STATIC_ROOT_VAL):
+    _sr_files = sum(len(f) for _, _, f in os.walk(STATIC_ROOT_VAL))
+    sys.stderr.write(f'[index.py] STATIC_ROOT file count={_sr_files}\n')
+for _i, d in enumerate(_STATICFILES_DIRS):
+    _d = str(d)
+    sys.stderr.write(f'[index.py] STATICFILES_DIRS[{_i}]={_d} exists={os.path.isdir(_d)}\n')
+    if os.path.isdir(_d):
+        _sf_files = sum(len(f) for _, _, f in os.walk(_d))
+        sys.stderr.write(f'[index.py]   file count={_sf_files}\n')
+sys.stderr.flush()
+
 _roots = []
 if os.path.isdir(STATIC_ROOT_VAL):
     _roots.append(STATIC_ROOT_VAL)
@@ -95,4 +108,12 @@ if os.path.isdir(_media_root):
 
 _file_count = len(getattr(application, 'files', {}))
 sys.stderr.write(f'[whitenoise] ready with {_file_count} static/media files, roots={_roots}\n')
+_sample_keys = list(getattr(application, 'files', {}).keys())[:10]
+sys.stderr.write(f'[whitenoise] sample keys: {_sample_keys}\n')
+_gallery_test = '/static/images/projects/gallery/shys-soccer-01.webp'
+_wn_found = _gallery_test in getattr(application, 'files', {})
+sys.stderr.write(f'[whitenoise] test gallery file {_gallery_test}: found={_wn_found}\n')
+_product_test = '/static/images/products/fl4m-01.webp'
+_wn_found2 = _product_test in getattr(application, 'files', {})
+sys.stderr.write(f'[whitenoise] test product file {_product_test}: found={_wn_found2}\n')
 sys.stderr.flush()
