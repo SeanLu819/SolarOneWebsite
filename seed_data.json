@@ -815,7 +815,7 @@
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
       "results": "",
-      "image": "projects/msu-tennis-01.webp",
+      "image": "images/projects/msu-tennis-01.webp",
       "order": 4,
       "translations": {
         "fr": {
@@ -943,7 +943,7 @@
       "sport_type": "MULTI_SPORT",
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
-      "image": "projects/Narbonne-basketball-04.webp",
+      "image": "images/projects/Narbonne-basketball-04.webp",
       "order": 7,
       "translations": {},
       "gallery": [],
