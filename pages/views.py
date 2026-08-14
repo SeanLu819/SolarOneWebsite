@@ -602,7 +602,7 @@ def _enrich_project(project, lang):
         pdf_raw = getattr(project, 'pdf_url', '')
         if pdf_raw:
             project.pdf_url = _static_url(pdf_raw)
-            sys.stderr.write(f'[views] Project {slug} PDF: {pdf_raw} -> {project.pdf_url}\n')
+            logger.info(f'Project {slug} PDF: {pdf_raw} -> {project.pdf_url}')
         else:
             project.pdf_url = ''
         static_gal_urls = _project_gallery_urls(slug) if slug else []
