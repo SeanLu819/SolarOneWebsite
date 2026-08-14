@@ -30,8 +30,12 @@ awesome-design-md-main/
 __pycache__/
 db.sqlite3
 media/
-# staticfiles/ — committed to Git so @vercel/python can serve it via WhiteNoise
-# without needing a build step (collectstatic is run locally before push).
+# staticfiles/ — created by collectstatic during Vercel build (build.sh)
+# NOT committed; build.sh creates public/ instead for Vercel CDN serving.
+staticfiles/
+
+# Vercel build output (public/ is created by build.sh during Vercel build)
+public/
 
 # Unused logo VARIANTS (kept locally but not deployed) — ONLY *.png variants!
 # DO NOT ignore .webp — those are the actual deployed assets!

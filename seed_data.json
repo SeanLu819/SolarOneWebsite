@@ -12,7 +12,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "products/rt200-m.webp",
-      "banner_image": "products/banners/m-series-bar-1.webp",
+      "banner_image": "products/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 1,
@@ -55,7 +55,9 @@
           "value": "125lm/W"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 2,
@@ -69,7 +71,7 @@
       "beam_angle": "18~100°",
       "protection": "",
       "image": "products/floodlight.webp",
-      "banner_image": "products/banners/rt410-bar-1.webp",
+      "banner_image": "products/rt410-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 2,
@@ -120,7 +122,9 @@
           "value": "18~100°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 11,
@@ -134,7 +138,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "products/vsp12m-01.webp",
-      "banner_image": "products/banners/vsp-bar-1.webp",
+      "banner_image": "products/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 3,
@@ -168,7 +172,9 @@
       },
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 13,
@@ -190,7 +196,9 @@
       "translations": {},
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 4,
@@ -225,7 +233,9 @@
           "value": "IP66"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 14,
@@ -239,7 +249,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "products/RT600SL-T_yqv89jW.webp",
-      "banner_image": "products/fl1m/fl1m-bar-1.webp",
+      "banner_image": "products/fl1m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 6,
@@ -247,7 +257,9 @@
       "translations": {},
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 5,
@@ -261,7 +273,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "products/RT600SL-T.webp",
-      "banner_image": "products/banners/fl1m-bar-1.webp",
+      "banner_image": "products/fl1m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 11,
@@ -286,7 +298,9 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 6,
@@ -299,10 +313,10 @@
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl4m-01.png",
-      "banner_image": "products/banners/fl4m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl4m-3d-view.png",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050.webp",
+      "image": "products/fl4m-01.webp",
+      "banner_image": "products/fl4m-bar-1.webp",
+      "dimension_image": "products/fl4m-3d-view.webp",
+      "beam_angle_image": "products/beamangle-12183050.webp",
       "order": 12,
       "parent_slug": "m-series",
       "translations": {
@@ -418,7 +432,19 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ]
+      ],
+      "ordering_info": [
+        "FL4M\r\n(Light With 4 Module)",
+        "320W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage\r\n(110-277VAC)\r\nH=High Voltage\r\n(347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1. 0-10V\r\n2. DMX\r\n3. Dali\r\n4. Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL4M-320W-30K-S"
     },
     {
       "pk": 7,
@@ -431,8 +457,8 @@
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl6m-01.png",
-      "banner_image": "products/banners/fl6m-bar-1.webp",
+      "image": "products/fl6m-01.webp",
+      "banner_image": "products/fl6m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 13,
@@ -457,7 +483,9 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 8,
@@ -470,8 +498,8 @@
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl9m-01.png",
-      "banner_image": "products/banners/fl9m-bar-1.webp",
+      "image": "products/fl9m-01.webp",
+      "banner_image": "products/fl9m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 14,
@@ -496,7 +524,9 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 9,
@@ -509,8 +539,8 @@
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl12m-01.png",
-      "banner_image": "products/banners/fl12m-bar-1.webp",
+      "image": "products/fl12m-01.webp",
+      "banner_image": "products/fl12m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
@@ -535,7 +565,9 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 12,
@@ -549,7 +581,7 @@
       "beam_angle": "",
       "protection": "",
       "image": "products/rt590.webp",
-      "banner_image": "products/banners/vsp-bar-1_yPJsGNE.webp",
+      "banner_image": "products/vsp-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 15,
@@ -583,7 +615,9 @@
       },
       "gallery": [],
       "specs": [],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     },
     {
       "pk": 10,
@@ -596,8 +630,8 @@
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl16m-01.png",
-      "banner_image": "products/banners/fl16m-bar-1.webp",
+      "image": "products/fl16m-01.webp",
+      "banner_image": "products/fl16m-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "order": 16,
@@ -622,7 +656,9 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [],
+      "model_number": ""
     }
   ],
   "projects": [
@@ -676,7 +712,7 @@
         "images/projects/football-field-led-retrofit/bmhs-football-field-04.webp",
         "images/projects/football-field-led-retrofit/bmhs-football-field-05_D1i9pFd.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/football_field_led_retrofit.pdf"
     },
     {
       "pk": 4,
@@ -722,7 +758,7 @@
         }
       },
       "gallery": [],
-      "pdf_url": ""
+      "pdf_url": "files/yuanshen_sports_centre_stadium.pdf"
     },
     {
       "pk": 2,
@@ -809,7 +845,7 @@
         }
       },
       "gallery": [],
-      "pdf_url": ""
+      "pdf_url": "files/morgan_state_university_tennis_courts.pdf"
     },
     {
       "pk": 7,
@@ -820,7 +856,7 @@
       "sport_type": "SKI_AREA",
       "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
       "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/nanshan-ski-01.webp",
+      "image": "projects/nanshan-ski-village/nanshan-ski-01.webp",
       "order": 5,
       "translations": {
         "fr": {
@@ -850,7 +886,7 @@
         }
       },
       "gallery": [],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 3,
@@ -922,7 +958,7 @@
       "sport_type": "AIRPORT",
       "description": "【Customer Profile】\r\nBeijing Capital International Airport is the 2nd largest airport in the world and is the main international airport serving Beijing. \r\n【Scope of Work】 \r\nSolarOne was contacted to create a lighting solution for Beijing's Capital International Airport apron, terminals and parking lots. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. \r\nAir travel requires lots of travel right here on the ground. SolarOne LED lighting solutions provide bright, even illumination along airport access roads, parking lots, walkways, corridors and concourses, slashing energy consumption and maintenance costs by double digits. Our Vision Smart technology reduces light spillover while enhancing operation safety.\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily used to replace the existing 1000 watt metal HID fixture with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the ground much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
       "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/bcia-airport-01.webp",
+      "image": "projects/beijing-capital-international-airport/bcia-airport-01.webp",
       "order": 10,
       "translations": {
         "fr": {
@@ -957,7 +993,7 @@
         }
       },
       "gallery": [],
-      "pdf_url": ""
+      "pdf_url": "files/beijing_capital_international_airport.pdf"
     }
   ],
   "siteconfig": {}
