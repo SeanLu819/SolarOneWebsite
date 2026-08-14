@@ -265,6 +265,15 @@ def _list_static_dir(rel_dir: str):
     return set()
 
 
+_GALLERY_SLUG_MAP = {
+    'yuanshen-sports-centre-stadium': ['shys-soccer-01.webp', 'shys-soccer-02.webp', 'shys-soccer-03.webp', 'shys-soccer-04.webp', 'shys-soccer-05.webp', 'soccerfield.webp'],
+    'baseball-field-led-retrofit': ['CCSC-Baseball-01.webp', 'CCSC-Baseball-02.webp', 'CCSC-Baseball-03.webp', 'CCSC-Baseball-04.webp', 'CCSC-Baseball-05.webp', 'Baseball.webp'],
+    'morgan-state-university-tennis-courts': ['msu-tennis-01.webp', 'msu-tennis-02.webp', 'msu-tennis-03.webp', 'msu-tennis-04.webp', 'msu-tennis-05.webp'],
+    'narbonne-arena': ['Narbonne-basketball-01.webp', 'Narbonne-basketball-02.webp', 'Narbonne-basketball-03.webp', 'Narbonne-basketball-04.webp', 'Narbonne-basketball-05.webp', 'basketball.webp'],
+    'multi-sport-arena-hd-broadcast': ['choecm-basketball-01.webp', 'choecm-basketball-02.webp', 'choecm-basketball-03.webp', 'choecm-basketball-04.webp', 'choecm-basketball-05.webp', 'choecm-tennis-01.webp'],
+}
+
+
 def _find_project_gallery_files(slug: str):
     """Return list of relative static paths for all gallery images of a project slug."""
     results = []
@@ -280,17 +289,23 @@ def _find_project_gallery_files(slug: str):
     if not results:
         gallery_dir = 'images/projects/gallery'
         gal_files = _list_static_dir(gallery_dir)
-        slug_token = slug.replace('-', '').replace('_', '').lower()
-        matched = []
-        for f in sorted(gal_files):
-            fl = f.lower()
-            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                continue
-            f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
-            if slug_token and slug_token in f_token:
-                matched.append(f'{gallery_dir}/{f}')
-        if matched:
-            results = matched
+        mapped_names = _GALLERY_SLUG_MAP.get(slug)
+        if mapped_names:
+            for name in mapped_names:
+                if name.lower() in {f.lower() for f in gal_files}:
+                    results.append(f'{gallery_dir}/{name}')
+        if not results:
+            slug_token = slug.replace('-', '').replace('_', '').lower()
+            matched = []
+            for f in sorted(gal_files):
+                fl = f.lower()
+                if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                    continue
+                f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
+                if slug_token and slug_token in f_token:
+                    matched.append(f'{gallery_dir}/{f}')
+            if matched:
+                results = matched
     return results
 
 
