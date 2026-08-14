@@ -5,7 +5,7 @@
       "src": "index.py",
       "use": "@vercel/python",
       "config": {
-        "installCommand": "bash build.sh"
+        "maxLambdaSize": "15mb"
       }
     }
   ],

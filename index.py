@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BASE_DIR)
@@ -13,6 +14,36 @@ if IS_VERCEL and 'DATABASE_URL' not in os.environ:
 
 from django.core.wsgi import get_wsgi_application
 from django.conf import settings
+
+# CRITICAL: Run collectstatic on Vercel before starting the WSGI app.
+# This ensures staticfiles/ directory exists with all static assets.
+if IS_VERCEL:
+    STATIC_ROOT_DIR = str(settings.STATIC_ROOT)
+    if not os.path.exists(STATIC_ROOT_DIR) or not os.listdir(STATIC_ROOT_DIR):
+        sys.stderr.write('[index.py] Running collectstatic on Vercel...\n')
+        sys.stderr.flush()
+        try:
+            result = subprocess.run(
+                [sys.executable, 'manage.py', 'collectstatic', '--noinput'],
+                cwd=BASE_DIR,
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+            if result.stdout:
+                sys.stderr.write(result.stdout + '\n')
+            if result.returncode != 0:
+                sys.stderr.write(f'[index.py] collectstatic warning (exit {result.returncode}):\n')
+                if result.stderr:
+                    sys.stderr.write(result.stderr + '\n')
+            else:
+                file_count = sum(len(files) for _, _, files in os.walk(STATIC_ROOT_DIR))
+                sys.stderr.write(f'[index.py] collectstatic done: {file_count} files in {STATIC_ROOT_DIR}\n')
+        except subprocess.TimeoutExpired:
+            sys.stderr.write('[index.py] ERROR: collectstatic timed out!\n')
+        except Exception as e:
+            sys.stderr.write(f'[index.py] ERROR: collectstatic failed: {e}\n')
+        sys.stderr.flush()
 
 application = get_wsgi_application()
 
