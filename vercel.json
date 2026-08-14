@@ -11,7 +11,6 @@
   ],
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/favicon.ico", "dest": "/static/images/favicon.webp" },
     { "src": "/(.*)", "dest": "/index.py" }
   ]
 }
