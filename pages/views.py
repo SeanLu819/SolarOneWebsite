@@ -189,11 +189,34 @@ def _normalize_static_rel(path):
         probes = [f'images/projects/gallery/{path}', f'images/processed/{path}',
                   f'images/{path}', f'images/products/{path}']
         for p in probes:
-            if finders.find(p):
+            if _find_static(p):
                 return p
         return probes[0]
     # Unknown pattern: assume it lives under images/
     return f'images/{path}'
+
+
+def _find_static(rel_path):
+    """Check if a static file exists in any of the configured static directories.
+
+    On Vercel the STATICFILES_DIRS ('static/') may not exist at runtime, but
+    STATIC_ROOT ('staticfiles/') is committed to Git and always present.
+    This helper checks both so that product/project image URLs resolve
+    correctly on all platforms.
+    """
+    if finders.find(rel_path):
+        return True
+    static_root = str(settings.STATIC_ROOT)
+    full = os.path.join(static_root, rel_path)
+    if os.path.isfile(full):
+        return True
+    staticfiles_dirs = list(getattr(settings, 'STATICFILES_DIRS', []))
+    for d in staticfiles_dirs:
+        d = str(d)
+        full = os.path.join(d, rel_path)
+        if os.path.isfile(full):
+            return True
+    return False
 
 
 def _static_url(path):
@@ -208,7 +231,7 @@ def _static_url(path):
     if isinstance(path, str) and path.startswith(('/static/', '/media/')):
         return path
     rel = _normalize_static_rel(path)
-    if finders.find(rel):
+    if _find_static(rel):
         return static(rel)
     return static(rel)
 
@@ -306,7 +329,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
         return f'images/processed/{clean_name}'
     if clean_name:
         processed = f'images/processed/{clean_name}'
-        if finders.find(processed):
+        if _find_static(processed):
             return processed
     gallery_dir = 'images/projects/gallery'
     gal_files = _list_static_dir(gallery_dir)
@@ -319,7 +342,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
         if slug_token and slug_token in f_token:
             return f'{gallery_dir}/{f}'
     if db_path and db_path.startswith('images/'):
-        if finders.find(db_path):
+        if _find_static(db_path):
             return db_path
     return f'images/processed/{clean_name}' if clean_name else ''
 
@@ -338,11 +361,11 @@ def _project_image_url(field, project_slug: str = ''):
         return ''
     db_path = str(field.name)
     if db_path.startswith('images/'):
-        if finders.find(db_path):
+        if _find_static(db_path):
             return static(db_path)
         return static(db_path)
     cover = _find_project_cover_path(project_slug, db_path)
-    if cover and finders.find(cover):
+    if cover and _find_static(cover):
         return static(cover)
     if cover:
         return static(cover)
@@ -433,15 +456,18 @@ def _product_image_url(product, field_name):
         if not candidate or candidate in seen:
             continue
         seen.add(candidate)
-        if finders.find(candidate):
+        if _find_static(candidate):
             return static(candidate)
+
+    if candidates:
+        return static(candidates[0])
 
     media_url = getattr(field, 'url', '')
     if media_url:
         return media_url
 
     media_full = os.path.join(settings.MEDIA_ROOT, field_name_value)
-    if os.path.exists(media_full):
+    if os.path.isfile(media_full):
         return f'/media/{field_name_value.lstrip("/")}'
     return ''
 
@@ -571,7 +597,14 @@ def _enrich_project(project, lang):
             cover = _find_project_cover_path(slug, getattr(project, 'image', ''))
             if cover:
                 project.image_url = _static_url(cover)
-        project.pdf_url = _static_url(project.pdf_url) if project.pdf_url else ''
+
+        # Handle PDF URL for seed data projects
+        pdf_raw = getattr(project, 'pdf_url', '')
+        if pdf_raw:
+            project.pdf_url = _static_url(pdf_raw)
+            sys.stderr.write(f'[views] Project {slug} PDF: {pdf_raw} -> {project.pdf_url}\n')
+        else:
+            project.pdf_url = ''
         static_gal_urls = _project_gallery_urls(slug) if slug else []
         seed_gal_paths = list(getattr(project, 'gallery_paths', []) or [])
         combined = []
