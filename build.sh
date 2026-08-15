@@ -42,6 +42,10 @@ fi
 set -e
 echo "=== [build.sh] pip install done ==="
 
+# 1.5. Regenerate seed_data.py from seed_data.json (Vercel only uses seed_data.py)
+echo "=== [build.sh] Regenerating seed_data.py ==="
+python _regen_seed.py 2>&1
+
 # 2. Run Django collectstatic -> outputs to ./staticfiles per STATIC_ROOT
 echo "=== [build.sh] Running collectstatic ==="
 python manage.py collectstatic --noinput 2>&1
