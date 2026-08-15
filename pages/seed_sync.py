@@ -4,8 +4,8 @@ Merge-sync database text content into seed_data.py and seed_data.json.
 Only updates text fields (description, specs, energy_data, translations,
 results) from the database. Image paths, gallery paths, and other static
 file references are preserved from the existing seed files, because the
-DB stores upload paths like 'products/fl4m-01_abc123.png' while the seed
-files need curated paths like 'images/products/fl4m/fl4m-01.png'.
+DB stores upload paths like 'products/fl4m-01_abc123.webp' while the seed
+files need curated paths like 'images/products/fl4m/fl4m-01.webp'.
 """
 import json
 import os

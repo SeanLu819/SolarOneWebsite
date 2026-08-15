@@ -11,12 +11,12 @@ class ProductImagePathResolutionTests(SimpleTestCase):
     def test_static_fallback_matches_same_stem_with_webp_extension(self):
         product = SimpleNamespace(
             slug='fl4m',
-            image=SimpleNamespace(name='products/fl4m-01.png'),
+            image=SimpleNamespace(name='products/fl4m-01.webp'),
         )
 
         url = _product_image_url(product, 'image')
 
-        self.assertIn('/static/images/products/fl4m/fl4m-01.webp', url)
+        self.assertIn('/static/images/products/fl4m-01.webp', url)
 
     def test_static_fallback_prefers_db_relative_canonical_path(self):
         product = SimpleNamespace(

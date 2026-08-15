@@ -54,7 +54,6 @@ if IS_VERCEL:
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,8 +63,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Visitor tracking middleware only in local dev (not on Vercel)
 if not IS_VERCEL:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     MIDDLEWARE.append('pages.middleware.VisitorTrackingMiddleware')
 
 ROOT_URLCONF = 'solarone.urls'
@@ -180,18 +179,19 @@ else:
     MEDIA_ROOT = BASE_DIR / 'media'
 
 # ============ WHITENOISE (Static File Compression & Caching) ============
-# Enable gzip/brotli compression and aggressive caching for static assets
-WHITENOISE_USE_FINDERS = True
+# On Vercel, WhiteNoiseMiddleware is removed from MIDDLEWARE (index.py
+# handles static files via a WSGI-level wrapper). So WhiteNoise only runs
+# in the index.py wrapper, where it reads files directly from disk.
+# WHITENOISE_USE_FINDERS controls the Django-middleware integration —
+# irrelevant on Vercel but we set it False for clarity.
+WHITENOISE_USE_FINDERS = not IS_VERCEL
 WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_MAX_AGE = 31536000  # 1 year cache for versioned static files
-# Allow Whitenoise to compress files even without a manifest
 WHITENOISE_ALLOW_ALL_ORIGINS = True
-# Add /media/ as an extra WhiteNoise prefix so MEDIA_URL files committed
-# under static/media/ (Vercel) or served via static() resolution are reachable.
 WHITENOISE_EXTRA_PREFIXES = [
     ('/media/', str(BASE_DIR / 'static' / 'media')),
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # ============ CACHE ============
 # Local dev uses LocMem (in-process). On Vercel there's no persistent cache

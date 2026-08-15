@@ -60,33 +60,31 @@ _SIDEBAR_CAT_TO_PRODUCT_CAT = {
 }
 
 
+_seed_cache = None
+
 def _load_seed():
     """Load seed data. On Vercel, import from the embedded Python module
     (pages.seed_data) so no filesystem access is needed. In local dev, fall
     back to reading seed_data.json from disk so the JSON stays the source of
     truth during development."""
-    data = cache.get('seed_data_json')
-    if data is None:
-        try:
-            from pages.seed_data import SEED_DATA
-            data = SEED_DATA
-        except Exception:
-            logger.warning('Could not import pages.seed_data, trying JSON file', exc_info=True)
-            data = None
-
-        if data is None:
-            for path in _SEED_CANDIDATES:
-                try:
-                    with open(path, 'r', encoding='utf-8') as f:
-                        data = json.load(f)
-                    break
-                except Exception:
-                    continue
-            if data is None:
-                logger.warning('Failed to load seed data from any source', exc_info=True)
-                data = {'products': [], 'projects': [], 'siteconfig': {}}
-        cache.set('seed_data_json', data, timeout=300)
-    return data
+    global _seed_cache
+    if _seed_cache is not None:
+        return _seed_cache
+    try:
+        from pages.seed_data import SEED_DATA
+        _seed_cache = SEED_DATA
+    except Exception:
+        logger.warning('Could not import pages.seed_data, trying JSON file', exc_info=True)
+        for path in _SEED_CANDIDATES:
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    _seed_cache = json.load(f)
+                break
+            except Exception:
+                continue
+    if _seed_cache is None:
+        _seed_cache = {'products': [], 'projects': [], 'site_config': {}}
+    return _seed_cache
 
 
 # ============================================================================
@@ -162,8 +160,7 @@ def _media_url(field):
 def _normalize_static_rel(path):
     """Rewrite legacy seed paths (projects/x.webp, products/x.webp, ...) into
     canonical paths under images/ that match the committed static/ directory
-    layout. Returns the first path that actually exists in static finders, or
-    the best guess if nothing matches."""
+    layout."""
     if not path:
         return ''
     path = str(path).strip().lstrip('/\\')
@@ -184,15 +181,7 @@ def _normalize_static_rel(path):
     for old, new in legacy_map.items():
         if path.startswith(old):
             return new + path[len(old):]
-    # Bare filename: try images/projects/gallery/NAME, then images/processed/NAME
-    if '/' not in path:
-        probes = [f'images/projects/gallery/{path}', f'images/processed/{path}',
-                  f'images/{path}', f'images/products/{path}']
-        for p in probes:
-            if _find_static(p):
-                return p
-        return probes[0]
-    # Unknown pattern: assume it lives under images/
+    # Bare filename or unknown pattern: assume it lives under images/
     return f'images/{path}'
 
 

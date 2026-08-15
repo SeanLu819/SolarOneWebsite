@@ -424,6 +424,42 @@
   })();
 </script>
 
+{% if not request.COOKIES.cookie_consent_accepted %}
+<div id="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--surface);border-top:1px solid var(--line);padding:20px;display:none;font-family:var(--ff-body);">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;">
+    <div style="flex:1;min-width:280px;">
+      <p id="cookie-desc" style="margin:0;font-size:14px;color:var(--ink-mute);">
+        {% trans "We use cookies to enhance your browsing experience and analyze site traffic. By clicking 'Accept', you consent to our use of cookies." %}
+        <a href="{% url 'about' %}#privacy" style="color:var(--accent);text-decoration:underline;">{% trans "Privacy Policy" %}</a>
+      </p>
+    </div>
+    <div style="display:flex;gap:12px;flex-shrink:0;">
+      <button id="cookie-reject" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'">{% trans "Reject" %}</button>
+      <button id="cookie-accept" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--accent);border:1px solid var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">{% trans "Accept All" %}</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var banner = document.getElementById('cookie-banner');
+  if (!banner) return;
+  var consent = localStorage.getItem('cookie_consent');
+  if (consent) return;
+  banner.style.display = 'block';
+  document.getElementById('cookie-accept').onclick = function() {
+    localStorage.setItem('cookie_consent', 'accepted', {expires: 365});
+    banner.style.display = 'none';
+    document.cookie = 'cookie_consent_accepted=accepted;path=/;max-age=31536000;SameSite=Lax';
+  };
+  document.getElementById('cookie-reject').onclick = function() {
+    localStorage.setItem('cookie_consent', 'rejected', {expires: 365});
+    banner.style.display = 'none';
+    document.cookie = 'cookie_consent_accepted=rejected;path=/;max-age=31536000;SameSite=Lax';
+  };
+})();
+</script>
+{% endif %}
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
