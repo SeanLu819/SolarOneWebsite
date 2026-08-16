@@ -147,13 +147,16 @@
           </div>
         </div>
 
-        <!-- Product dimension diagram — unified for all products -->
+        {% if product.slug != 'm-series' %}
+        <!-- Product dimension diagram — hidden only for M-Series overview -->
         <div class="detail-dimension">
           <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
           {% if product.beam_angle_image_url %}
           <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}" loading="lazy">
           {% else %}
-          <img class="detail-beam-angle-img" src="{% static 'images/products/fl4m/beamangle-12183050.webp' %}" alt="{% trans 'beam angle' %}" loading="lazy">
+          <div class="detail-dimension-placeholder">
+            <span class="detail-placeholder">{% trans "Beam Angle" %}</span>
+          </div>
           {% endif %}
 
           <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
@@ -165,8 +168,10 @@
           </div>
           {% endif %}
         </div>
+        {% endif %}
 
-        <!-- Energy and Performance Data — from product.energy_data -->
+        {% if product.slug != 'm-series' %}
+        <!-- Energy and Performance Data — hidden only for M-Series overview -->
         <div class="detail-energy-data">
           <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
           <div class="detail-energy-table-wrap">
@@ -253,12 +258,18 @@
             </table>
           </div>
         </div>
+        {% endif %}
 
         <!-- Ordering information — unified for all products -->
         <div class="detail-ordering">
           <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
           {% if product.model_number %}
           <p class="detail-ordering-model">{% trans "Model Number:" %} {{ product.model_number }}</p>
+          {% endif %}
+          {% if product.ordering_image_url %}
+          <div class="detail-ordering-image">
+            <img src="{{ product.ordering_image_url }}" alt="Ordering Information" loading="lazy">
+          </div>
           {% endif %}
           {% if product.ordering_cols %}
           <div class="detail-ordering-table-wrap">
@@ -268,12 +279,12 @@
                   <th>{% trans "Series Name" %}</th>
                   <th>{% trans "System Power" %}</th>
                   <th>{% trans "CCT" %}</th>
-                  <th>{% trans "Voltage" %}</th>
+                  <th>{% trans "Input Voltage" %}</th>
                   <th>{% trans "Beam Angle" %}</th>
-                  <th>{% trans "Fixture Color(option)" %}</th>
-                  <th>{% trans "Controls (Option)" %}</th>
+                  <th>{% trans "Finish (option)" %}</th>
+                  <th>{% trans "Dimming (option)" %}</th>
                   <th>{% trans "Bracket Type (option)" %}</th>
-                  <th>{% trans "Power Driver Location" %}</th>
+                  <th>{% trans "LED Driver Location" %}</th>
                 </tr>
               </thead>
               <tbody>
@@ -570,6 +581,16 @@
     letter-spacing: -0.01em;
     margin-bottom: 16px;
   }
+  .detail-ordering-image {
+    margin-bottom: 20px;
+  }
+  .detail-ordering-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
   .detail-ordering-table-wrap {
     width: 100%;
     overflow-x: auto;
@@ -604,6 +625,14 @@
     text-transform: capitalize;
     letter-spacing: -0.01em;
     border-bottom: 1px solid var(--line);
+  }
+  .detail-ordering-table th:nth-child(5),
+  .detail-ordering-table td:nth-child(5) {
+    width: 14%;
+  }
+  .detail-ordering-table th:nth-child(7),
+  .detail-ordering-table td:nth-child(7) {
+    width: 6%;
   }
   .detail-ordering-table td {
     background: transparent;

@@ -13,6 +13,13 @@
         handleTranslateClick(btn);
       });
     });
+    document.querySelectorAll('.ordering-fill-btn').forEach(function (btn) {
+      if (btn._orderingFillBound) return;
+      btn._orderingFillBound = true;
+      btn.addEventListener('click', function () {
+        handleFillDefaultsClick(btn);
+      });
+    });
   }
 
   function handleTranslateClick(btn) {
@@ -121,6 +128,38 @@
     return match ? match[2] : '';
   }
 
+  function handleFillDefaultsClick(btn) {
+    var status = btn.parentNode.querySelector('.ordering-fill-status');
+    var defaultsStr = btn.getAttribute('data-defaults') || '[]';
+    var defaults;
+    try {
+      defaults = JSON.parse(defaultsStr);
+    } catch (e) {
+      setStatus(status, '✗ Failed to parse defaults.', '#c00');
+      return;
+    }
+    if (!Array.isArray(defaults) || defaults.length === 0) {
+      setStatus(status, '✗ No defaults available.', '#c00');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Filling...';
+
+    var filled = 0;
+    for (var i = 0; i < defaults.length && i < 9; i++) {
+      var name = 'ordering_info_' + i;
+      var textarea = document.querySelector('textarea[name="' + name + '"]');
+      if (textarea) {
+        textarea.value = defaults[i] || '';
+        filled++;
+      }
+    }
+    setStatus(status, '✓ Filled ' + filled + ' columns with defaults.', '#080');
+    btn.disabled = false;
+    btn.textContent = '🔄 Fill Defaults';
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -129,7 +168,7 @@
 
   // Also re-init on Django admin inline formsets (just in case)
   document.addEventListener('DOMNodeInserted', function (e) {
-    if (e.target && e.target.classList && e.target.classList.contains('auto-translate-btn')) {
+    if (e.target && e.target.classList && (e.target.classList.contains('auto-translate-btn') || e.target.classList.contains('ordering-fill-btn'))) {
       init();
     }
   });

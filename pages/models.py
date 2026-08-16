@@ -47,12 +47,12 @@ class Product(models.Model):
     dimension_image = models.ImageField(
         upload_to='products/dimensions/',
         blank=True,
-        help_text='产品尺寸图。建议 1920×1080 像素（16:9，最小 960×540），会在详情页规格下方单独展示。'
+        help_text='产品尺寸图。建议 1920×800 像素（2.4:1 长条形，最小 960×400），会在详情页规格下方单独展示。'
     )
     beam_angle_image = models.ImageField(
         upload_to='products/beam_angles/',
         blank=True,
-        help_text='配光曲线/光束角示意图。建议 1920×1080 像素（16:9，最小 960×540），会在尺寸图上方展示。'
+        help_text='配光曲线/光束角示意图。建议 1920×540 像素（约 3.56:1 长条形，最小 960×270），会在尺寸图上方展示。'
     )
     parent = models.ForeignKey(
         'self',
@@ -78,7 +78,25 @@ class Product(models.Model):
     # Energy & Performance Data: list of {"label": "...", "value": "..."} dicts.
     # Rendered as the ENERGY AND PERFORMANCE DATA table on product detail page.
     energy_data = JSONField(
-        default=list,
+        default=[
+            {"label": "Series Name", "value": "FL1M-80W"},
+            {"label": "Lumen Output", "value": ">10,400lm"},
+            {"label": "System Wattage", "value": "80W"},
+            {"label": "CRI", "value": "70-95"},
+            {"label": "Color temperature", "value": "3000K-3500K、4000K-4500k、5500K-5700K"},
+            {"label": "Input Voltage (High Voltage)", "value": "347-480VAC"},
+            {"label": "Input Voltage (Low Voltage)", "value": "110-277VAC"},
+            {"label": "L70 Hours", "value": ">100,000 at 25°C"},
+            {"label": "Operating Temperature Range", "value": "-40°C to 55°C"},
+            {"label": "Surge (Common Mode / Differential Mode)", "value": "10kV"},
+            {"label": "IP Rating", "value": "IP66"},
+            {"label": "Effective Projected Area (EPA) at 90°", "value": "0.26 (sq. ft.)"},
+            {"label": "L\" X W\" X H\"", "value": "217*234*136mm"},
+            {"label": "Approximate Weight", "value": "2.3 kgs( 5.2 lbs)"},
+            {"label": "Material", "value": "Aluminum / Glass"},
+            {"label": "LED brand", "value": "Bridgelux"},
+            {"label": "LED Driver", "value": "Inventronics Or Equal"},
+        ],
         blank=True,
         verbose_name='Energy & Performance Data',
         help_text='产品能效参数表，用于详情页 ENERGY AND PERFORMANCE DATA 表格。'
@@ -89,17 +107,33 @@ class Product(models.Model):
     model_number = models.CharField(
         max_length=200,
         blank=True,
+        default="FL1M-80W",
         verbose_name='Model Number',
-        help_text='示例：FL4M-320W-30K-S'
+        help_text='产品型号标识，示例：FL1M-80W-30K-S。新建产品时会自动填充默认值，可按需修改。'
     )
     ordering_info = JSONField(
-        default=list,
+        default=[
+            "FL1M (Light With 1 Module)",
+            "80W",
+            "30=3000K\n40=4000K\n57=5700K",
+            "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+            "12=12°\n18=18°\n30=30°\n50=50°",
+            "GRY=Grey\nBLK=Black",
+            "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+            "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+            "W = With Fixture\nS = Separated from Fixture"
+        ],
         blank=True,
         verbose_name='Ordering Information',
         help_text='订购信息表格，9 列，每列支持多行（换行分隔）。'
-                  '格式：["Series Value", "Power Value", "CCT Value", "Voltage Value", '
-                  '"Beam Angle Value", "Color Value", "Controls Value", '
-                  '"Bracket Value", "Driver Location Value"]'
+                  '新建产品时自动填充通用默认值，大部分列（如 CCT、电压、颜色、控制方式、支架等）可直接复用，'
+                  '只需修改 Series Name 和 Power 即可快速完成。'
+    )
+    ordering_image = models.ImageField(
+        upload_to='products/ordering/',
+        blank=True,
+        verbose_name='Ordering Information Image',
+        help_text='订购信息示意图，展示在 ORDERING INFORMATION 表格上方。建议 1920×600 像素。'
     )
 
     class Meta:

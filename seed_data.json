@@ -132,9 +132,88 @@
           "value": "18~100°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT410FL-260W-XXK-S"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">31,200lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "260W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.4(sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.8\" X 15.8\"X 4.2\" / 418 X 400 X 172 (mm)"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "(30lbs)13.5kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "RT410FL",
+        "260W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "30=30°\r\n50=50°\r\n100=100°\r\n8040=80°X 40°\r\n11060=110°X 60°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "RT410FL-260W-XXK-S"
     },
     {
       "pk": 11,
@@ -154,14 +233,9 @@
       "order": 3,
       "parent_slug": "",
       "translations": {
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
           "name": "VSP-XXXXW-9M-YP"
         },
         "es": {
@@ -169,14 +243,19 @@
           "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
           "name": "VSP-XXXXW-9M-YP"
         },
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
           "name": "VSP-XXXXW-9M-YP"
         },
         "ru": {
           "category": "Система спортивного освещения",
           "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-9M-YP"
         }
       },
@@ -293,7 +372,13 @@
       "beam_angle_image": "",
       "order": 11,
       "parent_slug": "m-series",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [
         "products/gallery/fl1m-01.webp",
         "products/gallery/fl1m-02.webp",
@@ -318,9 +403,88 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL1M-80W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": "10400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "80w"
+        },
+        {
+          "label": "CRI",
+          "value": ">80"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "0.26 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "8.6\" X 9.2\"X 5.4\"/218*235*137mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 5.2 lbs)2.3 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "FL1M (Light With 1 Module)",
+        "80W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL1M-80W-30K-S"
     },
     {
       "pk": 6,
@@ -443,7 +607,7 @@
         },
         {
           "label": "Approximate Weight",
-          "value": "( 24.5 lbs) 11.00 kgs"
+          "value": "( 24.5 lbs) 11.0 kgs"
         },
         {
           "label": "Material",
@@ -488,7 +652,13 @@
       "beam_angle_image": "",
       "order": 13,
       "parent_slug": "m-series",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [
         "products/gallery/fl6m-01.webp",
         "products/gallery/fl6m-02.webp",
@@ -513,9 +683,88 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL6M-480W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">58700lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "480W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.58 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 14.5\"X 8.1\"/553*368*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 37 lbs) 16.8 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "FL6M (Light With 6 Module)",
+        "480W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL6M-480W-30K-S"
     },
     {
       "pk": 8,
@@ -534,7 +783,13 @@
       "beam_angle_image": "",
       "order": 14,
       "parent_slug": "m-series",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [
         "products/gallery/fl9m-01.webp",
         "products/gallery/fl9m-02.webp",
@@ -559,9 +814,88 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL9M-720W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">87,600lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "720W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "2.37 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 21.8\"X 8.1\"/553*553*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 58lbs)26.0 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "FL9M (Light With 9 Module)",
+        "720W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL9M-720W-XXK-S"
     },
     {
       "pk": 9,
@@ -580,7 +914,13 @@
       "beam_angle_image": "",
       "order": 15,
       "parent_slug": "m-series",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [
         "products/gallery/fl12m-01.webp",
         "products/gallery/fl12m-02.webp",
@@ -605,9 +945,88 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL12M-1000W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">123,000 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "1000W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "3.16 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 29.1\"X 8.1\"/553*737.90*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 59lbs)33.0 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "FL12M (Light With 12 Module)",
+        "1000W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL12M-1000W-YYK-H-30"
     },
     {
       "pk": 12,
@@ -627,14 +1046,9 @@
       "order": 15,
       "parent_slug": "vsp-xxxxw-9m-yp",
       "translations": {
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
           "name": "VSP-XXXXW-12M-YP"
         },
         "es": {
@@ -642,14 +1056,19 @@
           "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
           "name": "VSP-XXXXW-12M-YP"
         },
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
           "name": "VSP-XXXXW-12M-YP"
         },
         "ru": {
           "category": "Система спортивного освещения",
           "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-12M-YP"
         }
       },
@@ -681,7 +1100,13 @@
       "beam_angle_image": "",
       "order": 16,
       "parent_slug": "m-series",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [
         "products/gallery/fl16m-01.webp",
         "products/gallery/fl16m-02.webp",
@@ -706,9 +1131,88 @@
           "value": "18~50°"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL16M-1360W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">163,000 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "1360W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "4.16 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "29\" X 29 \"X 8.1\"/738*738*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 94.5lbs)42.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "ordering_info": [
+        "FL16M (Light With 16 Module)",
+        "1360W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ],
+      "model_number": "FL12M-1360W-30K-H"
     }
   ],
   "projects": [

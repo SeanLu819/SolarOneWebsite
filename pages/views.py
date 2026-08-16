@@ -463,9 +463,6 @@ def _product_image_url(product, field_name):
         if _find_static(candidate):
             return static(candidate)
 
-    if candidates:
-        return static(candidates[0])
-
     media_url = getattr(field, 'url', '')
     if media_url:
         return media_url
@@ -520,6 +517,7 @@ def _enrich_product(product, lang):
         product.banner_image_url = _product_image_url(product, 'banner_image')
         product.dimension_image_url = _product_image_url(product, 'dimension_image')
         product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
+        product.ordering_image_url = _product_image_url(product, 'ordering_image')
         product.gallery = [
             {
                 'src': _product_image_url(
@@ -536,6 +534,7 @@ def _enrich_product(product, lang):
         product.banner_image_url = _static_url(product.banner_image)
         product.dimension_image_url = _static_url(product.dimension_image)
         product.beam_angle_image_url = _static_url(product.beam_angle_image)
+        product.ordering_image_url = _static_url(product.ordering_image)
         product.gallery = [
             {'src': _static_url(p), 'alt': f"{product.name_t} — view {i + 1}"}
             for i, p in enumerate(product.gallery_paths)

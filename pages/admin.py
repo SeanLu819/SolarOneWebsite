@@ -142,12 +142,24 @@ ORDERING_COLUMNS = [
     'Series Name',
     'System Power',
     'CCT',
-    'Voltage',
+    'Input Voltage',
     'Beam Angle',
-    'Fixture Color(option)',
-    'Controls (Option)',
+    'Finish (option)',
+    'Dimming (option)',
     'Bracket Type (option)',
-    'Power Driver Location',
+    'LED Driver Location',
+]
+
+ORDERING_DEFAULTS = [
+    "FL1M (Light With 1 Module)",
+    "80W",
+    "30=3000K\n40=4000K\n57=5700K",
+    "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+    "12=12°\n18=18°\n30=30°\n50=50°",
+    "GRY=Grey\nBLK=Black",
+    "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+    "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+    "W = With Fixture\nS = Separated from Fixture",
 ]
 
 
@@ -170,8 +182,13 @@ class OrderingInfoWidget(forms.Widget):
         columns_html = []
         for i, header in enumerate(ORDERING_COLUMNS):
             val = escape(value[i] if i < len(value) else '')
+            col_style = 'min-width:130px;flex:1;'
+            if header == 'Beam Angle':
+                col_style = 'min-width:130px;flex:1.3;'
+            elif header == 'Dimming (option)':
+                col_style = 'min-width:90px;flex:0.7;'
             columns_html.append(
-                f'<div style="min-width:110px;flex:1;">'
+                f'<div style="{col_style}">'
                 f'<div style="font-size:10px;font-weight:700;color:#333;text-align:center;margin-bottom:4px;min-height:28px;display:flex;align-items:flex-end;justify-content:center;">{escape(header)}</div>'
                 f'<textarea name="{name}_{i}" rows="4" '
                 f'style="width:100%;padding:4px 6px;border:1px solid #ccc;border-radius:3px;'
@@ -182,6 +199,12 @@ class OrderingInfoWidget(forms.Widget):
             f'<div style="max-width:100%;padding:8px 0;overflow-x:auto;">'
             f'<p style="margin:0 0 10px;color:#666;font-size:12px;">'
             f'每列支持多行（换行分隔），留空列不显示。横向滚动查看全部 9 列。</p>'
+            f'<div class="ordering-fill-row" style="margin-bottom:10px;display:flex;align-items:center;gap:12px;">'
+            f'<button type="button" class="button ordering-fill-btn" '
+            f'data-defaults="{escape(json.dumps(ORDERING_DEFAULTS, ensure_ascii=False))}" '
+            f'style="white-space:nowrap;">🔄 Fill Defaults</button>'
+            f'<span class="ordering-fill-status" style="font-size:12px;color:#666;"></span>'
+            f'</div>'
             f'<div style="display:flex;gap:6px;min-width:1000px;">'
             f'{"".join(columns_html)}'
             f'</div></div>'
@@ -236,7 +259,7 @@ class TranslationsWidget(forms.Widget):
             parts.append(
                 f'<div class="translation-lang" style="display:block;width:100% !important;max-width:900px;box-sizing:border-box;margin-bottom:14px;">'
                 f'<label for="{textarea_id}" style="display:block;font-weight:700;margin-bottom:6px;">{code} — {escape(lang_name)}</label>'
-                f'<textarea id="{textarea_id}" name="{name}_{code}" rows="6" '
+                f'<textarea id="{textarea_id}" name="{name}_{code}" rows="{self.attrs.get("rows", "6")}" '
                 f'style="width:100% !important;max-width:900px;box-sizing:border-box;font-family:monospace;font-size:12px;">{escape(lang_json)}</textarea>'
                 f'<div class="auto-translate-row" style="margin:8px 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
                 f'<button type="button" class="button auto-translate-btn" data-lang="{code}" data-target-id="{textarea_id}" '
@@ -279,8 +302,8 @@ class ProductAdminForm(forms.ModelForm):
             'specs': SpecsWidget,
             'energy_data': EnergyDataWidget,
             'ordering_info': OrderingInfoWidget,
-            'description': forms.Textarea(attrs={'rows': 4, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
-            'translations': TranslationsWidget(),
+            'description': forms.Textarea(attrs={'rows': 2, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'translations': TranslationsWidget(attrs={'rows': '2'}),
         }
 
 
@@ -337,7 +360,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
         ('Content', {
             # Put translations on its own row so it can span full width
-            'fields': (('description', 'model_number'), 'translations')
+            'fields': ('description', 'translations')
         }),
         ('Images', {
             'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
@@ -352,8 +375,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'description': '详情页 ENERGY AND PERFORMANCE DATA 表格的 17 个标准参数。填写 value（值）即可，留空的行不会显示。'
         }),
         ('Ordering Information (订购信息表格)', {
-            'fields': ('ordering_info',),
-            'description': '产品详情页 ORDERING INFORMATION 表格，共 9 列。每列可输入多行（换行分隔）。留空则整列不显示。'
+            'fields': ('model_number', 'ordering_info'),
+            'description': 'Model Number 为该产品的型号标识（如 FL1M-80W-30K-S）。下方表格共 9 列，每列可输入多行（换行分隔），大量数据可在产品间复用，只需修改对应列的值即可。留空则整列不显示。'
         }),
         ('Legacy specs (read-only, will be migrated to Specs above)', {
             'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
