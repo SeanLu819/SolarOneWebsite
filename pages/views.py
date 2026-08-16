@@ -114,6 +114,7 @@ class _DictProduct:
         self.energy_data = item.get('energy_data', []) or []
         self.model_number = item.get('model_number', '')
         self.ordering_info = item.get('ordering_info', []) or []
+        self.ordering_image = item.get('ordering_image', '')
 
     def t(self, field_name, lang='en'):
         if lang == 'en' or not self.translations:
