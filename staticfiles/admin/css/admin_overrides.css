@@ -10,16 +10,14 @@
     box-sizing: border-box !important;
 }
 
-/* Per-language translations: slightly smaller height than before but consistent */
+/* Per-language translations: font styling only, height controlled by rows attr */
 [id^="id_translations_"] {
-    min-height: 120px !important;
     font-family: monospace !important;
     font-size: 12px !important;
 }
 
-/* Increase description height, reduce results height as requested */
+/* Description: width only, height controlled by rows attr */
 #id_description {
-    min-height: 160px !important;
     width: 100% !important;
     max-width: none !important;
 }

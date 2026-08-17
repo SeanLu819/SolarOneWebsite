@@ -10,7 +10,9 @@ files need curated paths like 'images/products/fl4m/fl4m-01.webp'.
 import json
 import os
 import copy
+import importlib
 from django.conf import settings
+from django.contrib.staticfiles import finders
 
 
 # Fields to sync from DB (text content that changes frequently)
@@ -30,6 +32,12 @@ _IMAGE_FIELDS = [
     'gallery', 'pdf_url',
 ]
 
+# Image fields that can be synced from DB when seed value is empty
+_SYNCABLE_IMAGE_FIELDS = [
+    'image', 'banner_image', 'dimension_image', 'beam_angle_image',
+    'ordering_image',
+]
+
 
 def _find_seed_item(items, slug):
     """Find an item in seed list by slug, return (index, item) or (None, None)."""
@@ -39,12 +47,49 @@ def _find_seed_item(items, slug):
     return None, None
 
 
+def _resolve_static_path(db_value, slug):
+    """Resolve a DB upload path to the correct static path.
+    
+    DB stores upload paths like 'products/dimensions/fl1m-3d-view.webp'
+    but the seed needs curated paths like 'images/products/fl1m/fl1m-3d-view.webp'.
+    """
+    if not db_value or not slug:
+        return db_value
+    db_value = db_value.replace('\\', '/')
+    filename = db_value.split('/')[-1]
+    candidates = [
+        f'images/products/{slug}/{filename}',
+        f'images/products/{filename}',
+        f'images/{db_value}',
+    ]
+    for candidate in candidates:
+        if finders.find(candidate):
+            return candidate
+        static_root = str(settings.STATIC_ROOT)
+        full = os.path.join(static_root, candidate)
+        if os.path.isfile(full):
+            return candidate
+        for d in getattr(settings, 'STATICFILES_DIRS', []):
+            full = os.path.join(str(d), candidate)
+            if os.path.isfile(full):
+                return candidate
+    return db_value
+
+
 def _merge_product(db_product, seed_item):
     """Merge DB text fields into existing seed product item."""
     for field in _PRODUCT_TEXT_FIELDS:
         db_val = getattr(db_product, field, None)
         if db_val is not None:
             seed_item[field] = db_val
+    # For image fields, resolve DB upload paths to curated static paths
+    for field in _SYNCABLE_IMAGE_FIELDS:
+        current = seed_item.get(field, '')
+        if not current or not current.startswith('images/'):
+            db_field = getattr(db_product, field, None)
+            if db_field and getattr(db_field, 'name', ''):
+                resolved = _resolve_static_path(db_field.name, db_product.slug)
+                seed_item[field] = resolved
 
 
 def _merge_project(db_project, seed_item):
@@ -103,6 +148,7 @@ def sync_seed_data():
                     'banner_image': product.banner_image.name if product.banner_image else '',
                     'dimension_image': product.dimension_image.name if product.dimension_image else '',
                     'beam_angle_image': product.beam_angle_image.name if product.beam_angle_image else '',
+                    'ordering_image': product.ordering_image.name if product.ordering_image else '',
                     'order': product.order,
                     'parent_slug': product.parent.slug if product.parent else '',
                     'translations': product.translations if isinstance(product.translations, dict) else {},
