@@ -633,6 +633,16 @@ def _product_category_filter(active_category):
     return _SIDEBAR_CAT_TO_PRODUCT_CAT.get(active_category, [active_category])
 
 
+_PRODUCTS_WHITELIST = {
+    'm-series',
+    'rt410-series',
+    'vsp-xxxxw-9m-yp',
+    'rt590fl-s',
+    'rt400-series',
+    'rt600sl-t',
+}
+
+
 def _get_products_from_db(lang, active_category='', active_series=''):
     """Try loading products from DB. Returns None on failure."""
     try:
@@ -641,6 +651,8 @@ def _get_products_from_db(lang, active_category='', active_series=''):
             products_list = products_list.filter(category__in=_product_category_filter(active_category))
         if active_series:
             products_list = products_list.filter(slug=active_series)
+        else:
+            products_list = products_list.filter(slug__in=_PRODUCTS_WHITELIST)
         products_list = products_list.order_by('order')
         result = []
         for p in products_list:
@@ -659,6 +671,8 @@ def _get_products_from_json(lang, active_category='', active_series=''):
     result = []
     for item in items:
         if item.get('parent_slug'):
+            continue
+        if not active_series and item.get('slug') not in _PRODUCTS_WHITELIST:
             continue
         if active_category and item.get('category') not in _product_category_filter(active_category):
             continue

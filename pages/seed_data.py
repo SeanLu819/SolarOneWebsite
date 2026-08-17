@@ -18,10 +18,11 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/m-series/rt200-m.webp",
-      "banner_image": "images/products/m-series/m-series-bar-1.webp",
+      "image": "products/rt200-m.webp",
+      "banner_image": "products/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
+      "ordering_image": "products/ordering/sample-number.webp",
       "order": 1,
       "parent_slug": "",
       "translations": {
@@ -51,12 +52,7 @@ SEED_DATA = {
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [
-        "products/gallery/m-series-01.webp",
-        "products/gallery/m-series-02.webp",
-        "products/gallery/m-series-03.webp",
-        "products/gallery/m-series-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -67,10 +63,7 @@ SEED_DATA = {
           "value": "125lm/W"
         }
       ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": "",
-      "ordering_image": "images/products/ordering/sample-number.webp"
+      "energy_data": []
     },
     {
       "pk": 2,
@@ -83,10 +76,11 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
-      "image": "images/products/rt410-series/floodlight.webp",
-      "banner_image": "images/products/rt410-series/rt410-bar-1.webp",
-      "dimension_image": "images/products/rt410-series/rt410-3d-view.webp",
-      "beam_angle_image": "images/products/rt410-series/beamangle183050100.webp",
+      "image": "products/floodlight.webp",
+      "banner_image": "products/rt410-bar-1.webp",
+      "dimension_image": "products/dimensions/rt410-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle183050100.webp",
+      "ordering_image": "",
       "order": 2,
       "parent_slug": "",
       "translations": {
@@ -116,12 +110,7 @@ SEED_DATA = {
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [
-        "products/gallery/rt410fl-s-01.webp",
-        "products/gallery/rt410fl-s-02.webp",
-        "products/gallery/rt410fl-s-03.webp",
-        "products/gallery/rt410fl-s-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -209,159 +198,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "RT410FL",
-        "260W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "30=30°\r\n50=50°\r\n100=100°\r\n8040=80°X 40°\r\n11060=110°X 60°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "RT410FL-260W-XXK-S"
-    },
-    {
-      "pk": 11,
-      "name": "VSP-XXXXW-9M-YP",
-      "slug": "vsp-xxxxw-9m-yp",
-      "category": "SPORTS_LIGHTING",
-      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "images/products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
-      "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "images/products/vsp-xxxxw-9m-yp/beamangle-12183050_3YkmJS7.webp",
-      "order": 3,
-      "parent_slug": "",
-      "translations": {
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "es": {
-          "category": "Sistema de Iluminación Deportiva",
-          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "ru": {
-          "category": "Система спортивного освещения",
-          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-9M-YP"
-        }
-      },
-      "gallery": [
-        "products/gallery/VSP9M-01.webp",
-        "products/gallery/VSP9M-02.webp",
-        "products/gallery/VSP9M-03.webp",
-        "products/gallery/VSP9M-04.webp"
-      ],
-      "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
-    },
-    {
-      "pk": 13,
-      "name": "RT590FL-S",
-      "slug": "rt590fl-s",
-      "category": "FLOODLIGHT",
-      "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "images/products/rt590fl-s/rt590_eRixs78.webp",
-      "banner_image": "images/products/rt590fl-s/vsp-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "",
-      "order": 4,
-      "parent_slug": "",
-      "translations": {},
-      "gallery": [],
-      "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
-    },
-    {
-      "pk": 4,
-      "name": "HB Series",
-      "slug": "rt400-series",
-      "category": "HIGHBAY_LOWBAY",
-      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
-      "power": "100~300W",
-      "efficacy": "120lm/W",
-      "output": "",
-      "beam_angle": "",
-      "protection": "IP66",
-      "image": "images/products/rt400-series/HB.webp",
-      "banner_image": "",
-      "dimension_image": "",
-      "beam_angle_image": "",
-      "order": 5,
-      "parent_slug": "",
-      "translations": {},
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "100~300W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "120lm/W"
-        },
-        {
-          "label": "Protection",
-          "value": "IP66"
-        }
-      ],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
-    },
-    {
-      "pk": 14,
-      "name": "RT600SL-T",
-      "slug": "rt600sl-t",
-      "category": "ROADWAY",
-      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "images/products/rt600sl-t/RT600SL-T_yqv89jW.webp",
-      "banner_image": "images/products/rt600sl-t/fl1m-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "",
-      "order": 6,
-      "parent_slug": "",
-      "translations": {},
-      "gallery": [],
-      "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      ]
     },
     {
       "pk": 5,
@@ -374,10 +211,11 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/RT600SL-T.webp",
-      "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
-      "dimension_image": "images/products/fl1m/fl1m-3d-view.webp",
-      "beam_angle_image": "images/products/fl1m/beamangle-12183050_65Fg8YW.webp",
+      "image": "products/RT600SL-T.webp",
+      "banner_image": "products/fl1m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl1m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_65Fg8YW.webp",
+      "ordering_image": "",
       "order": 11,
       "parent_slug": "m-series",
       "translations": {
@@ -387,12 +225,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl1m-01.webp",
-        "products/gallery/fl1m-02.webp",
-        "products/gallery/fl1m-03.webp",
-        "products/gallery/fl1m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -480,19 +313,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL1M (Light With 1 Module)",
-        "80W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL1M-80W-30K-S"
+      ]
     },
     {
       "pk": 6,
@@ -505,10 +326,11 @@ SEED_DATA = {
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m-01.webp",
-      "banner_image": "images/products/fl4m/fl4m-bar-1.webp",
-      "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
-      "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
+      "image": "products/fl4m-01.webp",
+      "banner_image": "products/fl4m-bar-1.webp",
+      "dimension_image": "products/fl4m-3d-view.webp",
+      "beam_angle_image": "products/beamangle-12183050.webp",
+      "ordering_image": "",
       "order": 12,
       "parent_slug": "m-series",
       "translations": {
@@ -528,12 +350,7 @@ SEED_DATA = {
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [
-        "products/gallery/fl4m-01.webp",
-        "products/gallery/fl4m-02.webp",
-        "products/gallery/fl4m-03.webp",
-        "products/gallery/fl4m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -629,19 +446,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL4M\r\n(Light With 4 Module)",
-        "320W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage\r\n(110-277VAC)\r\nH=High Voltage\r\n(347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1. 0-10V\r\n2. DMX\r\n3. Dali\r\n4. Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL4M-320W-30K-S"
+      ]
     },
     {
       "pk": 7,
@@ -654,10 +459,11 @@ SEED_DATA = {
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m-01.webp",
-      "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
-      "dimension_image": "images/products/fl6m/fl6m-3d-view.webp",
-      "beam_angle_image": "images/products/fl6m/beamangle-12183050_KcK84ZP.webp",
+      "image": "products/fl6m-01.webp",
+      "banner_image": "products/fl6m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl6m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_KcK84ZP.webp",
+      "ordering_image": "",
       "order": 13,
       "parent_slug": "m-series",
       "translations": {
@@ -667,12 +473,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl6m-01.webp",
-        "products/gallery/fl6m-02.webp",
-        "products/gallery/fl6m-03.webp",
-        "products/gallery/fl6m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -760,19 +561,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL6M (Light With 6 Module)",
-        "480W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL6M-480W-30K-S"
+      ]
     },
     {
       "pk": 8,
@@ -785,10 +574,11 @@ SEED_DATA = {
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m-01.webp",
-      "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
-      "dimension_image": "images/products/fl9m/fl9m-3d-view_DbaAklf.webp",
-      "beam_angle_image": "images/products/fl9m/beamangle-12183050_4BJ8mot.webp",
+      "image": "products/fl9m-01.webp",
+      "banner_image": "products/fl9m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_4BJ8mot.webp",
+      "ordering_image": "",
       "order": 14,
       "parent_slug": "m-series",
       "translations": {
@@ -798,12 +588,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl9m-01.webp",
-        "products/gallery/fl9m-02.webp",
-        "products/gallery/fl9m-03.webp",
-        "products/gallery/fl9m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -891,19 +676,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL9M (Light With 9 Module)",
-        "720W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL9M-720W-XXK-S"
+      ]
     },
     {
       "pk": 9,
@@ -916,10 +689,11 @@ SEED_DATA = {
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m-01.webp",
-      "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
-      "dimension_image": "images/products/fl12m/fl12m-3d-view.webp",
-      "beam_angle_image": "images/products/fl12m/beamangle-12183050_RlTn9zd.webp",
+      "image": "products/fl12m-01.webp",
+      "banner_image": "products/fl12m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl12m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_RlTn9zd.webp",
+      "ordering_image": "",
       "order": 15,
       "parent_slug": "m-series",
       "translations": {
@@ -929,12 +703,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl12m-01.webp",
-        "products/gallery/fl12m-02.webp",
-        "products/gallery/fl12m-03.webp",
-        "products/gallery/fl12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -1022,74 +791,7 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL12M (Light With 12 Module)",
-        "1000W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL12M-1000W-YYK-H-30"
-    },
-    {
-      "pk": 12,
-      "name": "VSP-XXXXW-12M-YP",
-      "slug": "vsp-xxxxw-12m-yp",
-      "category": "SPORTS_LIGHTING",
-      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "images/products/vsp-xxxxw-12m-yp/rt590.webp",
-      "banner_image": "images/products/vsp-xxxxw-12m-yp/vsp-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "images/products/vsp-xxxxw-12m-yp/beamangle-12183050_H3Gim4J.webp",
-      "order": 15,
-      "parent_slug": "vsp-xxxxw-9m-yp",
-      "translations": {
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "es": {
-          "category": "Sistema de Iluminación Deportiva",
-          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "ru": {
-          "category": "Система спортивного освещения",
-          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-12M-YP"
-        }
-      },
-      "gallery": [
-        "products/gallery/vsp12m-01.webp",
-        "products/gallery/vsp12m-02.webp",
-        "products/gallery/vsp12m-03.webp",
-        "products/gallery/vsp12m-04.webp"
-      ],
-      "specs": [],
-      "energy_data": [],
-      "ordering_info": [],
-      "model_number": ""
+      ]
     },
     {
       "pk": 10,
@@ -1102,10 +804,11 @@ SEED_DATA = {
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m-01.webp",
-      "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
-      "dimension_image": "images/products/fl16m/fl16m-3d-view.webp",
-      "beam_angle_image": "images/products/fl16m/beamangle-12183050_vxDZHMV.webp",
+      "image": "products/fl16m-01.webp",
+      "banner_image": "products/fl16m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl16m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_vxDZHMV.webp",
+      "ordering_image": "",
       "order": 16,
       "parent_slug": "m-series",
       "translations": {
@@ -1115,12 +818,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl16m-01.webp",
-        "products/gallery/fl16m-02.webp",
-        "products/gallery/fl16m-03.webp",
-        "products/gallery/fl16m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -1208,19 +906,623 @@ SEED_DATA = {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ]
+    },
+    {
+      "pk": 11,
+      "name": "VSP-XXXXW-9M-YP",
+      "slug": "vsp-xxxxw-9m-yp",
+      "category": "SPORTS_LIGHTING",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/vsp12m-01.webp",
+      "banner_image": "products/vsp/vsp-bar-1.webp",
+      "dimension_image": "products/dimensions/ac-en-3d-view.png",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_3YkmJS7.webp",
+      "ordering_image": "",
+      "order": 21,
+      "parent_slug": "",
+      "translations": {
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "es": {
+          "category": "Sistema de Iluminación Deportiva",
+          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "ru": {
+          "category": "Система спортивного освещения",
+          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
+          "name": "VSP-XXXXW-9M-YP"
+        }
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "VSP-XXXXW-9M-YP (AC Enclosure))"
+        },
+        {
+          "label": "System Wattage",
+          "value": "4200W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.7\" x 14.0\" x 23.6\" / 400 x 355 x 600 mm"
+        },
+        {
+          "label": "Material",
+          "value": "Stainless Steel 304"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 12,
+      "name": "VSP-XXXXW-12M-YP",
+      "slug": "vsp-xxxxw-12m-yp",
+      "category": "SPORTS_LIGHTING",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt590.webp",
+      "banner_image": "products/vsp/vsp-bar-1.webp",
+      "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_H3Gim4J.webp",
+      "ordering_image": "",
+      "order": 22,
+      "parent_slug": "",
+      "translations": {
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "es": {
+          "category": "Sistema de Iluminación Deportiva",
+          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "ru": {
+          "category": "Система спортивного освещения",
+          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
+          "name": "VSP-XXXXW-12M-YP"
+        }
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "VSP-XXXXW-12M-YP (LED Driver Enclosure)"
+        },
+        {
+          "label": "System Wattage",
+          "value": "4200W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.7\" x 14.0\" x 39.4\" / 400 x 355 x 1000 mm"
+        },
+        {
+          "label": "Material",
+          "value": "Stainless Steel 304"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 13,
+      "name": "RT590FL-S",
+      "slug": "rt590fl-s",
+      "category": "FLOODLIGHT",
+      "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt590_eRixs78.webp",
+      "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
+      "dimension_image": "products/dimensions/tr590-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-3050120_cbdtaqu.webp",
+      "ordering_image": "",
+      "order": 31,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT590FL-160W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">20,800 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "160W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "23.2\"  x 11.9\" x  9.8\" / 589 x 301 x 248.5mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 28.2 lbs) 12.8 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 16,
+      "name": "RT390FL-S",
+      "slug": "rt390fl",
+      "category": "FLOODLIGHT",
+      "description": "RT390FL-S",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt390-01.webp",
+      "banner_image": "products/banners/rt390-bar-01.webp",
+      "dimension_image": "products/dimensions/rt390-3d-view.webp",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "order": 32,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT390FL-S"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">10,400lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "80W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "369 x 294 x 336 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "(18.7 lbs) 8.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 4,
+      "name": "HB Series",
+      "slug": "rt400-series",
+      "category": "HIGHBAY_LOWBAY",
+      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
+      "power": "100~300W",
+      "efficacy": "120lm/W",
+      "output": "",
+      "beam_angle": "",
+      "protection": "IP66",
+      "image": "products/HB.webp",
+      "banner_image": "",
+      "dimension_image": "",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "order": 41,
+      "parent_slug": "",
+      "translations": {},
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "100~300W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "120lm/W"
+        },
+        {
+          "label": "Protection",
+          "value": "IP66"
+        }
       ],
-      "ordering_info": [
-        "FL16M (Light With 16 Module)",
-        "1360W",
-        "30=3000K\r\n40=4000K\r\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
-        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
-        "GRY=Grey\r\nBLK=Black",
-        "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
-        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
-        "W = With Fixture\r\nS = Separated from Fixture"
-      ],
-      "model_number": "FL12M-1360W-30K-H"
+      "energy_data": []
+    },
+    {
+      "pk": 14,
+      "name": "RT600SL-T",
+      "slug": "rt600sl-t",
+      "category": "ROADWAY",
+      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/RT600SL-T_yqv89jW.webp",
+      "banner_image": "products/banners/rt600sl-t-bar-1.webp",
+      "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
+      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140.webp",
+      "ordering_image": "",
+      "order": 51,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT600SL-T-120W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">14,400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "120W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "23.5\"  x 13.8\" x  3.9\" / 596 x 350 x 100mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 27.6 lbs) 12.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 15,
+      "name": "RT820SL-T",
+      "slug": "rt820sl-t",
+      "category": "ROADWAY",
+      "description": "1111",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "",
+      "banner_image": "products/banners/rt820sl-t-bar-1.webp",
+      "dimension_image": "",
+      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
+      "ordering_image": "",
+      "order": 52,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT820SL-T"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">10,400lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "240W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "32.3\" x 13.8\" x 3.9\" / 821 × 350 × 100 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 40.3 lbs) 18.3 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
     }
   ],
   "projects": [
@@ -1233,7 +1535,7 @@ SEED_DATA = {
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
-      "image": "images/projects/football-field-led-retrofit/bmhs-football-field-01.webp",
+      "image": "images/processed/footballfield.webp",
       "order": 1,
       "translations": {
         "fr": {
@@ -1267,14 +1569,8 @@ SEED_DATA = {
           "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
       },
-      "gallery": [
-        "images/projects/football-field-led-retrofit/bmhs-football-field-01.webp",
-        "images/projects/football-field-led-retrofit/bmhs-football-field-02.webp",
-        "images/projects/football-field-led-retrofit/bmhs-football-field-03.webp",
-        "images/projects/football-field-led-retrofit/bmhs-football-field-04.webp",
-        "images/projects/football-field-led-retrofit/bmhs-football-field-05_D1i9pFd.webp"
-      ],
-      "pdf_url": "files/football_field_led_retrofit.pdf"
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 4,
@@ -1320,7 +1616,7 @@ SEED_DATA = {
         }
       },
       "gallery": [],
-      "pdf_url": "files/yuanshen_sports_centre_stadium.pdf"
+      "pdf_url": ""
     },
     {
       "pk": 2,
@@ -1377,7 +1673,7 @@ SEED_DATA = {
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
       "results": "",
-      "image": "images/projects/msu-tennis-01.webp",
+      "image": "projects/msu-tennis-01.webp",
       "order": 4,
       "translations": {
         "fr": {
@@ -1407,7 +1703,7 @@ SEED_DATA = {
         }
       },
       "gallery": [],
-      "pdf_url": "files/morgan_state_university_tennis_courts.pdf"
+      "pdf_url": ""
     },
     {
       "pk": 7,
@@ -1418,7 +1714,7 @@ SEED_DATA = {
       "sport_type": "SKI_AREA",
       "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
       "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/nanshan-ski-village/nanshan-ski-01.webp",
+      "image": "projects/nanshan-ski-01.webp",
       "order": 5,
       "translations": {
         "fr": {
@@ -1448,7 +1744,7 @@ SEED_DATA = {
         }
       },
       "gallery": [],
-      "pdf_url": "files/nanshan_ski_village.pdf"
+      "pdf_url": ""
     },
     {
       "pk": 3,
@@ -1505,7 +1801,7 @@ SEED_DATA = {
       "sport_type": "MULTI_SPORT",
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
-      "image": "images/projects/Narbonne-basketball-04.webp",
+      "image": "projects/Narbonne-basketball-04.webp",
       "order": 7,
       "translations": {},
       "gallery": [],
@@ -1520,7 +1816,7 @@ SEED_DATA = {
       "sport_type": "AIRPORT",
       "description": "【Customer Profile】\r\nBeijing Capital International Airport is the 2nd largest airport in the world and is the main international airport serving Beijing. \r\n【Scope of Work】 \r\nSolarOne was contacted to create a lighting solution for Beijing's Capital International Airport apron, terminals and parking lots. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. \r\nAir travel requires lots of travel right here on the ground. SolarOne LED lighting solutions provide bright, even illumination along airport access roads, parking lots, walkways, corridors and concourses, slashing energy consumption and maintenance costs by double digits. Our Vision Smart technology reduces light spillover while enhancing operation safety.\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily used to replace the existing 1000 watt metal HID fixture with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the ground much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
       "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/beijing-capital-international-airport/bcia-airport-01.webp",
+      "image": "projects/bcia-airport-01.webp",
       "order": 10,
       "translations": {
         "fr": {
@@ -1555,7 +1851,28 @@ SEED_DATA = {
         }
       },
       "gallery": [],
-      "pdf_url": "files/beijing_capital_international_airport.pdf"
+      "pdf_url": ""
+    },
+    {
+      "pk": 9,
+      "title": "Olympic Sports Center Gymnasium (Beijing)",
+      "location": "Beijing, China",
+      "slug": "olympic-sports-center-gymnasium-beijing",
+      "venue_type": "INDOOR",
+      "sport_type": "BASKETBALL",
+      "description": "Olympic Sports Center Gymnasium (Beijing)",
+      "results": "",
+      "image": "projects/oscg-01.webp",
+      "order": 45,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "pdf_url": ""
     }
   ],
   "siteconfig": {}

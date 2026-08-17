@@ -1,6 +1,9 @@
 import json
 import os
+import re
 import shutil
+import subprocess
+import sys
 
 from django import forms
 from django.contrib import admin
@@ -65,7 +68,7 @@ class SpecsWidget(forms.Widget):
             value = data.get(f'{name}_{i}_value', '').strip()
             if label or value:
                 specs.append({'label': label, 'value': value})
-        return specs
+        return json.dumps(specs)
 
 
 ENERGY_DATA_FIELDS = [
@@ -135,7 +138,7 @@ class EnergyDataWidget(forms.Widget):
             value = data.get(f'{name}_{i}_value', '').strip()
             if value:  # Only include rows that have a value filled in
                 specs.append({'label': label, 'value': value})
-        return specs
+        return json.dumps(specs)
 
 
 ORDERING_COLUMNS = [
@@ -217,7 +220,7 @@ class OrderingInfoWidget(forms.Widget):
             values.append(val)
         while values and not values[-1]:
             values.pop()
-        return values
+        return json.dumps(values)
 
 
 class TranslationsWidget(forms.Widget):
@@ -289,7 +292,7 @@ class TranslationsWidget(forms.Widget):
             except Exception:
                 # store raw string fallback under 'description' if it's plain text
                 translations[code] = {'description': raw}
-        return translations
+        return _json.dumps(translations)
 
 
 class ProductAdminForm(forms.ModelForm):
@@ -363,8 +366,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': ('description', 'translations')
         }),
         ('Images', {
-            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用\u201cDimension image\u201d字段，配光曲线请使用\u201cBeam angle image\u201d字段，不要在轮播图中重复上传。'
+            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image', 'ordering_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用\u201cDimension image\u201d字段，配光曲线请使用\u201cBeam angle image\u201d字段，不要在轮播图中重复上传。Ordering image 为订购信息示意图，仅在 M series 页面显示。'
         }),
         ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
             'fields': ('specs',),
@@ -387,6 +390,103 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
         js = ('admin/js/auto_translate.js',)
+
+    def _sync_product_images(self, obj):
+        slug = obj.slug
+        media_root = settings.MEDIA_ROOT
+
+        standard_fields = ['image', 'banner_image', 'dimension_image', 'beam_angle_image']
+        seed_paths = {}
+
+        for field_name in standard_fields:
+            field = getattr(obj, field_name, None)
+            if field and getattr(field, 'name', ''):
+                src = os.path.join(media_root, str(field))
+                if os.path.exists(src):
+                    filename = os.path.basename(src)
+                    static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
+                    os.makedirs(static_dir, exist_ok=True)
+                    dst = os.path.join(static_dir, filename)
+                    shutil.copy2(src, dst)
+                    seed_paths[field_name] = f'images/products/{slug}/{filename}'
+
+        ordering_field = getattr(obj, 'ordering_image', None)
+        if ordering_field and getattr(ordering_field, 'name', ''):
+            src = os.path.join(media_root, str(ordering_field))
+            if os.path.exists(src):
+                filename = os.path.basename(src)
+                static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', 'ordering')
+                os.makedirs(static_dir, exist_ok=True)
+                dst = os.path.join(static_dir, filename)
+                shutil.copy2(src, dst)
+                seed_paths['ordering_image'] = f'images/products/ordering/{filename}'
+
+        gallery_paths = []
+        gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
+        for img in obj.images.all():
+            if img.image and getattr(img.image, 'name', ''):
+                src = os.path.join(media_root, str(img.image))
+                if os.path.exists(src):
+                    os.makedirs(gallery_dir, exist_ok=True)
+                    filename = os.path.basename(src)
+                    dst = os.path.join(gallery_dir, filename)
+                    shutil.copy2(src, dst)
+                    gallery_paths.append(f'images/products/{slug}/{filename}')
+
+        seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
+        seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
+
+        try:
+            with open(seed_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            for p in data.get('products', []):
+                if p.get('slug') == slug:
+                    for fn, path in seed_paths.items():
+                        p[fn] = path
+                    p['gallery'] = gallery_paths
+                    break
+            with open(seed_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+                f.write('\n')
+        except Exception:
+            pass
+
+        try:
+            with open(seed_py_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            idx = content.find(f'"slug": "{slug}"')
+            if idx >= 0:
+                for fn, path in seed_paths.items():
+                    pattern = re.compile(f'"{fn}":\\s*"([^"]*)"')
+                    match = pattern.search(content[idx:])
+                    if match:
+                        m_start = match.start() + idx
+                        val_start = content.find('"', m_start) + 1
+                        val_end = content.find('"', val_start)
+                        content = content[:val_start] + path + content[val_end:]
+                gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', content[idx:])
+                if gal_match:
+                    g_start = gal_match.start() + idx
+                    g_end = gal_match.end()
+                    content = content[:g_start] + json.dumps(gallery_paths) + content[g_end:]
+                with open(seed_py_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+        except Exception:
+            pass
+
+        try:
+            subprocess.run(
+                [sys.executable, 'manage.py', 'collectstatic', '--noinput'],
+                cwd=settings.BASE_DIR,
+                capture_output=True,
+                timeout=120,
+            )
+        except Exception:
+            pass
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        self._sync_product_images(obj)
 
 
 class ProjectImageInline(admin.TabularInline):
@@ -562,6 +662,11 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         if obj.pdf_static:
             self._update_seed_pdf_url(obj.slug, obj.pdf_static)
         self._sync_project_images(obj)
+
+    def save_formset(self, request, form, formset, change):
+        super().save_formset(request, form, formset, change)
+        if formset.model == ProjectImage:
+            self._sync_project_images(form.instance)
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
