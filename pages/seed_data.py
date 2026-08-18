@@ -52,7 +52,12 @@ SEED_DATA = {
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/m-series-01.webp",
+        "products/gallery/m-series-02.webp",
+        "products/gallery/m-series-03.webp",
+        "products/gallery/m-series-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -110,7 +115,12 @@ SEED_DATA = {
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt410fl-s-01.webp",
+        "products/gallery/rt410fl-s-02.webp",
+        "products/gallery/rt410fl-s-03.webp",
+        "products/gallery/rt410fl-s-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -1060,7 +1070,12 @@ SEED_DATA = {
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/vsp12m-01.webp",
+        "products/gallery/vsp12m-02.webp",
+        "products/gallery/vsp12m-03.webp",
+        "products/gallery/vsp12m-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1142,7 +1157,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt590fl-s-01.webp",
+        "products/gallery/rt590fl-s-02.webp",
+        "products/gallery/rt590fl-s-03.webp",
+        "products/gallery/rt590fl-s-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1366,16 +1386,15 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/RT600SL-T.webp",
+        "products/gallery/rt600sl-02.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
           "value": "RT600SL-T-120W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">14,400 lm"
         },
         {
           "label": "System Wattage",
