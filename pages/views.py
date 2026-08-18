@@ -209,6 +209,46 @@ def _find_static(rel_path):
     return False
 
 
+def _dict_product_image_url(path, slug):
+    """Return static URL for a _DictProduct image field, trying multiple path combinations."""
+    if not path:
+        return ''
+    if isinstance(path, str) and path.startswith(('http://', 'https://')):
+        return path
+    if isinstance(path, str) and path.startswith(('/static/', '/media/')):
+        return path
+    
+    path = str(path).replace('\\', '/')
+    filename = Path(path).name
+    stem = Path(filename).stem
+    
+    candidates = []
+    # Already canonical path
+    if path.startswith('images/'):
+        candidates.append(path)
+    # Legacy products/xxx -> images/products/xxx
+    if path.startswith('products/'):
+        candidates.append(f'images/{path}')
+    # Try with slug: images/products/{slug}/{filename}
+    if slug and filename:
+        candidates.append(f'images/products/{slug}/{filename}')
+    # Try with slug and .webp extension
+    if slug and stem:
+        candidates.append(f'images/products/{slug}/{stem}.webp')
+    
+    seen = set()
+    for candidate in candidates:
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        if _find_static(candidate):
+            return static(candidate)
+    
+    # Fallback: still return static URL even if file not found
+    rel = _normalize_static_rel(path)
+    return static(rel)
+
+
 def _static_url(path):
     """Return static URL for a non-empty path. Accepts a wide variety of
     legacy or canonical paths and normalizes them to a Django static URL.
@@ -531,13 +571,14 @@ def _enrich_product(product, lang):
         ]
         product.parent_slug = product.parent.slug if product.parent else ''
     else:
-        product.image_url = _static_url(product.image)
-        product.banner_image_url = _static_url(product.banner_image)
-        product.dimension_image_url = _static_url(product.dimension_image)
-        product.beam_angle_image_url = _static_url(product.beam_angle_image)
-        product.ordering_image_url = _static_url(product.ordering_image)
+        slug = getattr(product, 'slug', '')
+        product.image_url = _dict_product_image_url(product.image, slug)
+        product.banner_image_url = _dict_product_image_url(product.banner_image, slug)
+        product.dimension_image_url = _dict_product_image_url(product.dimension_image, slug)
+        product.beam_angle_image_url = _dict_product_image_url(product.beam_angle_image, slug)
+        product.ordering_image_url = _dict_product_image_url(product.ordering_image, slug)
         product.gallery = [
-            {'src': _static_url(p), 'alt': f"{product.name_t} — view {i + 1}"}
+            {'src': _dict_product_image_url(p, slug), 'alt': f"{product.name_t} — view {i + 1}"}
             for i, p in enumerate(product.gallery_paths)
         ]
         if not product.parent_slug:

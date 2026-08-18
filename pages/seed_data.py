@@ -953,7 +953,12 @@ SEED_DATA = {
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/VSP9M-01.webp",
+        "products/VSP9M-02.webp",
+        "products/VSP9M-03.webp",
+        "products/VSP9M-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
