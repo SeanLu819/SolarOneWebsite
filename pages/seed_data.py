@@ -235,7 +235,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl1m-01.webp",
+        "products/gallery/fl1m-02.webp",
+        "products/gallery/fl1m-03.webp",
+        "products/gallery/fl1m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -360,7 +365,12 @@ SEED_DATA = {
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl4m-01.webp",
+        "products/gallery/fl4m-02.webp",
+        "products/gallery/fl4m-03.webp",
+        "products/gallery/fl4m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -483,7 +493,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl6m-01.webp",
+        "products/gallery/fl6m-02.webp",
+        "products/gallery/fl6m-03.webp",
+        "products/gallery/fl6m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -598,7 +613,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl9m-01.webp",
+        "products/gallery/fl9m-02.webp",
+        "products/gallery/fl9m-03.webp",
+        "products/gallery/fl9m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -713,7 +733,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl12m-01.webp",
+        "products/gallery/fl12m-02.webp",
+        "products/gallery/fl12m-03.webp",
+        "products/gallery/fl12m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -828,7 +853,12 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl16m-01.webp",
+        "products/gallery/fl16m-02.webp",
+        "products/gallery/fl16m-03.webp",
+        "products/gallery/fl16m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
