@@ -315,6 +315,11 @@ class CacheClearMixin:
     def _clear_cache(self):
         cache.delete('site_config')
         cache.delete('seed_data_json')
+        try:
+            from pages.views import invalidate_enrichment_cache
+            invalidate_enrichment_cache()
+        except Exception:
+            pass
 
     def _sync_seed_files(self):
         """Sync database data to seed_data.py and seed_data.json for Vercel deployment."""

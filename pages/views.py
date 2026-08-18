@@ -152,6 +152,82 @@ def _list_static_dir(rel_dir):
 
 
 # ============================================================================
+# Enrichment result cache (eliminates repeated _enrich_product/_enrich_project calls)
+# ============================================================================
+
+_enriched_products_cache = {}
+_enriched_projects_cache = {}
+_enriched_product_detail_cache = {}
+_enriched_project_detail_cache = {}
+
+
+def _cache_key_products(lang, active_category='', active_series=''):
+    return f'{lang}|{active_category}|{active_series}'
+
+
+def _cache_key_projects(lang, active_venue_type='', active_sport_type=''):
+    return f'{lang}|{active_venue_type}|{active_sport_type}'
+
+
+def _get_cached_products(lang, active_category='', active_series=''):
+    """Get enriched products from cache. Returns None if not cached."""
+    key = _cache_key_products(lang, active_category, active_series)
+    return _enriched_products_cache.get(key)
+
+
+def _set_cached_products(products, lang, active_category='', active_series=''):
+    """Store enriched products in cache."""
+    key = _cache_key_products(lang, active_category, active_series)
+    _enriched_products_cache[key] = products
+
+
+def _get_cached_projects(lang, active_venue_type='', active_sport_type=''):
+    """Get enriched projects from cache. Returns None if not cached."""
+    key = _cache_key_projects(lang, active_venue_type, active_sport_type)
+    return _enriched_projects_cache.get(key)
+
+
+def _set_cached_projects(projects, lang, active_venue_type='', active_sport_type=''):
+    """Store enriched projects in cache."""
+    key = _cache_key_projects(lang, active_venue_type, active_sport_type)
+    _enriched_projects_cache[key] = projects
+
+
+def _get_cached_product_detail(slug, lang):
+    """Get enriched product detail from cache. Returns None if not cached."""
+    key = f'{slug}|{lang}'
+    return _enriched_product_detail_cache.get(key)
+
+
+def _set_cached_product_detail(product, slug, lang):
+    """Store enriched product detail in cache."""
+    key = f'{slug}|{lang}'
+    _enriched_product_detail_cache[key] = product
+
+
+def _get_cached_project_detail(slug, lang):
+    """Get enriched project detail from cache. Returns None if not cached."""
+    key = f'{slug}|{lang}'
+    return _enriched_project_detail_cache.get(key)
+
+
+def _set_cached_project_detail(project, slug, lang):
+    """Store enriched project detail in cache."""
+    key = f'{slug}|{lang}'
+    _enriched_project_detail_cache[key] = project
+
+
+def invalidate_enrichment_cache():
+    """Clear all enrichment caches. Call when seed data changes."""
+    global _enriched_products_cache, _enriched_projects_cache
+    global _enriched_product_detail_cache, _enriched_project_detail_cache
+    _enriched_products_cache = {}
+    _enriched_projects_cache = {}
+    _enriched_product_detail_cache = {}
+    _enriched_project_detail_cache = {}
+
+
+# ============================================================================
 # Lightweight wrappers that mimic the model interface for seed JSON fallback
 # ============================================================================
 
@@ -736,6 +812,9 @@ _PRODUCTS_WHITELIST = {
 
 def _get_products_from_db(lang, active_category='', active_series=''):
     """Try loading products from DB. Returns None on failure."""
+    cached = _get_cached_products(lang, active_category, active_series)
+    if cached is not None:
+        return cached
     try:
         products_list = Product.objects.filter(parent__isnull=True)
         if active_category:
@@ -749,6 +828,7 @@ def _get_products_from_db(lang, active_category='', active_series=''):
         for p in products_list:
             _enrich_product(p, lang)
             result.append(p)
+        _set_cached_products(result, lang, active_category, active_series)
         return result
     except Exception:
         logger.warning('DB products query failed, will fall back to seed JSON', exc_info=True)
@@ -757,6 +837,9 @@ def _get_products_from_db(lang, active_category='', active_series=''):
 
 def _get_products_from_json(lang, active_category='', active_series=''):
     """Load products from seed_data.json (fallback for Vercel)."""
+    cached = _get_cached_products(lang, active_category, active_series)
+    if cached is not None:
+        return cached
     data = _load_seed()
     items = data.get('products', [])
     result = []
@@ -773,6 +856,7 @@ def _get_products_from_json(lang, active_category='', active_series=''):
         _enrich_product(p, lang)
         result.append(p)
     result.sort(key=lambda p: getattr(p, 'order', 0) or 0)
+    _set_cached_products(result, lang, active_category, active_series)
     return result
 
 
@@ -782,9 +866,13 @@ def _get_products_from_json(lang, active_category='', active_series=''):
 
 def _get_product_detail_from_db(slug, lang):
     """Try loading a single product from DB. Returns None on failure."""
+    cached = _get_cached_product_detail(slug, lang)
+    if cached is not None:
+        return cached
     try:
         product = Product.objects.select_related('parent').prefetch_related('images').get(slug=slug)
         _enrich_product(product, lang)
+        _set_cached_product_detail(product, slug, lang)
         return product
     except Product.DoesNotExist:
         return None
@@ -795,11 +883,15 @@ def _get_product_detail_from_db(slug, lang):
 
 def _get_product_detail_from_json(slug, lang):
     """Load a single product from seed_data.json (fallback for Vercel)."""
+    cached = _get_cached_product_detail(slug, lang)
+    if cached is not None:
+        return cached
     data = _load_seed()
     for item in data.get('products', []):
         if item.get('slug') == slug:
             p = _DictProduct(item)
             _enrich_product(p, lang)
+            _set_cached_product_detail(p, slug, lang)
             return p
     return None
 
@@ -810,6 +902,9 @@ def _get_product_detail_from_json(slug, lang):
 
 def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
     """Try loading projects from DB. Returns None on failure."""
+    cached = _get_cached_projects(lang, active_venue_type, active_sport_type)
+    if cached is not None:
+        return cached
     try:
         projects_list = Project.objects.all()
         if active_venue_type:
@@ -820,6 +915,7 @@ def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
         for proj in projects_list:
             _enrich_project(proj, lang)
             result.append(proj)
+        _set_cached_projects(result, lang, active_venue_type, active_sport_type)
         return result
     except Exception:
         logger.warning('DB projects query failed, will fall back to seed JSON', exc_info=True)
@@ -828,6 +924,9 @@ def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
 
 def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
     """Load projects from seed_data.json (fallback for Vercel)."""
+    cached = _get_cached_projects(lang, active_venue_type, active_sport_type)
+    if cached is not None:
+        return cached
     data = _load_seed()
     items = data.get('projects', [])
     result = []
@@ -839,14 +938,19 @@ def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
         proj = _DictProject(item)
         _enrich_project(proj, lang)
         result.append(proj)
+    _set_cached_projects(result, lang, active_venue_type, active_sport_type)
     return result
 
 
 def _get_project_detail_from_db(slug, lang):
     """Try loading a single project from DB. Returns None on failure."""
+    cached = _get_cached_project_detail(slug, lang)
+    if cached is not None:
+        return cached
     try:
         project = Project.objects.prefetch_related('images').get(slug=slug)
         _enrich_project(project, lang)
+        _set_cached_project_detail(project, slug, lang)
         return project
     except Project.DoesNotExist:
         return None
@@ -857,11 +961,15 @@ def _get_project_detail_from_db(slug, lang):
 
 def _get_project_detail_from_json(slug, lang):
     """Load a single project from seed_data.json (fallback for Vercel)."""
+    cached = _get_cached_project_detail(slug, lang)
+    if cached is not None:
+        return cached
     data = _load_seed()
     for item in data.get('projects', []):
         if item.get('slug') == slug:
             proj = _DictProject(item)
             _enrich_project(proj, lang)
+            _set_cached_project_detail(proj, slug, lang)
             return proj
     return None
 
