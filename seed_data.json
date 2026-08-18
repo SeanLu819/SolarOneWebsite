@@ -45,7 +45,12 @@
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/m-series-01.webp",
+        "products/gallery/m-series-02.webp",
+        "products/gallery/m-series-03.webp",
+        "products/gallery/m-series-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -56,7 +61,18 @@
           "value": "125lm/W"
         }
       ],
-      "energy_data": []
+      "energy_data": [],
+      "ordering_info": [
+        "FL1M (Light With 1 Module)",
+        "80~1280W+",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
+      ]
     },
     {
       "pk": 2,
@@ -103,7 +119,12 @@
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt410fl-s-01.webp",
+        "products/gallery/rt410fl-s-02.webp",
+        "products/gallery/rt410fl-s-03.webp",
+        "products/gallery/rt410fl-s-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -191,6 +212,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "RT410 Series",
+        "260W/400W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -218,7 +250,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl1m-01.webp",
+        "products/gallery/fl1m-02.webp",
+        "products/gallery/fl1m-03.webp",
+        "products/gallery/fl1m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -306,6 +343,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL1M (Light With 1 Module)",
+        "80W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -343,7 +391,12 @@
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl4m-01.webp",
+        "products/gallery/fl4m-02.webp",
+        "products/gallery/fl4m-03.webp",
+        "products/gallery/fl4m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -439,6 +492,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL4M (Light With 4 Modules)",
+        "320W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -466,7 +530,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl6m-01.webp",
+        "products/gallery/fl6m-02.webp",
+        "products/gallery/fl6m-03.webp",
+        "products/gallery/fl6m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -554,6 +623,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL6M (Light With 6 Modules)",
+        "480W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -581,7 +661,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl9m-01.webp",
+        "products/gallery/fl9m-02.webp",
+        "products/gallery/fl9m-03.webp",
+        "products/gallery/fl9m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -669,6 +754,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL9M (Light With 9 Modules)",
+        "630W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -696,7 +792,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl12m-01.webp",
+        "products/gallery/fl12m-02.webp",
+        "products/gallery/fl12m-03.webp",
+        "products/gallery/fl12m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -784,6 +885,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL12M (Light With 12 Modules)",
+        "1000W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -811,7 +923,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl16m-01.webp",
+        "products/gallery/fl16m-02.webp",
+        "products/gallery/fl16m-03.webp",
+        "products/gallery/fl16m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -899,6 +1016,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "FL16M (Light With 16 Modules)",
+        "1280W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -946,7 +1074,12 @@
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/VSP9M-01.webp",
+        "products/gallery/VSP9M-02.webp",
+        "products/gallery/VSP9M-03.webp",
+        "products/gallery/VSP9M-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1001,6 +1134,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "VSP-XXXXW-9M-YP",
+        "900W/1200W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1048,7 +1192,12 @@
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/vsp12m-01.webp",
+        "products/gallery/vsp12m-02.webp",
+        "products/gallery/vsp12m-03.webp",
+        "products/gallery/vsp12m-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1103,6 +1252,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "VSP-XXXXW-12M-YP",
+        "1200W/1600W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1130,7 +1290,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt590fl-s-01.webp",
+        "products/gallery/rt590fl-s-02.webp",
+        "products/gallery/rt590fl-s-03.webp",
+        "products/gallery/rt590fl-s-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1197,6 +1362,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "RT590FL-S",
+        "160W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1354,7 +1530,10 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/RT600SL-T.webp",
+        "products/gallery/rt600sl-02.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1421,6 +1600,17 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
+      ],
+      "ordering_info": [
+        "RT600SL-T",
+        "120W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
