@@ -52,12 +52,7 @@ SEED_DATA = {
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [
-        "products/gallery/m-series-01.webp",
-        "products/gallery/m-series-02.webp",
-        "products/gallery/m-series-03.webp",
-        "products/gallery/m-series-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -115,12 +110,7 @@ SEED_DATA = {
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [
-        "products/gallery/rt410fl-s-01.webp",
-        "products/gallery/rt410fl-s-02.webp",
-        "products/gallery/rt410fl-s-03.webp",
-        "products/gallery/rt410fl-s-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -235,12 +225,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl1m-01.webp",
-        "products/gallery/fl1m-02.webp",
-        "products/gallery/fl1m-03.webp",
-        "products/gallery/fl1m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -365,12 +350,7 @@ SEED_DATA = {
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [
-        "products/gallery/fl4m-01.webp",
-        "products/gallery/fl4m-02.webp",
-        "products/gallery/fl4m-03.webp",
-        "products/gallery/fl4m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -493,12 +473,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl6m-01.webp",
-        "products/gallery/fl6m-02.webp",
-        "products/gallery/fl6m-03.webp",
-        "products/gallery/fl6m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -613,12 +588,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl9m-01.webp",
-        "products/gallery/fl9m-02.webp",
-        "products/gallery/fl9m-03.webp",
-        "products/gallery/fl9m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -733,12 +703,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl12m-01.webp",
-        "products/gallery/fl12m-02.webp",
-        "products/gallery/fl12m-03.webp",
-        "products/gallery/fl12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -853,12 +818,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl16m-01.webp",
-        "products/gallery/fl16m-02.webp",
-        "products/gallery/fl16m-03.webp",
-        "products/gallery/fl16m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -993,12 +953,7 @@ SEED_DATA = {
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [
-        "products/VSP9M-01.webp",
-        "products/VSP9M-02.webp",
-        "products/VSP9M-03.webp",
-        "products/VSP9M-04.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": [
         {
@@ -1100,12 +1055,7 @@ SEED_DATA = {
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [
-        "products/gallery/vsp12m-01.webp",
-        "products/gallery/vsp12m-02.webp",
-        "products/gallery/vsp12m-03.webp",
-        "products/gallery/vsp12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": [
         {
@@ -1187,12 +1137,7 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/rt590fl-s-01.webp",
-        "products/gallery/rt590fl-s-02.webp",
-        "products/gallery/rt590fl-s-03.webp",
-        "products/gallery/rt590fl-s-04.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": [
         {
@@ -1416,15 +1361,16 @@ SEED_DATA = {
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/RT600SL-T.webp",
-        "products/gallery/rt600sl-02.webp"
-      ],
+      "gallery": [],
       "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
           "value": "RT600SL-T-120W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">14,400 lm"
         },
         {
           "label": "System Wattage",
