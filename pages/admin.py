@@ -502,7 +502,7 @@ class ProjectAdminForm(forms.ModelForm):
         model = Project
         fields = '__all__'
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'description': forms.Textarea(attrs={'rows': 8, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
             'results': forms.Textarea(attrs={'rows': 3, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
             'translations': TranslationsWidget(attrs={'rows': 10}),
         }
@@ -524,7 +524,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         }),
         ('Images', {
             'fields': ('image',),
-            'description': '主图。轮播图片请在下方 "Reference images" 区域添加。'
+            'description': '主图。轮播图片请在下方 "Project images" 区域添加。'
         }),
         ('Content', {
             # Put description and results each on their own row so they stack vertically
@@ -647,7 +647,8 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        if obj.pdf_file and not getattr(obj, '_pdf_copied', False):
+        # Handle PDF file copy to static directory
+        if obj.pdf_file:
             src = obj.pdf_file.path
             dst_dir = os.path.join(settings.BASE_DIR, 'static', 'files')
             os.makedirs(dst_dir, exist_ok=True)
@@ -655,10 +656,10 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             _, ext = os.path.splitext(os.path.basename(src))
             dst_name = f'{safe_name}{ext}'
             dst = os.path.join(dst_dir, dst_name)
-            shutil.copy2(src, dst)
-            obj.pdf_static = f'files/{dst_name}'
-            obj.save(update_fields=['pdf_static'])
-            obj._pdf_copied = True
+            if os.path.exists(src):
+                shutil.copy2(src, dst)
+                obj.pdf_static = f'files/{dst_name}'
+                Project.objects.filter(pk=obj.pk).update(pdf_static=obj.pdf_static)
         if obj.pdf_static:
             self._update_seed_pdf_url(obj.slug, obj.pdf_static)
         self._sync_project_images(obj)
@@ -723,7 +724,7 @@ class SiteConfigAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Products Section', {
             'fields': ('products_title', 'products_subtitle')
         }),
-        ('References Section', {
+        ('Projects Section', {
             'fields': ('projects_title', 'projects_subtitle')
         }),
         ('About Section', {

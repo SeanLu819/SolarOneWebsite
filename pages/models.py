@@ -246,8 +246,8 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['order', 'pk']
-        verbose_name = 'Reference'
-        verbose_name_plural = 'References'
+        verbose_name = 'Project'
+        verbose_name_plural = 'Projects'
 
     def __str__(self):
         return self.title
@@ -277,8 +277,8 @@ class ProjectImage(models.Model):
 
     class Meta:
         ordering = ['order', 'pk']
-        verbose_name = 'Reference image'
-        verbose_name_plural = 'Reference images'
+        verbose_name = 'Project image'
+        verbose_name_plural = 'Project images'
 
     def __str__(self):
         return f"{self.project.title} — {self.alt_text or self.image.name}"
