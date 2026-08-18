@@ -885,7 +885,7 @@ _SIDEBAR_I18N = {
     'Ski Area':         {'fr': 'Domaine skiable', 'es': 'Área de Esquí', 'de': 'Skigebiet', 'ar': 'منطقة التزلج', 'ru': 'Горнолыжный курорт'},
     'Stadium':          {'fr': 'Stade', 'es': 'Estadio', 'de': 'Stadion', 'ar': 'استاد', 'ru': 'Стадион'},
     'Basketball':       {'fr': 'Basketball', 'es': 'Baloncesto', 'de': 'Basketball', 'ar': 'كرة السلة', 'ru': 'Баскетбол'},
-    'Volleyball':       {'fr': 'Volleyball', 'es': 'Voleibol', 'de': 'Volleyball', 'ar': 'كرة الطائرة', 'ru': 'Волейбол'},
+    'Velodrome':        {'fr': 'Vélodrome', 'es': 'Velódromo', 'de': 'Radrennbahn', 'ar': 'حلبة سباق الدراجات', 'ru': 'Велодром'},
     'Tennis':           {'fr': 'Tennis', 'es': 'Tenis', 'de': 'Tennis', 'ar': 'تنس', 'ru': 'Теннис'},
     'Multi-Sport Arena':{'fr': 'Complexe Multi-Sports', 'es': 'Pista Polideportiva', 'de': 'Mehrzweckhalle', 'ar': 'صالة متعددة الرياضات', 'ru': 'Универсальный спортивный зал'},
     'Airport':          {'fr': 'Aéroport', 'es': 'Aeropuerto', 'de': 'Flughafen', 'ar': 'مطار', 'ru': 'Аэропорт'},
@@ -961,7 +961,7 @@ def _get_projects_sidebar(lang='en'):
             'sports': [
                 {'key': 'MULTI_SPORT', 'label': _t('Multi-Sport Arena', lang)},
                 {'key': 'BASKETBALL', 'label': _t('Basketball', lang)},
-                {'key': 'VOLLEYBALL', 'label': _t('Volleyball', lang)},
+                {'key': 'VELODROME', 'label': _t('Velodrome', lang)},
                 {'key': 'TENNIS', 'label': _t('Tennis', lang)},
                 {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
             ],

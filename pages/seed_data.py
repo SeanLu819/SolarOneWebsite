@@ -1,9 +1,4 @@
-"""Seed data embedded as Python module for Vercel compatibility.
-
-On Vercel, non-Python files (like seed_data.json) are not automatically included
-in the serverless function bundle. Embedding the data here ensures it is always
-available via a normal Python import.
-"""
+"""Seed data embedded as Python module for Vercel compatibility."""
 
 SEED_DATA = {
   "products": [
@@ -29,30 +24,46 @@ SEED_DATA = {
         "fr": {
           "name": "Série M",
           "category": "Modulaire",
-          "description": "Design véritablement modulaire — évolutif d’un seul module 1M (80W) jusqu’à 16M (1280W) ou plus. Configurations combinables flexibles pour répondre précisément aux exigences de chaque projet."
+          "description": "Design véritablement modulaire — évolutif d’un seul module 1M (80W) jusqu’à 16M (1280W) ou plus. Configurations combinables flexibles pour répondre précisément aux exigences de chaque projet.",
         },
         "es": {
           "name": "Serie M",
           "category": "Modular",
-          "description": "Diseño verdaderamente modular — escalable desde un solo módulo 1M (80W) hasta 16M (1280W) o más. Configuraciones combinables flexibles para satisfacer con precisión los requisitos de cualquier proyecto."
+          "description": "Diseño verdaderamente modular — escalable desde un solo módulo 1M (80W) hasta 16M (1280W) o más. Configuraciones combinables flexibles para satisfacer con precisión los requisitos de cualquier proyecto.",
         },
         "de": {
           "name": "M-Serie",
           "category": "Modular",
-          "description": "Wirklich modulares Design — skalierbar von einem einzelnen 1M (80W) Modul bis zu 16M (1280W) oder mehr. Flexible Kombinationskonfigurationen zur genauen Erfüllung jeder Projektforderung."
+          "description": "Wirklich modulares Design — skalierbar von einem einzelnen 1M (80W) Modul bis zu 16M (1280W) oder mehr. Flexible Kombinationskonfigurationen zur genauen Erfüllung jeder Projektforderung.",
         },
         "ru": {
           "name": "Серия M",
           "category": "Модульные",
-          "description": "Истинно модульная конструкция — масштабируемая от одного модуля 1M (80 Вт) до 16M (1280 Вт) и более. Гибкие комбинации конфигураций для точного соответствия требованиям любого проекта."
+          "description": "Истинно модульная конструкция — масштабируемая от одного модуля 1M (80 Вт) до 16M (1280 Вт) и более. Гибкие комбинации конфигураций для точного соответствия требованиям любого проекта.",
         },
         "ar": {
           "name": "سلسلة M",
           "category": "معيارية",
-          "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
-        }
+          "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة.",
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/m-series-01.webp",
+        "products/gallery/m-series-02.webp",
+        "products/gallery/m-series-03.webp",
+        "products/gallery/m-series-04.webp",
+      ],
+      "ordering_info": [
+        "FL1M (Light With 1 Module)",
+        "80~1280W+",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -61,9 +72,10 @@ SEED_DATA = {
         {
           "label": "Efficacy",
           "value": "125lm/W"
-        }
+        },
       ],
-      "energy_data": []
+      "energy_data": [],
+      "model_number": "",
     },
     {
       "pk": 2,
@@ -87,30 +99,46 @@ SEED_DATA = {
         "fr": {
           "name": "Série RT410",
           "category": "Projecteur",
-          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast."
+          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast.",
         },
         "es": {
           "name": "Serie RT410",
           "category": "Proyector",
-          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast."
+          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast.",
         },
         "de": {
           "name": "RT410-Serie",
           "category": "Flutlicht",
-          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität."
+          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität.",
         },
         "ru": {
           "name": "Серия RT410",
           "category": "Прожекторы",
-          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством."
+          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством.",
         },
         "ar": {
           "name": "سلسلة RT410",
           "category": "مشاريع إضاءة",
-          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
-        }
+          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر.",
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt410fl-s-01.webp",
+        "products/gallery/rt410fl-s-02.webp",
+        "products/gallery/rt410fl-s-03.webp",
+        "products/gallery/rt410fl-s-04.webp",
+      ],
+      "ordering_info": [
+        "RT410 Series",
+        "260W/400W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -127,7 +155,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~100°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -197,8 +225,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 5,
@@ -219,13 +248,34 @@ SEED_DATA = {
       "order": 11,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl1m-01.webp",
+        "products/gallery/fl1m-02.webp",
+        "products/gallery/fl1m-03.webp",
+        "products/gallery/fl1m-04.webp",
+      ],
+      "ordering_info": [
+        "FL1M (Light With 1 Module)",
+        "80W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -242,7 +292,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~50°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -312,8 +362,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 6,
@@ -335,22 +386,38 @@ SEED_DATA = {
       "parent_slug": "m-series",
       "translations": {
         "fr": {
-          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
+          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M.",
         },
         "es": {
-          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
+          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M.",
         },
         "de": {
-          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
+          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie.",
         },
         "ru": {
-          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
+          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M.",
         },
         "ar": {
-          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
-        }
+          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M.",
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl4m-01.webp",
+        "products/gallery/fl4m-02.webp",
+        "products/gallery/fl4m-03.webp",
+        "products/gallery/fl4m-04.webp",
+      ],
+      "ordering_info": [
+        "FL4M (Light With 4 Modules)",
+        "320W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -375,7 +442,7 @@ SEED_DATA = {
         {
           "label": "CRI",
           "value": "70~95"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -445,8 +512,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 7,
@@ -467,13 +535,34 @@ SEED_DATA = {
       "order": 13,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl6m-01.webp",
+        "products/gallery/fl6m-02.webp",
+        "products/gallery/fl6m-03.webp",
+        "products/gallery/fl6m-04.webp",
+      ],
+      "ordering_info": [
+        "FL6M (Light With 6 Modules)",
+        "480W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -490,7 +579,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~50°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -560,8 +649,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 8,
@@ -582,13 +672,34 @@ SEED_DATA = {
       "order": 14,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl9m-01.webp",
+        "products/gallery/fl9m-02.webp",
+        "products/gallery/fl9m-03.webp",
+        "products/gallery/fl9m-04.webp",
+      ],
+      "ordering_info": [
+        "FL9M (Light With 9 Modules)",
+        "630W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -605,7 +716,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~50°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -675,8 +786,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 9,
@@ -697,13 +809,34 @@ SEED_DATA = {
       "order": 15,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl12m-01.webp",
+        "products/gallery/fl12m-02.webp",
+        "products/gallery/fl12m-03.webp",
+        "products/gallery/fl12m-04.webp",
+      ],
+      "ordering_info": [
+        "FL12M (Light With 12 Modules)",
+        "1000W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -720,7 +853,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~50°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -790,8 +923,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 10,
@@ -812,13 +946,34 @@ SEED_DATA = {
       "order": 16,
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl16m-01.webp",
+        "products/gallery/fl16m-02.webp",
+        "products/gallery/fl16m-03.webp",
+        "products/gallery/fl16m-04.webp",
+      ],
+      "ordering_info": [
+        "FL16M (Light With 16 Modules)",
+        "1280W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [
         {
           "label": "Power",
@@ -835,7 +990,7 @@ SEED_DATA = {
         {
           "label": "Beam Angle",
           "value": "18~50°"
-        }
+        },
       ],
       "energy_data": [
         {
@@ -905,8 +1060,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 11,
@@ -930,30 +1086,46 @@ SEED_DATA = {
         "fr": {
           "category": "Système d'Éclairage Sportif",
           "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-9M-YP"
+          "name": "VSP-XXXXW-9M-YP",
         },
         "es": {
           "category": "Sistema de Iluminación Deportiva",
           "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-9M-YP"
+          "name": "VSP-XXXXW-9M-YP",
         },
         "de": {
           "category": "Sportbeleuchtungssystem",
           "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-9M-YP"
+          "name": "VSP-XXXXW-9M-YP",
         },
         "ru": {
           "category": "Система спортивного освещения",
           "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-9M-YP"
+          "name": "VSP-XXXXW-9M-YP",
         },
         "ar": {
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-9M-YP"
-        }
+          "name": "VSP-XXXXW-9M-YP",
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/VSP9M-01.webp",
+        "products/gallery/VSP9M-02.webp",
+        "products/gallery/VSP9M-03.webp",
+        "products/gallery/VSP9M-04.webp",
+      ],
+      "ordering_info": [
+        "VSP-XXXXW-9M-YP",
+        "900W/1200W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1007,8 +1179,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 12,
@@ -1032,30 +1205,46 @@ SEED_DATA = {
         "fr": {
           "category": "Système d'Éclairage Sportif",
           "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-12M-YP"
+          "name": "VSP-XXXXW-12M-YP",
         },
         "es": {
           "category": "Sistema de Iluminación Deportiva",
           "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-12M-YP"
+          "name": "VSP-XXXXW-12M-YP",
         },
         "de": {
           "category": "Sportbeleuchtungssystem",
           "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-12M-YP"
+          "name": "VSP-XXXXW-12M-YP",
         },
         "ru": {
           "category": "Система спортивного освещения",
           "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-12M-YP"
+          "name": "VSP-XXXXW-12M-YP",
         },
         "ar": {
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-12M-YP"
-        }
+          "name": "VSP-XXXXW-12M-YP",
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/vsp12m-01.webp",
+        "products/gallery/vsp12m-02.webp",
+        "products/gallery/vsp12m-03.webp",
+        "products/gallery/vsp12m-04.webp",
+      ],
+      "ordering_info": [
+        "VSP-XXXXW-12M-YP",
+        "1200W/1600W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1109,8 +1298,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 13,
@@ -1131,13 +1321,34 @@ SEED_DATA = {
       "order": 31,
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt590fl-s-01.webp",
+        "products/gallery/rt590fl-s-02.webp",
+        "products/gallery/rt590fl-s-03.webp",
+        "products/gallery/rt590fl-s-04.webp",
+      ],
+      "ordering_info": [
+        "RT590FL-S",
+        "160W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1203,8 +1414,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 16,
@@ -1225,11 +1437,16 @@ SEED_DATA = {
       "order": 32,
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
       "gallery": [],
       "specs": [],
@@ -1297,8 +1514,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 4,
@@ -1318,7 +1536,8 @@ SEED_DATA = {
       "ordering_image": "",
       "order": 41,
       "parent_slug": "",
-      "translations": {},
+      "translations": {
+      },
       "gallery": [],
       "specs": [
         {
@@ -1332,9 +1551,10 @@ SEED_DATA = {
         {
           "label": "Protection",
           "value": "IP66"
-        }
+        },
       ],
-      "energy_data": []
+      "energy_data": [],
+      "model_number": "",
     },
     {
       "pk": 14,
@@ -1355,13 +1575,32 @@ SEED_DATA = {
       "order": 51,
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/RT600SL-T.webp",
+        "products/gallery/rt600sl-02.webp",
+      ],
+      "ordering_info": [
+        "RT600SL-T",
+        "120W",
+        "30=3000K\n40=4000K\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
+        "12=12°\n18=18°\n30=30°\n50=50°",
+        "GRY=Grey\nBLK=Black",
+        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
+        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
+        "W = With Fixture\nS = Separated from Fixture",
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1427,8 +1666,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     },
     {
       "pk": 15,
@@ -1449,11 +1689,16 @@ SEED_DATA = {
       "order": 52,
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
       },
       "gallery": [],
       "specs": [],
@@ -1521,8 +1766,9 @@ SEED_DATA = {
         {
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
-        }
-      ]
+        },
+      ],
+      "model_number": "",
     }
   ],
   "projects": [
@@ -1537,40 +1783,40 @@ SEED_DATA = {
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Lycée Bohemia Manor",
           "location": "États-Unis",
           "description": "【Profil du client】\nBohemia Manor High School est une école publique gérée par Cecil County Public Schools située à environ 1,6 km au sud de la petite ville de Chesapeake City dans le comté de Cecil, MD. Il s'agit d'une petite école de 685 élèves qui partage son campus avec le collège Bohemia Manor.\nl'école est également connue sous le surnom de « Bo Manor ».\n\n【Étendue des travaux】\nL'éclairage d'origine du champ « Bo Manor » était inefficace, sous-éclairé et difficile à entretenir. En outre, les spécifications du projet nécessitaient l'utilisation des poteaux et des structures existants.\n\n【La solution】\nUne conception photométrique de précision a été réalisée pour s'assurer que les spécifications de conception étaient respectées. La conception a nécessité le remplacement (40 au total) des luminaires 1500W MH existants par (48 au total) de nos lampes de sport à LED FL9M -630W.",
-          "results": "<strong>Éclairage</strong> moyen de 30 fc, <strong>uniformité 1,37 : 1</strong> — dépassant les exigences du projet."
+          "results": "<strong>Éclairage</strong> moyen de 30 fc, <strong>uniformité 1,37 : 1</strong> — dépassant les exigences du projet.",
         },
         "es": {
           "title": "Escuela Secundaria Bohemia Manor",
           "location": "Estados Unidos",
           "description": "Perfil 【del cliente】\nBohemia Manor High School es una escuela pública operada por las Escuelas Públicas del Condado de Cecil ubicada aproximadamente a una milla al sur de la pequeña ciudad de Chesapeake City en el Condado de Cecil, MD. Esta es una pequeña escuela de 685 estudiantes que comparte su campus con Bohemia Manor Middle School.\nla escuela también es conocida con el apodo de \"Bo Manor\".\n\n【Alcance del trabajo】\nLa iluminación original en el campo \"Bo Manor\" era ineficiente, poco iluminada y molesta de mantener. Además, las especificaciones del proyecto requerían el uso de los postes y estructuras existentes.\n\n【La solución】\nSe completó un diseño fotométrico de precisión para garantizar que se cumplieran las especificaciones de diseño. El diseño requería el reemplazo (40 en total) de los accesorios de iluminación existentes de 1500W MH a (48 en total) de nuestras luces deportivas de rendimiento LED FL9M -630W.",
-          "results": "<strong>30</strong> fc iluminancia media, <strong>uniformidad 1.37 : 1</strong> — excediendo los requisitos del proyecto."
+          "results": "<strong>30</strong> fc iluminancia media, <strong>uniformidad 1.37 : 1</strong> — excediendo los requisitos del proyecto.",
         },
         "de": {
           "title": "Bohemia Manor Gymnasium",
           "location": "Vereinigte Staaten von Amerika",
           "description": "【Kundenprofil】\nDie Bohemia Manor High School ist eine öffentliche Schule, die von Cecil County Public Schools betrieben wird und etwa eine Meile südlich der kleinen Stadt Chesapeake City in Cecil County, MD, liegt. Dies ist eine kleine Schule mit 685 Schülern, die ihren Campus mit der Bohemia Manor Middle School teilt. Die\nschule ist auch unter dem Spitznamen „Bo Manor“ bekannt.\n\n【Arbeitsumfang】\nDie ursprüngliche Beleuchtung im Feld \"Bo Manor\" war ineffizient, unterleuchtet und musste mühsam gewartet werden. Außerdem erforderten die Spezifikationen des Projekts die Nutzung der vorhandenen Pole und Strukturen.\n\n【Die Lösung】\nEin präzises photometrisches Design wurde fertiggestellt, um sicherzustellen, dass die Konstruktionsspezifikationen eingehalten wurden. Das Design sah den Austausch (insgesamt 40) der vorhandenen 1500-W-MH-Leuchten an (insgesamt 48) unserer FL9M-630-W-LED-Leistungssportleuchten vor.",
-          "results": "<strong>30fc</strong> mittlere Beleuchtungsstärke, <strong>Gleichmäßigkeit 1,37 : 1</strong> — die Projektanforderungen übertreffend."
+          "results": "<strong>30fc</strong> mittlere Beleuchtungsstärke, <strong>Gleichmäßigkeit 1,37 : 1</strong> — die Projektanforderungen übertreffend.",
         },
         "ru": {
           "title": "Средняя школа Bohemia Manor",
           "location": "Соединенные Штаты Америки",
           "description": "Профиль 【клиента】\nСредняя школа Bohemia Manor - это государственная школа, управляемая государственными школами округа Сесил, расположенная примерно в одной миле к югу от небольшого городка Чесапик-Сити в округе Сесил, штат Мэриленд. Это небольшая школа на 685 учеников, которая делит свой кампус со средней школой Bohemia Manor.\nшкола также известна под прозвищем «Усадьба Бо».\n\n【Объем работ】\nПервоначальное освещение на месторождении «Усадьба Бо» было неэффективным, недостаточно освещенным и требовало хлопот в обслуживании. Также спецификации проекта требовали использования существующих опор и конструкций.\n\n【Решение】\nДля обеспечения соответствия проектным спецификациям была завершена точная фотометрическая конструкция. Дизайн предусматривал замену (всего 40) существующих светильников 1500 Вт MH на (всего 48) наших светодиодных спортивных светильников FL9M -630W.",
-          "results": "<strong>30fc</strong> средняя освещенность, <strong>равномерность 1,37 : 1</strong> — превышение проектных требований."
+          "results": "<strong>30fc</strong> средняя освещенность, <strong>равномерность 1,37 : 1</strong> — превышение проектных требований.",
         },
         "ar": {
           "title": "مدرسة بوهيميا مانور الثانوية",
           "location": "الولايات المتحدة الأمريكية",
           "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
-          "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
-        }
+          "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع.",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 4,
@@ -1583,40 +1829,40 @@ SEED_DATA = {
       "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
       "image": "images/processed/soccerfield.webp",
       "order": 2,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Stade du Centre Sportif Yuanshen",
           "location": "Shanghai, Chine",
           "description": "Un stade polyvalent à Shanghai Pudong avec 160 000 m² et 20 000 places. 320 projecteurs LED FL12M-1000W (TCP: 5000-5500K) avec système de contrôle réseau pour la commande à distance et le monitoring de puissance.",
-          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018."
+          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018.",
         },
         "es": {
           "title": "Estadio del Centro Deportivo Yuanshen",
           "location": "Shanghai, China",
           "description": "Un estadio polideportivo en Shanghai Pudong con 160,000 m² y 20,000 asientos. 320 luminarias LED FL12M-1000W (TCP: 5000-5500K) con sistema de control en red para encendido/apagado remoto y monitoreo.",
-          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018."
+          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018.",
         },
         "de": {
           "title": "Yuanshen Sportzentrum Stadion",
           "location": "Shanghai, China",
           "description": "Ein Mehrzweckstadion in Shanghai Pudong mit 160.000 m² und 20.000 Sitzplätzen. 320 LED-Sportfluter FL12M-1000W (TDF: 5000-5500K) mit Netzwerk-Steuerungssystem.",
-          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018."
+          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018.",
         },
         "ru": {
           "title": "Стадион Спортивного центра Юаньшэнь",
           "location": "Шанхай, Китай",
           "description": "Многоцелевой стадион в районе Пудун, Шанхай, площадью 160 000 м² на 20 000 мест. 320 спортивных LED-прожекторов FL12M-1000W (ЦТТ: 5000-5500К) с сетевой системой управления.",
-          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018."
+          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018.",
         },
         "ar": {
           "title": "ملعب مركز يوانشين الرياضي",
           "location": "شنغهاي، الصين",
           "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
-          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
-        }
+          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018.",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 2,
@@ -1629,40 +1875,40 @@ SEED_DATA = {
       "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
       "image": "images/processed/Baseball.webp",
       "order": 3,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Rénovation LED Terrain de Baseball",
           "location": "États-Unis",
           "description": "150 projecteurs LED sportifs FL9M-630W de la série Performance avec drivers à montage distant ont été installés. Un système de contrôle réseau a été intégré pour permettre le contrôle à distance marche/arrêt et la surveillance de puissance.",
-          "results": "50/30fc éclairage moyen, uniformité 2.0:1 / 2.5:1 — respectant les spécifications du projet."
+          "results": "50/30fc éclairage moyen, uniformité 2.0:1 / 2.5:1 — respectant les spécifications du projet.",
         },
         "es": {
           "title": "Renovación LED Campo de Béisbol",
           "location": "Estados Unidos",
           "description": "Se instalaron 150 luminarias LED deportivas FL9M-630W de la serie Performance con controladores de montaje remoto. Se incorporó un sistema de control en red para permitir encendido/apagado remoto y monitoreo de potencia.",
-          "results": "50/30fc iluminación promedio, uniformidad 2.0:1 / 2.5:1 — cumpliendo las especificaciones del proyecto."
+          "results": "50/30fc iluminación promedio, uniformidad 2.0:1 / 2.5:1 — cumpliendo las especificaciones del proyecto.",
         },
         "de": {
           "title": "LED-Umrüstung Baseballfeld",
           "location": "Vereinigte Staaten",
           "description": "150 LED-Sportfluter FL9M-630W der Performance-Serie mit Fernmontage-Treibern wurden installiert. Ein Netzwerk-Steuerungssystem wurde integriert für ferngesteuerte Ein/Aus-Steuerung und Leistungsüberwachung.",
-          "results": "50/30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 2.0:1 / 2.5:1 — erfüllt die Projektspezifikationen."
+          "results": "50/30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 2.0:1 / 2.5:1 — erfüllt die Projektspezifikationen.",
         },
         "ru": {
           "title": "Модернизация LED бейбольного поля",
           "location": "Соединённые Штаты",
           "description": "Установлены 150 спортивных LED-прожекторов FL9M-630W серии Performance с удалёнными драйверами. Интегрирована сетевая система управления для дистанционного включения/выключения и мониторинга мощности.",
-          "results": "Средняя освещённость 50/30фк, равномерность 2.0:1 / 2.5:1 — соответствие проектным спецификациям."
+          "results": "Средняя освещённость 50/30фк, равномерность 2.0:1 / 2.5:1 — соответствие проектным спецификациям.",
         },
         "ar": {
           "title": "ترقية LED لملاعب البيسبول",
           "location": "الولايات المتحدة",
           "description": "تم تركيب 150 مصابيح LED رياضية FL9M-630W من سلسلة الأداء مع محركات تحكم عن بعد. تم دمج نظام تحكم شبكي للسماح بالتشغيل/الإيقاف عن بعد ومراقبة الطاقة.",
-          "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
-        }
+          "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع.",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 6,
@@ -1675,1862 +1921,35 @@ SEED_DATA = {
       "results": "",
       "image": "projects/msu-tennis-01.webp",
       "order": 4,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Courts de tennis de l'Université Morgan State",
           "description": "【Profil du client】\nMorgan State University est la première université publique de recherche urbaine du Maryland, connue pour son excellence en matière d'enseignement, de recherche intensive, de service public efficace et d'engagement communautaire. Morgan prépare les diplômés diversifiés et compétitifs à réussir dans une société mondiale et interdépendante.",
-          "location": "États-Unis"
+          "location": "États-Unis",
         },
         "es": {
           "title": "Pistas de tenis de la Universidad Estatal Morgan",
           "description": "Perfil 【del cliente】\nMorgan State University es la principal universidad pública de investigación urbana en Maryland, conocida por su excelencia en la enseñanza, la investigación intensiva, el servicio público efectivo y la participación de la comunidad. Morgan prepara graduados diversos y competitivos para el éxito en una sociedad global e interdependiente.",
-          "location": "Estados Unidos"
+          "location": "Estados Unidos",
         },
         "de": {
           "title": "Tennisplätze der Morgan State University",
           "description": "【Kundenprofil】\nDie Morgan State University ist die führende öffentliche Stadtforschungsuniversität in Maryland, die für ihre Exzellenz in der Lehre, intensive Forschung, effektiven öffentlichen Dienst und soziales Engagement bekannt ist. Morgan bereitet vielfältige und wettbewerbsfähige Absolventen auf den Erfolg in einer globalen, voneinander abhängigen Gesellschaft vor.",
-          "location": "Vereinigte Staaten von Amerika"
-        },
-        "ru": {
-          "title": "Теннисные корты Morgan State University",
-          "description": "Профиль 【клиента】\nГосударственный университет Моргана является ведущим государственным городским исследовательским университетом в Мэриленде, известным своим превосходством в обучении, интенсивных исследованиях, эффективной государственной службе и вовлечении сообщества. Morgan готовит разнообразных и конкурентоспособных выпускников к успеху в глобальном, взаимозависимом обществе.",
-          "location": "Соединенные Штаты Америки"
-        },
-        "ar": {
-          "title": "ملاعب التنس بجامعة ولاية مورغان",
-          "description": "الملف الشخصي 【للعميل】\nجامعة ولاية مورغان هي الجامعة البحثية الحضرية العامة الرائدة في ولاية ماريلاند، والمعروفة بتميزها في التدريس والبحث المكثف والخدمة العامة الفعالة والمشاركة المجتمعية. تعد مورغان خريجين متنوعين وتنافسين للنجاح في مجتمع عالمي مترابط.",
-          "location": "الولايات المتحدة الأمريكية"
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 7,
-      "title": "Nanshan Ski Village",
-      "location": "Beijing, China",
-      "slug": "nanshan-ski-village",
-      "venue_type": "OUTDOOR",
-      "sport_type": "SKI_AREA",
-      "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/nanshan-ski-01.webp",
-      "order": 5,
-      "translations": {
-        "fr": {
-          "title": "Village de ski de Nanshan",
-          "description": "【Profil du client】\nLe village de ski de Nanshan est situé au nord de la ville de Pékin. Depuis son ouverture en 2001, cette station de ski est devenue la plus grande du genre en Chine, offrant les équipements et les équipements de ski les plus avancés pour tous les amateurs de ski, qu'ils soient touristes ou locaux.\n\n【Étendue des travaux】\nSolarOne Vision Smart RT-410 a été sélectionné pour éclairer le village de ski de Nanshan. Dans tous les sports, l'éclairage LED offre la meilleure scène pour les compétiteurs, et ce n'est pas différent pour les skieurs et les snowboarders. La technologie de contrôle de l'éblouissement équivaut à un éclairage plus uniforme avec moins d'ombres indésirables ou de points chauds qui peuvent distraire les contributeurs pendant leur course. Dans un sport avec peu de marge d'erreur, la technologie LED permet de s'assurer que les lumières ne créent pas une autre variable pour les skieurs et les snowboarders.\n\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. L'éblouissement et la sortie de lumière ont été effectués. Ensuite, nous avons fourni des points de visée exacts pour chaque match. Les lampes d'inondation SolarOne Vision Smart 260W RT410 ont été facilement installées dans le village de ski de Nanshan. Nos solutions d'éclairage LED fournissent une lumière uniforme dans l'air et sur la pente beaucoup plus efficacement que la lumière aux halogénures métalliques et réduisent considérablement le déversement de lumière indésirable et la pollution lumineuse. La durée de vie des LED dépasse généralement 100 000 heures par rapport à une durée de vie traditionnelle des halogénures métalliques de 18 000 heures.",
-          "location": "Pékin, Chine"
-        },
-        "es": {
-          "title": "Nanshan Ski Village",
-          "description": "Perfil 【del cliente】\nNanshan Ski Village se encuentra al norte de la ciudad de Pekín. Desde su apertura en 2001, esta estación de esquí se ha convertido en la más grande de su tipo en China, proporcionando los equipos y servicios de esquí más avanzados para todos los entusiastas del esquí, tanto turistas como lugareños.\n\n【Alcance del trabajo】\nSolarOne Vision Smart RT-410 fue seleccionado para iluminar la estación de esquí de Nanshan. En todos los deportes, la iluminación LED proporciona el mejor escenario para que los competidores se desempeñen, y no es diferente para los esquiadores y snowboarders. La tecnología de control de deslumbramiento equivale a una iluminación más uniforme con menos sombras no deseadas o puntos calientes que pueden distraer a los usuarios durante su carrera. En un deporte con poco margen de error, la tecnología LED ayuda a garantizar que las luces no creen otra variable para los esquiadores y snowboarders.\n\n【La solución】\nSe realizó un diseño fotométrico de ingeniería. Se realizó el deslumbramiento y la salida de luz. Luego proporcionamos puntos de puntería exactos para cada accesorio. La serie de luces de inundación SolarOne Vision Smart 260W RT410 se instaló fácilmente en la estación de esquí de Nanshan. Nuestras soluciones de iluminación LED proporcionan una luz uniforme en el aire y en la pendiente de manera mucho más eficiente que la luz de haluro metálico y reducen significativamente los derrames de luz no deseados y la contaminación lumínica. La vida útil de los LED generalmente supera las 100.000 horas en comparación con una vida útil tradicional de haluro metálico de 18.000 horas.",
-          "location": "Pekin, China"
-        },
-        "de": {
-          "title": "Nanshan Skidorf",
-          "description": "【Kundenprofil】\nDas Skidorf Nanshan liegt nördlich von Peking-Stadt. Seit seiner Eröffnung im Jahr 2001 ist dieses Skigebiet das größte seiner Art in China und bietet die fortschrittlichsten Skiausrüstungen und Annehmlichkeiten für alle Skibegeisterten - sowohl Touristen als auch Einheimische.\n\n【Arbeitsumfang】\nSolarOne Vision Smart RT-410 wurde ausgewählt, um das Nanshan Ski Village zu beleuchten. In allen Sportarten bietet LED-Beleuchtung die beste Bühne für Konkurrenten, und das ist für Ski- und Snowboarder nicht anders. Die Blendschutztechnologie sorgt für eine gleichmäßigere Beleuchtung mit weniger unerwünschten Schatten oder Hotspots, die Patrons während ihres Laufs ablenken können. In einer Sportart mit wenig Spielraum für Fehler sorgt die LED-TECHNOLOGIE dafür, dass die Lichter keine weitere Variable für Skifahrer und Snowboarder darstellen.\n\n【Die Lösung】\nEs wurde ein konstruiertes photometrisches Design durchgeführt. Die Blend- und Lichtleistung wurde durchgeführt. Dann haben wir für jede Vorrichtung genaue Zielpunkte angegeben. Die SolarOne Vision Smart 260W RT410 Flutlicht-Serie wurde einfach im Skidorf Nanshan installiert. Unsere LED-Beleuchtungslösungen liefern gleichmäßiges Licht in der Luft und am Hang viel effizienter als Metallhalogenidlicht und reduzieren unerwünschtes Licht und Lichtverschmutzung erheblich. Die Lebensdauer von LEDs übersteigt im Allgemeinen 100.000 Stunden im Vergleich zu einer herkömmlichen Lebensdauer von 18.000 Stunden.",
-          "location": "Peking, China"
-        },
-        "ru": {
-          "title": "Лыжная деревня Наньшань",
-          "description": "Профиль 【клиента】\nЛыжная деревня Наньшань расположена к северу от Пекина. С момента своего открытия в 2001 году этот горнолыжный курорт стал крупнейшим в своем роде в Китае, предоставляя самое современное горнолыжное оборудование и удобства для всех любителей горнолыжного спорта - как туристов, так и местных жителей.\n\n【Объем работ】\nДля освещения горнолыжной деревни Наньшань был выбран SolarOne Vision Smart RT-410. Во всех видах спорта светодиодное освещение обеспечивает лучшую сцену для выступлений участников, и оно ничем не отличается для лыжников и сноубордистов. Технология управления бликами обеспечивает более равномерное освещение с меньшим количеством нежелательных теней или горячих точек, которые могут отвлекать посетителей во время пробежки. В спорте с небольшим запасом на ошибку СВЕТОДИОДНАЯ технология помогает обеспечить, чтобы огни не создавали еще одну переменную для лыжников и сноубордистов.\n\n【Решение】\nВыполнен инженерный фотометрический расчет. Выполняли ослепление и светоотдачу. Затем мы предоставили точные точки прицеливания для каждого приспособления. SolarOne Vision Smart 260W RT410 Flood Light Series были легко установлены в лыжной деревне Наньшань. Наши светодиодные осветительные решения обеспечивают равномерный свет в воздухе и на склоне гораздо эффективнее, чем свет галогенида металла, и значительно уменьшают нежелательный разлив света и световое загрязнение. Срок службы светодиодов обычно превышает 100 000 часов по сравнению с традиционным сроком службы галогенида металла, составляющим 18 000 часов.",
-          "location": "Пекин, Китай"
-        },
-        "ar": {
-          "title": "قرية نانشان للتزلج",
-          "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
-          "location": "بكين، الصين"
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 3,
-      "title": "Multi-Sport Arena HD Broadcast",
-      "location": "France",
-      "slug": "multi-sport-arena-hd-broadcast",
-      "venue_type": "INDOOR",
-      "sport_type": "MULTI_SPORT",
-      "description": "A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.",
-      "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
-      "image": "images/processed/basketball.webp",
-      "order": 6,
-      "translations": {
-        "fr": {
-          "title": "Arène Multisport HD Broadcast",
-          "location": "France",
-          "description": "Un lieu polyvalent en France conçu pour la télévision HD, convertible entre configurations basket et tennis. Les projecteurs LED FL9M-630W satisfont pleinement les exigences d’éclairage pour le basket et le tennis.",
-          "results": ">2000 lux — répondant aux normes de diffusion HD."
-        },
-        "es": {
-          "title": "Arena Multideporte HD Broadcast",
-          "location": "Francia",
-          "description": "Un recinto polideportivo en Francia diseñado para televisión HD, convertible entre configuraciones de baloncesto y tenis. Las luminarias LED FL9M-630W satisfacen plenamente los requisitos de iluminación.",
-          "results": ">2000 lux — cumpliendo los estándares de transmisión HD."
-        },
-        "de": {
-          "title": "Mehrzweck-HD-Broadcast-Arena",
-          "location": "Frankreich",
-          "description": "Eine Mehrzweckhalle in Frankreich für HD-Fernsehen, umschaltbar zwischen Basketball- und Tennis-Konfiguration. FL9M-630W LED-Sportfluter erfüllen vollumfänglich die Beleuchtungsanforderungen.",
-          "results": ">2000 Lux — erfüllt HD-Broadcast-Standards."
-        },
-        "ru": {
-          "title": "Многоспортивная арена HD-вещания",
-          "location": "Франция",
-          "description": "Многоцелевой комплекс во Франции, спроектированный для HD-телевидения, преобразуемый между баскетбольными и теннисными конфигурациями. LED-прожекторы FL9M-630W полностью удовлетворяют требованиям освещения.",
-          "results": ">2000 люкс — соответствие стандартам HD-вещания."
-        },
-        "ar": {
-          "title": "صالة رياضية متعددة الألعاب بث HD",
-          "location": "فرنسا",
-          "description": "مرفق متعدد الأغراض في فرنسا مصمم للتلفزيون عالي الدقة، قابل للتحويل بين إعدادات كرة السلة والتنس. مصابيح LED FL9M-630W تلبي بالكامل متطلبات الإضاءة.",
-          "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 5,
-      "title": "Narbonne Arena",
-      "location": "France",
-      "slug": "narbonne-arena",
-      "venue_type": "INDOOR",
-      "sport_type": "MULTI_SPORT",
-      "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
-      "results": "",
-      "image": "projects/Narbonne-basketball-04.webp",
-      "order": 7,
-      "translations": {},
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 8,
-      "title": "Beijing Capital International Airport",
-      "location": "Beijing, China",
-      "slug": "beijing-capital-international-airport",
-      "venue_type": "INFRASTRUCTURE",
-      "sport_type": "AIRPORT",
-      "description": "【Customer Profile】\r\nBeijing Capital International Airport is the 2nd largest airport in the world and is the main international airport serving Beijing. \r\n【Scope of Work】 \r\nSolarOne was contacted to create a lighting solution for Beijing's Capital International Airport apron, terminals and parking lots. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. \r\nAir travel requires lots of travel right here on the ground. SolarOne LED lighting solutions provide bright, even illumination along airport access roads, parking lots, walkways, corridors and concourses, slashing energy consumption and maintenance costs by double digits. Our Vision Smart technology reduces light spillover while enhancing operation safety.\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily used to replace the existing 1000 watt metal HID fixture with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the ground much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
-      "image": "projects/bcia-airport-01.webp",
-      "order": 10,
-      "translations": {
-        "fr": {
-          "title": "Aéroport international de Beijing",
-          "description": "【Profil du client】\nL'aéroport international de Beijing Capital est le deuxième plus grand aéroport du monde et le principal aéroport international desservant Pékin. \n【Étendue des travaux】 \nSolarOne a été contacté pour créer une solution d'éclairage pour l'aire de trafic, les terminaux et les parkings de l'aéroport international de la capitale de Pékin. Ce projet consistait en un remplacement un pour un des luminaires aux halogénures métalliques de 1 000 watts existants. \nLes voyages en avion nécessitent beaucoup de déplacements ici même au sol. Les solutions d'éclairage LED SolarOne fournissent un éclairage lumineux et uniforme le long des routes d'accès aux aéroports, des parkings, des passerelles, des couloirs et des halls, réduisant ainsi la consommation d'énergie et les coûts d'entretien à deux chiffres. Notre technologie Vision Smart réduit les débordements de lumière tout en améliorant la sécurité de fonctionnement.\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. Nous avons vérifié l'éblouissement et la luminosité. Ensuite, nous avons fourni des points de visée exacts pour chaque match. [Error: Server Error: You made too many requests to the server.Accor]",
-          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        },
-        "es": {
-          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
-          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        },
-        "de": {
-          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
-          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        },
-        "ru": {
-          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
-          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        },
-        "ar": {
-          "title": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
-          "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 10,
-      "title": "Beijing International Tennis Center",
-      "location": "Beijing, China",
-      "slug": "beijing-international-tennis-center",
-      "venue_type": "INDOOR",
-      "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall was the first indoor professional tennis hall. In 2015, to promote its development consistent with the time, the company decided to proceed with the reconstruction of the tennis hall on its original premise. \r\n\r\n【Scope of Work 】\r\nSolarOne was contacted to create a lighting solution for the Bejiing International Tennis Club. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for tennis players. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract athletes while in the game. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the athletes.",
-      "results": "Where every hit counts, uniform, no-glare light does not effect the vision of the athletes while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. The new lighting system achieved an average of uniformity of 75 percent and a saved in energy costs by 50 percent. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel. SolarOne Vision Smart RT410FL-S160W improved the Beijing international Tennis Club experience with the greatest visual comfort for the athletes and coaches alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry",
-      "image": "",
-      "order": 25,
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      []дульная конструкция — масштабируемая от одного модуля 1M (80 Вт) до 16M (1280 Вт) и более. Гибкие комбинации конфигураций для точного соответствия требованиям любого проекта."
-        },
-        "ar": {
-          "name": "سلسلة M",
-          "category": "معيارية",
-          "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
-        }
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "80~1280W+"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        }
-      ],
-      "energy_data": []
-    },
-    {
-      "pk": 2,
-      "name": "RT410 Series",
-      "slug": "rt410-series",
-      "category": "AREA_SITE",
-      "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
-      "power": "260W",
-      "efficacy": "125lm/W",
-      "output": "",
-      "beam_angle": "18~100°",
-      "protection": "",
-      "image": "products/floodlight.webp",
-      "banner_image": "products/rt410-bar-1.webp",
-      "dimension_image": "products/dimensions/rt410-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle183050100.webp",
-      "ordering_image": "",
-      "order": 2,
-      "parent_slug": "",
-      "translations": {
-        "fr": {
-          "name": "Série RT410",
-          "category": "Projecteur",
-          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast."
-        },
-        "es": {
-          "name": "Serie RT410",
-          "category": "Proyector",
-          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast."
-        },
-        "de": {
-          "name": "RT410-Serie",
-          "category": "Flutlicht",
-          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität."
-        },
-        "ru": {
-          "name": "Серия RT410",
-          "category": "Прожекторы",
-          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством."
-        },
-        "ar": {
-          "name": "سلسلة RT410",
-          "category": "مشاريع إضاءة",
-          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
-        }
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "260W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "32500+lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~100°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "RT410FL-260W-XXK-S"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">31,200lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "260W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "1.4(sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "15.8\" X 15.8\"X 4.2\" / 418 X 400 X 172 (mm)"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "(30lbs)13.5kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 5,
-      "name": "FL1M",
-      "slug": "fl1m",
-      "category": "AREA_SITE",
-      "description": "FL1M modular floodlight configuration — part of the M Series family.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/RT600SL-T.webp",
-      "banner_image": "products/fl1m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl1m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_65Fg8YW.webp",
-      "ordering_image": "",
-      "order": 11,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "80W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "10k+lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL1M-80W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": "10400 lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "80w"
-        },
-        {
-          "label": "CRI",
-          "value": ">80"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "0.26 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "8.6\" X 9.2\"X 5.4\"/218*235*137mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 5.2 lbs)2.3 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 6,
-      "name": "FL4M",
-      "slug": "fl4m",
-      "category": "AREA_SITE",
-      "description": "FL4M modular floodlight configuration — part of the M Series family.",
-      "power": "320W",
-      "efficacy": "125lm/W",
-      "output": "40K+ lm",
-      "beam_angle": "18~50°",
-      "protection": "",
-      "image": "products/fl4m-01.webp",
-      "banner_image": "products/fl4m-bar-1.webp",
-      "dimension_image": "products/fl4m-3d-view.webp",
-      "beam_angle_image": "products/beamangle-12183050.webp",
-      "ordering_image": "",
-      "order": 12,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {
-          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
-        },
-        "es": {
-          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
-        },
-        "de": {
-          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
-        },
-        "ru": {
-          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
-        },
-        "ar": {
-          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
-        }
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "320W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "40K+ lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "12~50°"
-        },
-        {
-          "label": "CCT",
-          "value": "3000~5700K"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL4M-320W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">41,600lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "320W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "1.05 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "14.5\" X 14.5\"X 8.1\" / 368*368*343mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 24.5 lbs) 11.0 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 7,
-      "name": "FL6M",
-      "slug": "fl6m",
-      "category": "AREA_SITE",
-      "description": "FL6M modular floodlight configuration — part of the M Series family.",
-      "power": "480W",
-      "efficacy": "125lm/W",
-      "output": "60K+ lm",
-      "beam_angle": "18~50°",
-      "protection": "",
-      "image": "products/fl6m-01.webp",
-      "banner_image": "products/fl6m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl6m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_KcK84ZP.webp",
-      "ordering_image": "",
-      "order": 13,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "480W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "60K+ lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL6M-480W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">58700lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "480W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "1.58 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "21.8\" X 14.5\"X 8.1\"/553*368*343mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 37 lbs) 16.8 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 8,
-      "name": "FL9M",
-      "slug": "fl9m",
-      "category": "AREA_SITE",
-      "description": "FL9M modular floodlight configuration — part of the M Series family.",
-      "power": "630W",
-      "efficacy": "125lm/W",
-      "output": "90K+ lm",
-      "beam_angle": "18~50°",
-      "protection": "",
-      "image": "products/fl9m-01.webp",
-      "banner_image": "products/fl9m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_4BJ8mot.webp",
-      "ordering_image": "",
-      "order": 14,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "630W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "90K+ lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL9M-720W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">87,600lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "720W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "2.37 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "21.8\" X 21.8\"X 8.1\"/553*553*343mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 58lbs)26.0 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 9,
-      "name": "FL12M",
-      "slug": "fl12m",
-      "category": "AREA_SITE",
-      "description": "FL12M modular floodlight configuration — part of the M Series family.",
-      "power": "1000W",
-      "efficacy": "125lm/W",
-      "output": "120K+ lm",
-      "beam_angle": "18~50°",
-      "protection": "",
-      "image": "products/fl12m-01.webp",
-      "banner_image": "products/fl12m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl12m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_RlTn9zd.webp",
-      "ordering_image": "",
-      "order": 15,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "1000W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "120K+ lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL12M-1000W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">123,000 lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "1000W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "3.16 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "21.8\" X 29.1\"X 8.1\"/553*737.90*343mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 59lbs)33.0 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 10,
-      "name": "FL16M",
-      "slug": "fl16m",
-      "category": "AREA_SITE",
-      "description": "FL16M modular floodlight configuration — part of the M Series family.",
-      "power": "1280W",
-      "efficacy": "125lm/W",
-      "output": "160K+ lm",
-      "beam_angle": "18~50°",
-      "protection": "",
-      "image": "products/fl16m-01.webp",
-      "banner_image": "products/fl16m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl16m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_vxDZHMV.webp",
-      "ordering_image": "",
-      "order": 16,
-      "parent_slug": "m-series",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "1280W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "125lm/W"
-        },
-        {
-          "label": "Output",
-          "value": "160K+ lm"
-        },
-        {
-          "label": "Beam Angle",
-          "value": "18~50°"
-        }
-      ],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "FL16M-1360W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">163,000 lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "1360W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "Effective Projected Area (EPA) at 90°",
-          "value": "4.16 (sq. ft.)"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "29\" X 29 \"X 8.1\"/738*738*343mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 94.5lbs)42.5 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 11,
-      "name": "VSP-XXXXW-9M-YP",
-      "slug": "vsp-xxxxw-9m-yp",
-      "category": "SPORTS_LIGHTING",
-      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/vsp12m-01.webp",
-      "banner_image": "products/vsp/vsp-bar-1.webp",
-      "dimension_image": "products/dimensions/ac-en-3d-view.png",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_3YkmJS7.webp",
-      "ordering_image": "",
-      "order": 21,
-      "parent_slug": "",
-      "translations": {
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "es": {
-          "category": "Sistema de Iluminación Deportiva",
-          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "ru": {
-          "category": "Система спортивного освещения",
-          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-9M-YP"
-        },
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-9M-YP"
-        }
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "VSP-XXXXW-9M-YP (AC Enclosure))"
-        },
-        {
-          "label": "System Wattage",
-          "value": "4200W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "15.7\" x 14.0\" x 23.6\" / 400 x 355 x 600 mm"
-        },
-        {
-          "label": "Material",
-          "value": "Stainless Steel 304"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 12,
-      "name": "VSP-XXXXW-12M-YP",
-      "slug": "vsp-xxxxw-12m-yp",
-      "category": "SPORTS_LIGHTING",
-      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/rt590.webp",
-      "banner_image": "products/vsp/vsp-bar-1.webp",
-      "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_H3Gim4J.webp",
-      "ordering_image": "",
-      "order": 22,
-      "parent_slug": "",
-      "translations": {
-        "fr": {
-          "category": "Système d'Éclairage Sportif",
-          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "es": {
-          "category": "Sistema de Iluminación Deportiva",
-          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "de": {
-          "category": "Sportbeleuchtungssystem",
-          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "ru": {
-          "category": "Система спортивного освещения",
-          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
-          "name": "VSP-XXXXW-12M-YP"
-        },
-        "ar": {
-          "category": "نظام إضاءة رياضية",
-          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
-          "name": "VSP-XXXXW-12M-YP"
-        }
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "VSP-XXXXW-12M-YP (LED Driver Enclosure)"
-        },
-        {
-          "label": "System Wattage",
-          "value": "4200W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "15.7\" x 14.0\" x 39.4\" / 400 x 355 x 1000 mm"
-        },
-        {
-          "label": "Material",
-          "value": "Stainless Steel 304"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 13,
-      "name": "RT590FL-S",
-      "slug": "rt590fl-s",
-      "category": "FLOODLIGHT",
-      "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/rt590_eRixs78.webp",
-      "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
-      "dimension_image": "products/dimensions/tr590-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-3050120_cbdtaqu.webp",
-      "ordering_image": "",
-      "order": 31,
-      "parent_slug": "",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "RT590FL-160W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">20,800 lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "160W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "23.2\"  x 11.9\" x  9.8\" / 589 x 301 x 248.5mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 28.2 lbs) 12.8 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 16,
-      "name": "RT390FL-S",
-      "slug": "rt390fl",
-      "category": "FLOODLIGHT",
-      "description": "RT390FL-S",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/rt390-01.webp",
-      "banner_image": "products/banners/rt390-bar-01.webp",
-      "dimension_image": "products/dimensions/rt390-3d-view.webp",
-      "beam_angle_image": "",
-      "ordering_image": "",
-      "order": 32,
-      "parent_slug": "",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "RT390FL-S"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">10,400lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "80W"
-        },
-        {
-          "label": "CRI",
-          "value": "70-95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347-480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110-277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": ">100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "369 x 294 x 336 mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "(18.7 lbs) 8.5 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 4,
-      "name": "HB Series",
-      "slug": "rt400-series",
-      "category": "HIGHBAY_LOWBAY",
-      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
-      "power": "100~300W",
-      "efficacy": "120lm/W",
-      "output": "",
-      "beam_angle": "",
-      "protection": "IP66",
-      "image": "products/HB.webp",
-      "banner_image": "",
-      "dimension_image": "",
-      "beam_angle_image": "",
-      "ordering_image": "",
-      "order": 41,
-      "parent_slug": "",
-      "translations": {},
-      "gallery": [],
-      "specs": [
-        {
-          "label": "Power",
-          "value": "100~300W"
-        },
-        {
-          "label": "Efficacy",
-          "value": "120lm/W"
-        },
-        {
-          "label": "Protection",
-          "value": "IP66"
-        }
-      ],
-      "energy_data": []
-    },
-    {
-      "pk": 14,
-      "name": "RT600SL-T",
-      "slug": "rt600sl-t",
-      "category": "ROADWAY",
-      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "products/RT600SL-T_yqv89jW.webp",
-      "banner_image": "products/banners/rt600sl-t-bar-1.webp",
-      "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
-      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140.webp",
-      "ordering_image": "",
-      "order": 51,
-      "parent_slug": "",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "RT600SL-T-120W"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">14,400 lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "120W"
-        },
-        {
-          "label": "CRI",
-          "value": "70~95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347~480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110~277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": "100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "23.5\"  x 13.8\" x  3.9\" / 596 x 350 x 100mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 27.6 lbs) 12.5 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    },
-    {
-      "pk": 15,
-      "name": "RT820SL-T",
-      "slug": "rt820sl-t",
-      "category": "ROADWAY",
-      "description": "1111",
-      "power": "",
-      "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
-      "image": "",
-      "banner_image": "products/banners/rt820sl-t-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
-      "ordering_image": "",
-      "order": 52,
-      "parent_slug": "",
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "specs": [],
-      "energy_data": [
-        {
-          "label": "Series Name",
-          "value": "RT820SL-T"
-        },
-        {
-          "label": "Lumen Output",
-          "value": ">10,400lm"
-        },
-        {
-          "label": "System Wattage",
-          "value": "240W"
-        },
-        {
-          "label": "CRI",
-          "value": "70-95"
-        },
-        {
-          "label": "Color Temperature (Kevin)",
-          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
-        },
-        {
-          "label": "Input Voltage (High Voltage)",
-          "value": "347-480VAC"
-        },
-        {
-          "label": "Input Voltage (Low Voltage)",
-          "value": "110-277VAC"
-        },
-        {
-          "label": "L70 Hours",
-          "value": ">100,000 at 25°C"
-        },
-        {
-          "label": "Operating Temperature Range",
-          "value": "-40°C to 55°C"
-        },
-        {
-          "label": "Surge (Common Mode / Differential Mode)",
-          "value": "10kV"
-        },
-        {
-          "label": "IP Rating",
-          "value": "IP66"
-        },
-        {
-          "label": "L\" × W\" × H\"",
-          "value": "32.3\" x 13.8\" x 3.9\" / 821 × 350 × 100 mm"
-        },
-        {
-          "label": "Approximate Weight",
-          "value": "( 40.3 lbs) 18.3 kgs"
-        },
-        {
-          "label": "Material",
-          "value": "Aluminum / Glass"
-        },
-        {
-          "label": "LED Brand",
-          "value": "Bridgelux"
-        },
-        {
-          "label": "LED Driver",
-          "value": "Inventronics Or Equal"
-        }
-      ]
-    }
-  ],
-  "projects": [
-    {
-      "pk": 1,
-      "title": "Bohemia Manor High School",
-      "location": "United States",
-      "slug": "football-field-led-retrofit",
-      "venue_type": "OUTDOOR",
-      "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
-      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
-      "image": "images/processed/footballfield.webp",
-      "order": 1,
-      "translations": {
-        "fr": {
-          "title": "Lycée Bohemia Manor",
-          "location": "États-Unis",
-          "description": "【Profil du client】\nBohemia Manor High School est une école publique gérée par Cecil County Public Schools située à environ 1,6 km au sud de la petite ville de Chesapeake City dans le comté de Cecil, MD. Il s'agit d'une petite école de 685 élèves qui partage son campus avec le collège Bohemia Manor.\nl'école est également connue sous le surnom de « Bo Manor ».\n\n【Étendue des travaux】\nL'éclairage d'origine du champ « Bo Manor » était inefficace, sous-éclairé et difficile à entretenir. En outre, les spécifications du projet nécessitaient l'utilisation des poteaux et des structures existants.\n\n【La solution】\nUne conception photométrique de précision a été réalisée pour s'assurer que les spécifications de conception étaient respectées. La conception a nécessité le remplacement (40 au total) des luminaires 1500W MH existants par (48 au total) de nos lampes de sport à LED FL9M -630W.",
-          "results": "<strong>Éclairage</strong> moyen de 30 fc, <strong>uniformité 1,37 : 1</strong> — dépassant les exigences du projet."
-        },
-        "es": {
-          "title": "Escuela Secundaria Bohemia Manor",
-          "location": "Estados Unidos",
-          "description": "Perfil 【del cliente】\nBohemia Manor High School es una escuela pública operada por las Escuelas Públicas del Condado de Cecil ubicada aproximadamente a una milla al sur de la pequeña ciudad de Chesapeake City en el Condado de Cecil, MD. Esta es una pequeña escuela de 685 estudiantes que comparte su campus con Bohemia Manor Middle School.\nla escuela también es conocida con el apodo de \"Bo Manor\".\n\n【Alcance del trabajo】\nLa iluminación original en el campo \"Bo Manor\" era ineficiente, poco iluminada y molesta de mantener. Además, las especificaciones del proyecto requerían el uso de los postes y estructuras existentes.\n\n【La solución】\nSe completó un diseño fotométrico de precisión para garantizar que se cumplieran las especificaciones de diseño. El diseño requería el reemplazo (40 en total) de los accesorios de iluminación existentes de 1500W MH a (48 en total) de nuestras luces deportivas de rendimiento LED FL9M -630W.",
-          "results": "<strong>30</strong> fc iluminancia media, <strong>uniformidad 1.37 : 1</strong> — excediendo los requisitos del proyecto."
-        },
-        "de": {
-          "title": "Bohemia Manor Gymnasium",
           "location": "Vereinigte Staaten von Amerika",
-          "description": "【Kundenprofil】\nDie Bohemia Manor High School ist eine öffentliche Schule, die von Cecil County Public Schools betrieben wird und etwa eine Meile südlich der kleinen Stadt Chesapeake City in Cecil County, MD, liegt. Dies ist eine kleine Schule mit 685 Schülern, die ihren Campus mit der Bohemia Manor Middle School teilt. Die\nschule ist auch unter dem Spitznamen „Bo Manor“ bekannt.\n\n【Arbeitsumfang】\nDie ursprüngliche Beleuchtung im Feld \"Bo Manor\" war ineffizient, unterleuchtet und musste mühsam gewartet werden. Außerdem erforderten die Spezifikationen des Projekts die Nutzung der vorhandenen Pole und Strukturen.\n\n【Die Lösung】\nEin präzises photometrisches Design wurde fertiggestellt, um sicherzustellen, dass die Konstruktionsspezifikationen eingehalten wurden. Das Design sah den Austausch (insgesamt 40) der vorhandenen 1500-W-MH-Leuchten an (insgesamt 48) unserer FL9M-630-W-LED-Leistungssportleuchten vor.",
-          "results": "<strong>30fc</strong> mittlere Beleuchtungsstärke, <strong>Gleichmäßigkeit 1,37 : 1</strong> — die Projektanforderungen übertreffend."
-        },
-        "ru": {
-          "title": "Средняя школа Bohemia Manor",
-          "location": "Соединенные Штаты Америки",
-          "description": "Профиль 【клиента】\nСредняя школа Bohemia Manor - это государственная школа, управляемая государственными школами округа Сесил, расположенная примерно в одной миле к югу от небольшого городка Чесапик-Сити в округе Сесил, штат Мэриленд. Это небольшая школа на 685 учеников, которая делит свой кампус со средней школой Bohemia Manor.\nшкола также известна под прозвищем «Усадьба Бо».\n\n【Объем работ】\nПервоначальное освещение на месторождении «Усадьба Бо» было неэффективным, недостаточно освещенным и требовало хлопот в обслуживании. Также спецификации проекта требовали использования существующих опор и конструкций.\n\n【Решение】\nДля обеспечения соответствия проектным спецификациям была завершена точная фотометрическая конструкция. Дизайн предусматривал замену (всего 40) существующих светильников 1500 Вт MH на (всего 48) наших светодиодных спортивных светильников FL9M -630W.",
-          "results": "<strong>30fc</strong> средняя освещенность, <strong>равномерность 1,37 : 1</strong> — превышение проектных требований."
-        },
-        "ar": {
-          "title": "مدرسة بوهيميا مانور الثانوية",
-          "location": "الولايات المتحدة الأمريكية",
-          "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
-          "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 4,
-      "title": "Yuanshen Sports Centre Stadium",
-      "location": "Shanghai, China",
-      "slug": "yuanshen-sports-centre-stadium",
-      "venue_type": "OUTDOOR",
-      "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】\r\nShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】\r\nLighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】\r\nFL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed.\r\nAlso, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
-      "image": "images/processed/soccerfield.webp",
-      "order": 2,
-      "translations": {
-        "fr": {
-          "title": "Stade du Centre Sportif Yuanshen",
-          "location": "Shanghai, Chine",
-          "description": "Un stade polyvalent à Shanghai Pudong avec 160 000 m² et 20 000 places. 320 projecteurs LED FL12M-1000W (TCP: 5000-5500K) avec système de contrôle réseau pour la commande à distance et le monitoring de puissance.",
-          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018."
-        },
-        "es": {
-          "title": "Estadio del Centro Deportivo Yuanshen",
-          "location": "Shanghai, China",
-          "description": "Un estadio polideportivo en Shanghai Pudong con 160,000 m² y 20,000 asientos. 320 luminarias LED FL12M-1000W (TCP: 5000-5500K) con sistema de control en red para encendido/apagado remoto y monitoreo.",
-          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018."
-        },
-        "de": {
-          "title": "Yuanshen Sportzentrum Stadion",
-          "location": "Shanghai, China",
-          "description": "Ein Mehrzweckstadion in Shanghai Pudong mit 160.000 m² und 20.000 Sitzplätzen. 320 LED-Sportfluter FL12M-1000W (TDF: 5000-5500K) mit Netzwerk-Steuerungssystem.",
-          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018."
-        },
-        "ru": {
-          "title": "Стадион Спортивного центра Юаньшэнь",
-          "location": "Шанхай, Китай",
-          "description": "Многоцелевой стадион в районе Пудун, Шанхай, площадью 160 000 м² на 20 000 мест. 320 спортивных LED-прожекторов FL12M-1000W (ЦТТ: 5000-5500К) с сетевой системой управления.",
-          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018."
-        },
-        "ar": {
-          "title": "ملعب مركز يوانشين الرياضي",
-          "location": "شنغهاي، الصين",
-          "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
-          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 2,
-      "title": "Carroll County Sports Complex",
-      "location": "United States",
-      "slug": "baseball-field-led-retrofit",
-      "venue_type": "OUTDOOR",
-      "sport_type": "BASEBALL_FIELD",
-      "description": "150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
-      "image": "images/processed/Baseball.webp",
-      "order": 3,
-      "translations": {
-        "fr": {
-          "title": "Rénovation LED Terrain de Baseball",
-          "location": "États-Unis",
-          "description": "150 projecteurs LED sportifs FL9M-630W de la série Performance avec drivers à montage distant ont été installés. Un système de contrôle réseau a été intégré pour permettre le contrôle à distance marche/arrêt et la surveillance de puissance.",
-          "results": "50/30fc éclairage moyen, uniformité 2.0:1 / 2.5:1 — respectant les spécifications du projet."
-        },
-        "es": {
-          "title": "Renovación LED Campo de Béisbol",
-          "location": "Estados Unidos",
-          "description": "Se instalaron 150 luminarias LED deportivas FL9M-630W de la serie Performance con controladores de montaje remoto. Se incorporó un sistema de control en red para permitir encendido/apagado remoto y monitoreo de potencia.",
-          "results": "50/30fc iluminación promedio, uniformidad 2.0:1 / 2.5:1 — cumpliendo las especificaciones del proyecto."
-        },
-        "de": {
-          "title": "LED-Umrüstung Baseballfeld",
-          "location": "Vereinigte Staaten",
-          "description": "150 LED-Sportfluter FL9M-630W der Performance-Serie mit Fernmontage-Treibern wurden installiert. Ein Netzwerk-Steuerungssystem wurde integriert für ferngesteuerte Ein/Aus-Steuerung und Leistungsüberwachung.",
-          "results": "50/30fc durchschnittliche Beleuchtung, Gleichmäßigkeit 2.0:1 / 2.5:1 — erfüllt die Projektspezifikationen."
-        },
-        "ru": {
-          "title": "Модернизация LED бейбольного поля",
-          "location": "Соединённые Штаты",
-          "description": "Установлены 150 спортивных LED-прожекторов FL9M-630W серии Performance с удалёнными драйверами. Интегрирована сетевая система управления для дистанционного включения/выключения и мониторинга мощности.",
-          "results": "Средняя освещённость 50/30фк, равномерность 2.0:1 / 2.5:1 — соответствие проектным спецификациям."
-        },
-        "ar": {
-          "title": "ترقية LED لملاعب البيسبول",
-          "location": "الولايات المتحدة",
-          "description": "تم تركيب 150 مصابيح LED رياضية FL9M-630W من سلسلة الأداء مع محركات تحكم عن بعد. تم دمج نظام تحكم شبكي للسماح بالتشغيل/الإيقاف عن بعد ومراقبة الطاقة.",
-          "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 6,
-      "title": "Morgan State University Tennis Courts",
-      "location": "United States",
-      "slug": "morgan-state-university-tennis-courts",
-      "venue_type": "OUTDOOR",
-      "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
-      "results": "",
-      "image": "projects/msu-tennis-01.webp",
-      "order": 4,
-      "translations": {
-        "fr": {
-          "title": "Courts de tennis de l'Université Morgan State",
-          "description": "【Profil du client】\nMorgan State University est la première université publique de recherche urbaine du Maryland, connue pour son excellence en matière d'enseignement, de recherche intensive, de service public efficace et d'engagement communautaire. Morgan prépare les diplômés diversifiés et compétitifs à réussir dans une société mondiale et interdépendante.",
-          "location": "États-Unis"
-        },
-        "es": {
-          "title": "Pistas de tenis de la Universidad Estatal Morgan",
-          "description": "Perfil 【del cliente】\nMorgan State University es la principal universidad pública de investigación urbana en Maryland, conocida por su excelencia en la enseñanza, la investigación intensiva, el servicio público efectivo y la participación de la comunidad. Morgan prepara graduados diversos y competitivos para el éxito en una sociedad global e interdependiente.",
-          "location": "Estados Unidos"
-        },
-        "de": {
-          "title": "Tennisplätze der Morgan State University",
-          "description": "【Kundenprofil】\nDie Morgan State University ist die führende öffentliche Stadtforschungsuniversität in Maryland, die für ihre Exzellenz in der Lehre, intensive Forschung, effektiven öffentlichen Dienst und soziales Engagement bekannt ist. Morgan bereitet vielfältige und wettbewerbsfähige Absolventen auf den Erfolg in einer globalen, voneinander abhängigen Gesellschaft vor.",
-          "location": "Vereinigte Staaten von Amerika"
         },
         "ru": {
           "title": "Теннисные корты Morgan State University",
           "description": "Профиль 【клиента】\nГосударственный университет Моргана является ведущим государственным городским исследовательским университетом в Мэриленде, известным своим превосходством в обучении, интенсивных исследованиях, эффективной государственной службе и вовлечении сообщества. Morgan готовит разнообразных и конкурентоспособных выпускников к успеху в глобальном, взаимозависимом обществе.",
-          "location": "Соединенные Штаты Америки"
+          "location": "Соединенные Штаты Америки",
         },
         "ar": {
           "title": "ملاعب التنس بجامعة ولاية مورغان",
           "description": "الملف الشخصي 【للعميل】\nجامعة ولاية مورغان هي الجامعة البحثية الحضرية العامة الرائدة في ولاية ماريلاند، والمعروفة بتميزها في التدريس والبحث المكثف والخدمة العامة الفعالة والمشاركة المجتمعية. تعد مورغان خريجين متنوعين وتنافسين للنجاح في مجتمع عالمي مترابط.",
-          "location": "الولايات المتحدة الأمريكية"
-        }
+          "location": "الولايات المتحدة الأمريكية",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 7,
@@ -3543,35 +1962,35 @@ SEED_DATA = {
       "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
       "image": "projects/nanshan-ski-01.webp",
       "order": 5,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Village de ski de Nanshan",
           "description": "【Profil du client】\nLe village de ski de Nanshan est situé au nord de la ville de Pékin. Depuis son ouverture en 2001, cette station de ski est devenue la plus grande du genre en Chine, offrant les équipements et les équipements de ski les plus avancés pour tous les amateurs de ski, qu'ils soient touristes ou locaux.\n\n【Étendue des travaux】\nSolarOne Vision Smart RT-410 a été sélectionné pour éclairer le village de ski de Nanshan. Dans tous les sports, l'éclairage LED offre la meilleure scène pour les compétiteurs, et ce n'est pas différent pour les skieurs et les snowboarders. La technologie de contrôle de l'éblouissement équivaut à un éclairage plus uniforme avec moins d'ombres indésirables ou de points chauds qui peuvent distraire les contributeurs pendant leur course. Dans un sport avec peu de marge d'erreur, la technologie LED permet de s'assurer que les lumières ne créent pas une autre variable pour les skieurs et les snowboarders.\n\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. L'éblouissement et la sortie de lumière ont été effectués. Ensuite, nous avons fourni des points de visée exacts pour chaque match. Les lampes d'inondation SolarOne Vision Smart 260W RT410 ont été facilement installées dans le village de ski de Nanshan. Nos solutions d'éclairage LED fournissent une lumière uniforme dans l'air et sur la pente beaucoup plus efficacement que la lumière aux halogénures métalliques et réduisent considérablement le déversement de lumière indésirable et la pollution lumineuse. La durée de vie des LED dépasse généralement 100 000 heures par rapport à une durée de vie traditionnelle des halogénures métalliques de 18 000 heures.",
-          "location": "Pékin, Chine"
+          "location": "Pékin, Chine",
         },
         "es": {
           "title": "Nanshan Ski Village",
           "description": "Perfil 【del cliente】\nNanshan Ski Village se encuentra al norte de la ciudad de Pekín. Desde su apertura en 2001, esta estación de esquí se ha convertido en la más grande de su tipo en China, proporcionando los equipos y servicios de esquí más avanzados para todos los entusiastas del esquí, tanto turistas como lugareños.\n\n【Alcance del trabajo】\nSolarOne Vision Smart RT-410 fue seleccionado para iluminar la estación de esquí de Nanshan. En todos los deportes, la iluminación LED proporciona el mejor escenario para que los competidores se desempeñen, y no es diferente para los esquiadores y snowboarders. La tecnología de control de deslumbramiento equivale a una iluminación más uniforme con menos sombras no deseadas o puntos calientes que pueden distraer a los usuarios durante su carrera. En un deporte con poco margen de error, la tecnología LED ayuda a garantizar que las luces no creen otra variable para los esquiadores y snowboarders.\n\n【La solución】\nSe realizó un diseño fotométrico de ingeniería. Se realizó el deslumbramiento y la salida de luz. Luego proporcionamos puntos de puntería exactos para cada accesorio. La serie de luces de inundación SolarOne Vision Smart 260W RT410 se instaló fácilmente en la estación de esquí de Nanshan. Nuestras soluciones de iluminación LED proporcionan una luz uniforme en el aire y en la pendiente de manera mucho más eficiente que la luz de haluro metálico y reducen significativamente los derrames de luz no deseados y la contaminación lumínica. La vida útil de los LED generalmente supera las 100.000 horas en comparación con una vida útil tradicional de haluro metálico de 18.000 horas.",
-          "location": "Pekin, China"
+          "location": "Pekin, China",
         },
         "de": {
           "title": "Nanshan Skidorf",
           "description": "【Kundenprofil】\nDas Skidorf Nanshan liegt nördlich von Peking-Stadt. Seit seiner Eröffnung im Jahr 2001 ist dieses Skigebiet das größte seiner Art in China und bietet die fortschrittlichsten Skiausrüstungen und Annehmlichkeiten für alle Skibegeisterten - sowohl Touristen als auch Einheimische.\n\n【Arbeitsumfang】\nSolarOne Vision Smart RT-410 wurde ausgewählt, um das Nanshan Ski Village zu beleuchten. In allen Sportarten bietet LED-Beleuchtung die beste Bühne für Konkurrenten, und das ist für Ski- und Snowboarder nicht anders. Die Blendschutztechnologie sorgt für eine gleichmäßigere Beleuchtung mit weniger unerwünschten Schatten oder Hotspots, die Patrons während ihres Laufs ablenken können. In einer Sportart mit wenig Spielraum für Fehler sorgt die LED-TECHNOLOGIE dafür, dass die Lichter keine weitere Variable für Skifahrer und Snowboarder darstellen.\n\n【Die Lösung】\nEs wurde ein konstruiertes photometrisches Design durchgeführt. Die Blend- und Lichtleistung wurde durchgeführt. Dann haben wir für jede Vorrichtung genaue Zielpunkte angegeben. Die SolarOne Vision Smart 260W RT410 Flutlicht-Serie wurde einfach im Skidorf Nanshan installiert. Unsere LED-Beleuchtungslösungen liefern gleichmäßiges Licht in der Luft und am Hang viel effizienter als Metallhalogenidlicht und reduzieren unerwünschtes Licht und Lichtverschmutzung erheblich. Die Lebensdauer von LEDs übersteigt im Allgemeinen 100.000 Stunden im Vergleich zu einer herkömmlichen Lebensdauer von 18.000 Stunden.",
-          "location": "Peking, China"
+          "location": "Peking, China",
         },
         "ru": {
           "title": "Лыжная деревня Наньшань",
           "description": "Профиль 【клиента】\nЛыжная деревня Наньшань расположена к северу от Пекина. С момента своего открытия в 2001 году этот горнолыжный курорт стал крупнейшим в своем роде в Китае, предоставляя самое современное горнолыжное оборудование и удобства для всех любителей горнолыжного спорта - как туристов, так и местных жителей.\n\n【Объем работ】\nДля освещения горнолыжной деревни Наньшань был выбран SolarOne Vision Smart RT-410. Во всех видах спорта светодиодное освещение обеспечивает лучшую сцену для выступлений участников, и оно ничем не отличается для лыжников и сноубордистов. Технология управления бликами обеспечивает более равномерное освещение с меньшим количеством нежелательных теней или горячих точек, которые могут отвлекать посетителей во время пробежки. В спорте с небольшим запасом на ошибку СВЕТОДИОДНАЯ технология помогает обеспечить, чтобы огни не создавали еще одну переменную для лыжников и сноубордистов.\n\n【Решение】\nВыполнен инженерный фотометрический расчет. Выполняли ослепление и светоотдачу. Затем мы предоставили точные точки прицеливания для каждого приспособления. SolarOne Vision Smart 260W RT410 Flood Light Series были легко установлены в лыжной деревне Наньшань. Наши светодиодные осветительные решения обеспечивают равномерный свет в воздухе и на склоне гораздо эффективнее, чем свет галогенида металла, и значительно уменьшают нежелательный разлив света и световое загрязнение. Срок службы светодиодов обычно превышает 100 000 часов по сравнению с традиционным сроком службы галогенида металла, составляющим 18 000 часов.",
-          "location": "Пекин, Китай"
+          "location": "Пекин, Китай",
         },
         "ar": {
           "title": "قرية نانشان للتزلج",
           "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
-          "location": "بكين، الصين"
-        }
+          "location": "بكين، الصين",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 3,
@@ -3584,40 +2003,40 @@ SEED_DATA = {
       "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
       "image": "images/processed/basketball.webp",
       "order": 6,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Arène Multisport HD Broadcast",
           "location": "France",
           "description": "Un lieu polyvalent en France conçu pour la télévision HD, convertible entre configurations basket et tennis. Les projecteurs LED FL9M-630W satisfont pleinement les exigences d’éclairage pour le basket et le tennis.",
-          "results": ">2000 lux — répondant aux normes de diffusion HD."
+          "results": ">2000 lux — répondant aux normes de diffusion HD.",
         },
         "es": {
           "title": "Arena Multideporte HD Broadcast",
           "location": "Francia",
           "description": "Un recinto polideportivo en Francia diseñado para televisión HD, convertible entre configuraciones de baloncesto y tenis. Las luminarias LED FL9M-630W satisfacen plenamente los requisitos de iluminación.",
-          "results": ">2000 lux — cumpliendo los estándares de transmisión HD."
+          "results": ">2000 lux — cumpliendo los estándares de transmisión HD.",
         },
         "de": {
           "title": "Mehrzweck-HD-Broadcast-Arena",
           "location": "Frankreich",
           "description": "Eine Mehrzweckhalle in Frankreich für HD-Fernsehen, umschaltbar zwischen Basketball- und Tennis-Konfiguration. FL9M-630W LED-Sportfluter erfüllen vollumfänglich die Beleuchtungsanforderungen.",
-          "results": ">2000 Lux — erfüllt HD-Broadcast-Standards."
+          "results": ">2000 Lux — erfüllt HD-Broadcast-Standards.",
         },
         "ru": {
           "title": "Многоспортивная арена HD-вещания",
           "location": "Франция",
           "description": "Многоцелевой комплекс во Франции, спроектированный для HD-телевидения, преобразуемый между баскетбольными и теннисными конфигурациями. LED-прожекторы FL9M-630W полностью удовлетворяют требованиям освещения.",
-          "results": ">2000 люкс — соответствие стандартам HD-вещания."
+          "results": ">2000 люкс — соответствие стандартам HD-вещания.",
         },
         "ar": {
           "title": "صالة رياضية متعددة الألعاب بث HD",
           "location": "فرنسا",
           "description": "مرفق متعدد الأغراض في فرنسا مصمم للتلفزيون عالي الدقة، قابل للتحويل بين إعدادات كرة السلة والتنس. مصابيح LED FL9M-630W تلبي بالكامل متطلبات الإضاءة.",
-          "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
-        }
+          "results": ">2000 لوكس — تلبي معايير البث عالي الدقة.",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 5,
@@ -3630,9 +2049,10 @@ SEED_DATA = {
       "results": "",
       "image": "projects/Narbonne-basketball-04.webp",
       "order": 7,
-      "translations": {},
+      "pdf_url": "",
       "gallery": [],
-      "pdf_url": ""
+      "translations": {
+      },
     },
     {
       "pk": 8,
@@ -3645,61 +2065,40 @@ SEED_DATA = {
       "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
       "image": "projects/bcia-airport-01.webp",
       "order": 10,
+      "pdf_url": "",
+      "gallery": [],
       "translations": {
         "fr": {
           "title": "Aéroport international de Beijing",
           "description": "【Profil du client】\nL'aéroport international de Beijing Capital est le deuxième plus grand aéroport du monde et le principal aéroport international desservant Pékin. \n【Étendue des travaux】 \nSolarOne a été contacté pour créer une solution d'éclairage pour l'aire de trafic, les terminaux et les parkings de l'aéroport international de la capitale de Pékin. Ce projet consistait en un remplacement un pour un des luminaires aux halogénures métalliques de 1 000 watts existants. \nLes voyages en avion nécessitent beaucoup de déplacements ici même au sol. Les solutions d'éclairage LED SolarOne fournissent un éclairage lumineux et uniforme le long des routes d'accès aux aéroports, des parkings, des passerelles, des couloirs et des halls, réduisant ainsi la consommation d'énergie et les coûts d'entretien à deux chiffres. Notre technologie Vision Smart réduit les débordements de lumière tout en améliorant la sécurité de fonctionnement.\n【La solution】\nUne conception photométrique d'ingénierie a été réalisée. Nous avons vérifié l'éblouissement et la luminosité. Ensuite, nous avons fourni des points de visée exacts pour chaque match. [Error: Server Error: You made too many requests to the server.Accor]",
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
         },
         "es": {
           "title": "[Error: Server Error: You made too many requests to the server.Accor]",
           "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
         },
         "de": {
           "title": "[Error: Server Error: You made too many requests to the server.Accor]",
           "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
         },
         "ru": {
           "title": "[Error: Server Error: You made too many requests to the server.Accor]",
           "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
         },
         "ar": {
           "title": "[Error: Server Error: You made too many requests to the server.Accor]",
           "description": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
-          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
-        }
+          "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]",
+        },
       },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 10,
-      "title": "Beijing International Tennis Center",
-      "location": "Beijing, China",
-      "slug": "beijing-international-tennis-center",
-      "venue_type": "INDOOR",
-      "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall was the first indoor professional tennis hall. In 2015, to promote its development consistent with the time, the company decided to proceed with the reconstruction of the tennis hall on its original premise. \r\n\r\n【Scope of Work 】\r\nSolarOne was contacted to create a lighting solution for the Bejiing International Tennis Club. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for tennis players. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract athletes while in the game. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the athletes.",
-      "results": "Where every hit counts, uniform, no-glare light does not effect the vision of the athletes while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. The new lighting system achieved an average of uniformity of 75 percent and a saved in energy costs by 50 percent. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel. SolarOne Vision Smart RT410FL-S160W improved the Beijing international Tennis Club experience with the greatest visual comfort for the athletes and coaches alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry",
-      "image": "",
-      "order": 25,
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [],
-      "pdf_url": ""
     },
     {
       "pk": 9,
@@ -3712,16 +2111,20 @@ SEED_DATA = {
       "results": "",
       "image": "projects/oscg-01.webp",
       "order": 45,
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
+      "pdf_url": "",
       "gallery": [],
-      "pdf_url": ""
+      "translations": {
+        "fr": {
+        },
+        "es": {
+        },
+        "de": {
+        },
+        "ru": {
+        },
+        "ar": {
+        },
+      },
     }
   ],
-  "siteconfig": {}
 }
