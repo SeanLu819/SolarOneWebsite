@@ -61,6 +61,8 @@ _SIDEBAR_CAT_TO_PRODUCT_CAT = {
 
 
 _seed_cache = None
+_static_file_set = None
+_dir_listing_cache = {}
 
 def _load_seed():
     """Load seed data. On Vercel, import from the embedded Python module
@@ -85,6 +87,68 @@ def _load_seed():
     if _seed_cache is None:
         _seed_cache = {'products': [], 'projects': [], 'site_config': {}}
     return _seed_cache
+
+
+def _build_static_file_set():
+    """Build a set of all relative static file paths. Cached after first call.
+    Eliminates 20-50 filesystem calls per request."""
+    global _static_file_set
+    if _static_file_set is not None:
+        return _static_file_set
+
+    file_set = set()
+    dirs_to_scan = []
+
+    static_root = str(settings.STATIC_ROOT)
+    if os.path.isdir(static_root):
+        dirs_to_scan.append(static_root)
+
+    for d in getattr(settings, 'STATICFILES_DIRS', []):
+        d = str(d)
+        if os.path.isdir(d) and d not in dirs_to_scan:
+            dirs_to_scan.append(d)
+
+    for base_dir in dirs_to_scan:
+        for root, _, files in os.walk(base_dir):
+            for f in files:
+                full = os.path.join(root, f)
+                rel = os.path.relpath(full, base_dir)
+                rel = rel.replace('\\', '/')
+                file_set.add(rel)
+
+    _static_file_set = file_set
+    logger.info(f'Built static file cache: {len(file_set)} files')
+    return file_set
+
+
+def _find_static(rel_path):
+    """O(1) lookup in cached static file set. No filesystem I/O after first call."""
+    rel_path = rel_path.replace('\\', '/')
+    return rel_path in _build_static_file_set()
+
+
+def _list_static_dir(rel_dir):
+    """List files in a static directory with caching. Eliminates repeated os.listdir() calls."""
+    if rel_dir in _dir_listing_cache:
+        return _dir_listing_cache[rel_dir]
+
+    results = set()
+    dirs_to_check = []
+
+    base = os.path.join(settings.BASE_DIR, 'static', rel_dir)
+    dirs_to_check.append(base)
+
+    static_root = os.path.join(str(settings.STATIC_ROOT), rel_dir)
+    if static_root not in dirs_to_check:
+        dirs_to_check.append(static_root)
+
+    for d in dirs_to_check:
+        if os.path.isdir(d):
+            for f in os.listdir(d):
+                results.add(f)
+
+    _dir_listing_cache[rel_dir] = results
+    return results
 
 
 # ============================================================================
@@ -279,20 +343,6 @@ def _clean_hashed_name(name: str) -> str:
     if '_' in stem:
         stem = stem.rsplit('_', 1)[0]
     return f'{stem}.{ext}'
-
-
-def _list_static_dir(rel_dir: str):
-    """List files in a static directory (relative to static/).
-
-    On Vercel the source static/ tree may not be deployed; fall back to
-    STATIC_ROOT (staticfiles/) which is populated by collectstatic."""
-    full = os.path.join(settings.BASE_DIR, 'static', rel_dir)
-    if os.path.isdir(full):
-        return set(os.listdir(full))
-    full2 = os.path.join(str(settings.STATIC_ROOT), rel_dir)
-    if os.path.isdir(full2):
-        return set(os.listdir(full2))
-    return set()
 
 
 _GALLERY_SLUG_MAP = {
