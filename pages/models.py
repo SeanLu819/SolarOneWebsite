@@ -209,6 +209,7 @@ class Project(models.Model):
         ('SKI_AREA', 'Ski Area'),
         ('BASKETBALL', 'Basketball'),
         ('VOLLEYBALL', 'Volleyball'),
+        ('TENNIS', 'Tennis'),
         ('TRACK_FIELD', 'Track and Field'),
         ('MULTI_SPORT', 'Multi-Sport Arena'),
         ('AIRPORT', 'Airport'),

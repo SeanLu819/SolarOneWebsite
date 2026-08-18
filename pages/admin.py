@@ -608,21 +608,43 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
         seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
 
+        # Update seed_data.json
         try:
             with open(seed_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
+            found = False
             for p in data.get('projects', []):
                 if p.get('slug') == slug:
                     if cover_rel:
                         p['image'] = cover_rel
                     p['gallery'] = gallery_paths
+                    found = True
                     break
+            if not found:
+                # Add new project to seed_data.json
+                new_proj = {
+                    'pk': obj.pk,
+                    'title': obj.title,
+                    'location': obj.location,
+                    'slug': slug,
+                    'venue_type': obj.venue_type,
+                    'sport_type': obj.sport_type,
+                    'description': obj.description,
+                    'results': obj.results,
+                    'image': cover_rel,
+                    'order': obj.order,
+                    'pdf_url': obj.pdf_static if obj.pdf_static else '',
+                    'gallery': gallery_paths,
+                    'translations': obj.translations if obj.translations else {},
+                }
+                data['projects'].append(new_proj)
             with open(seed_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
                 f.write('\n')
         except Exception:
             pass
 
+        # Update seed_data.py
         try:
             with open(seed_py_path, 'r', encoding='utf-8') as f:
                 content = f.read()
