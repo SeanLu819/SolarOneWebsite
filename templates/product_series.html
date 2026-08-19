@@ -67,7 +67,7 @@
         <!-- Hero with banner image as background, title at top-left -->
         {% static 'images/products/fl4m/fl4m-bar-1.webp' as fl4m_hero_fallback %}
         <div class="series-hero">
-          <img src="{{ series_hero_image|default:fl4m_hero_fallback }}" alt="{{ series_title }} — SolarOne LED lighting application" class="series-hero-bg">
+          <img src="{{ series_hero_image|default:fl4m_hero_fallback }}" alt="{{ series_title }} — SolarOne LED lighting application" class="series-hero-bg" loading="lazy">
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{% trans "M Series" %}</span>
@@ -105,7 +105,7 @@
             <div class="ps-thumbnails">
               {% for img in gallery %}
               <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-                <img src="{{ img.src }}" alt="{{ img.alt }}">
+                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
               </button>
               {% endfor %}
             </div>

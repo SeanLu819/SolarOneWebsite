@@ -8,13 +8,8 @@
       "description": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
       "power": "80~1280W+",
       "efficacy": "125lm/W",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/rt200-m.webp",
       "banner_image": "products/m-series-bar-1.webp",
-      "dimension_image": "",
-      "beam_angle_image": "",
       "ordering_image": "products/ordering/sample-number.webp",
       "order": 1,
       "parent_slug": "",
@@ -61,7 +56,6 @@
           "value": "125lm/W"
         }
       ],
-      "energy_data": [],
       "ordering_info": [
         "FL1M (Light With 1 Module)",
         "80~1280W+",
@@ -82,9 +76,7 @@
       "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
       "power": "260W",
       "efficacy": "125lm/W",
-      "output": "",
       "beam_angle": "18~100°",
-      "protection": "",
       "image": "products/floodlight.webp",
       "banner_image": "products/rt410-bar-1.webp",
       "dimension_image": "products/dimensions/rt410-3d-view.webp",
@@ -233,9 +225,6 @@
       "description": "FL1M modular floodlight configuration — part of the M Series family.",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/RT600SL-T.webp",
       "banner_image": "products/fl1m-bar-1.webp",
       "dimension_image": "products/dimensions/fl1m-3d-view.webp",
@@ -366,7 +355,6 @@
       "efficacy": "125lm/W",
       "output": "40K+ lm",
       "beam_angle": "18~50°",
-      "protection": "",
       "image": "products/fl4m-01.webp",
       "banner_image": "products/fl4m-bar-1.webp",
       "dimension_image": "products/fl4m-3d-view.webp",
@@ -515,7 +503,6 @@
       "efficacy": "125lm/W",
       "output": "60K+ lm",
       "beam_angle": "18~50°",
-      "protection": "",
       "image": "products/fl6m-01.webp",
       "banner_image": "products/fl6m-bar-1.webp",
       "dimension_image": "products/dimensions/fl6m-3d-view.webp",
@@ -646,7 +633,6 @@
       "efficacy": "125lm/W",
       "output": "90K+ lm",
       "beam_angle": "18~50°",
-      "protection": "",
       "image": "products/fl9m-01.webp",
       "banner_image": "products/fl9m-bar-1.webp",
       "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
@@ -777,7 +763,6 @@
       "efficacy": "125lm/W",
       "output": "120K+ lm",
       "beam_angle": "18~50°",
-      "protection": "",
       "image": "products/fl12m-01.webp",
       "banner_image": "products/fl12m-bar-1.webp",
       "dimension_image": "products/dimensions/fl12m-3d-view.webp",
@@ -908,7 +893,6 @@
       "efficacy": "125lm/W",
       "output": "160K+ lm",
       "beam_angle": "18~50°",
-      "protection": "",
       "image": "products/fl16m-01.webp",
       "banner_image": "products/fl16m-bar-1.webp",
       "dimension_image": "products/dimensions/fl16m-3d-view.webp",
@@ -1037,9 +1021,6 @@
       "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/vsp12m-01.webp",
       "banner_image": "products/vsp/vsp-bar-1.webp",
       "dimension_image": "products/dimensions/ac-en-3d-view.png",
@@ -1080,7 +1061,6 @@
         "products/gallery/VSP9M-03.webp",
         "products/gallery/VSP9M-04.webp"
       ],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1155,9 +1135,6 @@
       "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/rt590.webp",
       "banner_image": "products/vsp/vsp-bar-1.webp",
       "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
@@ -1198,7 +1175,6 @@
         "products/gallery/vsp12m-03.webp",
         "products/gallery/vsp12m-04.webp"
       ],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1273,9 +1249,6 @@
       "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/rt590_eRixs78.webp",
       "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
       "dimension_image": "products/dimensions/tr590-3d-view.webp",
@@ -1296,7 +1269,6 @@
         "products/gallery/rt590fl-s-03.webp",
         "products/gallery/rt590fl-s-04.webp"
       ],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1383,13 +1355,9 @@
       "description": "RT390FL-S",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/rt390-01.webp",
       "banner_image": "products/banners/rt390-bar-01.webp",
       "dimension_image": "products/dimensions/rt390-3d-view.webp",
-      "beam_angle_image": "",
       "ordering_image": "",
       "order": 32,
       "parent_slug": "",
@@ -1401,7 +1369,6 @@
         "ar": {}
       },
       "gallery": [],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1477,13 +1444,9 @@
       "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
       "power": "100~300W",
       "efficacy": "120lm/W",
-      "output": "",
-      "beam_angle": "",
       "protection": "IP66",
       "image": "products/HB.webp",
       "banner_image": "",
-      "dimension_image": "",
-      "beam_angle_image": "",
       "ordering_image": "",
       "order": 41,
       "parent_slug": "",
@@ -1502,8 +1465,7 @@
           "label": "Protection",
           "value": "IP66"
         }
-      ],
-      "energy_data": []
+      ]
     },
     {
       "pk": 14,
@@ -1513,9 +1475,6 @@
       "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "products/RT600SL-T_yqv89jW.webp",
       "banner_image": "products/banners/rt600sl-t-bar-1.webp",
       "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
@@ -1534,7 +1493,6 @@
         "products/gallery/RT600SL-T.webp",
         "products/gallery/rt600sl-02.webp"
       ],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1621,12 +1579,8 @@
       "description": "1111",
       "power": "",
       "efficacy": "",
-      "output": "",
-      "beam_angle": "",
-      "protection": "",
       "image": "",
       "banner_image": "products/banners/rt820sl-t-bar-1.webp",
-      "dimension_image": "",
       "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
       "ordering_image": "",
       "order": 52,
@@ -1639,7 +1593,6 @@
         "ar": {}
       },
       "gallery": [],
-      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1751,9 +1704,7 @@
           "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
           "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 4,
@@ -1797,9 +1748,7 @@
           "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
           "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 2,
@@ -1843,9 +1792,7 @@
           "description": "تم تركيب 150 مصابيح LED رياضية FL9M-630W من سلسلة الأداء مع محركات تحكم عن بعد. تم دمج نظام تحكم شبكي للسماح بالتشغيل/الإيقاف عن بعد ومراقبة الطاقة.",
           "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 6,
@@ -1884,9 +1831,7 @@
           "description": "الملف الشخصي 【للعميل】\nجامعة ولاية مورغان هي الجامعة البحثية الحضرية العامة الرائدة في ولاية ماريلاند، والمعروفة بتميزها في التدريس والبحث المكثف والخدمة العامة الفعالة والمشاركة المجتمعية. تعد مورغان خريجين متنوعين وتنافسين للنجاح في مجتمع عالمي مترابط.",
           "location": "الولايات المتحدة الأمريكية"
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 7,
@@ -1925,9 +1870,7 @@
           "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
           "location": "بكين، الصين"
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 3,
@@ -1971,9 +1914,7 @@
           "description": "مرفق متعدد الأغراض في فرنسا مصمم للتلفزيون عالي الدقة، قابل للتحويل بين إعدادات كرة السلة والتنس. مصابيح LED FL9M-630W تلبي بالكامل متطلبات الإضاءة.",
           "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 5,
@@ -1985,10 +1926,7 @@
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
       "image": "projects/Narbonne-basketball-04.webp",
-      "order": 7,
-      "translations": {},
-      "gallery": [],
-      "pdf_url": ""
+      "order": 7
     },
     {
       "pk": 8,
@@ -2032,9 +1970,7 @@
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
           "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         }
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     },
     {
       "pk": 9,
@@ -2053,9 +1989,7 @@
         "de": {},
         "ru": {},
         "ar": {}
-      },
-      "gallery": [],
-      "pdf_url": ""
+      }
     }
   ],
   "siteconfig": {}
