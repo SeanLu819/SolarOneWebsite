@@ -112,17 +112,7 @@ class Product(models.Model):
         help_text='产品型号标识，示例：FL1M-80W-30K-S。新建产品时会自动填充默认值，可按需修改。'
     )
     ordering_info = JSONField(
-        default=[
-            "FL1M (Light With 1 Module)",
-            "80W",
-            "30=3000K\n40=4000K\n57=5700K",
-            "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-            "12=12°\n18=18°\n30=30°\n50=50°",
-            "GRY=Grey\nBLK=Black",
-            "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-            "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-            "W = With Fixture\nS = Separated from Fixture"
-        ],
+        default=list,
         blank=True,
         verbose_name='Ordering Information',
         help_text='订购信息表格，9 列，每列支持多行（换行分隔）。'
