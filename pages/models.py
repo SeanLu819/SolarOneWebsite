@@ -668,14 +668,49 @@ def _update_seed_project(project):
     _rewrite_seed_project(getattr(project, 'slug', ''), cover_rel, gallery_rel)
 
 
+def _clean_hashed_filename(fname):
+    """Strip Django upload hash suffix (7 alphanumeric chars after underscore).
+
+    Django's default storage appends a hash like _abcX123 when a file with the
+    same name already exists. We strip it so static filenames are stable and
+    match what seed_sync.py resolves.
+    """
+    base = os.path.basename(fname)
+    stem, ext = os.path.splitext(base)
+    m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
+    if m:
+        return f'{stem[:m.start()]}{ext}'
+    return base
+
+
+def _prune_stale_images(static_dir, current_names):
+    """Remove image files from static_dir that are not in current_names set."""
+    try:
+        for entry in os.listdir(static_dir):
+            entry_lower = entry.lower()
+            if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif', '.svg')):
+                continue
+            if entry not in current_names:
+                try:
+                    os.remove(os.path.join(static_dir, entry))
+                except Exception:
+                    pass
+    except Exception:
+        pass
+
+
 @receiver(post_save, sender=Product)
 def sync_product_on_save(sender, instance, **kwargs):
+    """Copy product images from media/ to static/images/products/<slug>/
+    with Django hash suffixes stripped. Also prunes stale files."""
     if not getattr(instance, 'slug', None):
         return
     slug = instance.slug
     media_root = str(settings.MEDIA_ROOT)
     static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'products', slug)
     os.makedirs(static_dir, exist_ok=True)
+
+    current_names = set()
 
     def _copy_to(field_attr):
         field = getattr(instance, field_attr, None)
@@ -685,16 +720,23 @@ def sync_product_on_save(sender, instance, **kwargs):
         src = os.path.join(media_root, str(fname))
         if not os.path.exists(src):
             return None
-        dst = os.path.join(static_dir, os.path.basename(fname))
+        clean_name = _clean_hashed_filename(fname)
+        current_names.add(clean_name)
+        dst = os.path.join(static_dir, clean_name)
         try:
             shutil.copy2(src, dst)
         except Exception:
             pass
-        return f'images/products/{slug}/{os.path.basename(fname)}'
+        return f'images/products/{slug}/{clean_name}'
 
-    for attr in ('image', 'banner_image', 'dimension_image', 'beam_angle_image'):
+    # All product image fields (matching the model)
+    for attr in (
+        'image', 'banner_image', 'dimension_image',
+        'beam_angle_image', 'ordering_image', 'cert_image',
+    ):
         _copy_to(attr)
 
+    # Gallery images
     try:
         for pimg in instance.images.all():
             fname = getattr(pimg.image, 'name', None)
@@ -703,7 +745,9 @@ def sync_product_on_save(sender, instance, **kwargs):
             src = os.path.join(media_root, str(fname))
             if not os.path.exists(src):
                 continue
-            dst = os.path.join(static_dir, os.path.basename(fname))
+            clean_name = _clean_hashed_filename(fname)
+            current_names.add(clean_name)
+            dst = os.path.join(static_dir, clean_name)
             try:
                 shutil.copy2(src, dst)
             except Exception:
@@ -711,9 +755,19 @@ def sync_product_on_save(sender, instance, **kwargs):
     except Exception:
         pass
 
+    # Remove stale files no longer referenced
+    _prune_stale_images(static_dir, current_names)
+
 
 @receiver(post_save, sender=ProductImage)
 def sync_product_image_on_save(sender, instance, **kwargs):
+    product = getattr(instance, 'product', None)
+    if product:
+        sync_product_on_save(type(product), product)
+
+
+@receiver(post_delete, sender=ProductImage)
+def sync_product_image_on_delete(sender, instance, **kwargs):
     product = getattr(instance, 'product', None)
     if product:
         sync_product_on_save(type(product), product)

@@ -42,9 +42,11 @@ fi
 set -e
 echo "=== [build.sh] pip install done ==="
 
-# 1.5. Regenerate seed_data.py from seed_data.json (Vercel only uses seed_data.py)
-echo "=== [build.sh] Regenerating seed_data.py ==="
-python regen_seed_data.py 2>&1
+# 1.5. Regenerate pages/seed_data.py from seed_data.json (Vercel only uses seed_data.py).
+# Uses the unified seed_sync.py in JSON mode (no Django DB needed on Vercel).
+# This also validates image paths and prints warnings for missing files.
+echo "=== [build.sh] Regenerating seed_data.py from seed_data.json ==="
+python -m pages.seed_sync --json 2>&1
 
 # 2. Run Django collectstatic -> outputs to ./staticfiles per STATIC_ROOT
 echo "=== [build.sh] Running collectstatic ==="
