@@ -33,6 +33,7 @@ def main():
         lines.append(f'      "dimension_image": "{escape_json_string(p.get("dimension_image", ""))}",')
         lines.append(f'      "beam_angle_image": "{escape_json_string(p.get("beam_angle_image", ""))}",')
         lines.append(f'      "ordering_image": "{escape_json_string(p.get("ordering_image", ""))}",')
+        lines.append(f'      "cert_image": "{escape_json_string(p.get("cert_image", ""))}",')
         lines.append(f'      "order": {p.get("order", 0)},')
         lines.append(f'      "parent_slug": "{escape_json_string(p.get("parent_slug", ""))}",')
         

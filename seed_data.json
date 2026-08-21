@@ -11,8 +11,8 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt200-m.webp",
-      "banner_image": "products/m-series-bar-1.webp",
+      "image": "products/m-series/rt200-m.webp",
+      "banner_image": "products/m-series/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "ordering_image": "products/ordering/sample-number.webp",
@@ -45,7 +45,12 @@
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/m-series-01.webp",
+        "products/gallery/m-series-02.webp",
+        "products/gallery/m-series-03.webp",
+        "products/gallery/m-series-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -69,10 +74,10 @@
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
-      "image": "products/floodlight.webp",
-      "banner_image": "products/rt410-bar-1.webp",
-      "dimension_image": "products/dimensions/rt410-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle183050100.webp",
+      "image": "products/rt410-series/floodlight.webp",
+      "banner_image": "products/rt410-series/rt410-bar-1.webp",
+      "dimension_image": "products/rt410-series/rt410-3d-view.webp",
+      "beam_angle_image": "products/rt410-series/beamangle183050100.webp",
       "ordering_image": "",
       "order": 2,
       "parent_slug": "",
@@ -103,7 +108,12 @@
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt410fl-s-01.webp",
+        "products/gallery/rt410fl-s-02.webp",
+        "products/gallery/rt410fl-s-03.webp",
+        "products/gallery/rt410fl-s-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -204,10 +214,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/RT600SL-T.webp",
-      "banner_image": "products/fl1m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl1m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_65Fg8YW.webp",
+      "image": "products/fl1m/RT600SL-T.webp",
+      "banner_image": "products/fl1m/fl1m-bar-1.webp",
+      "dimension_image": "products/fl1m/fl1m-3d-view.webp",
+      "beam_angle_image": "products/fl1m/beamangle-12183050_65Fg8YW.webp",
       "ordering_image": "",
       "order": 11,
       "parent_slug": "m-series",
@@ -218,7 +228,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl1m-01.webp",
+        "products/gallery/fl1m-02.webp",
+        "products/gallery/fl1m-03.webp",
+        "products/gallery/fl1m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -319,10 +334,10 @@
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl4m-01.webp",
-      "banner_image": "products/fl4m-bar-1.webp",
-      "dimension_image": "products/fl4m-3d-view.webp",
-      "beam_angle_image": "products/beamangle-12183050.webp",
+      "image": "products/fl4m/fl4m-01.webp",
+      "banner_image": "products/fl4m/fl4m-bar-1.webp",
+      "dimension_image": "products/fl4m/fl4m-3d-view.webp",
+      "beam_angle_image": "products/fl4m/beamangle-12183050.webp",
       "ordering_image": "",
       "order": 12,
       "parent_slug": "m-series",
@@ -343,7 +358,12 @@
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl4m-01.webp",
+        "products/gallery/fl4m-02.webp",
+        "products/gallery/fl4m-03.webp",
+        "products/gallery/fl4m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -452,10 +472,10 @@
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl6m-01.webp",
-      "banner_image": "products/fl6m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl6m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_KcK84ZP.webp",
+      "image": "products/fl6m/fl6m-01.webp",
+      "banner_image": "products/fl6m/fl6m-bar-1.webp",
+      "dimension_image": "products/fl6m/fl6m-3d-view.webp",
+      "beam_angle_image": "products/fl6m/beamangle-12183050_KcK84ZP.webp",
       "ordering_image": "",
       "order": 13,
       "parent_slug": "m-series",
@@ -466,7 +486,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl6m-01.webp",
+        "products/gallery/fl6m-02.webp",
+        "products/gallery/fl6m-03.webp",
+        "products/gallery/fl6m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -567,10 +592,10 @@
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl9m-01.webp",
-      "banner_image": "products/banners/fl9m-bar-1_X3TvGYy.webp",
-      "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_4BJ8mot.webp",
+      "image": "products/fl9m/fl9m-01.webp",
+      "banner_image": "products/fl9m/fl9m-bar-1.webp",
+      "dimension_image": "products/fl9m/fl9m-3d-view.webp",
+      "beam_angle_image": "products/fl9m/beamangle-12183050_4BJ8mot.webp",
       "ordering_image": "",
       "order": 14,
       "parent_slug": "m-series",
@@ -581,7 +606,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl9m-01.webp",
+        "products/gallery/fl9m-02.webp",
+        "products/gallery/fl9m-03.webp",
+        "products/gallery/fl9m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -682,10 +712,10 @@
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl12m-01.webp",
-      "banner_image": "products/fl12m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl12m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_RlTn9zd.webp",
+      "image": "products/fl12m/fl12m-01.webp",
+      "banner_image": "products/fl12m/fl12m-bar-1.webp",
+      "dimension_image": "products/fl12m/fl12m-3d-view.webp",
+      "beam_angle_image": "products/fl12m/beamangle-12183050_RlTn9zd.webp",
       "ordering_image": "",
       "order": 15,
       "parent_slug": "m-series",
@@ -696,7 +726,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl12m-01.webp",
+        "products/gallery/fl12m-02.webp",
+        "products/gallery/fl12m-03.webp",
+        "products/gallery/fl12m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -797,10 +832,10 @@
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "products/fl16m-01.webp",
-      "banner_image": "products/fl16m-bar-1.webp",
-      "dimension_image": "products/dimensions/fl16m-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_vxDZHMV.webp",
+      "image": "products/fl16m/fl16m-01.webp",
+      "banner_image": "products/fl16m/fl16m-bar-1.webp",
+      "dimension_image": "products/fl16m/fl16m-3d-view.webp",
+      "beam_angle_image": "products/fl16m/beamangle-12183050_vxDZHMV.webp",
       "ordering_image": "",
       "order": 16,
       "parent_slug": "m-series",
@@ -811,7 +846,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/fl16m-01.webp",
+        "products/gallery/fl16m-02.webp",
+        "products/gallery/fl16m-03.webp",
+        "products/gallery/fl16m-04.webp"
+      ],
       "specs": [
         {
           "label": "Power",
@@ -912,10 +952,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/vsp12m-01.webp",
-      "banner_image": "products/banners/vsp-bar-1_SlCnPb6.webp",
-      "dimension_image": "products/dimensions/ac-en-3d-view.png",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_3YkmJS7.webp",
+      "image": "products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
+      "banner_image": "products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
+      "dimension_image": "products/vsp-xxxxw-9m-yp/ac-en-3d-view.png",
+      "beam_angle_image": "products/vsp-xxxxw-9m-yp/beamangle-12183050_3YkmJS7.webp",
       "ordering_image": "",
       "order": 21,
       "parent_slug": "",
@@ -946,7 +986,12 @@
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/VSP9M-01.webp",
+        "products/gallery/VSP9M-02.webp",
+        "products/gallery/VSP9M-03.webp",
+        "products/gallery/VSP9M-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1014,10 +1059,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt590.webp",
-      "banner_image": "products/banners/vsp-bar-2.webp",
-      "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-12183050_H3Gim4J.webp",
+      "image": "products/vsp-xxxxw-12m-yp/rt590.webp",
+      "banner_image": "products/vsp-xxxxw-12m-yp/vsp-bar-2.webp",
+      "dimension_image": "products/vsp-xxxxw-12m-yp/led-en-3d-view.webp",
+      "beam_angle_image": "products/vsp-xxxxw-12m-yp/beamangle-12183050_H3Gim4J.webp",
       "ordering_image": "",
       "order": 22,
       "parent_slug": "",
@@ -1048,7 +1093,12 @@
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/vsp12m-01.webp",
+        "products/gallery/vsp12m-02.webp",
+        "products/gallery/vsp12m-03.webp",
+        "products/gallery/vsp12m-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1116,10 +1166,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt590_eRixs78.webp",
-      "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
-      "dimension_image": "products/dimensions/tr590-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-3050120_cbdtaqu.webp",
+      "image": "products/rt590fl-s/rt590.webp",
+      "banner_image": "products/rt590fl-s/rt590-bar-01.webp",
+      "dimension_image": "products/rt590fl-s/tr590-3d-view.webp",
+      "beam_angle_image": "products/rt590fl-s/beamangle-3050120.webp",
       "ordering_image": "",
       "order": 31,
       "parent_slug": "",
@@ -1130,7 +1180,12 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/rt590fl-s-01.webp",
+        "products/gallery/rt590fl-s-02.webp",
+        "products/gallery/rt590fl-s-03.webp",
+        "products/gallery/rt590fl-s-04.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1210,10 +1265,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt390-01.webp",
-      "banner_image": "products/banners/rt390-bar-01.webp",
-      "dimension_image": "products/dimensions/rt390-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/beamangle-3050120_WlTRDAS.webp",
+      "image": "products/rt390fl/rt390-01.webp",
+      "banner_image": "products/rt390fl/rt390-bar-01.webp",
+      "dimension_image": "products/rt390fl/rt390-3d-view.webp",
+      "beam_angle_image": "products/rt390fl/beamangle-3050120_WlTRDAS.webp",
       "ordering_image": "",
       "order": 32,
       "parent_slug": "",
@@ -1304,10 +1359,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt400hb-01.webp",
-      "banner_image": "products/banners/rt400hb-barnner-01_CeBvRPy.webp",
-      "dimension_image": "products/dimensions/rt400hb-3d-view01_AQPehKc.webp",
-      "beam_angle_image": "products/beam_angles/rt400hb-beamangle-254590_TC5pGeM.png",
+      "image": "products/rt400hb/rt400hb-01.webp",
+      "banner_image": "products/rt400hb/rt400hb-barnner-01.webp",
+      "dimension_image": "products/rt400hb/rt400hb-3d-view01.webp",
+      "beam_angle_image": "products/rt400hb/rt400hb-beamangle-254590.png",
       "ordering_image": "",
       "order": 42,
       "parent_slug": "",
@@ -1394,10 +1449,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/hb500-04.webp",
-      "banner_image": "products/banners/rt500hb-barnner-01_fe5jJ6X.webp",
-      "dimension_image": "products/dimensions/rt500hb-3d-view.webp",
-      "beam_angle_image": "products/beam_angles/rt500hb-beamangle-254590.webp",
+      "image": "products/rt500hb/hb500-04.webp",
+      "banner_image": "products/rt500hb/rt500hb-barnner-01.webp",
+      "dimension_image": "products/rt500hb/rt500hb-3d-view.webp",
+      "beam_angle_image": "products/rt500hb/rt500hb-beamangle-254590.webp",
       "ordering_image": "",
       "order": 43,
       "parent_slug": "",
@@ -1488,9 +1543,9 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/rt220ub-01_mqkz4p2.webp",
-      "banner_image": "products/banners/rt220ub-banner_J5UGLoq.webp",
-      "dimension_image": "products/dimensions/rt220ub-3d-view_m8pTs49.webp",
+      "image": "products/rt220ub/rt220ub-01.webp",
+      "banner_image": "products/rt220ub/rt220ub-banner.webp",
+      "dimension_image": "products/rt220ub/rt220ub-3d-view.webp",
       "beam_angle_image": "",
       "ordering_image": "",
       "order": 44,
@@ -1582,10 +1637,10 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "products/RT600SL-T_yqv89jW.webp",
-      "banner_image": "products/banners/rt600sl-t-bar-1.webp",
-      "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
-      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140.webp",
+      "image": "products/rt600sl-t/RT600SL-T.webp",
+      "banner_image": "products/rt600sl-t/rt600sl-t-bar-1.webp",
+      "dimension_image": "products/rt600sl-t/RT600SL-dimension-1.webp",
+      "beam_angle_image": "products/rt600sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
       "order": 51,
       "parent_slug": "",
@@ -1596,7 +1651,10 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "products/gallery/RT600SL-T.webp",
+        "products/gallery/rt600sl-02.webp"
+      ],
       "specs": [],
       "energy_data": [
         {
@@ -1677,9 +1735,9 @@
       "beam_angle": "",
       "protection": "",
       "image": "",
-      "banner_image": "products/banners/rt820sl-t-bar-1.webp",
-      "dimension_image": "products/dimensions/rt820-3d-view_OgEZFpC.png",
-      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
+      "banner_image": "products/rt820sl-t/rt820sl-t-bar-1.webp",
+      "dimension_image": "products/rt820sl-t/rt820-3d-view.png",
+      "beam_angle_image": "products/rt820sl-t/rt600sl-beamangle70-140_0tydTLp.webp",
       "ordering_image": "",
       "order": 52,
       "parent_slug": "",
