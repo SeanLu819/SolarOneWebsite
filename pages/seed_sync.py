@@ -193,6 +193,40 @@ def _product_to_dict(product):
     }
 
 
+def _resolve_project_pdf(project, base_dir=None):
+    """Resolve the PDF URL for a project.
+
+    Priority:
+    1. project.pdf_static (explicit static path set in admin)
+    2. project.pdf_file (uploaded file, resolve to static if copied)
+    3. Auto-discover in static/files/ using slug-based naming
+    """
+    slug = getattr(project, 'slug', '')
+    if not slug:
+        return ''
+
+    # 1. Explicit pdf_static field
+    pdf_static = getattr(project, 'pdf_static', '') or ''
+    if pdf_static:
+        return pdf_static
+
+    # 2. Uploaded pdf_file - check if it exists in static files dir
+    pdf_file = getattr(project, 'pdf_file', None)
+    if pdf_file and getattr(pdf_file, 'name', ''):
+        fname = os.path.basename(pdf_file.name)
+        candidate = f'files/{fname}'
+        if _static_file_exists(candidate, base_dir):
+            return candidate
+
+    # 3. Auto-discover: slug_underscored.pdf in files/
+    auto_name = slug.replace('-', '_') + '.pdf'
+    candidate = f'files/{auto_name}'
+    if _static_file_exists(candidate, base_dir):
+        return candidate
+
+    return ''
+
+
 def _project_to_dict(project):
     """Convert a Project model instance to a seed dict with ALL fields."""
     slug = project.slug
@@ -203,6 +237,7 @@ def _project_to_dict(project):
         image_path = _resolve_static_path(img.name, slug, 'projects')
 
     gallery = _project_gallery_paths(project)
+    pdf_url = _resolve_project_pdf(project)
 
     return {
         'pk': project.pk,
@@ -217,7 +252,7 @@ def _project_to_dict(project):
         'order': project.order,
         'translations': project.translations if isinstance(project.translations, dict) else {},
         'gallery': gallery,
-        'pdf_url': getattr(project, 'pdf_url', '') or '',
+        'pdf_url': pdf_url,
     }
 
 
@@ -295,11 +330,71 @@ def sync_seed_from_db():
         return False
 
 
+def _discover_project_cover(slug, seed_image='', base_dir=None):
+    """Find the best cover image for a project, mirroring _find_project_cover_path logic.
+
+    Priority:
+    1. Per-slug directory (first image, excluding old/new comparison shots)
+    2. images/processed/ fallback for known legacy placeholders
+    3. Gallery directory match by slug token
+    4. Flat projects/ directory
+    """
+    import os
+
+    def _list_dir(rel_dir):
+        rel_dir = rel_dir.replace('\\', '/')
+        full_dir = None
+        # Check in each static dir
+        if base_dir:
+            for sub in ['static', 'staticfiles', 'public/static']:
+                d = os.path.join(base_dir, sub, rel_dir)
+                if os.path.isdir(d):
+                    full_dir = d
+                    break
+        if not full_dir:
+            return []
+        try:
+            return [f for f in os.listdir(full_dir)
+                    if f.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif'))]
+        except OSError:
+            return []
+
+    slug_dir = f'images/projects/{slug}'
+    slug_files = _list_dir(slug_dir)
+    exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
+
+    if slug_files:
+        slug_files_sorted = sorted(slug_files)
+        # Skip excluded files, pick first valid image
+        for f in slug_files_sorted:
+            if f.lower() not in exclude:
+                return f'{slug_dir}/{f}'
+
+    # Legacy processed/ fallback
+    name = os.path.basename(seed_image) if seed_image else ''
+    if name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
+        processed = f'images/processed/{name}'
+        if _static_file_exists(processed, base_dir):
+            return processed
+
+    # Gallery directory fallback
+    gallery_files = _list_dir('images/projects/gallery')
+    if gallery_files:
+        slug_tokens = set(slug.replace('-', ' ').lower().split())
+        for f in sorted(gallery_files):
+            f_lower = f.lower()
+            if any(tok in f_lower for tok in slug_tokens if len(tok) > 3):
+                return f'images/projects/gallery/{f}'
+
+    return seed_image  # keep original as last resort
+
+
 def sync_seed_from_json(base_dir=None):
     """JSON → Python sync. Reads seed_data.json, writes pages/seed_data.py.
 
     Used by build.sh on Vercel where there's no DB.
     Also validates image paths and prints warnings for missing files.
+    Auto-discovers PDF files and fixes project cover paths.
     Returns True on success, False on failure.
     """
     if base_dir is None:
@@ -317,7 +412,29 @@ def sync_seed_from_json(base_dir=None):
         print(f'[seed_sync] ERROR reading JSON: {e}')
         return False
 
-    # Validate image paths (informational)
+    # Auto-discover PDF files for projects with empty pdf_url
+    pdf_discovered = 0
+    for p in seed_data.get('projects', []):
+        if not p.get('pdf_url', ''):
+            slug = p.get('slug', '')
+            auto_name = slug.replace('-', '_') + '.pdf'
+            candidate = f'files/{auto_name}'
+            if _static_file_exists(candidate, base_dir):
+                p['pdf_url'] = candidate
+                pdf_discovered += 1
+
+    # Auto-fix project cover paths that don't resolve
+    covers_fixed = 0
+    for p in seed_data.get('projects', []):
+        current = p.get('image', '')
+        if current and not _static_file_exists(current, base_dir):
+            slug = p.get('slug', '')
+            new_path = _discover_project_cover(slug, current, base_dir)
+            if new_path and new_path != current and _static_file_exists(new_path, base_dir):
+                p['image'] = new_path
+                covers_fixed += 1
+
+    # Validate image + PDF paths (informational)
     missing = []
     for p in seed_data.get('products', []):
         for field in ['image', 'banner_image', 'dimension_image', 'beam_angle_image', 'ordering_image', 'cert_image']:
@@ -334,13 +451,20 @@ def sync_seed_from_json(base_dir=None):
         for g in p.get('gallery', []):
             if g and not _static_file_exists(g, base_dir):
                 missing.append(f"  project {p['slug']} gallery: {g}")
+        if p.get('pdf_url') and not _static_file_exists(p['pdf_url'], base_dir):
+            missing.append(f"  project {p['slug']}.pdf_url: {p['pdf_url']}")
 
     if missing:
-        print(f'[seed_sync] WARNING: {len(missing)} image path(s) not found in static/:')
+        print(f'[seed_sync] WARNING: {len(missing)} path(s) not found in static/:')
         for m in missing[:20]:
             print(m)
         if len(missing) > 20:
             print(f'  ... and {len(missing) - 20} more')
+
+    if pdf_discovered:
+        print(f'[seed_sync] Auto-discovered {pdf_discovered} PDF file(s) for projects')
+    if covers_fixed:
+        print(f'[seed_sync] Fixed {covers_fixed} project cover image path(s)')
 
     _write_seed_files(seed_data, base_dir)
 

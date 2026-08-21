@@ -2102,7 +2102,7 @@ SEED_DATA = {
         "images/projects/football-field-led-retrofit/bmhs-football-field-04.webp",
         "images/projects/football-field-led-retrofit/bmhs-football-field-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/football_field_led_retrofit.pdf"
     },
     {
       "pk": 13,
@@ -2129,7 +2129,7 @@ SEED_DATA = {
         "images/projects/yuanshen-sports-centre-stadium/shys-soccer-04.webp",
         "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/yuanshen_sports_centre_stadium.pdf"
     },
     {
       "pk": 2,
@@ -2228,7 +2228,7 @@ SEED_DATA = {
         "images/projects/morgan-state-university-tennis-courts/msu-tennis-04.webp",
         "images/projects/morgan-state-university-tennis-courts/msu-tennis-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/morgan_state_university_tennis_courts.pdf"
     },
     {
       "pk": 7,
@@ -2275,7 +2275,7 @@ SEED_DATA = {
         "images/projects/nanshan-ski-village/nanshan-ski-04.webp",
         "images/projects/nanshan-ski-village/nanshan-ski-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/nanshan_ski_village.pdf"
     },
     {
       "pk": 3,
@@ -2407,7 +2407,7 @@ SEED_DATA = {
         "images/projects/beijing-capital-international-airport/bcia-airport-04.webp",
         "images/projects/beijing-capital-international-airport/bcia-airport-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/beijing_capital_international_airport.pdf"
     },
     {
       "pk": 10,
@@ -2433,7 +2433,7 @@ SEED_DATA = {
         "images/projects/beijing-international-tennis-center/bitc-tennis-03.webp",
         "images/projects/beijing-international-tennis-center/bitc-tennis-04.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/beijing_international_tennis_center.pdf"
     },
     {
       "pk": 11,
@@ -2460,7 +2460,7 @@ SEED_DATA = {
         "images/projects/national-snow-and-ice-research-center/27factory-04.webp",
         "images/projects/national-snow-and-ice-research-center/27factory-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/national_snow_and_ice_research_center.pdf"
     },
     {
       "pk": 12,
