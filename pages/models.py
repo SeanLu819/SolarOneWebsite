@@ -483,6 +483,11 @@ class DailyStats(models.Model):
 def _sync_project_media_to_static(project):
     """Copy project cover + all gallery images from media/ to static/images/projects/<slug>/.
 
+    Also PRUNES stale files from the static directory: any image in
+    static/images/projects/<slug>/ that is no longer referenced by the
+    current DB state is deleted. This prevents the carousel from growing
+    indefinitely when images are replaced or deleted in the admin.
+
     Returns (cover_rel_path, gallery_rel_paths) relative to static/.
     """
     if not project or not getattr(project, 'slug', None):
@@ -502,11 +507,15 @@ def _sync_project_media_to_static(project):
             return f'{parts[0]}{ext}'
         return base
 
+    # ---- Collect current destination filenames from DB ----
+    current_dest_names = set()
+
     cover_rel = ''
     if getattr(project, 'image', None) and project.image.name:
         src_cover = os.path.join(media_root, str(project.image.name))
         if os.path.exists(src_cover):
             dst_name = _dest_name(src_cover)
+            current_dest_names.add(dst_name)
             dst_cover = os.path.join(static_dir, dst_name)
             try:
                 shutil.copy2(src_cover, dst_cover)
@@ -527,6 +536,7 @@ def _sync_project_media_to_static(project):
         if not os.path.exists(src):
             continue
         dst_name = _dest_name(src)
+        current_dest_names.add(dst_name)
         dst = os.path.join(static_dir, dst_name)
         try:
             shutil.copy2(src, dst)
@@ -535,6 +545,21 @@ def _sync_project_media_to_static(project):
         rel = f'images/projects/{slug}/{dst_name}'
         if rel not in gallery_paths:
             gallery_paths.append(rel)
+
+    # ---- Prune stale files from static directory ----
+    try:
+        for entry in os.listdir(static_dir):
+            entry_lower = entry.lower()
+            if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                continue
+            if entry not in current_dest_names:
+                stale_path = os.path.join(static_dir, entry)
+                try:
+                    os.remove(stale_path)
+                except Exception:
+                    pass
+    except Exception:
+        pass
 
     return cover_rel, gallery_paths
 

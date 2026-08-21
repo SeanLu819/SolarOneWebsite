@@ -742,19 +742,23 @@ def _enrich_project(project, lang):
             project.pdf_url = project.pdf_file.url
         else:
             project.pdf_url = ''
-        static_gal_urls = _project_gallery_urls(project)
-        if static_gal_urls:
-            project.gallery = [
-                {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
-                for i, src in enumerate(static_gal_urls)
-            ]
-        else:
+        # DB-based projects: DB is the source of truth for gallery.
+        # Resolve each ProjectImage to its best URL (static preferred, media fallback).
+        db_images = list(project.images.all())
+        if db_images:
             project.gallery = [
                 {
                     'src': _project_image_url(img.image, slug),
                     'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
                 }
-                for i, img in enumerate(project.images.all())
+                for i, img in enumerate(db_images)
+            ]
+        else:
+            # Fallback: directory scan for projects with no DB gallery records
+            static_gal_urls = _project_gallery_urls(project)
+            project.gallery = [
+                {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
+                for i, src in enumerate(static_gal_urls)
             ]
     else:
         seed_image = getattr(project, 'image', '')
@@ -775,18 +779,19 @@ def _enrich_project(project, lang):
             logger.info(f'Project {slug} PDF: {pdf_raw} -> {project.pdf_url}')
         else:
             project.pdf_url = ''
-        static_gal_urls = _project_gallery_urls(slug) if slug else []
+
+        # Seed-based gallery: gallery_paths from seed data is the source of truth.
+        # Directory scan is only used as a fallback when seed has no gallery data.
         seed_gal_paths = list(getattr(project, 'gallery_paths', []) or [])
-        combined = []
-        for p in static_gal_urls:
-            combined.append(p)
-        for p in seed_gal_paths:
-            u = _static_url(p)
-            if u and u not in combined:
-                combined.append(u)
+        if seed_gal_paths:
+            gal_urls = [_static_url(p) for p in seed_gal_paths if p]
+            gal_urls = [u for u in gal_urls if u]
+        else:
+            static_gal_urls = _project_gallery_urls(slug) if slug else []
+            gal_urls = static_gal_urls
         project.gallery = [
             {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
-            for i, src in enumerate(combined)
+            for i, src in enumerate(gal_urls)
         ]
 
 
@@ -1387,10 +1392,8 @@ def product_detail(request, slug):
 
     Content (text, images, banner, gallery) is read from the Product model so
     it can be edited in the admin. Seed JSON is kept as a fallback for Vercel.
-    Returns 404 if the product does not exist.
+    Shows a friendly "Product Not Found" page when the product doesn't exist.
     """
-    from django.http import Http404
-
     context = get_common_context()
     lang = get_language()
 
@@ -1401,24 +1404,22 @@ def product_detail(request, slug):
     if product is None:
         product = _get_product_detail_from_json(slug, lang)
 
-    if product is None:
-        raise Http404(_('Product not found'))
-
     active_series, active_subseries, parent_slug = _resolve_product_sidebar(slug, lang)
     context['active_series'] = active_series
     context['active_subseries'] = active_subseries
 
-    context['product'] = product
-    context['banner_image'] = product.banner_image_url
-    context['banner_label'] = product.category_t
-    context['gallery'] = product.gallery
-    context['is_variant'] = bool(product.parent_slug)
-    context['parent_slug'] = parent_slug or product.parent_slug
-    # Certification badges for M Series / RT410 Series and their variants
-    context['show_certs'] = (
-        product.slug in ('m-series', 'rt410-series') or
-        product.parent_slug == 'm-series'
-    )
+    if product:
+        context['product'] = product
+        context['banner_image'] = product.banner_image_url
+        context['banner_label'] = product.category_t
+        context['gallery'] = product.gallery
+        context['is_variant'] = bool(product.parent_slug)
+        context['parent_slug'] = parent_slug or product.parent_slug
+        # Certification badges for M Series / RT410 Series and their variants
+        context['show_certs'] = (
+            product.slug in ('m-series', 'rt410-series') or
+            product.parent_slug == 'm-series'
+        )
 
     return render(request, 'product_detail.html', context)
 
