@@ -17,6 +17,7 @@ from .models import (
     Product, ProductImage, Project, ProjectImage,
     ContactMessage, SiteConfig, Visitor, DailyStats,
     NewsArticle,
+    _clean_hashed_filename,
 )
 
 # Admin branding with version
@@ -408,7 +409,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             if field and getattr(field, 'name', ''):
                 src = os.path.join(media_root, str(field))
                 if os.path.exists(src):
-                    filename = os.path.basename(src)
+                    filename = _clean_hashed_filename(str(field))
                     static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
                     os.makedirs(static_dir, exist_ok=True)
                     dst = os.path.join(static_dir, filename)
@@ -419,7 +420,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         if ordering_field and getattr(ordering_field, 'name', ''):
             src = os.path.join(media_root, str(ordering_field))
             if os.path.exists(src):
-                filename = os.path.basename(src)
+                filename = _clean_hashed_filename(str(ordering_field))
                 static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', 'ordering')
                 os.makedirs(static_dir, exist_ok=True)
                 dst = os.path.join(static_dir, filename)
@@ -429,13 +430,9 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         # Cert image — synced to per-product slug dir for Vercel persistence
         cert_field = getattr(obj, 'cert_image', None)
         if cert_field and getattr(cert_field, 'name', ''):
-            import re as _re
             src = os.path.join(media_root, str(cert_field))
             if os.path.exists(src):
-                base = os.path.basename(src)
-                stem, ext = os.path.splitext(base)
-                m = _re.search(r'_([a-zA-Z0-9]{7})$', stem)
-                filename = f'{stem[:m.start()]}{ext}' if m else base
+                filename = _clean_hashed_filename(str(cert_field))
                 static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
                 os.makedirs(static_dir, exist_ok=True)
                 dst = os.path.join(static_dir, filename)
@@ -449,7 +446,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                 src = os.path.join(media_root, str(img.image))
                 if os.path.exists(src):
                     os.makedirs(gallery_dir, exist_ok=True)
-                    filename = os.path.basename(src)
+                    filename = _clean_hashed_filename(str(img.image))
                     dst = os.path.join(gallery_dir, filename)
                     shutil.copy2(src, dst)
                     gallery_paths.append(f'images/products/{slug}/{filename}')

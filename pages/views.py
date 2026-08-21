@@ -98,9 +98,15 @@ def _build_static_file_set():
     file_set = set()
     dirs_to_scan = []
 
-    static_root = str(settings.STATIC_ROOT)
-    if os.path.isdir(static_root):
-        dirs_to_scan.append(static_root)
+    # In local DEBUG mode, only scan STATICFILES_DIRS (static/ source dir).
+    # Skip STATIC_ROOT (staticfiles/) to avoid stale cached copies from
+    # previous collectstatic runs — the source dir is always the latest.
+    # On Vercel/production, STATICFILES_DIRS may not exist, so we rely on
+    # STATIC_ROOT which is committed to the repo.
+    if not settings.DEBUG:
+        static_root = str(settings.STATIC_ROOT)
+        if os.path.isdir(static_root):
+            dirs_to_scan.append(static_root)
 
     for d in getattr(settings, 'STATICFILES_DIRS', []):
         d = str(d)
@@ -137,9 +143,11 @@ def _list_static_dir(rel_dir):
     base = os.path.join(settings.BASE_DIR, 'static', rel_dir)
     dirs_to_check.append(base)
 
-    static_root = os.path.join(str(settings.STATIC_ROOT), rel_dir)
-    if static_root not in dirs_to_check:
-        dirs_to_check.append(static_root)
+    # Skip STATIC_ROOT in DEBUG mode — use source dir only for freshness
+    if not settings.DEBUG:
+        static_root = os.path.join(str(settings.STATIC_ROOT), rel_dir)
+        if static_root not in dirs_to_check:
+            dirs_to_check.append(static_root)
 
     for d in dirs_to_check:
         if os.path.isdir(d):
@@ -336,17 +344,22 @@ def _find_static(rel_path):
     STATIC_ROOT ('staticfiles/') is committed to Git and always present.
     This helper checks both so that product/project image URLs resolve
     correctly on all platforms.
+
+    In local DEBUG mode, skip STATIC_ROOT to avoid stale cached copies
+    from previous collectstatic runs — STATICFILES_DIRS (static/) is the
+    source of truth and always has the latest files.
     """
     if finders.find(rel_path):
-        return True
-    static_root = str(settings.STATIC_ROOT)
-    full = os.path.join(static_root, rel_path)
-    if os.path.isfile(full):
         return True
     staticfiles_dirs = list(getattr(settings, 'STATICFILES_DIRS', []))
     for d in staticfiles_dirs:
         d = str(d)
         full = os.path.join(d, rel_path)
+        if os.path.isfile(full):
+            return True
+    if not settings.DEBUG:
+        static_root = str(settings.STATIC_ROOT)
+        full = os.path.join(static_root, rel_path)
         if os.path.isfile(full):
             return True
     return False
@@ -364,8 +377,17 @@ def _dict_product_image_url(path, slug):
     path = str(path).replace('\\', '/')
     filename = Path(path).name
     stem = Path(filename).stem
-    
+    clean_filename = _clean_hashed_name(filename)
+    clean_stem = Path(clean_filename).stem if clean_filename else ''
+
     candidates = []
+    # Hash-stripped variants first — prefer clean canonical filenames
+    if slug and clean_filename and clean_filename != filename:
+        candidates.append(f'images/products/{slug}/{clean_filename}')
+    if clean_filename and clean_filename != filename:
+        candidates.append(f'images/products/{clean_filename}')
+    if slug and clean_stem and clean_stem != stem:
+        candidates.append(f'images/products/{slug}/{clean_stem}.webp')
     # Already canonical path
     if path.startswith('images/'):
         candidates.append(path)
@@ -628,8 +650,18 @@ def _product_image_url(product, field_name):
     field_name_value = str(field.name).replace('\\', '/')
     filename = Path(field_name_value).name
     stem = Path(filename).stem
+    clean_filename = _clean_hashed_name(filename)
+    clean_stem = Path(clean_filename).stem if clean_filename else ''
 
     candidates = []
+    # Hash-stripped variants first — prefer clean canonical filenames
+    if slug and clean_filename and clean_filename != filename:
+        candidates.append(f'images/products/{slug}/{clean_filename}')
+    if clean_filename and clean_filename != filename:
+        candidates.append(f'images/products/{clean_filename}')
+    if slug and clean_stem and clean_stem != stem:
+        candidates.append(f'images/products/{slug}/{clean_stem}.webp')
+    # Original path-based candidates
     if field_name_value.startswith('products/'):
         candidates.append(f'images/{field_name_value}')
     if slug and filename:
@@ -1107,6 +1139,7 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'BASEBALL_FIELD', 'label': _t('Baseball Field', lang)},
                 {'key': 'TENNIS_COURTS', 'label': _t('Tennis Courts', lang)},
                 {'key': 'SKI_AREA', 'label': _t('Ski Area', lang)},
+                {'key': 'KARTING', 'label': _t('Karting Track', lang)},
             ],
         },
         {
@@ -1118,14 +1151,22 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'VELODROME', 'label': _t('Velodrome', lang)},
                 {'key': 'TENNIS', 'label': _t('Tennis', lang)},
                 {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
+                {'key': 'FENCING', 'label': _t('Fencing', lang)},
+                {'key': 'AQUATICS_CENTRE', 'label': _t('Aquatics Centre', lang)},
             ],
         },
         {
             'key': 'INFRASTRUCTURE',
-            'label': _t('Airports and Ports', lang),
+            'label': _t('Airports', lang),
             'sports': [
                 {'key': 'AIRPORT', 'label': _t('Airport', lang)},
-                {'key': 'SEAPORT', 'label': _t('Seaport', lang)},
+            ],
+        },
+        {
+            'key': 'ROADWAY',
+            'label': _t('Roadway', lang),
+            'sports': [
+                {'key': 'CITY_EXPRESSWAY', 'label': _t('City Expressway', lang)},
             ],
         },
     ]
@@ -1172,9 +1213,6 @@ def _get_products_sidebar(lang='en'):
                 {'key': 'RT390FL',   'slug': 'rt390fl',   'label': 'RT390FL'},
                 {'key': 'RT220UB',   'slug': 'rt220ub',   'label': 'RT220UB'},
                 {'key': 'RT420FS_S', 'slug': 'rt420fs-s', 'label': 'RT420FS-S'},
-                {'key': 'RT370FS_S', 'slug': 'rt370fs-s', 'label': 'RT370FS-S'},
-                {'key': 'RT300FS_S', 'slug': 'rt300fs-s', 'label': 'RT300FS-S'},
-                {'key': 'RT180FS_S', 'slug': 'rt180fs-s', 'label': 'RT180FS-S'},
             ],
         },
         {

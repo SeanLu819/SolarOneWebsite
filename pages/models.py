@@ -195,6 +195,7 @@ class Project(models.Model):
         ('OUTDOOR', 'Outdoor'),
         ('INDOOR', 'Indoor'),
         ('INFRASTRUCTURE', 'Infrastructure'),
+        ('ROADWAY', 'Roadway'),
     ]
 
     SPORT_TYPE_CHOICES = [
@@ -203,14 +204,17 @@ class Project(models.Model):
         ('BASEBALL_FIELD', 'Baseball Field'),
         ('TENNIS_COURTS', 'Tennis Courts'),
         ('SKI_AREA', 'Ski Area'),
+        ('KARTING', 'Karting Track'),
         ('BASKETBALL', 'Basketball'),
         ('VELODROME', 'Velodrome'),
         ('TENNIS', 'Tennis'),
         ('TRACK_FIELD', 'Track and Field'),
         ('MULTI_SPORT', 'Multi-Sport Arena'),
+        ('FENCING', 'Fencing'),
+        ('AQUATICS_CENTRE', 'Aquatics Centre'),
         ('AIRPORT', 'Airport'),
-        ('SEAPORT', 'Seaport'),
         ('ICE_ARENA', 'Ice Arena'),
+        ('CITY_EXPRESSWAY', 'City Expressway'),
         ('OTHER', 'Other'),
     ]
 
