@@ -2721,7 +2721,7 @@ SEED_DATA = {
       "sport_type": "AQUATICS_CENTRE",
       "description": "Yingdong Natatorium at the National Olympic Sports Center",
       "results": "",
-      "image": "images/projects/yingdong-natatorium/ydyyg-swim-01.png",
+      "image": "images/projects/yingdong-natatorium/ydyyg-swim-01.webp",
       "order": 29,
       "translations": {
         "fr": {},
@@ -2731,11 +2731,11 @@ SEED_DATA = {
         "ar": {}
       },
       "gallery": [
-        "images/projects/yingdong-natatorium/ydyyg-swim-01.png",
-        "images/projects/yingdong-natatorium/ydyyg-swim-03.jpg",
-        "images/projects/yingdong-natatorium/ydyyg-swim-05.png",
-        "images/projects/yingdong-natatorium/ydyyg-swim-02.png",
-        "images/projects/yingdong-natatorium/ydyyg-swim-04.jpg"
+        "images/projects/yingdong-natatorium/ydyyg-swim-01.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swim-02.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swim-03.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swim-04.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swim-05.webp"
       ],
       "pdf_url": ""
     }
