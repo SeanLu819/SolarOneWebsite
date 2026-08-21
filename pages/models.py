@@ -540,7 +540,12 @@ def _sync_project_media_to_static(project):
 
 
 def _rewrite_seed_project(slug, cover_rel, gallery_paths):
-    """Rewrite seed_data.json + pages/seed_data.py with current project image/gallery."""
+    """Rewrite seed_data.json + pages/seed_data.py with current project image/gallery.
+
+    Gallery is REPLACED (not merged) with the current DB state — the database
+    is the source of truth. Old images removed from the admin are also removed
+    from seed to prevent accumulation of stale files in the carousel.
+    """
     seed_path = os.path.join(str(settings.BASE_DIR), 'seed_data.json')
     seed_py_path = os.path.join(str(settings.BASE_DIR), 'pages', 'seed_data.py')
 
@@ -555,9 +560,6 @@ def _rewrite_seed_project(slug, cover_rel, gallery_paths):
                     changed = True
                 gal = list(p.get('gallery', []) or [])
                 new_gal = list(gallery_paths)
-                for g in gal:
-                    if g and g not in new_gal:
-                        new_gal.append(g)
                 if new_gal != gal:
                     p['gallery'] = new_gal
                     changed = True
@@ -588,15 +590,7 @@ def _rewrite_seed_project(slug, cover_rel, gallery_paths):
                 g_start = gal_match.start() + idx
                 g_end = gal_match.end()
                 existing = gal_match.group(0)
-                try:
-                    old_list = json.loads(existing[existing.find('['):])
-                except Exception:
-                    old_list = []
-                merged = list(gallery_paths)
-                for g in old_list:
-                    if g and g not in merged:
-                        merged.append(g)
-                new_block = '"gallery": ' + json.dumps(merged)
+                new_block = '"gallery": ' + json.dumps(gallery_paths)
                 if new_block != existing:
                     new_content = new_content[:g_start] + new_block + new_content[g_end:]
             if new_content != content:
