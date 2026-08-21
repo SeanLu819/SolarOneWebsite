@@ -30,7 +30,6 @@ _SEED_CANDIDATES = [
 _PRODUCT_CARD_LABELS = {
     'm-series': 'Area and Site',
     'rt410-series': 'Area and Site',
-    'rt400-series': 'Highbay & Low Bay',
     'vsp-xxxxw-9m-yp': 'Sports Lighting System',
     'vsp-xxxxw-12m-yp': 'Flood Lighting',
     'fl1m': 'Roadway',
@@ -805,7 +804,7 @@ _PRODUCTS_WHITELIST = {
     'rt410-series',
     'vsp-xxxxw-9m-yp',
     'rt590fl-s',
-    'rt400-series',
+    'rt400hb',
     'rt600sl-t',
 }
 
@@ -1388,7 +1387,10 @@ def product_detail(request, slug):
 
     Content (text, images, banner, gallery) is read from the Product model so
     it can be edited in the admin. Seed JSON is kept as a fallback for Vercel.
+    Returns 404 if the product does not exist.
     """
+    from django.http import Http404
+
     context = get_common_context()
     lang = get_language()
 
@@ -1399,22 +1401,24 @@ def product_detail(request, slug):
     if product is None:
         product = _get_product_detail_from_json(slug, lang)
 
+    if product is None:
+        raise Http404(_('Product not found'))
+
     active_series, active_subseries, parent_slug = _resolve_product_sidebar(slug, lang)
     context['active_series'] = active_series
     context['active_subseries'] = active_subseries
 
-    if product:
-        context['product'] = product
-        context['banner_image'] = product.banner_image_url
-        context['banner_label'] = product.category_t
-        context['gallery'] = product.gallery
-        context['is_variant'] = bool(product.parent_slug)
-        context['parent_slug'] = parent_slug or product.parent_slug
-        # Certification badges for M Series / RT410 Series and their variants
-        context['show_certs'] = (
-            product.slug in ('m-series', 'rt410-series') or
-            product.parent_slug == 'm-series'
-        )
+    context['product'] = product
+    context['banner_image'] = product.banner_image_url
+    context['banner_label'] = product.category_t
+    context['gallery'] = product.gallery
+    context['is_variant'] = bool(product.parent_slug)
+    context['parent_slug'] = parent_slug or product.parent_slug
+    # Certification badges for M Series / RT410 Series and their variants
+    context['show_certs'] = (
+        product.slug in ('m-series', 'rt410-series') or
+        product.parent_slug == 'm-series'
+    )
 
     return render(request, 'product_detail.html', context)
 

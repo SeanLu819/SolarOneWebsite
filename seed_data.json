@@ -8,8 +8,13 @@
       "description": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
       "power": "80~1280W+",
       "efficacy": "125lm/W",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/rt200-m.webp",
       "banner_image": "products/m-series-bar-1.webp",
+      "dimension_image": "",
+      "beam_angle_image": "",
       "ordering_image": "products/ordering/sample-number.webp",
       "order": 1,
       "parent_slug": "",
@@ -40,12 +45,7 @@
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
       },
-      "gallery": [
-        "products/gallery/m-series-01.webp",
-        "products/gallery/m-series-02.webp",
-        "products/gallery/m-series-03.webp",
-        "products/gallery/m-series-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -56,17 +56,7 @@
           "value": "125lm/W"
         }
       ],
-      "ordering_info": [
-        "FL1M (Light With 1 Module)",
-        "80~1280W+",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
-      ]
+      "energy_data": []
     },
     {
       "pk": 2,
@@ -76,7 +66,9 @@
       "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
       "power": "260W",
       "efficacy": "125lm/W",
+      "output": "",
       "beam_angle": "18~100°",
+      "protection": "",
       "image": "products/floodlight.webp",
       "banner_image": "products/rt410-bar-1.webp",
       "dimension_image": "products/dimensions/rt410-3d-view.webp",
@@ -111,12 +103,7 @@
           "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
         }
       },
-      "gallery": [
-        "products/gallery/rt410fl-s-01.webp",
-        "products/gallery/rt410fl-s-02.webp",
-        "products/gallery/rt410fl-s-03.webp",
-        "products/gallery/rt410fl-s-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -204,17 +191,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "RT410 Series",
-        "260W/400W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -225,6 +201,9 @@
       "description": "FL1M modular floodlight configuration — part of the M Series family.",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/RT600SL-T.webp",
       "banner_image": "products/fl1m-bar-1.webp",
       "dimension_image": "products/dimensions/fl1m-3d-view.webp",
@@ -239,12 +218,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl1m-01.webp",
-        "products/gallery/fl1m-02.webp",
-        "products/gallery/fl1m-03.webp",
-        "products/gallery/fl1m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -332,17 +306,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL1M (Light With 1 Module)",
-        "80W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -355,6 +318,7 @@
       "efficacy": "125lm/W",
       "output": "40K+ lm",
       "beam_angle": "18~50°",
+      "protection": "",
       "image": "products/fl4m-01.webp",
       "banner_image": "products/fl4m-bar-1.webp",
       "dimension_image": "products/fl4m-3d-view.webp",
@@ -379,12 +343,7 @@
           "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
-      "gallery": [
-        "products/gallery/fl4m-01.webp",
-        "products/gallery/fl4m-02.webp",
-        "products/gallery/fl4m-03.webp",
-        "products/gallery/fl4m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -480,17 +439,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL4M (Light With 4 Modules)",
-        "320W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -503,6 +451,7 @@
       "efficacy": "125lm/W",
       "output": "60K+ lm",
       "beam_angle": "18~50°",
+      "protection": "",
       "image": "products/fl6m-01.webp",
       "banner_image": "products/fl6m-bar-1.webp",
       "dimension_image": "products/dimensions/fl6m-3d-view.webp",
@@ -517,12 +466,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl6m-01.webp",
-        "products/gallery/fl6m-02.webp",
-        "products/gallery/fl6m-03.webp",
-        "products/gallery/fl6m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -610,17 +554,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL6M (Light With 6 Modules)",
-        "480W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -633,8 +566,9 @@
       "efficacy": "125lm/W",
       "output": "90K+ lm",
       "beam_angle": "18~50°",
+      "protection": "",
       "image": "products/fl9m-01.webp",
-      "banner_image": "products/fl9m-bar-1.webp",
+      "banner_image": "products/banners/fl9m-bar-1_X3TvGYy.webp",
       "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
       "beam_angle_image": "products/beam_angles/beamangle-12183050_4BJ8mot.webp",
       "ordering_image": "",
@@ -647,12 +581,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl9m-01.webp",
-        "products/gallery/fl9m-02.webp",
-        "products/gallery/fl9m-03.webp",
-        "products/gallery/fl9m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -740,17 +669,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL9M (Light With 9 Modules)",
-        "630W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -763,6 +681,7 @@
       "efficacy": "125lm/W",
       "output": "120K+ lm",
       "beam_angle": "18~50°",
+      "protection": "",
       "image": "products/fl12m-01.webp",
       "banner_image": "products/fl12m-bar-1.webp",
       "dimension_image": "products/dimensions/fl12m-3d-view.webp",
@@ -777,12 +696,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl12m-01.webp",
-        "products/gallery/fl12m-02.webp",
-        "products/gallery/fl12m-03.webp",
-        "products/gallery/fl12m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -870,17 +784,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL12M (Light With 12 Modules)",
-        "1000W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -893,6 +796,7 @@
       "efficacy": "125lm/W",
       "output": "160K+ lm",
       "beam_angle": "18~50°",
+      "protection": "",
       "image": "products/fl16m-01.webp",
       "banner_image": "products/fl16m-bar-1.webp",
       "dimension_image": "products/dimensions/fl16m-3d-view.webp",
@@ -907,12 +811,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/fl16m-01.webp",
-        "products/gallery/fl16m-02.webp",
-        "products/gallery/fl16m-03.webp",
-        "products/gallery/fl16m-04.webp"
-      ],
+      "gallery": [],
       "specs": [
         {
           "label": "Power",
@@ -1000,17 +899,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "FL16M (Light With 16 Modules)",
-        "1280W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1021,8 +909,11 @@
       "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/vsp12m-01.webp",
-      "banner_image": "products/vsp/vsp-bar-1.webp",
+      "banner_image": "products/banners/vsp-bar-1_SlCnPb6.webp",
       "dimension_image": "products/dimensions/ac-en-3d-view.png",
       "beam_angle_image": "products/beam_angles/beamangle-12183050_3YkmJS7.webp",
       "ordering_image": "",
@@ -1055,12 +946,8 @@
           "name": "VSP-XXXXW-9M-YP"
         }
       },
-      "gallery": [
-        "products/gallery/VSP9M-01.webp",
-        "products/gallery/VSP9M-02.webp",
-        "products/gallery/VSP9M-03.webp",
-        "products/gallery/VSP9M-04.webp"
-      ],
+      "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1114,17 +1001,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "VSP-XXXXW-9M-YP",
-        "900W/1200W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1135,8 +1011,11 @@
       "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/rt590.webp",
-      "banner_image": "products/vsp/vsp-bar-1.webp",
+      "banner_image": "products/banners/vsp-bar-2.webp",
       "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
       "beam_angle_image": "products/beam_angles/beamangle-12183050_H3Gim4J.webp",
       "ordering_image": "",
@@ -1169,12 +1048,8 @@
           "name": "VSP-XXXXW-12M-YP"
         }
       },
-      "gallery": [
-        "products/gallery/vsp12m-01.webp",
-        "products/gallery/vsp12m-02.webp",
-        "products/gallery/vsp12m-03.webp",
-        "products/gallery/vsp12m-04.webp"
-      ],
+      "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1228,17 +1103,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "VSP-XXXXW-12M-YP",
-        "1200W/1600W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1249,6 +1113,9 @@
       "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/rt590_eRixs78.webp",
       "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
       "dimension_image": "products/dimensions/tr590-3d-view.webp",
@@ -1263,12 +1130,8 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/rt590fl-s-01.webp",
-        "products/gallery/rt590fl-s-02.webp",
-        "products/gallery/rt590fl-s-03.webp",
-        "products/gallery/rt590fl-s-04.webp"
-      ],
+      "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1334,17 +1197,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "RT590FL-S",
-        "160W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1355,9 +1207,13 @@
       "description": "RT390FL-S",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/rt390-01.webp",
       "banner_image": "products/banners/rt390-bar-01.webp",
       "dimension_image": "products/dimensions/rt390-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-3050120_WlTRDAS.webp",
       "ordering_image": "",
       "order": 32,
       "parent_slug": "",
@@ -1369,6 +1225,7 @@
         "ar": {}
       },
       "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1437,33 +1294,280 @@
       ]
     },
     {
-      "pk": 4,
+      "pk": 17,
       "name": "HB Series",
-      "slug": "rt400-series",
+      "slug": "rt400hb",
       "category": "HIGHBAY_LOWBAY",
-      "description": "Industrial high bay luminaires for warehouses, factories, and gymnasiums. High-efficacy design with superior thermal management for 50,000+ hour life.",
-      "power": "100~300W",
-      "efficacy": "120lm/W",
-      "protection": "IP66",
-      "image": "products/HB.webp",
-      "banner_image": "",
+      "description": "Typical Applications\r\nHigh school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt400hb-01.webp",
+      "banner_image": "products/banners/rt400hb-barnner-01_CeBvRPy.webp",
+      "dimension_image": "products/dimensions/rt400hb-3d-view01_AQPehKc.webp",
+      "beam_angle_image": "products/beam_angles/rt400hb-beamangle-254590_TC5pGeM.png",
       "ordering_image": "",
-      "order": 41,
+      "order": 42,
       "parent_slug": "",
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [],
-      "specs": [
+      "specs": [],
+      "energy_data": [
         {
-          "label": "Power",
-          "value": "100~300W"
+          "label": "Series Name",
+          "value": "RT400HB-130W"
         },
         {
-          "label": "Efficacy",
-          "value": "120lm/W"
+          "label": "Lumen Output",
+          "value": ">16,900 lm"
         },
         {
-          "label": "Protection",
+          "label": "System Wattage",
+          "value": "130W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
           "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.6\" x 15.6\" x 15.8\" / 395 x 395 x 401 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "8.0 kgs( 17.6 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 18,
+      "name": "RT500HB",
+      "slug": "rt500hb",
+      "category": "HIGHBAY_LOWBAY",
+      "description": "Typical Applications\r\nHigh school, college, professional stadiums, Large area, Industrial Facilities, Building facades .",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/hb500-04.webp",
+      "banner_image": "products/banners/rt500hb-barnner-01_fe5jJ6X.webp",
+      "dimension_image": "products/dimensions/rt500hb-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/rt500hb-beamangle-254590.webp",
+      "ordering_image": "",
+      "order": 43,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT500HB-280W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">36,400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "280W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "19.7\" x 19.7\" x 18.0\"/500 x 500 x 457 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "16.0 kgs( 35.3 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 19,
+      "name": "RT220UB",
+      "slug": "rt220ub",
+      "category": "FLOODLIGHT",
+      "description": "Building Security ,Packing lots, residential area, display window, advertisement billboard..etc",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt220ub-01_mqkz4p2.webp",
+      "banner_image": "products/banners/rt220ub-banner_J5UGLoq.webp",
+      "dimension_image": "products/dimensions/rt220ub-3d-view_m8pTs49.webp",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "order": 44,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT220UB"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">5,200 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "40W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "10.1\" x 8.1\" x 5.0\" / 257.5 x 207 x 128 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "2.3 kgs( 5.2 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
         }
       ]
     },
@@ -1475,6 +1579,9 @@
       "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "products/RT600SL-T_yqv89jW.webp",
       "banner_image": "products/banners/rt600sl-t-bar-1.webp",
       "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
@@ -1489,10 +1596,8 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "products/gallery/RT600SL-T.webp",
-        "products/gallery/rt600sl-02.webp"
-      ],
+      "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1558,17 +1663,6 @@
           "label": "LED Driver",
           "value": "Inventronics Or Equal"
         }
-      ],
-      "ordering_info": [
-        "RT600SL-T",
-        "120W",
-        "30=3000K\n40=4000K\n57=5700K",
-        "S=Standard Voltage (110-277VAC)\nH=High Voltage (347-480VAC)",
-        "12=12°\n18=18°\n30=30°\n50=50°",
-        "GRY=Grey\nBLK=Black",
-        "1.0-10V\n2. DMX\n3. DALI\n4.Zigbee",
-        "U = Hang Mount Bracket\nL = Sitting Mount Bracket",
-        "W = With Fixture\nS = Separated from Fixture"
       ]
     },
     {
@@ -1576,11 +1670,15 @@
       "name": "RT820SL-T",
       "slug": "rt820sl-t",
       "category": "ROADWAY",
-      "description": "1111",
+      "description": "RT820SL-T",
       "power": "",
       "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
       "image": "",
       "banner_image": "products/banners/rt820sl-t-bar-1.webp",
+      "dimension_image": "products/dimensions/rt820-3d-view_OgEZFpC.png",
       "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
       "ordering_image": "",
       "order": 52,
@@ -1593,6 +1691,7 @@
         "ar": {}
       },
       "gallery": [],
+      "specs": [],
       "energy_data": [
         {
           "label": "Series Name",
@@ -1704,7 +1803,9 @@
           "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
           "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 4,
@@ -1748,7 +1849,9 @@
           "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
           "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 2,
@@ -1792,7 +1895,9 @@
           "description": "تم تركيب 150 مصابيح LED رياضية FL9M-630W من سلسلة الأداء مع محركات تحكم عن بعد. تم دمج نظام تحكم شبكي للسماح بالتشغيل/الإيقاف عن بعد ومراقبة الطاقة.",
           "results": "متوسط إضاءة 50/30fc، uniformity 2.0:1 / 2.5:1 — تلبي مواصفات المشروع."
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 6,
@@ -1831,7 +1936,9 @@
           "description": "الملف الشخصي 【للعميل】\nجامعة ولاية مورغان هي الجامعة البحثية الحضرية العامة الرائدة في ولاية ماريلاند، والمعروفة بتميزها في التدريس والبحث المكثف والخدمة العامة الفعالة والمشاركة المجتمعية. تعد مورغان خريجين متنوعين وتنافسين للنجاح في مجتمع عالمي مترابط.",
           "location": "الولايات المتحدة الأمريكية"
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 7,
@@ -1870,7 +1977,9 @@
           "description": "الملف الشخصي 【للعميل】\nتقع قرية نانشان للتزلج شمال مدينة بكين. منذ افتتاحه في عام 2001، أصبح منتجع التزلج هذا الأكبر من نوعه في الصين حيث يوفر أحدث معدات التزلج ووسائل الراحة لجميع عشاق التزلج - السياح والسكان المحليين على حد سواء.\n\n【نطاق العمل】\nتم اختيار SolarOne Vision Smart RT -410 لإضاءة قرية نانشان للتزلج. في جميع الألعاب الرياضية، توفر إضاءة LED أفضل مرحلة للمنافسين لأداءها، ولا يختلف الأمر بالنسبة للتزلج والتزلج على الجليد. تساوي تقنية التحكم في الوهج إضاءة أكثر اتساقًا مع عدد أقل من الظلال غير المرغوب فيها أو النقاط الساخنة التي يمكن أن تشتت انتباه العملاء أثناء الجري. في رياضة ذات هامش خطأ ضئيل، تساعد تقنية LED على ضمان أن الأضواء لا تخلق متغيرًا آخر للمتزلجين والمتزلجين على الجليد.\n\n【الحل】\nتم إجراء تصميم هندسي للقياسات الضوئية. تم تنفيذ الوهج وإخراج الضوء. ثم قدمنا نقاط التصويب الدقيقة لكل مباراة. تم تركيب سلسلة أضواء الفيضانات SolarOne Vision Smart 260W RT410 بسهولة في قرية نانشان للتزلج. توفر حلول الإضاءة LED الخاصة بنا ضوءًا موحدًا في الهواء وعلى المنحدر بكفاءة أكبر بكثير من ضوء الهاليد المعدني وتقلل بشكل كبير من انسكاب الضوء غير المرغوب فيه والتلوث الضوئي. يتجاوز عمر مصابيح LED عمومًا 100000 ساعة مقارنة بعمر هاليد معدني تقليدي يبلغ 18000 ساعة.",
           "location": "بكين، الصين"
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 3,
@@ -1914,7 +2023,9 @@
           "description": "مرفق متعدد الأغراض في فرنسا مصمم للتلفزيون عالي الدقة، قابل للتحويل بين إعدادات كرة السلة والتنس. مصابيح LED FL9M-630W تلبي بالكامل متطلبات الإضاءة.",
           "results": ">2000 لوكس — تلبي معايير البث عالي الدقة."
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 5,
@@ -1926,7 +2037,10 @@
       "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
       "results": "",
       "image": "projects/Narbonne-basketball-04.webp",
-      "order": 7
+      "order": 7,
+      "translations": {},
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 8,
@@ -1970,7 +2084,72 @@
           "location": "[Error: Server Error: You made too many requests to the server.Accor]",
           "results": "[Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor] [Error: Server Error: You made too many requests to the server.Accor]"
         }
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 10,
+      "title": "Beijing International Tennis Center",
+      "location": "Beijing, China",
+      "slug": "beijing-international-tennis-center",
+      "venue_type": "INDOOR",
+      "sport_type": "TENNIS",
+      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall was the first indoor professional tennis hall. In 2015, to promote its development consistent with the time, the company decided to proceed with the reconstruction of the tennis hall on its original premise. \r\n\r\n【Scope of Work 】\r\nSolarOne was contacted to create a lighting solution for the Bejiing International Tennis Club. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for tennis players. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract athletes while in the game. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the athletes.",
+      "results": "Where every hit counts, uniform, no-glare light does not effect the vision of the athletes while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. The new lighting system achieved an average of uniformity of 75 percent and a saved in energy costs by 50 percent. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel. SolarOne Vision Smart RT410FL-S160W improved the Beijing international Tennis Club experience with the greatest visual comfort for the athletes and coaches alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry",
+      "image": "projects/bitc-tennis-01.webp",
+      "order": 25,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 11,
+      "title": "National Snow and Ice Research Center",
+      "location": "Beijing, China",
+      "slug": "national-snow-and-ice-research-center",
+      "venue_type": "INDOOR",
+      "sport_type": "ICE_ARENA",
+      "description": "【Customer Profile】\r\nNational Snow and Ice Training and Research Center Special for 2022 Winter Olympic, located in Beijing , was rebuilt from the old 27 engine factory since 1897 . The first speed skating training hall made of carbon dioxide ice in Asia. It includes a 400m speed skating rink and two short track speed skating training ice rinks. With the 2022 Beijing Winter Olympics competition standards.\r\n\r\n【The Solution】\r\nFL9M-630W High Performance Series LED sports lights CCT:5000-5500K ,Ra:90 With 304pcs were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "Lighting standards for competitive tournament play were a must. 400m speed skating rink illuminative average lux :2000lx, U0=0.7 ,Meet HD LIVE TV standard．By the intelligent lighting control System:Interval lighting working mode , An additional 50% energy saving was achieved .Due to the excellent light system solution the budgetary and performance expectations were able to be met.",
+      "image": "projects/27factory-01.webp",
+      "order": 27,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 12,
+      "title": "Chun'an Velodrome",
+      "location": "Hangzhou, China",
+      "slug": "chunan-velodrome",
+      "venue_type": "INDOOR",
+      "sport_type": "VELODROME",
+      "description": "The Chun'an Velodrome is located in the Jieshou Block of the Qiandao Lake Tourism Resort and serves as the core venue for the cycling events at the Hangzhou Asian Games. Inspired by the design concept of \"Leaping Fish in the Morning Sun, Pearl of a Thousand Islands,\" the venue features an oval steel canopy and a dynamic floodlighting system, vividly capturing the dynamic imagery of a fish leaping from the water. Standing 40 meters tall, the building houses a 250-meter international standard indoor track and can accommodate up to 3,040 spectators.",
+      "results": "",
+      "image": "projects/bycicle-chunan01.webp",
+      "order": 28,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "pdf_url": ""
     },
     {
       "pk": 9,
@@ -1989,7 +2168,9 @@
         "de": {},
         "ru": {},
         "ar": {}
-      }
+      },
+      "gallery": [],
+      "pdf_url": ""
     }
   ],
   "siteconfig": {}
