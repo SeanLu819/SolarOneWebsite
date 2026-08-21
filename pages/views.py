@@ -220,10 +220,13 @@ def invalidate_enrichment_cache():
     """Clear all enrichment caches. Call when seed data changes."""
     global _enriched_products_cache, _enriched_projects_cache
     global _enriched_product_detail_cache, _enriched_project_detail_cache
+    global _dir_listing_cache, _static_file_set
     _enriched_products_cache = {}
     _enriched_projects_cache = {}
     _enriched_product_detail_cache = {}
     _enriched_project_detail_cache = {}
+    _dir_listing_cache = {}
+    _static_file_set = None
 
 
 # ============================================================================
@@ -501,26 +504,36 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
             if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():
                 return f'{slug_dir}/{f}'
             return f'{slug_dir}/{f}'
+    # Legacy processed/ fallback only for known seed placeholders
     if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
-        return f'images/processed/{clean_name}'
-    if clean_name:
         processed = f'images/processed/{clean_name}'
         if _find_static(processed):
             return processed
+    # Gallery directory fallback: match by slug token
     gallery_dir = 'images/projects/gallery'
     gal_files = _list_static_dir(gallery_dir)
-    slug_token = slug.replace('-', '').replace('_', '').lower()
-    for f in sorted(gal_files):
-        fl = f.lower()
-        if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-            continue
-        f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
-        if slug_token and slug_token in f_token:
-            return f'{gallery_dir}/{f}'
+    if gal_files:
+        # First try: exact clean_name match in gallery
+        if clean_name:
+            clean_lower = clean_name.lower()
+            for f in gal_files:
+                if _clean_hashed_name(f).lower() == clean_lower:
+                    return f'{gallery_dir}/{f}'
+        # Second try: slug token match
+        slug_token = slug.replace('-', '').replace('_', '').lower()
+        for f in sorted(gal_files):
+            fl = f.lower()
+            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                continue
+            f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
+            if slug_token and slug_token in f_token:
+                return f'{gallery_dir}/{f}'
+    # db_path as-is if it exists in static
     if db_path and db_path.startswith('images/'):
         if _find_static(db_path):
             return db_path
-    return f'images/processed/{clean_name}' if clean_name else ''
+    # No static asset found — return empty so caller falls back to media URL
+    return ''
 
 
 def _project_image_url(field, project_slug: str = ''):
@@ -690,6 +703,13 @@ def _enrich_product(product, lang):
         product.dimension_image_url = _product_image_url(product, 'dimension_image')
         product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
         product.ordering_image_url = _product_image_url(product, 'ordering_image')
+        # Cert image: use uploaded image if available, otherwise fall back to default
+        cert_url = _product_image_url(product, 'cert_image')
+        if not cert_url:
+            cert_default = 'images/products/m-series-certs.webp'
+            if _find_static(cert_default):
+                cert_url = static(cert_default)
+        product.cert_image_url = cert_url
         product.gallery = [
             {
                 'src': _product_image_url(
@@ -708,6 +728,13 @@ def _enrich_product(product, lang):
         product.dimension_image_url = _dict_product_image_url(product.dimension_image, slug)
         product.beam_angle_image_url = _dict_product_image_url(product.beam_angle_image, slug)
         product.ordering_image_url = _dict_product_image_url(product.ordering_image, slug)
+        # Cert image fallback for seed data
+        cert_url = _dict_product_image_url(getattr(product, 'cert_image', ''), slug) if hasattr(product, 'cert_image') else ''
+        if not cert_url:
+            cert_default = 'images/products/m-series-certs.webp'
+            if _find_static(cert_default):
+                cert_url = static(cert_default)
+        product.cert_image_url = cert_url
         product.gallery = [
             {'src': _dict_product_image_url(p, slug), 'alt': f"{product.name_t} — view {i + 1}"}
             for i, p in enumerate(product.gallery_paths)
@@ -738,6 +765,14 @@ def _enrich_project(project, lang):
     project.results_t = project.t('results', lang)
 
     slug = getattr(project, 'slug', '')
+
+    # Compare / secondary images (before/after pair) — template has per-slug hardcoded images.
+    # When True, the detail page renders a right column with the comparison images
+    # alongside the description. When False, the description spans full width.
+    _COMPARE_IMAGE_SLUGS = frozenset({
+        'football-field-led-retrofit',
+    })
+    project.has_compare_images = slug in _COMPARE_IMAGE_SLUGS
 
     if isinstance(project, Project):
         project.image_url = _project_image_url(project.image, slug)

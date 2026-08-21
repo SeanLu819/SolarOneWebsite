@@ -1776,7 +1776,7 @@ SEED_DATA = {
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
-      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
+      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
       "translations": {
@@ -1815,47 +1815,1820 @@ SEED_DATA = {
       "pdf_url": ""
     },
     {
-      "pk": 4,
+      "pk": 13,
       "title": "Yuanshen Sports Centre Stadium",
       "location": "Shanghai, China",
       "slug": "yuanshen-sports-centre-stadium",
       "venue_type": "OUTDOOR",
       "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】\r\nShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】\r\nLighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】\r\nFL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed.\r\nAlso, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
-      "image": "images/processed/soccerfield.webp",
+      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—).  The Shanghai SIPG football team is a powerhouse in the Chinese Super League (CSL), the top tier of men's professional football in China.\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M-1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
+      "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp": "projects/shys-soccer-02.webp",
       "order": 2,
       "translations": {
-        "fr": {
-          "title": "Stade du Centre Sportif Yuanshen",
-          "location": "Shanghai, Chine",
-          "description": "Un stade polyvalent à Shanghai Pudong avec 160 000 m² et 20 000 places. 320 projecteurs LED FL12M-1000W (TCP: 5000-5500K) avec système de contrôle réseau pour la commande à distance et le monitoring de puissance.",
-          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018."
-        },
-        "es": {
-          "title": "Estadio del Centro Deportivo Yuanshen",
-          "location": "Shanghai, China",
-          "description": "Un estadio polideportivo en Shanghai Pudong con 160,000 m² y 20,000 asientos. 320 luminarias LED FL12M-1000W (TCP: 5000-5500K) con sistema de control en red para encendido/apagado remoto y monitoreo.",
-          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018."
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      ["images/projects/yuanshen-sports-centre-stadium/shys-soccer-01.webp", "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp", "images/projects/yuanshen-sports-centre-stadium/shys-soccer-03.webp", "images/projects/yuanshen-sports-centre-stadium/shys-soccer-04.webp", "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"]iones combinables flexibles para satisfacer con precisión los requisitos de cualquier proyecto."
         },
         "de": {
-          "title": "Yuanshen Sportzentrum Stadion",
-          "location": "Shanghai, China",
-          "description": "Ein Mehrzweckstadion in Shanghai Pudong mit 160.000 m² und 20.000 Sitzplätzen. 320 LED-Sportfluter FL12M-1000W (TDF: 5000-5500K) mit Netzwerk-Steuerungssystem.",
-          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018."
+          "name": "M-Serie",
+          "category": "Modular",
+          "description": "Wirklich modulares Design — skalierbar von einem einzelnen 1M (80W) Modul bis zu 16M (1280W) oder mehr. Flexible Kombinationskonfigurationen zur genauen Erfüllung jeder Projektforderung."
         },
         "ru": {
-          "title": "Стадион Спортивного центра Юаньшэнь",
-          "location": "Шанхай, Китай",
-          "description": "Многоцелевой стадион в районе Пудун, Шанхай, площадью 160 000 м² на 20 000 мест. 320 спортивных LED-прожекторов FL12M-1000W (ЦТТ: 5000-5500К) с сетевой системой управления.",
-          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018."
+          "name": "Серия M",
+          "category": "Модульные",
+          "description": "Истинно модульная конструкция — масштабируемая от одного модуля 1M (80 Вт) до 16M (1280 Вт) и более. Гибкие комбинации конфигураций для точного соответствия требованиям любого проекта."
         },
         "ar": {
-          "title": "ملعب مركز يوانشين الرياضي",
-          "location": "شنغهاي، الصين",
-          "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
-          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
+          "name": "سلسلة M",
+          "category": "معيارية",
+          "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
         }
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "80~1280W+"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        }
+      ],
+      "energy_data": []
+    },
+    {
+      "pk": 2,
+      "name": "RT410 Series",
+      "slug": "rt410-series",
+      "category": "AREA_SITE",
+      "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
+      "power": "260W",
+      "efficacy": "125lm/W",
+      "output": "",
+      "beam_angle": "18~100°",
+      "protection": "",
+      "image": "products/floodlight.webp",
+      "banner_image": "products/rt410-bar-1.webp",
+      "dimension_image": "products/dimensions/rt410-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle183050100.webp",
+      "ordering_image": "",
+      "order": 2,
+      "parent_slug": "",
+      "translations": {
+        "fr": {
+          "name": "Série RT410",
+          "category": "Projecteur",
+          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast."
+        },
+        "es": {
+          "name": "Serie RT410",
+          "category": "Proyector",
+          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast."
+        },
+        "de": {
+          "name": "RT410-Serie",
+          "category": "Flutlicht",
+          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität."
+        },
+        "ru": {
+          "name": "Серия RT410",
+          "category": "Прожекторы",
+          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством."
+        },
+        "ar": {
+          "name": "سلسلة RT410",
+          "category": "مشاريع إضاءة",
+          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
+        }
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "260W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "32500+lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~100°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT410FL-260W-XXK-S"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">31,200lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "260W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.4(sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.8\" X 15.8\"X 4.2\" / 418 X 400 X 172 (mm)"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "(30lbs)13.5kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 5,
+      "name": "FL1M",
+      "slug": "fl1m",
+      "category": "AREA_SITE",
+      "description": "FL1M modular floodlight configuration — part of the M Series family.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/RT600SL-T.webp",
+      "banner_image": "products/fl1m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl1m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_65Fg8YW.webp",
+      "ordering_image": "",
+      "order": 11,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "80W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "10k+lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL1M-80W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": "10400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "80w"
+        },
+        {
+          "label": "CRI",
+          "value": ">80"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "0.26 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "8.6\" X 9.2\"X 5.4\"/218*235*137mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 5.2 lbs)2.3 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 6,
+      "name": "FL4M",
+      "slug": "fl4m",
+      "category": "AREA_SITE",
+      "description": "FL4M modular floodlight configuration — part of the M Series family.",
+      "power": "320W",
+      "efficacy": "125lm/W",
+      "output": "40K+ lm",
+      "beam_angle": "18~50°",
+      "protection": "",
+      "image": "products/fl4m-01.webp",
+      "banner_image": "products/fl4m-bar-1.webp",
+      "dimension_image": "products/fl4m-3d-view.webp",
+      "beam_angle_image": "products/beamangle-12183050.webp",
+      "ordering_image": "",
+      "order": 12,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {
+          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
+        },
+        "es": {
+          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
+        },
+        "de": {
+          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
+        },
+        "ru": {
+          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
+        },
+        "ar": {
+          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
+        }
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "320W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "40K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "12~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL4M-320W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">41,600lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "320W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.05 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "14.5\" X 14.5\"X 8.1\" / 368*368*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 24.5 lbs) 11.0 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 7,
+      "name": "FL6M",
+      "slug": "fl6m",
+      "category": "AREA_SITE",
+      "description": "FL6M modular floodlight configuration — part of the M Series family.",
+      "power": "480W",
+      "efficacy": "125lm/W",
+      "output": "60K+ lm",
+      "beam_angle": "18~50°",
+      "protection": "",
+      "image": "products/fl6m-01.webp",
+      "banner_image": "products/fl6m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl6m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_KcK84ZP.webp",
+      "ordering_image": "",
+      "order": 13,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "480W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "60K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL6M-480W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">58700lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "480W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "1.58 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 14.5\"X 8.1\"/553*368*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 37 lbs) 16.8 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 8,
+      "name": "FL9M",
+      "slug": "fl9m",
+      "category": "AREA_SITE",
+      "description": "FL9M modular floodlight configuration — part of the M Series family.",
+      "power": "630W",
+      "efficacy": "125lm/W",
+      "output": "90K+ lm",
+      "beam_angle": "18~50°",
+      "protection": "",
+      "image": "products/fl9m-01.webp",
+      "banner_image": "products/banners/fl9m-bar-1_X3TvGYy.webp",
+      "dimension_image": "products/dimensions/fl9m-3d-view_DbaAklf.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_4BJ8mot.webp",
+      "ordering_image": "",
+      "order": 14,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "630W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "90K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL9M-720W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">87,600lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "720W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "2.37 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 21.8\"X 8.1\"/553*553*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 58lbs)26.0 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 9,
+      "name": "FL12M",
+      "slug": "fl12m",
+      "category": "AREA_SITE",
+      "description": "FL12M modular floodlight configuration — part of the M Series family.",
+      "power": "1000W",
+      "efficacy": "125lm/W",
+      "output": "120K+ lm",
+      "beam_angle": "18~50°",
+      "protection": "",
+      "image": "products/fl12m-01.webp",
+      "banner_image": "products/fl12m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl12m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_RlTn9zd.webp",
+      "ordering_image": "",
+      "order": 15,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "1000W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "120K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL12M-1000W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">123,000 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "1000W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "3.16 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" X 29.1\"X 8.1\"/553*737.90*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 59lbs)33.0 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 10,
+      "name": "FL16M",
+      "slug": "fl16m",
+      "category": "AREA_SITE",
+      "description": "FL16M modular floodlight configuration — part of the M Series family.",
+      "power": "1280W",
+      "efficacy": "125lm/W",
+      "output": "160K+ lm",
+      "beam_angle": "18~50°",
+      "protection": "",
+      "image": "products/fl16m-01.webp",
+      "banner_image": "products/fl16m-bar-1.webp",
+      "dimension_image": "products/dimensions/fl16m-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_vxDZHMV.webp",
+      "ordering_image": "",
+      "order": 16,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [
+        {
+          "label": "Power",
+          "value": "1280W"
+        },
+        {
+          "label": "Efficacy",
+          "value": "125lm/W"
+        },
+        {
+          "label": "Output",
+          "value": "160K+ lm"
+        },
+        {
+          "label": "Beam Angle",
+          "value": "18~50°"
+        }
+      ],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL16M-1360W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">163,000 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "1360W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "4.16 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "29\" X 29 \"X 8.1\"/738*738*343mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 94.5lbs)42.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 11,
+      "name": "VSP-XXXXW-9M-YP",
+      "slug": "vsp-xxxxw-9m-yp",
+      "category": "SPORTS_LIGHTING",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/vsp12m-01.webp",
+      "banner_image": "products/banners/vsp-bar-1_SlCnPb6.webp",
+      "dimension_image": "products/dimensions/ac-en-3d-view.png",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_3YkmJS7.webp",
+      "ordering_image": "",
+      "order": 21,
+      "parent_slug": "",
+      "translations": {
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "es": {
+          "category": "Sistema de Iluminación Deportiva",
+          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "ru": {
+          "category": "Система спортивного освещения",
+          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-9M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
+          "name": "VSP-XXXXW-9M-YP"
+        }
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "VSP-XXXXW-9M-YP (AC Enclosure))"
+        },
+        {
+          "label": "System Wattage",
+          "value": "4200W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.7\" x 14.0\" x 23.6\" / 400 x 355 x 600 mm"
+        },
+        {
+          "label": "Material",
+          "value": "Stainless Steel 304"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 12,
+      "name": "VSP-XXXXW-12M-YP",
+      "slug": "vsp-xxxxw-12m-yp",
+      "category": "SPORTS_LIGHTING",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt590.webp",
+      "banner_image": "products/banners/vsp-bar-2.webp",
+      "dimension_image": "products/dimensions/led-en-3d-view_ktM13lC.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-12183050_H3Gim4J.webp",
+      "ordering_image": "",
+      "order": 22,
+      "parent_slug": "",
+      "translations": {
+        "fr": {
+          "category": "Système d'Éclairage Sportif",
+          "description": "Système de protection anti-stroboscope pour sites de diffusion. Élimine le scintillement des ralentis grâce à une technologie de commande haute fréquence stable.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "es": {
+          "category": "Sistema de Iluminación Deportiva",
+          "description": "Sistema de protección contra parpadeo de visión para recintos de broadcast. Elimina el parpadeo en reproducciones a cámara lenta con tecnología de accionamiento de alta frecuencia estable.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "de": {
+          "category": "Sportbeleuchtungssystem",
+          "description": "Vision Strobe Protection-System für Broadcast-Veranstaltungsorte. Beseitigt Flackern bei Zeitlupenwiedergaben durch stabile Hochfrequenz-Antriebstechnologie.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "ru": {
+          "category": "Система спортивного освещения",
+          "description": "Система защиты от стробоскопического эффекта для телевизионных объектов. Устраняет мерцание при замедленной съемке за счет стабильной высокочастотной технологии питания.",
+          "name": "VSP-XXXXW-12M-YP"
+        },
+        "ar": {
+          "category": "نظام إضاءة رياضية",
+          "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
+          "name": "VSP-XXXXW-12M-YP"
+        }
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "VSP-XXXXW-12M-YP (LED Driver Enclosure)"
+        },
+        {
+          "label": "System Wattage",
+          "value": "4200W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.7\" x 14.0\" x 39.4\" / 400 x 355 x 1000 mm"
+        },
+        {
+          "label": "Material",
+          "value": "Stainless Steel 304"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 13,
+      "name": "RT590FL-S",
+      "slug": "rt590fl-s",
+      "category": "FLOODLIGHT",
+      "description": "Professional LED floodlight designed for large-area illumination, sports fields, and industrial sites. High-efficacy performance with robust thermal management for long-lasting reliability.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt590_eRixs78.webp",
+      "banner_image": "products/banners/rt590-bar-01_Tt4lQct.webp",
+      "dimension_image": "products/dimensions/tr590-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-3050120_cbdtaqu.webp",
+      "ordering_image": "",
+      "order": 31,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT590FL-160W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">20,800 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "160W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "23.2\"  x 11.9\" x  9.8\" / 589 x 301 x 248.5mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 28.2 lbs) 12.8 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 16,
+      "name": "RT390FL-S",
+      "slug": "rt390fl",
+      "category": "FLOODLIGHT",
+      "description": "RT390FL-S",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt390-01.webp",
+      "banner_image": "products/banners/rt390-bar-01.webp",
+      "dimension_image": "products/dimensions/rt390-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/beamangle-3050120_WlTRDAS.webp",
+      "ordering_image": "",
+      "order": 32,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT390FL-S"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">10,400lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "80W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "369 x 294 x 336 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "(18.7 lbs) 8.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 17,
+      "name": "HB Series",
+      "slug": "rt400hb",
+      "category": "HIGHBAY_LOWBAY",
+      "description": "Typical Applications\r\nHigh school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt400hb-01.webp",
+      "banner_image": "products/banners/rt400hb-barnner-01_CeBvRPy.webp",
+      "dimension_image": "products/dimensions/rt400hb-3d-view01_AQPehKc.webp",
+      "beam_angle_image": "products/beam_angles/rt400hb-beamangle-254590_TC5pGeM.png",
+      "ordering_image": "",
+      "order": 42,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT400HB-130W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">16,900 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "130W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "15.6\" x 15.6\" x 15.8\" / 395 x 395 x 401 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "8.0 kgs( 17.6 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 18,
+      "name": "RT500HB",
+      "slug": "rt500hb",
+      "category": "HIGHBAY_LOWBAY",
+      "description": "Typical Applications\r\nHigh school, college, professional stadiums, Large area, Industrial Facilities, Building facades .",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/hb500-04.webp",
+      "banner_image": "products/banners/rt500hb-barnner-01_fe5jJ6X.webp",
+      "dimension_image": "products/dimensions/rt500hb-3d-view.webp",
+      "beam_angle_image": "products/beam_angles/rt500hb-beamangle-254590.webp",
+      "ordering_image": "",
+      "order": 43,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT500HB-280W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">36,400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "280W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "19.7\" x 19.7\" x 18.0\"/500 x 500 x 457 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "16.0 kgs( 35.3 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 19,
+      "name": "RT220UB",
+      "slug": "rt220ub",
+      "category": "FLOODLIGHT",
+      "description": "Building Security ,Packing lots, residential area, display window, advertisement billboard..etc",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/rt220ub-01_mqkz4p2.webp",
+      "banner_image": "products/banners/rt220ub-banner_J5UGLoq.webp",
+      "dimension_image": "products/dimensions/rt220ub-3d-view_m8pTs49.webp",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "order": 44,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT220UB"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">5,200 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "40W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "10.1\" x 8.1\" x 5.0\" / 257.5 x 207 x 128 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "2.3 kgs( 5.2 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 14,
+      "name": "RT600SL-T",
+      "slug": "rt600sl-t",
+      "category": "ROADWAY",
+      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "products/RT600SL-T_yqv89jW.webp",
+      "banner_image": "products/banners/rt600sl-t-bar-1.webp",
+      "dimension_image": "products/dimensions/RT600SL-dimension-1.webp",
+      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140.webp",
+      "ordering_image": "",
+      "order": 51,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT600SL-T-120W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">14,400 lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "120W"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347~480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110~277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": "100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "23.5\"  x 13.8\" x  3.9\" / 596 x 350 x 100mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 27.6 lbs) 12.5 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    },
+    {
+      "pk": 15,
+      "name": "RT820SL-T",
+      "slug": "rt820sl-t",
+      "category": "ROADWAY",
+      "description": "RT820SL-T",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "",
+      "banner_image": "products/banners/rt820sl-t-bar-1.webp",
+      "dimension_image": "products/dimensions/rt820-3d-view_OgEZFpC.png",
+      "beam_angle_image": "products/beam_angles/rt600sl-beamangle70-140_0tydTLp.webp",
+      "ordering_image": "",
+      "order": 52,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "RT820SL-T"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">10,400lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "240W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "32.3\" x 13.8\" x 3.9\" / 821 × 350 × 100 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "( 40.3 lbs) 18.3 kgs"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Brand",
+          "value": "Bridgelux"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "pk": 1,
+      "title": "Bohemia Manor High School",
+      "location": "United States",
+      "slug": "football-field-led-retrofit",
+      "venue_type": "OUTDOOR",
+      "sport_type": "FOOTBALL_FIELD",
+      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
+      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
+      "image": "images/processed/footballfield.webp",
+      "order": 1,
+      "translations": {
+        "fr": {
+          "title": "Lycée Bohemia Manor",
+          "location": "États-Unis",
+          "description": "【Profil du client】\nBohemia Manor High School est une école publique gérée par Cecil County Public Schools située à environ 1,6 km au sud de la petite ville de Chesapeake City dans le comté de Cecil, MD. Il s'agit d'une petite école de 685 élèves qui partage son campus avec le collège Bohemia Manor.\nl'école est également connue sous le surnom de « Bo Manor ».\n\n【Étendue des travaux】\nL'éclairage d'origine du champ « Bo Manor » était inefficace, sous-éclairé et difficile à entretenir. En outre, les spécifications du projet nécessitaient l'utilisation des poteaux et des structures existants.\n\n【La solution】\nUne conception photométrique de précision a été réalisée pour s'assurer que les spécifications de conception étaient respectées. La conception a nécessité le remplacement (40 au total) des luminaires 1500W MH existants par (48 au total) de nos lampes de sport à LED FL9M -630W.",
+          "results": "<strong>Éclairage</strong> moyen de 30 fc, <strong>uniformité 1,37 : 1</strong> — dépassant les exigences du projet."
+        },
+        "es": {
+          "title": "Escuela Secundaria Bohemia Manor",
+          "location": "Estados Unidos",
+          "description": "Perfil 【del cliente】\nBohemia Manor High School es una escuela pública operada por las Escuelas Públicas del Condado de Cecil ubicada aproximadamente a una milla al sur de la pequeña ciudad de Chesapeake City en el Condado de Cecil, MD. Esta es una pequeña escuela de 685 estudiantes que comparte su campus con Bohemia Manor Middle School.\nla escuela también es conocida con el apodo de \"Bo Manor\".\n\n【Alcance del trabajo】\nLa iluminación original en el campo \"Bo Manor\" era ineficiente, poco iluminada y molesta de mantener. Además, las especificaciones del proyecto requerían el uso de los postes y estructuras existentes.\n\n【La solución】\nSe completó un diseño fotométrico de precisión para garantizar que se cumplieran las especificaciones de diseño. El diseño requería el reemplazo (40 en total) de los accesorios de iluminación existentes de 1500W MH a (48 en total) de nuestras luces deportivas de rendimiento LED FL9M -630W.",
+          "results": "<strong>30</strong> fc iluminancia media, <strong>uniformidad 1.37 : 1</strong> — excediendo los requisitos del proyecto."
+        },
+        "de": {
+          "title": "Bohemia Manor Gymnasium",
+          "location": "Vereinigte Staaten von Amerika",
+          "description": "【Kundenprofil】\nDie Bohemia Manor High School ist eine öffentliche Schule, die von Cecil County Public Schools betrieben wird und etwa eine Meile südlich der kleinen Stadt Chesapeake City in Cecil County, MD, liegt. Dies ist eine kleine Schule mit 685 Schülern, die ihren Campus mit der Bohemia Manor Middle School teilt. Die\nschule ist auch unter dem Spitznamen „Bo Manor“ bekannt.\n\n【Arbeitsumfang】\nDie ursprüngliche Beleuchtung im Feld \"Bo Manor\" war ineffizient, unterleuchtet und musste mühsam gewartet werden. Außerdem erforderten die Spezifikationen des Projekts die Nutzung der vorhandenen Pole und Strukturen.\n\n【Die Lösung】\nEin präzises photometrisches Design wurde fertiggestellt, um sicherzustellen, dass die Konstruktionsspezifikationen eingehalten wurden. Das Design sah den Austausch (insgesamt 40) der vorhandenen 1500-W-MH-Leuchten an (insgesamt 48) unserer FL9M-630-W-LED-Leistungssportleuchten vor.",
+          "results": "<strong>30fc</strong> mittlere Beleuchtungsstärke, <strong>Gleichmäßigkeit 1,37 : 1</strong> — die Projektanforderungen übertreffend."
+        },
+        "ru": {
+          "title": "Средняя школа Bohemia Manor",
+          "location": "Соединенные Штаты Америки",
+          "description": "Профиль 【клиента】\nСредняя школа Bohemia Manor - это государственная школа, управляемая государственными школами округа Сесил, расположенная примерно в одной миле к югу от небольшого городка Чесапик-Сити в округе Сесил, штат Мэриленд. Это небольшая школа на 685 учеников, которая делит свой кампус со средней школой Bohemia Manor.\nшкола также известна под прозвищем «Усадьба Бо».\n\n【Объем работ】\nПервоначальное освещение на месторождении «Усадьба Бо» было неэффективным, недостаточно освещенным и требовало хлопот в обслуживании. Также спецификации проекта требовали использования существующих опор и конструкций.\n\n【Решение】\nДля обеспечения соответствия проектным спецификациям была завершена точная фотометрическая конструкция. Дизайн предусматривал замену (всего 40) существующих светильников 1500 Вт MH на (всего 48) наших светодиодных спортивных светильников FL9M -630W.",
+          "results": "<strong>30fc</strong> средняя освещенность, <strong>равномерность 1,37 : 1</strong> — превышение проектных требований."
+        },
+        "ar": {
+          "title": "مدرسة بوهيميا مانور الثانوية",
+          "location": "الولايات المتحدة الأمريكية",
+          "description": "الملف الشخصي 【للعميل】\nمدرسة بوهيميا مانور الثانوية هي مدرسة عامة تديرها مدارس مقاطعة سيسيل العامة وتقع على بعد ميل واحد تقريبًا جنوب مدينة تشيسابيك الصغيرة في مقاطعة سيسيل بولاية ماريلاند. هذه مدرسة صغيرة تضم 685 طالبًا تشترك في حرمها الجامعي مع مدرسة بوهيميا مانور المتوسطة.\nتُعرف المدرسة أيضًا باسم \"بو مانور\".\n\n【نطاق العمل】\nكانت الإضاءة الأصلية في حقل \"بو مانور\" غير فعالة، وتحت الإضاءة، ومتعبة في الصيانة. كما تطلبت مواصفات المشروع استخدام الأعمدة والهياكل القائمة.\n\n【الحل】\nتم الانتهاء من تصميم فوتومتري دقيق لضمان تلبية مواصفات التصميم. دعا التصميم إلى استبدال (إجمالي 40) من تركيبات الإضاءة MH الحالية بقدرة 1500 واط إلى (إجمالي 48) من مصابيح LED الرياضية ذات الأداء FL9M -630W.",
+          "results": "<strong>30fc</strong> متوسط الإضاءة، <strong>التوحيد 1.37 : 1</strong> — تجاوز متطلبات المشروع."
+        }
+      },
+      "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 13,
+      "title": "Yuanshen Sports Centre Stadium",
+      "location": "Shanghai, China",
+      "slug": "yuanshen-sports-centre-stadium",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SOCCER_FIELD",
+      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—).  The Shanghai SIPG football team is a powerhouse in the Chinese Super League (CSL), the top tier of men's professional football in China.\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M-1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
+      "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp": "projects/shys-soccer-02.webp",
+      "order": 2,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
       },
       "gallery": [],
       "pdf_url": ""
@@ -1914,7 +3687,7 @@ SEED_DATA = {
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
-      "results": "",
+      "results": "<strong>over 80fc</strong> average illuminance, <strong>uniformity 1.67:1</strong>",
       "image": "projects/msu-tennis-01.webp",
       "order": 4,
       "translations": {
@@ -1955,7 +3728,7 @@ SEED_DATA = {
       "venue_type": "OUTDOOR",
       "sport_type": "SKI_AREA",
       "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
       "image": "projects/nanshan-ski-01.webp",
       "order": 5,
       "translations": {
@@ -2045,7 +3818,13 @@ SEED_DATA = {
       "results": "",
       "image": "projects/Narbonne-basketball-04.webp",
       "order": 7,
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [],
       "pdf_url": ""
     },
@@ -2139,13 +3918,13 @@ SEED_DATA = {
     },
     {
       "pk": 12,
-      "title": "Chun'an Velodrome",
+      "title": "Hangzhou Asian Games Velodrome",
       "location": "Hangzhou, China",
       "slug": "chunan-velodrome",
       "venue_type": "INDOOR",
       "sport_type": "VELODROME",
       "description": "The Chun'an Velodrome is located in the Jieshou Block of the Qiandao Lake Tourism Resort and serves as the core venue for the cycling events at the Hangzhou Asian Games. Inspired by the design concept of \"Leaping Fish in the Morning Sun, Pearl of a Thousand Islands,\" the venue features an oval steel canopy and a dynamic floodlighting system, vividly capturing the dynamic imagery of a fish leaping from the water. Standing 40 meters tall, the building houses a 250-meter international standard indoor track and can accommodate up to 3,040 spectators.",
-      "results": "",
+      "results": "Horizontal illuminance: > 3200 lux (Uniformity: 0.90)\r\nMain Camera illuminance: > 2600 lux (Uniformity: 0..84)\r\nAuxiliary Camera illuminance: > 2200 lux (Uniformity: 0.70)\r\nComplies with HD broadcasting standards.",
       "image": "projects/bycicle-chunan01.webp",
       "order": 28,
       "translations": {
@@ -2165,8 +3944,8 @@ SEED_DATA = {
       "slug": "olympic-sports-center-gymnasium-beijing",
       "venue_type": "INDOOR",
       "sport_type": "BASKETBALL",
-      "description": "Olympic Sports Center Gymnasium (Beijing)",
-      "results": "",
+      "description": "The Beijing National Olympic Center Gymnasium, commonly known as the \"Aoti Center Gymnasium,\" is located on the north side of the National Olympic Sports Center. The hexagonal arena covers a total area of 4 hectares with a floor area of 32,410 square meters. The playing court measures 40 by 70 meters and can accommodate 6,300 spectators. It serves as the home venue for the Beijing Royal Fighters of the Chinese Basketball Association (CBA).",
+      "results": "Horizontal illuminance: > 4000 lux (Uniformity: 0.8)\r\nCamera illuminance: > 3000 lux (Uniformity: 0.7)\r\nComplies with HD broadcasting standards.",
       "image": "projects/oscg-01.webp",
       "order": 45,
       "translations": {

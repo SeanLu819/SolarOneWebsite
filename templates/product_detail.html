@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load text_filters %}
 
 {% block title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
@@ -125,7 +126,7 @@
 
           <!-- Right: Text + Specs -->
           <div class="detail-info">
-            <p class="detail-desc">{{ product.description_t }}</p>
+            <div class="detail-desc">{{ product.description_t|nl2para }}</div>
 
             {% if product.specs %}
             <div class="detail-specs">
@@ -138,10 +139,10 @@
             </div>
             {% endif %}
 
-            <!-- Certification badges -- M Series & RT410 Series -->
-            {% if active_series == 'M_SERIES' or active_series == 'RT410_SERIES' %}
+            <!-- Certification badges -->
+            {% if product.cert_image_url %}
             <div class="detail-cert-image">
-              <img src="{% static 'images/products/m-series-certs.webp' %}" alt="{% trans 'Product Certifications' %}" loading="lazy">
+              <img src="{{ product.cert_image_url }}" alt="{% trans 'Product Certifications' %}" loading="lazy">
             </div>
             {% endif %}
           </div>

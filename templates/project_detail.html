@@ -102,11 +102,12 @@
 
         <!-- Text content below image -->
         <div class="detail-info">
-          <div class="detail-info-grid" style="display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start;">
+          {% with has_compare_images=project.has_compare_images %}
+          <div class="detail-info-grid{% if has_compare_images %} has-compare{% endif %}">
 
             <div class="detail-info-left">
               {# Normalize intra-paragraph line breaks: admins paste from Word/PDF with hard wraps every ~40 chars, which `linebreaks` turns into <br> and forces a narrow column. Replace any <br> with a space so the browser wraps the text naturally across the full width. Paragraph splits (blank lines) are still preserved because `linebreaks` converts \n\n to </p><p> first. #}
-              <div class="detail-desc">{{ project.description_t|linebreaks|linebreaktospaces|safe }}</div>
+              <div class="detail-desc">{{ project.description_t|nl2para }}</div>
 
               <div class="detail-meta">
                 <div class="detail-meta-item">
@@ -126,6 +127,7 @@
               {# Download button moved to bottom of page to keep it visually at page end #}
             </div>
 
+            {% if has_compare_images %}
             <aside class="detail-info-right">
               {% if project.slug == 'football-field-led-retrofit' %}
               <div class="project-compare">
@@ -140,13 +142,15 @@
               </div>
               {% endif %}
             </aside>
+            {% endif %}
 
           </div>
+          {% endwith %}
 
           {% if project.results_t %}
           <div class="detail-results full-width-result">
             <span class="detail-results-label">{% trans "Project Results" %}</span>
-            <p class="detail-results-text">{{ project.results_t|safe }}</p>
+            <div class="detail-results-text">{{ project.results_t|nl2para }}</div>
           </div>
           {% endif %}
 
@@ -225,8 +229,30 @@
     color: var(--ink);
     margin: 0;
   }
+  .detail-results-text p {
+    margin: 0 0 1em;
+  }
+  .detail-results-text p:last-child {
+    margin-bottom: 0;
+  }
 
   /* Meta grid */
+  .detail-info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  /* When the project has comparison (secondary) images, lay them out in a right column. */
+  .detail-info-grid.has-compare {
+    grid-template-columns: 1fr 320px;
+  }
+  @media (max-width: 900px) {
+    .detail-info-grid.has-compare {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .detail-meta {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -252,7 +278,7 @@
   .project-compare {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
   .project-compare img {
     width: 100%;
@@ -262,12 +288,6 @@
     object-fit: cover;
     display: block;
     box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-  }
-
-  .project-compare {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
   }
 
   .compare-figure {

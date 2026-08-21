@@ -125,6 +125,12 @@ class Product(models.Model):
         verbose_name='Ordering Information Image',
         help_text='订购信息示意图，展示在 ORDERING INFORMATION 表格上方。建议 1920×600 像素。'
     )
+    cert_image = models.ImageField(
+        upload_to='products/certs/',
+        blank=True,
+        verbose_name='Certification Image',
+        help_text='产品认证标识图（如 UL、DLC、CE、IP66 等）。展示在规格下方。留空则使用通用默认认证图。建议 1200×200 像素（横向长条形）。'
+    )
 
     class Meta:
         ordering = ['order', 'pk']

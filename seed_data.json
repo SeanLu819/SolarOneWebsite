@@ -1769,7 +1769,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
-      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37 : 1</strong> — exceeding the project requirements.",
+      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
       "image": "images/processed/footballfield.webp",
       "order": 1,
       "translations": {
@@ -1805,6 +1805,33 @@
         }
       },
       "gallery": [],
+      "pdf_url": ""
+    },
+    {
+      "pk": 13,
+      "title": "Yuanshen Sports Centre Stadium",
+      "location": "Shanghai, China",
+      "slug": "yuanshen-sports-centre-stadium",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SOCCER_FIELD",
+      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—).  The Shanghai SIPG football team is a powerhouse in the Chinese Super League (CSL), the top tier of men's professional football in China.\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M-1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
+      "image": "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
+      "order": 2,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-01.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-03.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-04.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"
+      ],
       "pdf_url": ""
     },
     {
@@ -1861,7 +1888,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
-      "results": "",
+      "results": "<strong>over 80fc</strong> average illuminance, <strong>uniformity 1.67:1</strong>",
       "image": "projects/msu-tennis-01.webp",
       "order": 4,
       "translations": {
@@ -1902,7 +1929,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "SKI_AREA",
       "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light\r\nand make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
       "image": "projects/nanshan-ski-01.webp",
       "order": 5,
       "translations": {
@@ -1992,7 +2019,13 @@
       "results": "",
       "image": "projects/Narbonne-basketball-04.webp",
       "order": 7,
-      "translations": {},
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
       "gallery": [],
       "pdf_url": ""
     },
@@ -2040,33 +2073,6 @@
         }
       },
       "gallery": [],
-      "pdf_url": ""
-    },
-    {
-      "pk": 13,
-      "title": "Yuanshen Sports Centre Stadium",
-      "location": "Shanghai, China",
-      "slug": "yuanshen-sports-centre-stadium",
-      "venue_type": "OUTDOOR",
-      "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
-      "image": "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
-      "order": 11,
-      "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
-      },
-      "gallery": [
-        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-01.webp",
-        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
-        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-03.webp",
-        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-04.webp",
-        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"
-      ],
       "pdf_url": ""
     },
     {
@@ -2119,8 +2125,8 @@
       "venue_type": "INDOOR",
       "sport_type": "VELODROME",
       "description": "The Chun'an Velodrome is located in the Jieshou Block of the Qiandao Lake Tourism Resort and serves as the core venue for the cycling events at the Hangzhou Asian Games. Inspired by the design concept of \"Leaping Fish in the Morning Sun, Pearl of a Thousand Islands,\" the venue features an oval steel canopy and a dynamic floodlighting system, vividly capturing the dynamic imagery of a fish leaping from the water. Standing 40 meters tall, the building houses a 250-meter international standard indoor track and can accommodate up to 3,040 spectators.",
-      "results": "2000lux",
-      "image": "images/projects/chunan-velodrome/bycicle-chunan01.webp",
+      "results": "Horizontal illuminance: > 3200 lux (Uniformity: 0.90)\r\nMain Camera illuminance: > 2600 lux (Uniformity: 0..84)\r\nAuxiliary Camera illuminance: > 2200 lux (Uniformity: 0.70)\r\nComplies with HD broadcasting standards.",
+      "image": "projects/bycicle-chunan01.webp",
       "order": 28,
       "translations": {
         "fr": {},
@@ -2129,13 +2135,7 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [
-        "images/projects/chunan-velodrome/bycicle-chunan01.webp",
-        "images/projects/chunan-velodrome/bycicle-chunan04.webp",
-        "images/projects/chunan-velodrome/bycicle-chunan03.webp",
-        "images/projects/chunan-velodrome/bycicle-chunan02.webp",
-        "images/projects/chunan-velodrome/bycicle-chunan05.webp"
-      ],
+      "gallery": [],
       "pdf_url": ""
     },
     {
@@ -2145,8 +2145,8 @@
       "slug": "olympic-sports-center-gymnasium-beijing",
       "venue_type": "INDOOR",
       "sport_type": "BASKETBALL",
-      "description": "Olympic Sports Center Gymnasium (Beijing)",
-      "results": "",
+      "description": "The Beijing National Olympic Center Gymnasium, commonly known as the \"Aoti Center Gymnasium,\" is located on the north side of the National Olympic Sports Center. The hexagonal arena covers a total area of 4 hectares with a floor area of 32,410 square meters. The playing court measures 40 by 70 meters and can accommodate 6,300 spectators. It serves as the home venue for the Beijing Royal Fighters of the Chinese Basketball Association (CBA).",
+      "results": "Horizontal illuminance: > 4000 lux (Uniformity: 0.8)\r\nCamera illuminance: > 3000 lux (Uniformity: 0.7)\r\nComplies with HD broadcasting standards.",
       "image": "projects/oscg-01.webp",
       "order": 45,
       "translations": {

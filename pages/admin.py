@@ -371,8 +371,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': ('description', 'translations')
         }),
         ('Images', {
-            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image', 'ordering_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用\u201cDimension image\u201d字段，配光曲线请使用\u201cBeam angle image\u201d字段，不要在轮播图中重复上传。Ordering image 为订购信息示意图，仅在 M series 页面显示。'
+            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image', 'ordering_image', 'cert_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用“Dimension image”字段，配光曲线请使用“Beam angle image”字段，不要在轮播图中重复上传。Ordering image 为订购信息示意图。Cert image 为产品认证标识图，留空则使用通用默认认证图。'
         }),
         ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
             'fields': ('specs',),
@@ -425,6 +425,22 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                 dst = os.path.join(static_dir, filename)
                 shutil.copy2(src, dst)
                 seed_paths['ordering_image'] = f'images/products/ordering/{filename}'
+
+        # Cert image — synced to per-product slug dir for Vercel persistence
+        cert_field = getattr(obj, 'cert_image', None)
+        if cert_field and getattr(cert_field, 'name', ''):
+            import re as _re
+            src = os.path.join(media_root, str(cert_field))
+            if os.path.exists(src):
+                base = os.path.basename(src)
+                stem, ext = os.path.splitext(base)
+                m = _re.search(r'_([a-zA-Z0-9]{7})$', stem)
+                filename = f'{stem[:m.start()]}{ext}' if m else base
+                static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
+                os.makedirs(static_dir, exist_ok=True)
+                dst = os.path.join(static_dir, filename)
+                shutil.copy2(src, dst)
+                seed_paths['cert_image'] = f'images/products/{slug}/{filename}'
 
         gallery_paths = []
         gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
@@ -594,21 +610,58 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         os.makedirs(static_dir, exist_ok=True)
         media_root = settings.MEDIA_ROOT
 
+        def _dest_name(src_path):
+            """Strip Django's 7-char hash suffix so repeated uploads produce stable filenames."""
+            base = os.path.basename(src_path)
+            stem, ext = os.path.splitext(base)
+            m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
+            if m:
+                return f'{stem[:m.start()]}{ext}'
+            return base
+
+        # Collect destination filenames for stale-file pruning
+        current_dest_names = set()
+
         cover_rel = ''
         if obj.image:
             src_cover = os.path.join(media_root, str(obj.image))
             if os.path.exists(src_cover):
-                dst_cover = os.path.join(static_dir, os.path.basename(src_cover))
+                dst_name = _dest_name(src_cover)
+                current_dest_names.add(dst_name)
+                dst_cover = os.path.join(static_dir, dst_name)
                 shutil.copy2(src_cover, dst_cover)
-                cover_rel = f'images/projects/{slug}/{os.path.basename(src_cover)}'
+                cover_rel = f'images/projects/{slug}/{dst_name}'
 
         gallery_paths = []
         for img in obj.images.all():
             src = os.path.join(media_root, str(img.image))
-            if os.path.exists(src):
-                dst = os.path.join(static_dir, os.path.basename(src))
-                shutil.copy2(src, dst)
-                gallery_paths.append(f'images/projects/{slug}/{os.path.basename(src)}')
+            if not os.path.exists(src):
+                continue
+            dst_name = _dest_name(src)
+            current_dest_names.add(dst_name)
+            dst = os.path.join(static_dir, dst_name)
+            shutil.copy2(src, dst)
+            rel = f'images/projects/{slug}/{dst_name}'
+            if rel not in gallery_paths:
+                gallery_paths.append(rel)
+
+        # Prune stale files no longer referenced by DB
+        # Template-hardcoded special images (e.g. before/after comparison shots)
+        # are preserved — they are not managed through ProjectImage records.
+        _preserved = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
+        try:
+            for entry in os.listdir(static_dir):
+                if not entry.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                    continue
+                if entry.lower() in _preserved:
+                    continue
+                if entry not in current_dest_names:
+                    try:
+                        os.remove(os.path.join(static_dir, entry))
+                    except OSError:
+                        pass
+        except OSError:
+            pass
 
         seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
         seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
