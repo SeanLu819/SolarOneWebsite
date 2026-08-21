@@ -499,12 +499,19 @@ def _sync_project_media_to_static(project):
 
     def _dest_name(src_path):
         """Stable destination filename: strip Django hash suffix so repeated
-        uploads of the same file don't produce divergent static paths."""
+        uploads of the same file don't produce divergent static paths.
+
+        Django's default storage appends a 7-char alphanumeric hash when a
+        file with the same name already exists (e.g. photo_abcX123.jpg).
+        We strip that suffix to keep static filenames predictable.
+        """
+        import re
         base = os.path.basename(src_path)
         stem, ext = os.path.splitext(base)
-        parts = stem.rsplit('_', 1)
-        if len(parts) == 2 and len(parts[1]) > 0 and any(c.isdigit() for c in parts[1]):
-            return f'{parts[0]}{ext}'
+        # Django hash suffix: underscore + exactly 7 alphanumeric chars at end
+        m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
+        if m:
+            return f'{stem[:m.start()]}{ext}'
         return base
 
     # ---- Collect current destination filenames from DB ----

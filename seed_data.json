@@ -1808,52 +1808,6 @@
       "pdf_url": ""
     },
     {
-      "pk": 4,
-      "title": "Yuanshen Sports Centre Stadium",
-      "location": "Shanghai, China",
-      "slug": "yuanshen-sports-centre-stadium",
-      "venue_type": "OUTDOOR",
-      "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】\r\nShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】\r\nLighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】\r\nFL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed.\r\nAlso, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "<strong>2200 lux avg.</strong>, <strong>U0=0.8</strong>, <strong>Ra&gt;80</strong> — meeting AFC Stadium Lighting Guidelines 2018.",
-      "image": "images/processed/soccerfield.webp",
-      "order": 2,
-      "translations": {
-        "fr": {
-          "title": "Stade du Centre Sportif Yuanshen",
-          "location": "Shanghai, Chine",
-          "description": "Un stade polyvalent à Shanghai Pudong avec 160 000 m² et 20 000 places. 320 projecteurs LED FL12M-1000W (TCP: 5000-5500K) avec système de contrôle réseau pour la commande à distance et le monitoring de puissance.",
-          "results": "2200 lux moy., U0=0.8, Ra>80 — répondant aux directives AFC Stadium Lighting 2018."
-        },
-        "es": {
-          "title": "Estadio del Centro Deportivo Yuanshen",
-          "location": "Shanghai, China",
-          "description": "Un estadio polideportivo en Shanghai Pudong con 160,000 m² y 20,000 asientos. 320 luminarias LED FL12M-1000W (TCP: 5000-5500K) con sistema de control en red para encendido/apagado remoto y monitoreo.",
-          "results": "2200 lux prom., U0=0.8, Ra>80 — cumpliendo las Directrices de Iluminación de Estadios AFC 2018."
-        },
-        "de": {
-          "title": "Yuanshen Sportzentrum Stadion",
-          "location": "Shanghai, China",
-          "description": "Ein Mehrzweckstadion in Shanghai Pudong mit 160.000 m² und 20.000 Sitzplätzen. 320 LED-Sportfluter FL12M-1000W (TDF: 5000-5500K) mit Netzwerk-Steuerungssystem.",
-          "results": "2200 Lux Durchschnitt, U0=0.8, Ra>80 — erfüllt AFC-Stadionbeleuchtungsrichtlinien 2018."
-        },
-        "ru": {
-          "title": "Стадион Спортивного центра Юаньшэнь",
-          "location": "Шанхай, Китай",
-          "description": "Многоцелевой стадион в районе Пудун, Шанхай, площадью 160 000 м² на 20 000 мест. 320 спортивных LED-прожекторов FL12M-1000W (ЦТТ: 5000-5500К) с сетевой системой управления.",
-          "results": "Средняя 2200 люкс, U0=0.8, Ra>80 — соответствие руководящим принципам AFC по освещению стадионов 2018."
-        },
-        "ar": {
-          "title": "ملعب مركز يوانشين الرياضي",
-          "location": "شنغهاي، الصين",
-          "description": "ملعب متعدد الأغراض في شنغهاي بودونغ بمساحة 160,000 م² و20,000 مقعد. 320 مصباح LED رياضي FL12M-1000W مع نظام تحكم شبكي.",
-          "results": "متوسط 2200 لوكس، U0=0.8، Ra>80 — تلبي إرشادات AFC لإضاءة الملاعب 2018."
-        }
-      },
-      "gallery": [],
-      "pdf_url": ""
-    },
-    {
       "pk": 2,
       "title": "Carroll County Sports Complex",
       "location": "United States",
@@ -2089,6 +2043,33 @@
       "pdf_url": ""
     },
     {
+      "pk": 13,
+      "title": "Yuanshen Sports Centre Stadium",
+      "location": "Shanghai, China",
+      "slug": "yuanshen-sports-centre-stadium",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SOCCER_FIELD",
+      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—)\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
+      "image": "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
+      "order": 11,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-01.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-03.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-04.webp",
+        "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"
+      ],
+      "pdf_url": ""
+    },
+    {
       "pk": 10,
       "title": "Beijing International Tennis Center",
       "location": "Beijing, China",
@@ -2132,14 +2113,14 @@
     },
     {
       "pk": 12,
-      "title": "Chun'an Velodrome",
+      "title": "Hangzhou Asian Games Velodrome",
       "location": "Hangzhou, China",
       "slug": "chunan-velodrome",
       "venue_type": "INDOOR",
       "sport_type": "VELODROME",
       "description": "The Chun'an Velodrome is located in the Jieshou Block of the Qiandao Lake Tourism Resort and serves as the core venue for the cycling events at the Hangzhou Asian Games. Inspired by the design concept of \"Leaping Fish in the Morning Sun, Pearl of a Thousand Islands,\" the venue features an oval steel canopy and a dynamic floodlighting system, vividly capturing the dynamic imagery of a fish leaping from the water. Standing 40 meters tall, the building houses a 250-meter international standard indoor track and can accommodate up to 3,040 spectators.",
-      "results": "",
-      "image": "projects/bycicle-chunan01.webp",
+      "results": "2000lux",
+      "image": "images/projects/chunan-velodrome/bycicle-chunan01.webp",
       "order": 28,
       "translations": {
         "fr": {},
@@ -2148,7 +2129,13 @@
         "ru": {},
         "ar": {}
       },
-      "gallery": [],
+      "gallery": [
+        "images/projects/chunan-velodrome/bycicle-chunan01.webp",
+        "images/projects/chunan-velodrome/bycicle-chunan04.webp",
+        "images/projects/chunan-velodrome/bycicle-chunan03.webp",
+        "images/projects/chunan-velodrome/bycicle-chunan02.webp",
+        "images/projects/chunan-velodrome/bycicle-chunan05.webp"
+      ],
       "pdf_url": ""
     },
     {

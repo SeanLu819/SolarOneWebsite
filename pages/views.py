@@ -407,16 +407,22 @@ def _static_url(path):
 
 
 def _clean_hashed_name(name: str) -> str:
-    """Strip Django-upload hashed suffix like _yPJsGNE from filename."""
+    """Strip Django-upload hashed suffix like _yPJsGNE or _jlmQVlR from filename.
+
+    Django's default storage appends a 7-char alphanumeric hash when a file
+    with the same name already exists. We match that exact pattern.
+    """
     if not name:
         return ''
+    import re
     try:
         stem = name.rsplit('.', 1)[0]
         ext = name.rsplit('.', 1)[-1]
     except (ValueError, IndexError):
         return name
-    if '_' in stem:
-        stem = stem.rsplit('_', 1)[0]
+    m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
+    if m:
+        stem = stem[:m.start()]
     return f'{stem}.{ext}'
 
 
