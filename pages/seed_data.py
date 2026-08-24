@@ -1053,10 +1053,10 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
-      "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
+      "image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
+      "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-3.webp",
       "dimension_image": "images/products/vsp-xxxxw-9m-yp/ac-en-3d-view.png",
-      "beam_angle_image": "images/products/beamangle-12183050.webp",
+      "beam_angle_image": "images/products/vsp-xxxxw-9m-yp/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
       "order": 21,
@@ -1174,7 +1174,7 @@ SEED_DATA = {
       "beam_angle": "",
       "protection": "",
       "image": "images/products/vsp-xxxxw-12m-yp/rt590.webp",
-      "banner_image": "images/products/vsp-xxxxw-12m-yp/vsp-bar-2.webp",
+      "banner_image": "images/products/vsp-xxxxw-12m-yp/vsp-bar-1.webp",
       "dimension_image": "images/products/vsp-xxxxw-12m-yp/led-en-3d-view.webp",
       "beam_angle_image": "images/products/beamangle-12183050.webp",
       "ordering_image": "",
@@ -2875,11 +2875,5 @@ SEED_DATA = {
       "pdf_url": "files/pickle_n_par_club.pdf"
     }
   ],
-  "siteconfig": {
-    "social_facebook": "https://www.facebook.com/SolaroneEnergyTech",
-    "social_instagram": "https://www.instagram.com/solaronevision/",
-    "social_youtube": "https://www.youtube.com/@SolaroneVision",
-    "social_tiktok": "https://www.tiktok.com/@solaroneledlighting?lang=zh-Hans",
-    "social_linkedin": ""
-  }
+  "siteconfig": {}
 }
