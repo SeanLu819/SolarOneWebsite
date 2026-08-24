@@ -53,9 +53,13 @@ def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
 
     is_banner_like = any(kw in clean_filename.lower() for kw in ('bar', 'banner', 'barnner'))
 
+    # When slug == asset_type (e.g. both 'products_page'), skip the slug
+    # subdirectory to avoid double paths like 'images/products_page/products_page/'
+    subdir = '' if slug == asset_type else f'{slug}/'
+
     candidates = []
     if field_name == 'image' and is_banner_like:
-        dir_path = f'images/{asset_type}/{slug}/'
+        dir_path = f'images/{asset_type}/{subdir}'
         files_in_dir = _list_static_dir(dir_path)
         non_banner = [f for f in files_in_dir
                       if not any(kw in f.lower() for kw in ('bar', 'banner', 'barnner', '3d-view', 'dimension', 'beamangle', 'ordering', 'cert'))]
@@ -63,16 +67,16 @@ def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
             non_banner.sort(key=lambda f: (0 if clean_filename.split('.')[0].lower() in f.lower() else 1, f))
             candidates.append(f'{dir_path}{non_banner[0]}')
         candidates.extend([
-            f'images/{asset_type}/{slug}/{clean_filename}',
-            f'images/{asset_type}/{slug}/{raw_filename}',
+            f'images/{asset_type}/{subdir}{clean_filename}',
+            f'images/{asset_type}/{subdir}{raw_filename}',
             f'images/{asset_type}/{clean_filename}',
             f'images/{asset_type}/{raw_filename}',
             f'images/{db_path}',
         ])
     else:
         candidates = [
-            f'images/{asset_type}/{slug}/{clean_filename}',
-            f'images/{asset_type}/{slug}/{raw_filename}',
+            f'images/{asset_type}/{subdir}{clean_filename}',
+            f'images/{asset_type}/{subdir}{raw_filename}',
             f'images/{asset_type}/{clean_filename}',
             f'images/{asset_type}/{raw_filename}',
             f'images/{db_path}',
