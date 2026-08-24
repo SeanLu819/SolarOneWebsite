@@ -20,6 +20,8 @@ import re
 import copy
 import sys
 
+from django.db import models
+
 
 def _strip_hash_suffix(filename):
     """Strip Django upload hash suffix like _abcX123 from a filename."""
@@ -337,15 +339,57 @@ def _write_seed_files(seed_data, base_dir=None):
     return json_path, py_path
 
 
+def _siteconfig_to_dict():
+    """Serialize SiteConfig to a plain dict for seed JSON.
+
+    Image fields (hero_background, logo, og_image) are resolved to their
+    static/ path strings. All other fields are included as-is.
+    """
+    from pages.models import SiteConfig
+
+    cfg = SiteConfig.objects.first()
+    if not cfg:
+        return {}
+
+    _image_fields = {'hero_background', 'logo', 'og_image'}
+    data = {}
+
+    for field in SiteConfig._meta.get_fields():
+        if not hasattr(field, 'attname') or field.attname.endswith('_ptr_id'):
+            continue
+        name = field.attname if hasattr(field, 'attname') else field.name
+        if name in ('id', 'pk'):
+            continue
+
+        val = getattr(cfg, name, None)
+        if val is None:
+            val = ''
+
+        if isinstance(field, models.ImageField):
+            path = _resolve_static_path(
+                getattr(val, 'name', '') if hasattr(val, 'name') else str(val),
+                name,
+                'site',
+                field_name=name,
+            )
+            data[name] = path
+        elif isinstance(field, models.ForeignKey):
+            continue
+        else:
+            data[name] = str(val) if val else ''
+
+    return data
+
+
 def sync_seed_from_db():
-    """Full DB → seed sync. Reads all products + projects from DB,
+    """Full DB → seed sync. Reads all products + projects + siteconfig from DB,
     resolves image paths against static/, writes both JSON and Python.
 
     This is the authoritative sync — called from Django admin hooks.
     Returns True on success, False on failure.
     """
     try:
-        from pages.models import Product, Project
+        from pages.models import Product, Project, SiteConfig
 
         products = [
             _product_to_dict(p)
@@ -356,10 +400,12 @@ def sync_seed_from_db():
             for p in Project.objects.all().order_by('order', 'pk')
         ]
 
+        siteconfig = _siteconfig_to_dict()
+
         seed_data = {
             'products': products,
             'projects': projects,
-            'siteconfig': {},
+            'siteconfig': siteconfig,
         }
 
         json_path, py_path = _write_seed_files(seed_data)
