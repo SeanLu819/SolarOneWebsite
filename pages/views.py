@@ -1549,26 +1549,43 @@ def products(request):
         products_list = _get_products_from_json(lang, active_category, active_series)
 
     # Override card display data from ProductsPageCard (independent card management)
+    card_map = {}
     try:
         from pages.cards import ProductsPageCard
-        card_map = {}
         for card in ProductsPageCard.objects.filter(is_active=True).order_by('order', 'pk'):
             slug = card.link_url.strip('/').split('/')[-1]
             if slug:
                 card_map[slug] = card
     except Exception:
-        card_map = {}
+        # Fallback to seed JSON (Vercel — no database)
+        data = _load_seed()
+        for card_data in data.get('productspagecards', []):
+            if not card_data.get('is_active', True):
+                continue
+            slug = card_data['link_url'].strip('/').split('/')[-1]
+            if slug:
+                card_map[slug] = card_data
 
     for product in products_list:
         slug = getattr(product, 'slug', '')
         card = card_map.get(slug)
         if card:
-            if card.title:
-                product.name_t = card.title
-            if card.subtitle:
-                product.description_t = card.subtitle
-            if card.image and getattr(card.image, 'name', ''):
-                product.image_url = card.image.url
+            if hasattr(card, 'title'):
+                # DB record
+                if card.title:
+                    product.name_t = card.title
+                if card.subtitle:
+                    product.description_t = card.subtitle
+                if card.image and getattr(card.image, 'name', ''):
+                    product.image_url = card.image.url
+            else:
+                # Seed dict
+                if card.get('title'):
+                    product.name_t = card['title']
+                if card.get('subtitle'):
+                    product.description_t = card['subtitle']
+                if card.get('image'):
+                    product.image_url = static(card['image'])
 
     context['products'] = products_list
     return render(request, 'products.html', context)

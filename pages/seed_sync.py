@@ -390,6 +390,7 @@ def sync_seed_from_db():
     """
     try:
         from pages.models import Product, Project, SiteConfig
+        from pages.cards import ProductsPageCard
 
         products = [
             _product_to_dict(p)
@@ -402,10 +403,28 @@ def sync_seed_from_db():
 
         siteconfig = _siteconfig_to_dict()
 
+        cards = []
+        for card in ProductsPageCard.objects.all().order_by('order', 'pk'):
+            img_path = ''
+            if card.image and getattr(card.image, 'name', ''):
+                img_path = _resolve_static_path(
+                    card.image.name, 'products_page', 'products_page',
+                    field_name='image',
+                )
+            cards.append({
+                'title': card.title,
+                'subtitle': card.subtitle or '',
+                'image': img_path,
+                'link_url': card.link_url,
+                'order': card.order,
+                'is_active': card.is_active,
+            })
+
         seed_data = {
             'products': products,
             'projects': projects,
             'siteconfig': siteconfig,
+            'productspagecards': cards,
         }
 
         json_path, py_path = _write_seed_files(seed_data)

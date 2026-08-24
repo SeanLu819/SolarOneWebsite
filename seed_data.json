@@ -2924,5 +2924,55 @@
     "font_size_card_title": "1.25rem",
     "font_size_card_desc": "0.95rem",
     "accent_color": "#0088FF"
-  }
+  },
+  "productspagecards": [
+    {
+      "title": "M Series",
+      "subtitle": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
+      "image": "",
+      "link_url": "/products/m-series/",
+      "order": 1,
+      "is_active": true
+    },
+    {
+      "title": "RT410 Series",
+      "subtitle": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
+      "image": "",
+      "link_url": "/products/rt410-series/",
+      "order": 2,
+      "is_active": true
+    },
+    {
+      "title": "VSP series",
+      "subtitle": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
+      "image": "",
+      "link_url": "/products/vsp-xxxxw-9m-yp/",
+      "order": 3,
+      "is_active": true
+    },
+    {
+      "title": "FLOOD LIGHTING",
+      "subtitle": "RT180FS ~ RT420FS series flood lighting",
+      "image": "images/products_page/flood-light-01.webp",
+      "link_url": "/products/rt590fl-s/",
+      "order": 4,
+      "is_active": true
+    },
+    {
+      "title": "HIGHBAY",
+      "subtitle": "Typical Applications High school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
+      "image": "images/products_page/highbay-01.webp",
+      "link_url": "/products/rt400hb/",
+      "order": 5,
+      "is_active": true
+    },
+    {
+      "title": "Street Lighting",
+      "subtitle": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
+      "image": "images/products_page/RT600SL-T.webp",
+      "link_url": "/products/rt600sl-t/",
+      "order": 6,
+      "is_active": true
+    }
+  ]
 }
