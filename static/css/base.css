@@ -891,15 +891,11 @@
     height: 100%;
     object-fit: contain;
     transition: transform 0.4s ease;
-    filter: drop-shadow(0 16px 32px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
   }
   .product-card-img img.m-series-img {
     object-fit: contain;
     object-position: center;
-    transform: scale(1.20);
-  }
-  .product-card:hover .product-card-img img.m-series-img {
-    transform: scale(1.30);
   }
   .product-card-title {
     font-family: var(--ff-display);
