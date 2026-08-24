@@ -78,7 +78,7 @@ class Product(models.Model):
     # Energy & Performance Data: list of {"label": "...", "value": "..."} dicts.
     # Rendered as the ENERGY AND PERFORMANCE DATA table on product detail page.
     energy_data = JSONField(
-        default=[
+        default=lambda: [
             {"label": "Series Name", "value": "FL1M-80W"},
             {"label": "Lumen Output", "value": ">10,400lm"},
             {"label": "System Wattage", "value": "80W"},
@@ -207,7 +207,7 @@ class Project(models.Model):
         ('KARTING', 'Karting Track'),
         ('BASKETBALL', 'Basketball'),
         ('VELODROME', 'Velodrome'),
-        ('TENNIS', 'Tennis'),
+        ('TENNIS', 'Tennis & Pickleball'),
         ('TRACK_FIELD', 'Track and Field'),
         ('MULTI_SPORT', 'Multi-Sport Arena'),
         ('FENCING', 'Fencing'),
@@ -228,7 +228,7 @@ class Project(models.Model):
     image = models.ImageField(
         upload_to='projects/',
         blank=True,
-        help_text='Reference card cover image. Recommended 1280×720 px (16:9, min 640×360).'
+        help_text='项目详情页主图。建议 1920×1080 像素（16:9，Retina 屏适配，最小 1280×720）。'
     )
     pdf_file = models.FileField(
         upload_to=project_pdf_upload_path,
@@ -271,7 +271,7 @@ class ProjectImage(models.Model):
     )
     image = models.ImageField(
         upload_to='projects/gallery/',
-        help_text='Reference detail carousel image. Recommended 1280×720 px (16:9, min 640×360).'
+        help_text='项目详情页轮播图。建议 1920×1080 像素（16:9，Retina 屏适配，最小 1280×720）。'
     )
     alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt text')
     order = models.IntegerField(default=0, verbose_name='Order')
@@ -527,6 +527,13 @@ def _sync_project_media_to_static(project):
     # ---- Collect current destination filenames from DB ----
     current_dest_names = set()
 
+    # Per-slug protected files: template hardcodes these comparison (before/after)
+    # images so they must never be pruned even though they are not stored as model fields.
+    PROTECTED_COMPARE_FILES = {
+        'football-field-led-retrofit': {'old-hid-lighting.webp', 'new-led-lighting.webp'},
+    }
+    protected = {p.lower() for p in PROTECTED_COMPARE_FILES.get(slug, set())}
+
     cover_rel = ''
     if getattr(project, 'image', None) and project.image.name:
         src_cover = os.path.join(media_root, str(project.image.name))
@@ -563,11 +570,29 @@ def _sync_project_media_to_static(project):
         if rel not in gallery_paths:
             gallery_paths.append(rel)
 
+    # ---- Sync protected template-only files from media -> static ----
+    # These files are not backed by model fields but the template hardcodes
+    # them (e.g. old-hid-lighting / new-led-lighting). If an admin dropped
+    # them into media/projects/<slug>/ via FTP or an upload workaround, pick
+    # them up so they survive the prune pass below and appear on the site.
+    if protected:
+        for entry_lower in protected:
+            src = os.path.join(media_root, 'projects', slug, entry_lower)
+            if os.path.exists(src):
+                dst = os.path.join(static_dir, entry_lower)
+                try:
+                    shutil.copy2(src, dst)
+                except Exception:
+                    pass
+
     # ---- Prune stale files from static directory ----
     try:
         for entry in os.listdir(static_dir):
             entry_lower = entry.lower()
             if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                continue
+            # Never delete per-slug template-protected comparison images
+            if entry_lower in protected:
                 continue
             if entry not in current_dest_names:
                 stale_path = os.path.join(static_dir, entry)
@@ -642,10 +667,25 @@ def _rewrite_seed_project(slug, cover_rel, gallery_paths):
         pass
 
 
+def _invalidate_views_cache():
+    """Invalidate in-memory enrichment caches in views module.
+
+    Deferred import avoids a circular import (views already imports models).
+    Without this, admins saving a project in the backend keep serving stale
+    image URLs from the process-level cache until the dev server restarts.
+    """
+    try:
+        from pages.views import invalidate_enrichment_cache
+        invalidate_enrichment_cache()
+    except Exception:
+        pass
+
+
 @receiver(post_save, sender=Project)
 def sync_project_on_save(sender, instance, **kwargs):
     cover_rel, gallery_rel = _sync_project_media_to_static(instance)
     _rewrite_seed_project(instance.slug, cover_rel, gallery_rel)
+    _invalidate_views_cache()
 
 
 @receiver(post_save, sender=ProjectImage)
@@ -655,6 +695,7 @@ def sync_project_image_on_save(sender, instance, **kwargs):
         return
     cover_rel, gallery_rel = _sync_project_media_to_static(project)
     _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+    _invalidate_views_cache()
 
 
 @receiver(post_delete, sender=ProjectImage)
@@ -664,6 +705,7 @@ def sync_project_image_on_delete(sender, instance, **kwargs):
         return
     cover_rel, gallery_rel = _sync_project_media_to_static(project)
     _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+    _invalidate_views_cache()
 
 
 # Legacy helper retained for external callers.

@@ -1048,7 +1048,7 @@
       "protection": "",
       "image": "images/products/vsp-xxxxw-9m-yp/vsp12m-01.webp",
       "banner_image": "images/products/vsp-xxxxw-9m-yp/vsp-bar-1.webp",
-      "dimension_image": "images/products/vsp-xxxxw-9m-yp/ac-en-3d-view.webp",
+      "dimension_image": "images/products/vsp-xxxxw-9m-yp/ac-en-3d-view.png",
       "beam_angle_image": "images/products/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -1515,7 +1515,7 @@
       "image": "images/products/rt400hb/rt400hb-01.webp",
       "banner_image": "images/products/rt400hb/rt400hb-barnner-01.webp",
       "dimension_image": "images/products/rt400hb/rt400hb-3d-view01.webp",
-      "beam_angle_image": "images/products/rt400hb/rt400hb-beamangle-254590.webp",
+      "beam_angle_image": "images/products/rt400hb/rt400hb-beamangle-254590.png",
       "ordering_image": "",
       "cert_image": "",
       "order": 42,
@@ -1635,10 +1635,10 @@
         "ar": {}
       },
       "gallery": [
-        "images/products/rt500hb/hb500-01.webp",
+        "images/products/rt500hb/hb500-04.webp",
         "images/products/rt500hb/hb500-02.webp",
         "images/products/rt500hb/hb500-03.webp",
-        "images/products/rt500hb/hb500-04.webp"
+        "images/products/rt500hb/hb500-05.webp"
       ],
       "specs": [],
       "energy_data": [
@@ -1969,7 +1969,9 @@
       },
       "gallery": [
         "images/products/rt600sl-t/RT600SL-T.webp",
-        "images/products/rt600sl-t/rt600sl-02.webp"
+        "images/products/rt600sl-t/rt600sl-03.webp",
+        "images/products/rt600sl-t/rt600sl-02.webp",
+        "images/products/rt600sl-t/rt600sl-04.webp"
       ],
       "specs": [],
       "energy_data": [
@@ -2062,7 +2064,7 @@
       "protection": "",
       "image": "",
       "banner_image": "images/products/rt820sl-t/rt820sl-bar-2.webp",
-      "dimension_image": "images/products/rt820sl-t/rt820-3d-view.webp",
+      "dimension_image": "images/products/rt820sl-t/rt820-3d-view.png",
       "beam_angle_image": "images/products/rt820sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -2169,7 +2171,7 @@
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
-      "image": "images/projects/football-field-led-retrofit/bmhs-football-field-01.webp",
+      "image": "images/projects/football-field-led-retrofit/footballfield.webp",
       "order": 1,
       "translations": {
         "fr": {
@@ -2248,7 +2250,7 @@
       "sport_type": "BASEBALL_FIELD",
       "description": "150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.",
       "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
-      "image": "images/projects/baseball-field-led-retrofit/CCSC-Baseball-01.webp",
+      "image": "images/projects/baseball-field-led-retrofit/Baseball.webp",
       "order": 5,
       "translations": {
         "fr": {
@@ -2387,14 +2389,14 @@
     },
     {
       "pk": 3,
-      "title": "Multi-Sport Arena HD Broadcast",
+      "title": "Andre Vacheresse Stadium",
       "location": "France",
       "slug": "multi-sport-arena-hd-broadcast",
       "venue_type": "INDOOR",
       "sport_type": "MULTI_SPORT",
-      "description": "A multipurpose venue in France designed for HD television broadcast, convertible between basketball and tennis configurations. FL9M-630W LED sports lights fully satisfy the lighting requirements for both court types.",
+      "description": "【Customer Profile】\r\nHalle André Vacheresse Stadium is an indoor sporting arena located in Roanne, France. It is currently home to the Chorale Roanne Basket basketball team. This stadium is also home to the Tennis Fed Cup.\r\n\r\n【Scope of Work】\r\nThis project consisted of a one for one replacement of the existing 1500 Watt Metal Halide Fixtures. This Gymnasium can be used for basketball, tennis and a variety of other events. That’s what makes LED lighting such a great choice for these spaces. LED lighting in gyms can have a dramatic effect on participants’ experiences. Bright, high lumen output with minimal glare also gives users the clarity needed to shoot the ball into the basket or follow the action on the court.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart FL9M-720W fixtures were easily mounted replaced with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the court much more efficiently than metal halide light. The new lighting system achieved an average of uniformity of 82 percent.",
       "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
-      "image": "images/projects/multi-sport-arena-hd-broadcast/choecm-basketball-01.webp",
+      "image": "images/projects/multi-sport-arena-hd-broadcast/basketball.webp",
       "order": 10,
       "translations": {
         "fr": {
@@ -2436,7 +2438,7 @@
         "images/projects/multi-sport-arena-hd-broadcast/choecm-basketball-05.webp",
         "images/projects/multi-sport-arena-hd-broadcast/choecm-tennis-01.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/multi_sport_arena_hd_broadcast.pdf"
     },
     {
       "pk": 5,
@@ -2714,8 +2716,8 @@
       "sport_type": "AQUATICS_CENTRE",
       "description": "Yingdong Natatorium at the National Olympic Sports Center",
       "results": "",
-      "image": "images/projects/yingdong-natatorium/ydyyg-swim-01.webp",
-      "order": 29,
+      "image": "images/projects/yingdong-natatorium/ydyyg-swim-01.png",
+      "order": 31,
       "translations": {
         "fr": {},
         "es": {},
@@ -2731,7 +2733,146 @@
         "images/projects/yingdong-natatorium/ydyyg-swim-05.webp"
       ],
       "pdf_url": ""
+    },
+    {
+      "pk": 18,
+      "title": "Perryville High School",
+      "location": "United States",
+      "slug": "perryville-high-school",
+      "venue_type": "OUTDOOR",
+      "sport_type": "FOOTBALL_FIELD",
+      "description": "【Customer Profile】\r\nPerryville High School is a public school in Perryville, Maryland. The school is operated by Cecil County Public Schools. It is the home of the Perryville Panthers. \r\n【Scope of Work 】\r\nSimilar to the situation at \"Bo Manor\", our last completed project for CCPS, the field at Perryville was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
+      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.56:1</strong> — exceeding the project requirements.",
+      "image": "images/projects/perryville-high-school/phs-football-02.webp",
+      "order": 33,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/perryville-high-school/phs-football-05.webp",
+        "images/projects/perryville-high-school/phs-football-01.webp",
+        "images/projects/perryville-high-school/phs-football-04.webp",
+        "images/projects/perryville-high-school/phs-football-03.webp",
+        "images/projects/perryville-high-school/phs-football-02.webp"
+      ],
+      "pdf_url": "files/perryville_high_school.pdf"
+    },
+    {
+      "pk": 19,
+      "title": "McIntosh County Academy",
+      "location": "United States",
+      "slug": "mcintosh-county-academy",
+      "venue_type": "OUTDOOR",
+      "sport_type": "FOOTBALL_FIELD",
+      "description": "【Customer Profile】\r\nMcIntosh County Academy is the only public high school in McIntosh County, Georgia, United States. It was formerly known as Darien High School.\r\n【Scope of Work】\r\nMcIntosh County Academy reached out to SolarOne for a solution to upgrade their existing football lighting system to LED. We were able to offer a solution reusing the existing poles and structures helping to keep this project on-time and within budget.\r\n【The Solution】\r\nWe were able to meet IES recommended lighting levels with a one for one replacement using our FL9M-720W. The results were spectacular!",
+      "results": "",
+      "image": "images/projects/mcintosh-county-academy/mc-football-04.webp",
+      "order": 35,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/mcintosh-county-academy/mc-football-01.webp",
+        "images/projects/mcintosh-county-academy/mc-football-02.webp",
+        "images/projects/mcintosh-county-academy/mc-football-04.webp",
+        "images/projects/mcintosh-county-academy/mc-football-03.webp",
+        "images/projects/mcintosh-county-academy/mc-football-05.webp"
+      ],
+      "pdf_url": "files/mcintosh_county_academy.pdf"
+    },
+    {
+      "pk": 20,
+      "title": "Garrison Forest School",
+      "location": "United States",
+      "slug": "garrison-forest-school",
+      "venue_type": "OUTDOOR",
+      "sport_type": "SOCCER_FIELD",
+      "description": "【Customer Profile】\r\nGarrison Forest School (GFS) is a non-denominational private college preparatory boarding and day school located on a 110 acres campus in Owings Mills, Maryland. GFS offers kindergarten through 12th grade for girls as well as a coeducational program for pre-K. The school is accredited by the Middle States Association of Colleges and Secondary Schools and the Association of Independent Maryland Schools.\r\n\r\n【Scope of Work】\r\nWorked directly with the facility management team at Garrison Forest School to install a new LED lighting system. The goal was to provide tournament level lighting with a system that is easy to maintain.\r\n\r\n【The Solution】\r\nOur VSP Sports Lighting system includes FL12M-1000W fixtures and remote mounted driver boxes for ease of accessibility for future maintenance.",
+      "results": "",
+      "image": "images/projects/garrison-forest-school/Garrison_Forest-1.webp",
+      "order": 37,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/garrison-forest-school/Garrison_Forest-1.webp",
+        "images/projects/garrison-forest-school/Garrison_Forest-2.webp",
+        "images/projects/garrison-forest-school/Garrison_Forest-3.webp",
+        "images/projects/garrison-forest-school/Garrison_Forest-4.webp",
+        "images/projects/garrison-forest-school/Garrison_Forest-5.webp"
+      ],
+      "pdf_url": "files/garrison_forest_school.pdf"
+    },
+    {
+      "pk": 21,
+      "title": "North Creek Community Center",
+      "location": "United States",
+      "slug": "north-creek-community-center",
+      "venue_type": "OUTDOOR",
+      "sport_type": "TENNIS_COURTS",
+      "description": "【Customer Profile】\r\nNorth Creek Community Center features meeting room, community rooms, swimming pool, tennis courts, pickleball courts, soccer court, a tot lot, nature study and walking paths. \r\n【Scope of work】\r\nMontgomery Village Foundation was looking to improve the lighting on the sports courts at this facility. The SolarOne design team came up with a lighting layout to meet IES recommended lighting levels while allowing for the Owners to reuse the existing poles and structures.\r\n【Solution】\r\nOnce again, our RT410FL-260W sports light proves why it is our banner product and the perfect LED retrofit solution for sports courts!",
+      "results": "",
+      "image": "images/projects/north-creek-community-center/North_Creek_Community_03.png",
+      "order": 39,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/north-creek-community-center/ncc-tennis-01.webp",
+        "images/projects/north-creek-community-center/ncc-tennis-02.webp",
+        "images/projects/north-creek-community-center/ncc-tennis-03.webp"
+      ],
+      "pdf_url": "files/north_creek_community_center.pdf"
+    },
+    {
+      "pk": 22,
+      "title": "Pickle n Par club",
+      "location": "United States",
+      "slug": "pickle-n-par-club",
+      "venue_type": "INDOOR",
+      "sport_type": "TENNIS",
+      "description": "【Customer Profile】\r\nPickle N Par is the first and only dedicated indoor Pickleball courts on Long Island. Great surface superb lighting provide a beautiful setting to play. Not to mention the organized play sessions and top notch instructors. This is THE place to play pickleball when visiting New York.\r\n【Scope of Work】\r\nSolarOne was contacted during the Summer of 2019 by our partners at Green Arc Energy Advisors. They were looking for an LED lighting solution for their customer, Pickle N Par's new indoor pickleball facility. The desired goal was to light the courts to competition level standards while maintaining visual comfort for players and spectators alike. Our design team was able to put together a design and supply fixtures for this project, and the results speak for themselves. \r\n【The Solution】\r\nRT400HB-100W recreation series high bay was the exact product needed to achieve the desired results.",
+      "results": "",
+      "image": "images/projects/pickle-n-par-club/pap-pickleball-01.webp",
+      "order": 41,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/pickle-n-par-club/pap-pickleball-01.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-02.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-03.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-04.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-05.webp"
+      ],
+      "pdf_url": "files/pickle_n_par_club.pdf"
     }
   ],
-  "siteconfig": {}
+  "siteconfig": {
+    "social_facebook": "https://www.facebook.com/SolaroneEnergyTech",
+    "social_instagram": "https://www.instagram.com/solaronevision/",
+    "social_youtube": "https://www.youtube.com/@SolaroneVision",
+    "social_tiktok": "https://www.tiktok.com/@solaroneledlighting?lang=zh-Hans",
+    "social_linkedin": ""
+  }
 }

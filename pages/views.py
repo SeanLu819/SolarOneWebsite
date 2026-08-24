@@ -497,35 +497,52 @@ def _find_project_gallery_files(slug: str):
 
 
 def _find_project_cover_path(slug: str, db_path: str = ''):
-    """Find the cover image static path for a project slug."""
+    """Find the cover image static path for a project slug.
+
+    Priority order (highest to lowest):
+      1. Exact match on DB-specified filename (clean_name) in slug directory.
+         Admins explicitly uploaded this image — their choice wins.
+      2. Prefix heuristic (cover/main/01/1/hero) — only used when DB has no match.
+      3. First non-excluded image in slug directory.
+      4. Legacy processed/ seed placeholders.
+      5. Gallery directory fallback (exact name then slug token match).
+    """
     name = Path(db_path).name if db_path else ''
     clean_name = _clean_hashed_name(name) if name else ''
     slug_dir = f'images/projects/{slug}'
     slug_files = _list_static_dir(slug_dir)
+    exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
     priority_prefixes = ['cover', 'main', '01', '1', 'hero']
     if slug_files:
+        # 1) Exact DB-specified filename match — admin's choice always wins.
+        if clean_name:
+            clean_lower = clean_name.lower()
+            for f in sorted(slug_files):
+                fl = f.lower()
+                if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                    continue
+                if fl in exclude:
+                    continue
+                if _clean_hashed_name(f).lower() == clean_lower:
+                    return f'{slug_dir}/{f}'
+        # 2) Prefix heuristic — only if DB did not specify a matching file.
         for prefix in priority_prefixes:
             for f in sorted(slug_files):
                 fl = f.lower()
                 if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
                     continue
-                exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
                 if fl in exclude:
                     continue
                 stem = fl.rsplit('.', 1)[0]
-                if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():
-                    return f'{slug_dir}/{f}'
                 if stem.startswith(prefix):
                     return f'{slug_dir}/{f}'
+        # 3) First non-excluded image in slug directory.
         for f in sorted(slug_files):
             fl = f.lower()
             if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
                 continue
-            exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
             if fl in exclude:
                 continue
-            if clean_name and _clean_hashed_name(f).lower() == clean_name.lower():
-                return f'{slug_dir}/{f}'
             return f'{slug_dir}/{f}'
     # Legacy processed/ fallback only for known seed placeholders
     if clean_name in ('footballfield.webp', 'Baseball.webp', 'basketball.webp', 'soccerfield.webp'):
@@ -1072,7 +1089,7 @@ _SIDEBAR_I18N = {
     'Stadium':          {'fr': 'Stade', 'es': 'Estadio', 'de': 'Stadion', 'ar': 'استاد', 'ru': 'Стадион'},
     'Basketball':       {'fr': 'Basketball', 'es': 'Baloncesto', 'de': 'Basketball', 'ar': 'كرة السلة', 'ru': 'Баскетбол'},
     'Velodrome':        {'fr': 'Vélodrome', 'es': 'Velódromo', 'de': 'Radrennbahn', 'ar': 'حلبة سباق الدراجات', 'ru': 'Велодром'},
-    'Tennis':           {'fr': 'Tennis', 'es': 'Tenis', 'de': 'Tennis', 'ar': 'تنس', 'ru': 'Теннис'},
+    'Tennis & Pickleball': {'fr': 'Tennis & Pickleball', 'es': 'Tenis y Pickleball', 'de': 'Tennis & Pickleball', 'ar': 'التنس والبيكل بول', 'ru': 'Теннис и Пиклбол'},
     'Multi-Sport Arena':{'fr': 'Complexe Multi-Sports', 'es': 'Pista Polideportiva', 'de': 'Mehrzweckhalle', 'ar': 'صالة متعددة الرياضات', 'ru': 'Универсальный спортивный зал'},
     'Airport':          {'fr': 'Aéroport', 'es': 'Aeropuerto', 'de': 'Flughafen', 'ar': 'مطار', 'ru': 'Аэропорт'},
     'Seaport':          {'fr': 'Port Maritime', 'es': 'Puerto', 'de': 'Seehafen', 'ar': 'ميناء بحري', 'ru': 'Морской порт'},
@@ -1149,7 +1166,7 @@ def _get_projects_sidebar(lang='en'):
                 {'key': 'MULTI_SPORT', 'label': _t('Multi-Sport Arena', lang)},
                 {'key': 'BASKETBALL', 'label': _t('Basketball', lang)},
                 {'key': 'VELODROME', 'label': _t('Velodrome', lang)},
-                {'key': 'TENNIS', 'label': _t('Tennis', lang)},
+                {'key': 'TENNIS', 'label': _t('Tennis & Pickleball', lang)},
                 {'key': 'ICE_ARENA', 'label': _t('Ice Arena', lang)},
                 {'key': 'FENCING', 'label': _t('Fencing', lang)},
                 {'key': 'AQUATICS_CENTRE', 'label': _t('Aquatics Centre', lang)},
@@ -1259,19 +1276,48 @@ def _resolve_product_sidebar(slug, lang='en'):
     return active_series, active_subseries, parent_slug
 
 
-def _resolve_project_sidebar(sport_type, lang='en'):
-    """Resolve active_venue_type and active_sport_type for a project."""
-    active_venue_type = ''
-    active_sport_type = ''
-    for vt in _get_projects_sidebar(lang):
+def _resolve_project_sidebar(sport_type, lang='en', db_venue_type=''):
+    """Resolve active_venue_type and active_sport_type for a project.
+
+    The sidebar structure defines which venue group each sport key belongs
+    to, but the Project model also stores its own ``venue_type`` field and
+    the list-view filter uses both fields together. To keep detail-page
+    highlighting and list-view filtering perfectly aligned we prefer the
+    DB's own ``venue_type`` whenever it actually contains ``sport_type``
+    in the sidebar schema. If the DB venue is stale / inconsistent we
+    fall back to sidebar-driven resolution so the user still sees a
+    highlighted entry and a sensible breadcrumb.
+    """
+    sidebar = _get_projects_sidebar(lang)
+    # First pass: build the canonical sidebar mapping for this sport_type
+    canonical_venue = ''
+    canonical_sport = ''
+    for vt in sidebar:
         for st in vt['sports']:
             if st['key'] == sport_type:
-                active_venue_type = vt['key']
-                active_sport_type = st['key']
+                canonical_venue = vt['key']
+                canonical_sport = st['key']
                 break
-        if active_sport_type:
+        if canonical_sport:
             break
-    return active_venue_type, active_sport_type
+    if not canonical_sport:
+        return '', ''
+
+    active_venue_type = canonical_venue
+    if db_venue_type and db_venue_type != canonical_venue:
+        # DB has a different venue. Accept it ONLY if that venue group in
+        # sidebar also contains the same sport_type (which never happens in
+        # practice because each sport key lives in exactly one venue group).
+        # Otherwise stick to the canonical sidebar mapping and rely on the
+        # one-shot DB repair script to sync them up.
+        for vt in sidebar:
+            if vt['key'] == db_venue_type:
+                for st in vt['sports']:
+                    if st['key'] == sport_type:
+                        active_venue_type = db_venue_type
+                        break
+                break
+    return active_venue_type, canonical_sport
 
 
 # ============================================================================
@@ -1574,7 +1620,10 @@ def project_detail(request, slug):
     if project:
         context['project'] = project
         context['gallery'] = project.gallery
-        active_venue_type, active_sport_type = _resolve_project_sidebar(getattr(project, 'sport_type', ''), lang)
+        active_venue_type, active_sport_type = _resolve_project_sidebar(
+            getattr(project, 'sport_type', ''), lang,
+            db_venue_type=getattr(project, 'venue_type', ''),
+        )
         context['active_venue_type'] = active_venue_type
         context['active_sport_type'] = active_sport_type
 
