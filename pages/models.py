@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import re
+from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
@@ -11,6 +12,28 @@ from django.conf import settings
 
 def project_pdf_upload_path(instance, filename):
     return f'projects/pdfs/{instance.slug}/{filename}'
+
+
+def default_energy_data():
+    return [
+        {"label": "Series Name", "value": "FL1M-80W"},
+        {"label": "Lumen Output", "value": ">10,400lm"},
+        {"label": "System Wattage", "value": "80W"},
+        {"label": "CRI", "value": "70-95"},
+        {"label": "Color temperature", "value": "3000K-3500K、4000K-4500k、5500K-5700K"},
+        {"label": "Input Voltage (High Voltage)", "value": "347-480VAC"},
+        {"label": "Input Voltage (Low Voltage)", "value": "110-277VAC"},
+        {"label": "L70 Hours", "value": ">100,000 at 25°C"},
+        {"label": "Operating Temperature Range", "value": "-40°C to 55°C"},
+        {"label": "Surge (Common Mode / Differential Mode)", "value": "10kV"},
+        {"label": "IP Rating", "value": "IP66"},
+        {"label": "Effective Projected Area (EPA) at 90°", "value": "0.26 (sq. ft.)"},
+        {"label": "L\" X W\" X H\"", "value": "217*234*136mm"},
+        {"label": "Approximate Weight", "value": "2.3 kgs( 5.2 lbs)"},
+        {"label": "Material", "value": "Aluminum / Glass"},
+        {"label": "LED brand", "value": "Bridgelux"},
+        {"label": "LED Driver", "value": "Inventronics Or Equal"},
+    ]
 
 
 class Product(models.Model):
@@ -78,25 +101,7 @@ class Product(models.Model):
     # Energy & Performance Data: list of {"label": "...", "value": "..."} dicts.
     # Rendered as the ENERGY AND PERFORMANCE DATA table on product detail page.
     energy_data = JSONField(
-        default=lambda: [
-            {"label": "Series Name", "value": "FL1M-80W"},
-            {"label": "Lumen Output", "value": ">10,400lm"},
-            {"label": "System Wattage", "value": "80W"},
-            {"label": "CRI", "value": "70-95"},
-            {"label": "Color temperature", "value": "3000K-3500K、4000K-4500k、5500K-5700K"},
-            {"label": "Input Voltage (High Voltage)", "value": "347-480VAC"},
-            {"label": "Input Voltage (Low Voltage)", "value": "110-277VAC"},
-            {"label": "L70 Hours", "value": ">100,000 at 25°C"},
-            {"label": "Operating Temperature Range", "value": "-40°C to 55°C"},
-            {"label": "Surge (Common Mode / Differential Mode)", "value": "10kV"},
-            {"label": "IP Rating", "value": "IP66"},
-            {"label": "Effective Projected Area (EPA) at 90°", "value": "0.26 (sq. ft.)"},
-            {"label": "L\" X W\" X H\"", "value": "217*234*136mm"},
-            {"label": "Approximate Weight", "value": "2.3 kgs( 5.2 lbs)"},
-            {"label": "Material", "value": "Aluminum / Glass"},
-            {"label": "LED brand", "value": "Bridgelux"},
-            {"label": "LED Driver", "value": "Inventronics Or Equal"},
-        ],
+        default=default_energy_data,
         blank=True,
         verbose_name='Energy & Performance Data',
         help_text='产品能效参数表，用于详情页 ENERGY AND PERFORMANCE DATA 表格。'

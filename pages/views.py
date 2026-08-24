@@ -658,6 +658,10 @@ def _product_image_url(product, field_name):
     We prefer committed static assets under static/images/ because those are the
     canonical images checked into the repo and are stable across local dev and
     Vercel. If no static asset exists, fall back to the uploaded media file URL.
+
+    When field_name is 'image' (product card) and the stored path looks like
+    a banner image (contains 'bar'/'banner'), prefer non-banner files in the
+    slug directory to prevent banner leaks into card slots.
     """
     field = getattr(product, field_name, None)
     if not field or not getattr(field, 'name', None):
@@ -670,15 +674,23 @@ def _product_image_url(product, field_name):
     clean_filename = _clean_hashed_name(filename)
     clean_stem = Path(clean_filename).stem if clean_filename else ''
 
+    is_banner_like = any(kw in clean_filename.lower() for kw in ('bar', 'banner', 'barnner'))
+
     candidates = []
-    # Hash-stripped variants first — prefer clean canonical filenames
+    if field_name == 'image' and slug and is_banner_like:
+        dir_images = _list_product_dir_images(slug)
+        non_banner = [f for f in dir_images
+                      if not any(kw in f.lower() for kw in ('bar', 'banner', 'barnner', '3d-view', 'dimension', 'beamangle', 'ordering', 'cert'))]
+        if non_banner:
+            non_banner.sort(key=lambda f: (0 if clean_stem.lower() in f.lower() else 1, f))
+            candidates.append(f'images/products/{slug}/{non_banner[0]}')
+
     if slug and clean_filename and clean_filename != filename:
         candidates.append(f'images/products/{slug}/{clean_filename}')
     if clean_filename and clean_filename != filename:
         candidates.append(f'images/products/{clean_filename}')
     if slug and clean_stem and clean_stem != stem:
         candidates.append(f'images/products/{slug}/{clean_stem}.webp')
-    # Original path-based candidates
     if field_name_value.startswith('products/'):
         candidates.append(f'images/{field_name_value}')
     if slug and filename:
@@ -706,6 +718,33 @@ def _product_image_url(product, field_name):
     if os.path.isfile(media_full):
         return f'/media/{field_name_value.lstrip("/")}'
     return ''
+
+
+_PRODUCT_DIR_IMAGE_CACHE = {}
+
+def _list_product_dir_images(slug):
+    """List image files in a product's static directory (cached)."""
+    if slug in _PRODUCT_DIR_IMAGE_CACHE:
+        return _PRODUCT_DIR_IMAGE_CACHE[slug]
+    import os
+    results = []
+    dirs_to_check = []
+    static_root = str(getattr(settings, 'STATIC_ROOT', ''))
+    if static_root:
+        dirs_to_check.append(os.path.join(static_root, 'images', 'products', slug))
+    for d in getattr(settings, 'STATICFILES_DIRS', []):
+        dirs_to_check.append(os.path.join(str(d), 'images', 'products', slug))
+    for d in dirs_to_check:
+        if os.path.isdir(d):
+            try:
+                for f in os.listdir(d):
+                    if f.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                        results.append(f)
+                break
+            except OSError:
+                pass
+    _PRODUCT_DIR_IMAGE_CACHE[slug] = results
+    return results
 
 
 def _build_specs(obj):
@@ -1508,6 +1547,28 @@ def products(request):
     products_list = _get_products_from_db(lang, active_category, active_series)
     if not products_list:
         products_list = _get_products_from_json(lang, active_category, active_series)
+
+    # Override card display data from ProductsPageCard (independent card management)
+    try:
+        from pages.cards import ProductsPageCard
+        card_map = {}
+        for card in ProductsPageCard.objects.filter(is_active=True).order_by('order', 'pk'):
+            slug = card.link_url.strip('/').split('/')[-1]
+            if slug:
+                card_map[slug] = card
+    except Exception:
+        card_map = {}
+
+    for product in products_list:
+        slug = getattr(product, 'slug', '')
+        card = card_map.get(slug)
+        if card:
+            if card.title:
+                product.name_t = card.title
+            if card.subtitle:
+                product.description_t = card.subtitle
+            if card.image and getattr(card.image, 'name', ''):
+                product.image_url = card.image.url
 
     context['products'] = products_list
     return render(request, 'products.html', context)

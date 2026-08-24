@@ -32,14 +32,16 @@ def _strip_hash_suffix(filename):
     return filename
 
 
-def _resolve_static_path(db_path, slug, asset_type='products'):
+def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
     """Resolve a DB upload path to the canonical static path.
 
     DB stores something like 'products/banners/fl1m-bar-1_abcX123.webp'
     We want: 'images/products/fl1m/fl1m-bar-1.webp'
 
-    Strategy: try the most specific path first (per-slug dir, clean name),
-    then fall back to progressively broader candidates.
+    When field_name is 'image' (product card image) and the DB path
+    looks like a banner ('bar'/'banner' in name), prefer non-banner files
+    in the slug directory. This prevents banner images from leaking into
+    the product card image slot.
     """
     if not db_path:
         return ''
@@ -47,25 +49,69 @@ def _resolve_static_path(db_path, slug, asset_type='products'):
     raw_filename = os.path.basename(db_path)
     clean_filename = _strip_hash_suffix(raw_filename)
 
-    candidates = [
-        # Best: per-slug directory, clean filename
-        f'images/{asset_type}/{slug}/{clean_filename}',
-        # Per-slug directory, raw filename (with hash)
-        f'images/{asset_type}/{slug}/{raw_filename}',
-        # Flat products/ dir, clean filename
-        f'images/{asset_type}/{clean_filename}',
-        # Flat products/ dir, raw filename
-        f'images/{asset_type}/{raw_filename}',
-        # Direct images/ prefix
-        f'images/{db_path}',
-    ]
+    is_banner_like = any(kw in clean_filename.lower() for kw in ('bar', 'banner', 'barnner'))
 
+    candidates = []
+    if field_name == 'image' and is_banner_like:
+        dir_path = f'images/{asset_type}/{slug}/'
+        files_in_dir = _list_static_dir(dir_path)
+        non_banner = [f for f in files_in_dir
+                      if not any(kw in f.lower() for kw in ('bar', 'banner', 'barnner', '3d-view', 'dimension', 'beamangle', 'ordering', 'cert'))]
+        if non_banner:
+            non_banner.sort(key=lambda f: (0 if clean_filename.split('.')[0].lower() in f.lower() else 1, f))
+            candidates.append(f'{dir_path}{non_banner[0]}')
+        candidates.extend([
+            f'images/{asset_type}/{slug}/{clean_filename}',
+            f'images/{asset_type}/{slug}/{raw_filename}',
+            f'images/{asset_type}/{clean_filename}',
+            f'images/{asset_type}/{raw_filename}',
+            f'images/{db_path}',
+        ])
+    else:
+        candidates = [
+            f'images/{asset_type}/{slug}/{clean_filename}',
+            f'images/{asset_type}/{slug}/{raw_filename}',
+            f'images/{asset_type}/{clean_filename}',
+            f'images/{asset_type}/{raw_filename}',
+            f'images/{db_path}',
+        ]
+
+    seen = set()
     for candidate in candidates:
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
         if _static_file_exists(candidate):
             return candidate
 
-    # Fallback: return the most likely path (per-slug, clean name)
     return f'images/{asset_type}/{slug}/{clean_filename}'
+
+
+def _list_static_dir(rel_dir):
+    """List files in a static directory (cached)."""
+    import os
+    results = []
+    try:
+        from django.conf import settings
+        dirs_to_check = []
+        static_root = str(getattr(settings, 'STATIC_ROOT', ''))
+        if static_root:
+            dirs_to_check.append(os.path.join(static_root, rel_dir))
+        for d in getattr(settings, 'STATICFILES_DIRS', []):
+            dirs_to_check.append(os.path.join(str(d), rel_dir))
+    except Exception:
+        dirs_to_check = [os.path.join('static', rel_dir)]
+
+    for d in dirs_to_check:
+        if os.path.isdir(d):
+            try:
+                for f in os.listdir(d):
+                    if f.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                        results.append(f)
+                break
+            except OSError:
+                pass
+    return results
 
 
 _static_cache = None
@@ -161,7 +207,7 @@ def _product_to_dict(product):
     for field in image_fields:
         f = getattr(product, field, None)
         fname = getattr(f, 'name', '') if f else ''
-        resolved_images[field] = _resolve_static_path(fname, slug, 'products') if fname else ''
+        resolved_images[field] = _resolve_static_path(fname, slug, 'products', field_name=field) if fname else ''
 
     gallery = _product_gallery_paths(product)
 

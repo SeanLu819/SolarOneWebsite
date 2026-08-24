@@ -16,7 +16,7 @@ from django.views.decorators.http import require_POST
 from .models import (
     Product, ProductImage, Project, ProjectImage,
     ContactMessage, SiteConfig, Visitor, DailyStats,
-    NewsArticle,
+    NewsArticle, ProductsPageCard,
     _clean_hashed_filename,
 )
 
@@ -357,12 +357,34 @@ class ProductImageInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     form = ProductAdminForm
-    list_display = ('name', 'category', 'parent', 'order')
+    list_display = ('image_preview', 'name', 'category', 'parent', 'order', 'is_active')
     list_filter = ('category', 'parent')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
     search_fields = ['name', 'category', 'description']
     inlines = [ProductImageInline]
+    list_per_page = 25
+    ordering = ('order', 'pk')
+    change_list_template = 'admin/pages/product/change_list.html'
+
+    def image_preview(self, obj):
+        field = getattr(obj, 'image', None)
+        if field and getattr(field, 'name', ''):
+            from pages.seed_sync import _resolve_static_path
+            path = _resolve_static_path(field.name, obj.slug, 'products', field_name='image')
+            return mark_safe(
+                f'<img src="/static/{path}" style="width:60px;height:45px;object-fit:contain;'
+                f'border:1px solid #ddd;border-radius:4px;background:#f9f9f9;" />'
+            )
+        return mark_safe('<span style="color:#999;">(no image)</span>')
+    image_preview.short_description = 'Card Image'
+
+    def is_active(self, obj):
+        wl = {'m-series','rt410-series','vsp-xxxxw-9m-yp','rt590fl-s','rt400hb','rt600sl-t'}
+        if obj.parent is None and obj.slug in wl:
+            return mark_safe('<span style="color:#28a745;font-weight:bold;">PAGE</span>')
+        return mark_safe('<span style="color:#999;">detail</span>')
+    is_active.short_description = 'Products Page'
     fieldsets = (
         (None, {
             'fields': (('name', 'slug'), 'category', 'parent', 'order')
@@ -995,3 +1017,111 @@ def admin_translate(request):
             time.sleep(random.uniform(2.5, 4.5))
 
     return JsonResponse({'translations': result})
+
+
+PRODUCTS_PAGE_WHITELIST = [
+    'm-series',
+    'rt410-series',
+    'vsp-xxxxw-9m-yp',
+    'rt590fl-s',
+    'rt400hb',
+    'rt600sl-t',
+]
+
+
+@admin.register(ProductsPageCard)
+class ProductsPageCardAdmin(CacheClearMixin, admin.ModelAdmin):
+    list_display = ('image_preview', 'title', 'link_url', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('title', 'subtitle', 'link_url')
+    ordering = ('order', 'pk')
+    fieldsets = (
+        (None, {
+            'fields': (('title', 'link_url'), 'subtitle', 'image', ('order', 'is_active'))
+        }),
+    )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj=obj, **kwargs)
+        if 'subtitle' in form.base_fields:
+            form.base_fields['subtitle'].widget = forms.Textarea(attrs={
+                'rows': 4,
+                'style': 'width:100%;min-height:80px;',
+            })
+        return form
+
+    def image_preview(self, obj):
+        if obj.image and getattr(obj.image, 'name', ''):
+            return mark_safe(
+                f'<img src="{obj.image.url}" style="width:60px;height:45px;object-fit:contain;'
+                f'border:1px solid #ddd;border-radius:4px;background:#f9f9f9;" />'
+            )
+        return '(no image)'
+    image_preview.short_description = 'Image'
+
+
+def products_page_view(request):
+    """Custom admin view: manage the Products listing page cards.
+
+    Shows all ProductsPageCard entries as a card grid so the admin can
+    independently edit images, text, and link URLs for each card on the
+    public Products page.
+    """
+    from django.shortcuts import render
+
+    cards_data = []
+    for card in ProductsPageCard.objects.all():
+        img_url = ''
+        if card.image and getattr(card.image, 'name', ''):
+            img_url = card.image.url
+        cards_data.append({
+            'id': card.pk,
+            'title': card.title,
+            'subtitle': card.subtitle or '',
+            'image_url': img_url,
+            'link_url': card.link_url,
+            'order': card.order,
+            'is_active': card.is_active,
+            'edit_url': f'/admin/pages/productspagecard/{card.pk}/change/',
+        })
+
+    try:
+        site_config = SiteConfig.objects.first()
+        page_title = site_config.products_title if site_config else ''
+        page_subtitle = site_config.products_subtitle if site_config else ''
+    except Exception:
+        page_title = ''
+        page_subtitle = ''
+
+    context = {
+        'title': 'Products Page — Card Management',
+        'cards': cards_data,
+        'page_title': page_title,
+        'page_subtitle': page_subtitle,
+        'site_config_edit_url': '/admin/pages/siteconfig/',
+        'products_page_url': '/products/',
+        'add_card_url': '/admin/pages/productspagecard/add/',
+        'site_header': admin.site.site_header,
+        'site_title': admin.site.site_title,
+    }
+
+    return render(request, 'admin/pages/products_page.html', context)
+
+
+from django.urls import path as url_path
+
+original_get_urls = admin.site.get_urls
+
+def get_urls_with_products_page():
+    urls = original_get_urls()
+    custom_urls = [
+        url_path(
+            'products-page/',
+            admin.site.admin_view(products_page_view),
+            name='products_page',
+        ),
+    ]
+    return custom_urls + urls
+
+admin.site.get_urls = get_urls_with_products_page
