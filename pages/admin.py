@@ -1031,14 +1031,14 @@ PRODUCTS_PAGE_WHITELIST = [
 
 @admin.register(ProductsPageCard)
 class ProductsPageCardAdmin(CacheClearMixin, admin.ModelAdmin):
-    list_display = ('image_preview', 'title', 'link_url', 'order', 'is_active')
+    list_display = ('image_preview', 'title', 'slug', 'link_url', 'order', 'is_active')
     list_editable = ('order', 'is_active')
     list_filter = ('is_active',)
-    search_fields = ('title', 'subtitle', 'link_url')
+    search_fields = ('title', 'subtitle', 'slug', 'link_url')
     ordering = ('order', 'pk')
     fieldsets = (
         (None, {
-            'fields': (('title', 'link_url'), 'subtitle', 'image', ('order', 'is_active'))
+            'fields': (('title', 'slug'), 'subtitle', 'image', ('link_url', 'order', 'is_active'))
         }),
     )
 
@@ -1080,6 +1080,7 @@ def products_page_view(request):
             'title': card.title,
             'subtitle': card.subtitle or '',
             'image_url': img_url,
+            'slug': card.slug or '',
             'link_url': card.link_url,
             'order': card.order,
             'is_active': card.is_active,

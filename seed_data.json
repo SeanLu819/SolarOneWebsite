@@ -15,7 +15,7 @@
       "banner_image": "images/products/m-series/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
-      "ordering_image": "images/products/ordering/sample-number.webp",
+      "ordering_image": "images/products/m-series/sample-number.webp",
       "cert_image": "",
       "order": 1,
       "parent_slug": "",
@@ -50,7 +50,7 @@
         "images/products/m-series/m-series-01.webp",
         "images/products/m-series/m-series-02.webp",
         "images/products/m-series/m-series-03.webp",
-        "images/products/m-series/M_series_04.webp"
+        "images/products/m-series/m-series-05.webp"
       ],
       "specs": [
         {
@@ -2062,7 +2062,7 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt820sl-t/rt820sl-01.webp",
+      "image": "images/products/rt820sl-t/rt820-01.webp",
       "banner_image": "images/products/rt820sl-t/rt820sl-bar-2.webp",
       "dimension_image": "images/products/rt820sl-t/rt820-3d-view.png",
       "beam_angle_image": "images/products/rt820sl-t/rt600sl-beamangle70-140.webp",
@@ -2149,7 +2149,7 @@
           "value": "Inventronics Or Equal"
         }
       ],
-      "model_number": "FL1M-80W",
+      "model_number": "RT820SL-T",
       "ordering_info": [
         "RT820SL-T",
         "240W",
@@ -2930,6 +2930,7 @@
       "title": "M Series",
       "subtitle": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
       "image": "images/products_page/m-series-04.webp",
+      "slug": "m-series",
       "link_url": "/products/m-series/",
       "order": 1,
       "is_active": true
@@ -2938,6 +2939,7 @@
       "title": "RT410 Series",
       "subtitle": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
       "image": "",
+      "slug": "rt410-series",
       "link_url": "/products/rt410-series/",
       "order": 2,
       "is_active": true
@@ -2946,6 +2948,7 @@
       "title": "VSP series",
       "subtitle": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "image": "",
+      "slug": "vsp-xxxxw-9m-yp",
       "link_url": "/products/vsp-xxxxw-9m-yp/",
       "order": 3,
       "is_active": true
@@ -2954,7 +2957,8 @@
       "title": "FLOOD LIGHTING",
       "subtitle": "RT180FS ~ RT420FS series flood lighting",
       "image": "images/products_page/flood-light-01.webp",
-      "link_url": "/products/rt590fl-s/",
+      "slug": "rt420fs-s",
+      "link_url": "/products/rt420fs-s/",
       "order": 4,
       "is_active": true
     },
@@ -2962,6 +2966,7 @@
       "title": "HIGHBAY",
       "subtitle": "Typical Applications High school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
       "image": "images/products_page/highbay-01.webp",
+      "slug": "rt400hb",
       "link_url": "/products/rt400hb/",
       "order": 5,
       "is_active": true
@@ -2969,7 +2974,8 @@
     {
       "title": "Street Lighting",
       "subtitle": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
-      "image": "images/products_page/RT600SL-T.webp",
+      "image": "images/products_page/products_page/street-lighting-series-01.webp",
+      "slug": "rt600sl-t",
       "link_url": "/products/rt600sl-t/",
       "order": 6,
       "is_active": true

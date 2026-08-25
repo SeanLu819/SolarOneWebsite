@@ -938,7 +938,7 @@ _PRODUCTS_WHITELIST = {
     'm-series',
     'rt410-series',
     'vsp-xxxxw-9m-yp',
-    'rt590fl-s',
+    'rt420fs-s',
     'rt400hb',
     'rt600sl-t',
 }
@@ -1549,20 +1549,21 @@ def products(request):
         products_list = _get_products_from_json(lang, active_category, active_series)
 
     # Override card display data from ProductsPageCard (independent card management)
+    # Matching is done by card.slug (stable identifier), NOT by link_url.
+    # Changing link_url only changes the click destination, not which product the card overrides.
     card_map = {}
     try:
         from pages.cards import ProductsPageCard
         for card in ProductsPageCard.objects.filter(is_active=True).order_by('order', 'pk'):
-            slug = card.link_url.strip('/').split('/')[-1]
-            if slug:
-                card_map[slug] = card
+            if card.slug:
+                card_map[card.slug] = card
     except Exception:
         # Fallback to seed JSON (Vercel — no database)
         data = _load_seed()
         for card_data in data.get('productspagecards', []):
             if not card_data.get('is_active', True):
                 continue
-            slug = card_data['link_url'].strip('/').split('/')[-1]
+            slug = card_data.get('slug', '') or card_data.get('link_url', '').strip('/').split('/')[-1]
             if slug:
                 card_map[slug] = card_data
 
@@ -1578,6 +1579,8 @@ def products(request):
                     product.description_t = card.subtitle
                 if card.image and getattr(card.image, 'name', ''):
                     product.image_url = card.image.url
+                if card.link_url:
+                    product.card_link_url = card.link_url
             else:
                 # Seed dict
                 if card.get('title'):
@@ -1586,6 +1589,8 @@ def products(request):
                     product.description_t = card['subtitle']
                 if card.get('image'):
                     product.image_url = static(card['image'])
+                if card.get('link_url'):
+                    product.card_link_url = card['link_url']
 
     context['products'] = products_list
     return render(request, 'products.html', context)

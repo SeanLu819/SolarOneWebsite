@@ -78,7 +78,7 @@
           {% for product in products %}
           <div class="product-card reveal">
             <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
-            <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+            <a href="{% if product.card_link_url %}{{ product.card_link_url }}{% else %}{% url 'product_detail' product.slug %}{% endif %}" style="text-decoration: none; color: inherit;">
               {% if product.image_url %}
               <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy"></div>
               {% endif %}

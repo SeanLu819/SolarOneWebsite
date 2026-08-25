@@ -419,6 +419,7 @@ def sync_seed_from_db():
                 'title': card.title,
                 'subtitle': card.subtitle or '',
                 'image': img_path,
+                'slug': card.slug or '',
                 'link_url': card.link_url,
                 'order': card.order,
                 'is_active': card.is_active,

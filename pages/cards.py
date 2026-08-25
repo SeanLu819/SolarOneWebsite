@@ -16,10 +16,16 @@ class ProductsPageCard(models.Model):
         blank=True,
         help_text='卡片图片。建议 1280×720 像素（16:9），用于产品列表页卡片展示'
     )
+    slug = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text='关联的产品 slug，用于匹配卡片与产品。如 "m-series"。修改此字段将改变卡片关联的产品。',
+        db_index=True,
+    )
     link_url = models.CharField(
         max_length=200,
-        help_text='卡片点击跳转链接，如 "/products/m-series/"',
-        db_index=True
+        help_text='卡片点击跳转链接，如 "/products/m-series/"。仅用于前台跳转，不影响卡片与产品的匹配。',
+        db_index=True,
     )
     order = models.IntegerField(
         default=0,
