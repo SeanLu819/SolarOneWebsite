@@ -1,7 +1,9 @@
 # Product card display labels (per slug, matching sidebar category names)
 _PRODUCT_CARD_LABELS = {
     'm-series': 'Area and Site',
+    'fl9m-rgbw': 'Area and Site',
     'rt410-series': 'Area and Site',
+    'glare-shield-for-rt410': 'Area and Site',
     'vsp-xxxxw-9m-yp': 'Sports Lighting System',
     'vsp-xxxxw-12m-yp': 'Flood Lighting',
     'fl1m': 'Roadway',
@@ -159,13 +161,14 @@ def _get_products_sidebar(lang='en'):
                         {'key': 'FL1M',  'slug': 'fl1m',  'label': 'FL1M'},
                         {'key': 'FL4M',  'slug': 'fl4m',  'label': 'FL4M'},
                         {'key': 'FL6M',  'slug': 'fl6m',  'label': 'FL6M'},
-                        {'key': 'FL9M',  'slug': 'fl9m',  'label': 'FL9M'},
-                        {'key': 'FL12M', 'slug': 'fl12m', 'label': 'FL12M'},
+                        {'key': 'FL9M',      'slug': 'fl9m',      'label': 'FL9M'},
+                        {'key': 'FL9M_RGBW', 'slug': 'fl9m-rgbw',  'label': 'FL9M-RGBW'},
+                        {'key': 'FL12M',     'slug': 'fl12m',     'label': 'FL12M'},
                         {'key': 'FL16M', 'slug': 'fl16m', 'label': 'FL16M'},
                     ],
                 },
                 {'key': 'RT410_SERIES', 'slug': 'rt410-series', 'label': 'RT410FL-S'},
-                {'key': 'ACCESSORY', 'slug': 'accessory', 'label': _t('Accessory', lang)},
+                {'key': 'ACCESSORY', 'slug': 'glare-shield-for-rt410', 'label': _t('Accessory', lang)},
             ],
         },
         {

@@ -122,7 +122,7 @@ def _enrich_product(product, lang):
         product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
         product.ordering_image_url = _product_image_url(product, 'ordering_image')
         cert_url = _product_image_url(product, 'cert_image')
-        if not cert_url:
+        if not cert_url and product.category != 'ACCESSORY':
             cert_default = 'images/products/m-series-certs.webp'
             if _find_static(cert_default):
                 cert_url = static(cert_default)
@@ -146,7 +146,7 @@ def _enrich_product(product, lang):
         product.beam_angle_image_url = _dict_product_image_url(product.beam_angle_image, slug)
         product.ordering_image_url = _dict_product_image_url(product.ordering_image, slug)
         cert_url = _dict_product_image_url(getattr(product, 'cert_image', ''), slug) if hasattr(product, 'cert_image') else ''
-        if not cert_url:
+        if not cert_url and getattr(product, 'category', '') != 'ACCESSORY':
             cert_default = 'images/products/m-series-certs.webp'
             if _find_static(cert_default):
                 cert_url = static(cert_default)

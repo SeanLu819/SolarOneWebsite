@@ -235,6 +235,7 @@ def _product_to_dict(product):
         'ordering_image': resolved_images['ordering_image'],
         'cert_image': resolved_images['cert_image'],
         'order': product.order,
+        'is_active': product.is_active,
         'parent_slug': product.parent.slug if product.parent else '',
         'translations': product.translations if isinstance(product.translations, dict) else {},
         'gallery': gallery,
@@ -325,7 +326,9 @@ def _write_seed_files(seed_data, base_dir=None):
         json.dump(seed_data, f, ensure_ascii=False, indent=2)
         f.write('\n')
 
-    # Write Python module
+    # Write Python module (use repr for proper Python booleans)
+    py_data = json.dumps(seed_data, ensure_ascii=False, indent=2)
+    py_data = py_data.replace('true', 'True').replace('false', 'False').replace('null', 'None')
     lines = [
         '"""Seed data embedded as Python module for Vercel compatibility.',
         '',
@@ -334,7 +337,7 @@ def _write_seed_files(seed_data, base_dir=None):
         'available via a normal Python import.',
         '"""',
         '',
-        'SEED_DATA = ' + json.dumps(seed_data, ensure_ascii=False, indent=2),
+        'SEED_DATA = ' + py_data,
         '',
     ]
     with open(py_path, 'w', encoding='utf-8') as f:

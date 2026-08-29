@@ -22,9 +22,10 @@ SEED_DATA = {
       "banner_image": "images/products/m-series/m-series-bar-1.webp",
       "dimension_image": "",
       "beam_angle_image": "",
-      "ordering_image": "images/products/ordering/sample-number.webp",
+      "ordering_image": "images/products/m-series/sample-number.webp",
       "cert_image": "",
       "order": 1,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -57,7 +58,7 @@ SEED_DATA = {
         "images/products/m-series/m-series-01.webp",
         "images/products/m-series/m-series-02.webp",
         "images/products/m-series/m-series-03.webp",
-        "images/products/m-series/M_series_04.webp"
+        "images/products/m-series/m-series-05.webp"
       ],
       "specs": [
         {
@@ -91,6 +92,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 2,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -244,6 +246,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 11,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -377,6 +380,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 12,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {
@@ -524,10 +528,11 @@ SEED_DATA = {
       "image": "images/products/fl6m/fl6m-01.webp",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
       "dimension_image": "images/products/fl6m/fl6m-3d-view.webp",
-      "beam_angle_image": "images/products/beamangle-12183050.webp",
+      "beam_angle_image": "images/products/fl6m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
       "order": 13,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -661,6 +666,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 14,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -790,10 +796,11 @@ SEED_DATA = {
       "image": "images/products/fl12m/fl12m-01.webp",
       "banner_image": "images/products/fl12m/fl12m-bar-1.webp",
       "dimension_image": "images/products/fl12m/fl12m-3d-view.webp",
-      "beam_angle_image": "images/products/beamangle-12183050.webp",
+      "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
       "order": 15,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -923,10 +930,11 @@ SEED_DATA = {
       "image": "images/products/fl16m/fl16m-01.webp",
       "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
       "dimension_image": "images/products/fl16m/fl16m-3d-view.webp",
-      "beam_angle_image": "images/products/beamangle-12183050.webp",
+      "beam_angle_image": "images/products/fl16m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
       "order": 16,
+      "is_active": True,
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -1043,6 +1051,153 @@ SEED_DATA = {
       ]
     },
     {
+      "pk": 23,
+      "name": "FL9M-RGBW",
+      "slug": "fl9m-rgbw",
+      "category": "AREA_SITE",
+      "description": "Any Color from anywhere, anytime, at your convenience! FL9M-RGBW-600W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/fl9m-rgbw/rgbw-9m-w.webp",
+      "banner_image": "images/products/fl9m-rgbw/rgbw-bar-01.webp",
+      "dimension_image": "images/products/fl9m-rgbw/fl9m-3d-view.webp",
+      "beam_angle_image": "images/products/fl9m-rgbw/beamangle-12183050.webp",
+      "ordering_image": "",
+      "cert_image": "images/products/fl9m-rgbw/cert-3.webp",
+      "order": 17,
+      "is_active": True,
+      "parent_slug": "m-series",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/fl9m-rgbw/rgbw-9m-r.webp",
+        "images/products/fl9m-rgbw/rgbw-9m-g.webp",
+        "images/products/fl9m-rgbw/rgbw-9m-b.webp",
+        "images/products/fl9m-rgbw/rgbw-9m-w.webp"
+      ],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL9M-RGBW"
+        },
+        {
+          "label": "System Wattage",
+          "value": "600W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "2.37 (sq. ft.)"
+        },
+        {
+          "label": "L\" × W\" × H\"",
+          "value": "21.8\" x 21.8\" x 8.1\" / 553 x 553 x 343 mm"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "26.0 kgs( 58.0 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "model_number": "FL9M-RGBW",
+      "ordering_info": [
+        "FL9M-RGBW",
+        "600W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.DMX\r\n2.DALI",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
+        "W = With Fixture\r\nS = Separated from Fixture"
+      ]
+    },
+    {
+      "pk": 22,
+      "name": "Glare Shield for RT410",
+      "slug": "glare-shield-for-rt410",
+      "category": "ACCESSORY",
+      "description": "Glare Shield for RT410",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/glare-shield-for-rt410/rt410-glare-shield-01.webp",
+      "banner_image": "",
+      "dimension_image": "",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "cert_image": "",
+      "order": 19,
+      "is_active": True,
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/glare-shield-for-rt410/rt410-glare-shield-01.webp",
+        "images/products/glare-shield-for-rt410/rt410-glare-shield-02.webp",
+        "images/products/glare-shield-for-rt410/rt410-glare-shield-03.webp",
+        "images/products/glare-shield-for-rt410/rt410-glare-shield-04.webp"
+      ],
+      "specs": [],
+      "energy_data": [],
+      "model_number": "",
+      "ordering_info": []
+    },
+    {
       "pk": 11,
       "name": "VSP series",
       "slug": "vsp-xxxxw-9m-yp",
@@ -1060,6 +1215,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 21,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -1180,6 +1336,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 22,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -1300,6 +1457,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "images/products/rt590fl-s/cert-3.webp",
       "order": 31,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1415,6 +1573,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 32,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1526,6 +1685,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 42,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1633,6 +1793,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 43,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1744,6 +1905,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 44,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1855,6 +2017,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 45,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1966,6 +2129,7 @@ SEED_DATA = {
       "ordering_image": "",
       "cert_image": "",
       "order": 51,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2069,13 +2233,14 @@ SEED_DATA = {
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rt820sl-t/rt820sl-01.webp",
+      "image": "images/products/rt820sl-t/rt820-01.webp",
       "banner_image": "images/products/rt820sl-t/rt820sl-bar-2.webp",
       "dimension_image": "images/products/rt820sl-t/rt820-3d-view.png",
       "beam_angle_image": "images/products/rt820sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
       "cert_image": "",
       "order": 52,
+      "is_active": True,
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2156,7 +2321,7 @@ SEED_DATA = {
           "value": "Inventronics Or Equal"
         }
       ],
-      "model_number": "FL1M-80W",
+      "model_number": "RT820SL-T",
       "ordering_info": [
         "RT820SL-T",
         "240W",
@@ -2176,7 +2341,7 @@ SEED_DATA = {
       "slug": "football-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nBohemia Manor High School is a public school in Cecil County, MD. \r\n\r\n【Scope of Work】\r\nThe original lighting at the “Bo Manor” field was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
+      "description": "【Customer Profile】\r\nBohemia Manor High School, a public institution situated in Cecil County, MD.\r\n\r\n【Scope of Work】\r\nThe \"Bo Manor\" field suffered from an outdated, under-lit, and high-maintenance lighting system. Additionally, project parameters required seamless integration with the pre-existing pole structures.\r\n\r\n【The Solution】\r\nWe conducted a comprehensive photometric design to ensure all technical requirements were met. The final retrofit replaced 40 existing 1500W metal halide units with 48 of our FL9M 630W LED performance sports lights, delivering superior illumination and efficiency",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
       "image": "images/projects/football-field-led-retrofit/bmhs-football-field-02.webp",
       "order": 1,
@@ -2228,7 +2393,7 @@ SEED_DATA = {
       "slug": "yuanshen-sports-centre-stadium",
       "venue_type": "OUTDOOR",
       "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】 ShangHai Yuanshen Sports Centre Stadium is a multipurpose stadium and competition venue in Shanghai's Pudong New Area. With a total area of 160,000 square meters.this venue can accommodate 20,000 spectators at the same time, It was once the home stadium of Shanghai Shenxin Football Club,it will become the new home of Shanghai SIPG Football Club(2021—).  The Shanghai SIPG football team is a powerhouse in the Chinese Super League (CSL), the top tier of men's professional football in China.\r\n\r\n【Scope of Work】 Lighting standards for competitive tournament play were a must. As a result: Average lux: 2200lux ,U0=0.8 ,Ra>80 met the AFC stadium Lighting Guidelines 2018. During to the excellent light system solution the budgetary and performance expectations were able to be met.\r\n\r\n【The Solution】 FL12M-1000W High Performance Series LED sports lights CCT:5000-5500K With 320pcs ,were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "description": "【Customer Profile】\r\nLocated in Shanghai's Pudong New Area, this 160,000 sqm multipurpose stadium accommodates 20,000 spectators. Formerly home to Shanghai Shenxin FC, it has served as the home ground for CSL powerhouse Shanghai Port FC (formerly SIPG) since 2021.\r\n\r\n【Scope of Work】\r\nElite tournament lighting standards were mandatory. The system was engineered to deliver 2,200 lux average illuminance, U0 ≥0.8, and Ra >80, ensuring full compliance with the 2018 AFC Stadium Lighting Guidelines. Our tailored solution successfully balanced these stringent performance metrics with the project's budgetary constraints.\r\n\r\n【The Solution】\r\nWe deployed 320 FL12M-1000W High-Performance LED sports luminaires (5000–5500K). A smart networked control system was also incorporated, providing remote switching, dimming capabilities, and real-time power monitoring.",
       "results": "2200 lux avg., U0=0.8, Ra>80 — meeting AFC Stadium Lighting Guidelines 2018.",
       "image": "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
       "order": 3,
@@ -2255,9 +2420,9 @@ SEED_DATA = {
       "slug": "baseball-field-led-retrofit",
       "venue_type": "OUTDOOR",
       "sport_type": "BASEBALL_FIELD",
-      "description": "150 FL9M-630W Performance Series LED sports lights with remote mount drivers were installed. A networking control system was incorporated to allow for remote on/off control and power monitoring.",
+      "description": "【Customer Profile】\r\nCarroll County Sports Complex is a premier community athletic facility dedicated exclusively to baseball. The complex serves as a vital training and competition hub for surrounding elementary and middle schools, as well as local youth leagues and regional tournaments.\r\n\r\n【Scope of Work】\r\nThe five baseball fields were previously equipped with outdated, high-maintenance lighting fixtures that suffered from uneven illumination and frequent bulb replacements. The facility management sought a modernized lighting upgrade that would deliver superior, glare-free visibility for fast-moving baseballs, while significantly reducing energy consumption and long-term maintenance costs for the school district.\r\n\r\n【The Solution】\r\nA total of 150 FL9M-630W Performance Series LED sports lights featuring remote-mount drivers were installed to ensure optimal thermal management and extended lifespan. Additionally, an advanced networked control system was integrated to enable seamless remote on/off operation and real-time power monitoring, streamlining facility management and maximizing operational efficiency.",
       "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
-      "image": "images/projects/baseball-field-led-retrofit/Baseball.webp",
+      "image": "images/projects/baseball-field-led-retrofit/ccsc-baseball-720p-01.webp",
       "order": 5,
       "translations": {
         "fr": {
@@ -2292,11 +2457,11 @@ SEED_DATA = {
         }
       },
       "gallery": [
-        "images/projects/baseball-field-led-retrofit/CCSC-Baseball-01.webp",
-        "images/projects/baseball-field-led-retrofit/CCSC-Baseball-02.webp",
-        "images/projects/baseball-field-led-retrofit/CCSC-Baseball-03.webp",
-        "images/projects/baseball-field-led-retrofit/CCSC-Baseball-04.webp",
-        "images/projects/baseball-field-led-retrofit/CCSC-Baseball-05.webp"
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-720p-01.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-02.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-03.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-04.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-05.webp"
       ],
       "pdf_url": ""
     },
@@ -2307,7 +2472,7 @@ SEED_DATA = {
       "slug": "morgan-state-university-tennis-courts",
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nMorgan State University is the premier public urban research university in Maryland, known for its excellence in teaching, intensive research, effective public service and community engagement. Morgan prepares diverse and competitive graduates for success in a global, interdependent society.",
+      "description": "【Customer Profile】\r\nMorgan State University is Maryland’s premier public urban research university, renowned for its academic excellence and impactful community engagement.\r\n\r\n【Scope of Work】\r\nThe university sought to upgrade its athletic and campus lighting to enhance nighttime safety and support student-athletes. The project required a high-performance solution that met NCAA standards while aligning with the institution's sustainability goals.\r\n\r\n【The Solution】\r\nA customized LED lighting system was deployed across key venues, featuring precision photometric aiming for uniform, glare-free illumination. An integrated smart control platform was installed to enable remote scheduling and real-time energy monitoring, streamlining facility management and reducing operational costs.",
       "results": "<strong>over 80fc</strong> average illuminance, <strong>uniformity 1.67:1</strong>",
       "image": "images/projects/morgan-state-university-tennis-courts/msu-tennis-01.webp",
       "order": 7,
@@ -2354,8 +2519,8 @@ SEED_DATA = {
       "slug": "nanshan-ski-village",
       "venue_type": "OUTDOOR",
       "sport_type": "SKI_AREA",
-      "description": "【Customer Profile】\r\nNanshan Ski Village is located north of Beijing City. Since its opening in 2001, this ski resort has become the largest of its kind in China providing the most advanced ski equipments and amenities for all ski enthusiasts- both tourists and locals alike.\r\n\r\n【Scope of Work】\r\nSolarOne Vision Smart RT-410 was selected to light the Nanshan Ski Village. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for Ski and Snowboarders. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract patrons during their run. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the skiers and snowboarders.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. The glare and light output was performed. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily installed at the Nanshan Ski village. Our LED lighting solutions deliver uniform light in the air and on the slope much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "Where every aerial counts, uniform, no-glare light does not effect the vision of the Skiers and Snowboarders while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Nanshan Ski Village experience with the greatest visual comfort for the athletes and patrons alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "description": "【Customer Profile】\r\nSituated north of Beijing, Nanshan Ski Village has served as China’s largest and most advanced ski resort since 2001, offering top-tier equipment and amenities for skiers and snowboarders alike.\r\n\r\n【Scope of Work】\r\nThe project required a lighting system tailored for winter sports. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows on the slopes. In a high-speed sport with zero margin for error, our LED technology ensures that lighting remains a reliable constant, providing the ultimate visual clarity for skiers and snowboarders.\r\n\r\n【The Solution】\r\nThrough rigorous photometric modeling, we optimized glare control and established exact aiming coordinates for every fixture. The SolarOne Vision Smart 260W RT410 Flood Lights were effortlessly integrated into the resort's infrastructure. Our LED solution outperforms legacy metal halide systems by delivering exceptional uniformity on the slopes and in the air, while drastically reducing light pollution. Additionally, the LEDs offer a lifespan of over 100,000 hours, compared to just 18,000 hours for traditional metal halides.",
+      "results": "SolarOne Vision Smart RT410 floodlights upgrade lighting at Nanshan Ski Village. Low‑glare, uniform lighting protects vision for fast‑moving skiers and snowboarders. With minimal light spill, near‑zero maintenance and long‑life LEDs, the fixtures deliver excellent visual comfort for athletes and visitors, backed by a 10‑year manufacturer’s warranty.",
       "image": "images/projects/nanshan-ski-village/nanshan-ski-01.webp",
       "order": 9,
       "translations": {
@@ -2401,7 +2566,7 @@ SEED_DATA = {
       "slug": "multi-sport-arena-hd-broadcast",
       "venue_type": "INDOOR",
       "sport_type": "MULTI_SPORT",
-      "description": "【Customer Profile】\r\nHalle André Vacheresse Stadium is an indoor sporting arena located in Roanne, France. It is currently home to the Chorale Roanne Basket basketball team. This stadium is also home to the Tennis Fed Cup.\r\n\r\n【Scope of Work】\r\nThis project consisted of a one for one replacement of the existing 1500 Watt Metal Halide Fixtures. This Gymnasium can be used for basketball, tennis and a variety of other events. That’s what makes LED lighting such a great choice for these spaces. LED lighting in gyms can have a dramatic effect on participants’ experiences. Bright, high lumen output with minimal glare also gives users the clarity needed to shoot the ball into the basket or follow the action on the court.\r\n\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart FL9M-720W fixtures were easily mounted replaced with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the court much more efficiently than metal halide light. The new lighting system achieved an average of uniformity of 82 percent.",
+      "description": "【Customer Profile】\r\nLocated in Roanne, France, Halle André Vacheresse is a premier indoor arena serving as the home of Chorale Roanne Basket and a host venue for the Tennis Fed Cup.\r\n\r\n【Scope of Work】\r\nThe project entailed a one-for-one upgrade of legacy 1500W metal halide fixtures. To accommodate diverse events like basketball and tennis, the gymnasium required a versatile lighting system. Premium LED lighting was chosen to dramatically elevate the athlete experience, providing high-lumen, glare-free illumination essential for tracking fast-moving action and executing precise shots.\r\n\r\n【The Solution】\r\nThrough rigorous photometric modeling, we optimized glare control and established exact aiming coordinates for every fixture. The SolarOne Vision Smart FL9M-720W lights were effortlessly integrated via our one-for-one retrofit plan. Our LED solution outperforms legacy metal halides by delivering exceptional uniformity in the air and on the court, achieving an outstanding average uniformity of 82%.",
       "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
       "image": "images/projects/multi-sport-arena-hd-broadcast/basketball.webp",
       "order": 10,
@@ -2454,7 +2619,7 @@ SEED_DATA = {
       "slug": "narbonne-arena",
       "venue_type": "INDOOR",
       "sport_type": "MULTI_SPORT",
-      "description": "When the performers return, Narbonne Arena will be ready for them with a new GEO S12 line array system, installed by Texen. \r\nNarbonne Arena is the new cultural, sporting and event scene in Aude, in the south of France. Fully modular, it can accommodate up to 5000 people in its main space, and will host touring shows, concerts, symposia, meetings, conventions and sporting events. This new venue opened at the end of 2019, and its modern design includes good acoustics, says NEXO system specialist Carole Marsaud, who shares her NS-1 plots here.\r\nThere are 10 loudspeaker clusters around the venue, variously with 3x S12 and 4x S12 modules, with two larger arrays of 6x GEO S12 modules facing the main grandstand side. The system is powered by 3x NXAMP4x4s, equipped with Dante cards.",
+      "description": "【Customer Profile】\r\nOpened in late 2019, Narbonne Arena is a premier modular venue in southern France. Accommodating up to 5,000 attendees, it serves as a central hub for touring shows, concerts, conventions, and sporting events.\r\n\r\n【Scope of Work】\r\nThe arena required a state-of-the-art audio infrastructure to complement its modern architectural acoustics. The project demanded a highly versatile sound system capable of delivering exceptional audio clarity across diverse event configurations and modular layouts.\r\n\r\n【The Solution】\r\nInstalled by Texen, the new GEO S12 line array system features 10 strategically deployed loudspeaker clusters, including two larger 6-module arrays facing the main grandstand. The system is powered by three NXAMP4x4 amplifiers equipped with Dante cards, ensuring seamless signal routing and uncompromising audio performance.",
       "results": "",
       "image": "images/projects/narbonne-arena/Narbonne-basketball-04.webp",
       "order": 13,
@@ -2481,8 +2646,8 @@ SEED_DATA = {
       "slug": "beijing-capital-international-airport",
       "venue_type": "INFRASTRUCTURE",
       "sport_type": "AIRPORT",
-      "description": "【Customer Profile】\r\nBeijing Capital International Airport is the 2nd largest airport in the world and is the main international airport serving Beijing. \r\n【Scope of Work】 \r\nSolarOne was contacted to create a lighting solution for Beijing's Capital International Airport apron, terminals and parking lots. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. \r\nAir travel requires lots of travel right here on the ground. SolarOne LED lighting solutions provide bright, even illumination along airport access roads, parking lots, walkways, corridors and concourses, slashing energy consumption and maintenance costs by double digits. Our Vision Smart technology reduces light spillover while enhancing operation safety.\r\n【The Solution】\r\nAn engineered photometric design was performed. We checked glare and light output. Then we provided exact aiming points for each fixture. SolarOne Vision Smart 260W RT410 Flood Light Series were easily used to replace the existing 1000 watt metal HID fixture with our one for one plan. Our LED lighting solutions deliver uniform light in the air and on the ground much more efficiently than metal halide light and significantly reduce unwanted light spill and light pollution. The lifespan of LEDs generally exceeds 100,000 hours compared to a traditional metal halide lifespan of 18,000 hours.",
-      "results": "【The Results】\r\nWith ample, even lighting, the pilots will notice the difference. Well-lit airport areas increase your customers’ sense of safety and security. \r\nWhere every dock counts, uniform, no-glare light does not effect the vision of the airport ground crew while assisting the planes. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance during outdoor winter and summer temperature extremes, through the extent of the manufacture warranty.\r\nThe new lighting system achieved an average of uniformity of 80 percent and a saved in energy costs by 75 percent. LEDs provide high-quality light and make the airport more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel.\r\nSolarOne Vision Smart RT410 Flood Light fixtures improved the Beijing Capital International Airport experience with the greatest visual comfort for the pilots, and passengers. The advantage is clear. SolarOne products produce the highest quality lighting in the industry backed by a ten year warranty.",
+      "description": "【Customer Profile】\r\nAs the primary international gateway to Beijing, Capital International Airport ranks among the world's largest and busiest aviation hubs.\r\n\r\n【Scope of Work】\r\nThe project required a comprehensive, one-for-one retrofit of existing 1000W metal halide fixtures across the airport's apron, terminals, and parking facilities. The objective was to deliver bright, uniform illumination for critical ground operations while significantly reducing energy consumption, maintenance costs, and unwanted light pollution to enhance overall safety.\r\n\r\n【The Solution】\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for every fixture. The SolarOne Vision Smart 260W RT410 Flood Lights were seamlessly integrated via a one-for-one retrofit plan. Outperforming legacy metal halides, this LED solution delivers superior uniformity both in the air and on the ground, while reducing light spill and extending the system lifespan to over 100,000 hours.",
+      "results": "SolarOne Vision Smart RT410 floodlights transform lighting performance at Beijing Capital International Airport. Offering 80% lighting uniformity and 75% energy savings, these low‑glare luminaires deliver superior visual comfort for pilots, ground crews and passengers. Engineered for extreme temperatures with near‑zero maintenance, they are supported by a 10‑year manufacturer's warranty.",
       "image": "images/projects/beijing-capital-international-airport/bcia-airport-01.webp",
       "order": 15,
       "translations": {
@@ -2533,8 +2698,8 @@ SEED_DATA = {
       "slug": "beijing-international-tennis-center",
       "venue_type": "INDOOR",
       "sport_type": "TENNIS",
-      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall was the first indoor professional tennis hall. In 2015, to promote its development consistent with the time, the company decided to proceed with the reconstruction of the tennis hall on its original premise. \r\n\r\n【Scope of Work 】\r\nSolarOne was contacted to create a lighting solution for the Bejiing International Tennis Club. This project consisted of a one for one replacement of the existing 1000 Watt Metal Halide Fixtures. In all sports, LED lighting provides the best stage for competitors to perform, and it’s no different for tennis players. Glare control technology equals more uniform lighting with fewer unwanted shadows or hot spots that can distract athletes while in the game. In a sport with little margin for error, LED technology helps ensure the lights don't create another variable for the athletes.",
-      "results": "Where every hit counts, uniform, no-glare light does not effect the vision of the athletes while going at a fast speed. SolarOne lunimaires produce a minimum of glare and spillover, and require no maintenance. The new lighting system achieved an average of uniformity of 75 percent and a saved in energy costs by 50 percent. LEDs offer a low-cost entry point to provide high-quality light and make the venue more dynamic. Also, the long life of the LED carries a great saving in replacement parts and an almost total unconcern of the maintenance personnel. SolarOne Vision Smart RT410FL-S160W improved the Beijing international Tennis Club experience with the greatest visual comfort for the athletes and coaches alike. The advantage is clear. SolarOne products produce the highest quality lighting in the industry",
+      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall holds the distinction of being China's first indoor professional tennis venue. To align with modern standards and ensure its continued development, the facility underwent a comprehensive reconstruction on its original site in 2015.\r\n\r\n【Scope of Work】\r\nThe reconstruction project required a one-for-one replacement of the existing 1000W metal halide fixtures. As tennis is a sport with virtually no margin for error, the lighting system had to provide the ultimate visual stage for athletes. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows or hot spots, ensuring that the lighting remains a reliable constant rather than an unpredictable variable during high-speed play.\r\n\r\n【The Solution】\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for every fixture. The new LED lighting system was seamlessly integrated via a one-for-one retrofit plan, outperforming legacy metal halides by delivering exceptional uniformity both in the air and on the court, thereby guaranteeing optimal visual clarity for professional tennis.",
+      "results": "SolarOne Vision Smart RT410FL‑S160W elevates lighting performance at Beijing International Tennis Club. Delivering 75% uniformity and 50% energy savings, these low‑glare luminaires ensure excellent visual comfort for athletes and coaches. Long‑life LEDs reduce part replacements with virtually no ongoing maintenance.",
       "image": "images/projects/beijing-international-tennis-center/bitc-tennis-01.webp",
       "order": 17,
       "translations": {
@@ -2559,8 +2724,8 @@ SEED_DATA = {
       "slug": "national-snow-and-ice-research-center",
       "venue_type": "INDOOR",
       "sport_type": "ICE_ARENA",
-      "description": "【Customer Profile】\r\nNational Snow and Ice Training and Research Center Special for 2022 Winter Olympic, located in Beijing , was rebuilt from the old 27 engine factory since 1897 . The first speed skating training hall made of carbon dioxide ice in Asia. It includes a 400m speed skating rink and two short track speed skating training ice rinks. With the 2022 Beijing Winter Olympics competition standards.\r\n\r\n【The Solution】\r\nFL9M-630W High Performance Series LED sports lights CCT:5000-5500K ,Ra:90 With 304pcs were installed. Also, a networking control system was incorporated to allow for remote on/off control and power monitoring.",
-      "results": "Lighting standards for competitive tournament play were a must. 400m speed skating rink illuminative average lux :2000lx, U0=0.7 ,Meet HD LIVE TV standard．By the intelligent lighting control System:Interval lighting working mode , An additional 50% energy saving was achieved .Due to the excellent light system solution the budgetary and performance expectations were able to be met.",
+      "description": "【Customer Profile】\r\nBuilt on the historic site of a former 1897 engine factory, the National Snow and Ice Training and Research Center served as a vital hub for the 2022 Beijing Winter Olympics. It features Asia's first CO2 ice-making speed skating hall, comprising a 400m rink and two short track rinks built to strict Olympic competition standards.\r\n\r\n【Scope of Work】\r\nAs an elite Olympic training venue, the center required a high-performance lighting system that met rigorous broadcast and training standards. The solution needed to deliver exceptional visual clarity and precise color rendering for high-speed skating, while seamlessly integrating with the venue's sustainable infrastructure.\r\n\r\n【The Solution】\r\nA total of 304 FL9M-630W High-Performance LED sports luminaires (CCT: 5000–5500K, Ra: 90) were strategically installed to ensure optimal visual conditions. Additionally, an advanced networked control system was integrated to enable remote operation and real-time power monitoring, streamlining facility management.",
+      "results": "Built to meet strict tournament‑grade lighting requirements, the 400 m speed‑skating rink achieves 2000 lx average illuminance with U₀ uniformity of 0.7, satisfying HD live TV broadcast standards. Its intelligent lighting control system with interval‑lighting mode delivers an extra 50% energy savings. The complete lighting solution meets both project budget and performance expectations.",
       "image": "images/projects/national-snow-and-ice-research-center/27factory-01.webp",
       "order": 19,
       "translations": {
@@ -2586,8 +2751,8 @@ SEED_DATA = {
       "slug": "chunan-velodrome",
       "venue_type": "INDOOR",
       "sport_type": "VELODROME",
-      "description": "The Chun'an Velodrome is located in the Jieshou Block of the Qiandao Lake Tourism Resort and serves as the core venue for the cycling events at the Hangzhou Asian Games. Inspired by the design concept of \"Leaping Fish in the Morning Sun, Pearl of a Thousand Islands,\" the venue features an oval steel canopy and a dynamic floodlighting system, vividly capturing the dynamic imagery of a fish leaping from the water. Standing 40 meters tall, the building houses a 250-meter international standard indoor track and can accommodate up to 3,040 spectators.",
-      "results": "Horizontal illuminance: > 3200 lux (Uniformity: 0.90)\r\nMain Camera illuminance: > 2600 lux (Uniformity: 0..84)\r\nAuxiliary Camera illuminance: > 2200 lux (Uniformity: 0.70)\r\nComplies with HD broadcasting standards.",
+      "description": "【Customer Profile】\r\nLocated in the Qiandao Lake Tourism Resort, the Chun'an Velodrome served as the core cycling venue for the Hangzhou Asian Games. Inspired by the \"Leaping Fish in the Morning Sun\" concept, this 40-meter-tall landmark features a dynamic oval steel canopy and floodlighting system. It houses a 250-meter international standard indoor track with a seating capacity of 3,040.\r\n\r\n【Scope of Work】\r\nAs the premier venue for elite Asian Games cycling competitions, the velodrome required a world-class lighting system capable of supporting high-speed track events. The lighting solution needed to deliver flawless uniformity and precise color rendering for both athletes and broadcast cameras, while seamlessly complementing the venue's dynamic, pearl-inspired architectural design.\r\n\r\n【The Solution】\r\nA comprehensive photometric design was executed to optimize glare control and ensure precise aiming for the steeply banked track. The integrated dynamic floodlighting system was strategically calibrated to highlight the venue's iconic architecture, delivering exceptional visual clarity and an immersive atmosphere for both competitors and spectators.",
+      "results": "Horizontal illuminance: > 3200 lux (Uniformity: 0.90)\r\nMain Camera illuminance: > 2600 lux (Uniformity: 0.84)\r\nAuxiliary Camera illuminance: > 2200 lux (Uniformity: 0.70)\r\nComplies with HD broadcasting standards.",
       "image": "images/projects/chunan-velodrome/bycicle-chunan01.webp",
       "order": 21,
       "translations": {
@@ -2613,7 +2778,7 @@ SEED_DATA = {
       "slug": "olympic-sports-center-gymnasium-beijing",
       "venue_type": "INDOOR",
       "sport_type": "BASKETBALL",
-      "description": "The Beijing National Olympic Center Gymnasium, commonly known as the \"Aoti Center Gymnasium,\" is located on the north side of the National Olympic Sports Center. The hexagonal arena covers a total area of 4 hectares with a floor area of 32,410 square meters. The playing court measures 40 by 70 meters and can accommodate 6,300 spectators. It serves as the home venue for the Beijing Royal Fighters of the Chinese Basketball Association (CBA).",
+      "description": "【Customer Profile】\r\nLocated on the north side of the National Olympic Sports Center, the Beijing National Olympic Center Gymnasium (commonly known as the \"Aoti Center Gymnasium\") is a premier hexagonal arena. Spanning 4 hectares with a floor area of 32,410 square meters, it accommodates 6,300 spectators and serves as the home venue for the Beijing Royal Fighters of the Chinese Basketball Association (CBA).\r\n\r\n【Scope of Work】\r\nAs the home arena for a professional CBA team, the gymnasium required a high-performance lighting system capable of supporting elite basketball competitions and broadcast standards. The project demanded a solution that delivers exceptional visual clarity, uniform illumination, and minimal glare to track fast-moving action, while seamlessly integrating with the venue's unique hexagonal architecture.\r\n\r\n【The Solution】\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for the 40x70-meter playing court. The new LED lighting system was seamlessly installed, outperforming legacy fixtures by delivering superior uniformity across the court and in the air, ensuring optimal visual conditions for both athletes and spectators.",
       "results": "Horizontal illuminance: > 4000 lux (Uniformity: 0.8)\r\nCamera illuminance: > 3000 lux (Uniformity: 0.7)\r\nComplies with HD broadcasting standards.",
       "image": "images/projects/olympic-sports-center-gymnasium-beijing/oscg-01.webp",
       "order": 23,
@@ -2635,14 +2800,14 @@ SEED_DATA = {
     },
     {
       "pk": 14,
-      "title": "Beijing Liu Li Bridge",
+      "title": "Beijing LIULIQIAO Bridge",
       "location": "Beijing, China",
       "slug": "beijing-liu-li-bridge",
       "venue_type": "ROADWAY",
       "sport_type": "CITY_EXPRESSWAY",
-      "description": "Six 35-meter high-mast light poles at Liuliqiao on Beijing Third Ring Road.\r\nThe original nine 1000W high-pressure sodium (HPS) lamps have been replaced with eighteen 200W LED floodlights. The average illuminance is 33 lx, with a uniformity ratio of 0.56. The maximum illuminance is 68 lx, and the minimum is 23 lx.\r\nUsing a 2800K color temperature, this upgrade achieves an energy-saving rate of 66.67%.",
-      "results": "",
-      "image": "images/projects/beijing-liu-li-bridge/llq-roadway-01.webp",
+      "description": "【Customer Profile】\r\nLiuliqiao is a major traffic hub situated on Beijing’s Third Ring Road, serving as a critical artery for the city's high-volume vehicular flow.\r\n【Scope of Work】\r\nThe intersection's original lighting infrastructure consisted of nine 1000W high-pressure sodium (HPS) lamps mounted on six 35-meter high-mast poles. The facility required a comprehensive lighting upgrade to significantly reduce energy consumption and modernize the illumination quality while maintaining adequate visibility for nighttime traffic safety.\r\n【The Solution】\r\nThe project executed a strategic retrofit, replacing the legacy HPS lamps with eighteen 200W LED floodlights utilizing a 2800K color temperature. This upgrade achieved a remarkable 66.67% energy-saving rate. The optimized system now delivers an average illuminance of 33 lx with a uniformity ratio of 0.56, maintaining a maximum illuminance of 68 lx and a minimum of 23 lx to ensure safe and consistent road visibility.",
+      "results": "The original nine 1000W high-pressure sodium (HPS) lamps have been replaced with eighteen 200W LED floodlights. The average illuminance is 33 lx, with a uniformity ratio of 0.56. The maximum illuminance is 68 lx, and the minimum is 23 lx.\r\nUsing a 2800K color temperature, this upgrade achieves an energy-saving rate of 66.67%.",
+      "image": "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
       "order": 25,
       "translations": {
         "fr": {},
@@ -2652,11 +2817,11 @@ SEED_DATA = {
         "ar": {}
       },
       "gallery": [
-        "images/projects/beijing-liu-li-bridge/llq-roadway-01.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-02.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-03.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-04.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-05.webp"
+        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-02.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-03.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-04.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-05.webp"
       ],
       "pdf_url": ""
     },
@@ -2667,8 +2832,8 @@ SEED_DATA = {
       "slug": "fencing-venue-of-the-7th-cism-military-world-games",
       "venue_type": "INDOOR",
       "sport_type": "FENCING",
-      "description": "Wuhan City Vocational College Fencing Venue of the 7th CISM Military World Games",
-      "results": "2000lux\r\nHDTV",
+      "description": "【Customer Profile】\r\nThe Wuhan Business University Fencing Hall served as the venue for the fencing events of the Modern Pentathlon during the 7th CISM Military World Games. Notably, this project was the first to be completed and boasted the shortest construction cycle among all 35 venues for the Games.\r\n\r\n【Scope of Work】\r\nThe arena features a competition area with 10 pistes and a training area with 5 to 8 pistes, accommodating up to 2,185 spectators. The primary lighting challenge was to achieve a True \"shadowless\" effect. To meet the rigorous demands of high-speed fencing, the ceiling illumination required precise photometric calculations to eliminate distracting shadows and provide flawless visual clarity for the athletes.\r\n\r\n【The Solution】\r\nOver 180 FL6M-480W LED fixtures were strategically installed across the ceiling. Through meticulous optical design and exact aiming point calculations, the system delivers a uniform, shadowless glow that completely envelops the athletes. This advanced lighting solution ensures optimal visual conditions, allowing competitors to track fast-moving actions with absolute precision.",
+      "results": "Horizontal illuminance: > 3600 lux (Uniformity: 0.90)\r\nMain Camera illuminance: > 1500 lux (Uniformity: 0.80)\r\nComplies with HD broadcasting standards.",
       "image": "images/projects/fencing-venue-of-the-7th-cism-military-world-games/whzyxy-fencing-04.webp",
       "order": 27,
       "translations": {
@@ -2721,8 +2886,8 @@ SEED_DATA = {
       "slug": "yingdong-natatorium",
       "venue_type": "INDOOR",
       "sport_type": "AQUATICS_CENTRE",
-      "description": "Yingdong Natatorium at the National Olympic Sports Center",
-      "results": "",
+      "description": "【Customer Profile】\r\nLocated within Beijing's National Olympic Sports Center, the Yingdong Natatorium is a landmark aquatic venue funded by Henry Fok in 1986. Spanning 44,635 square meters with 6,000 seats, it has hosted prestigious international events including the 1990 Asian Games and the 2008 Beijing Olympics.\r\n\r\n【Scope of Work】\r\nThe venue required a high-performance lighting system engineered specifically for high-definition television broadcasting. The solution needed to deliver top-tier illumination while strictly managing glare and water reflections, ensuring optimal visual clarity and color rendering for elite aquatic competitions.\r\n\r\n【The Solution】\r\nA comprehensive photometric design was executed to optimize glare control and establish precise aiming coordinates. The new LED system delivers superior uniformity both in the air and across the pool, guaranteeing flawless visual conditions for athletes and broadcast cameras while meeting stringent HD broadcasting standards.",
+      "results": "Horizontal illuminance: > 2700 lux (Uniformity: 0.70)\r\nMain Camera illuminance: > 2200 lux (Uniformity: 0.60)\r\nAuxiliary Camera illuminance: > 1500 lux (Uniformity: 0.55)\r\nComplies with HD broadcasting standards.",
       "image": "images/projects/yingdong-natatorium/ydyyg-swim-01.webp",
       "order": 31,
       "translations": {
@@ -2748,7 +2913,7 @@ SEED_DATA = {
       "slug": "perryville-high-school",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nPerryville High School is a public school in Perryville, Maryland. The school is operated by Cecil County Public Schools. It is the home of the Perryville Panthers. \r\n【Scope of Work 】\r\nSimilar to the situation at \"Bo Manor\", our last completed project for CCPS, the field at Perryville was inefficient, under lit, and hassle to maintain. Also, the specifications of the project required use of the existing poles and structures.\r\n【The Solution】\r\nA precision photometric design was completed to ensure that the design specifications were met. The design called for replacement (40 total) of the existing 1500W MH light fixtures to (48 total) of our FL9M -630W LED performance sports lights.",
+      "description": "【Customer Profile】\r\nPerryville High School is a prominent public educational institution in Perryville, Maryland, operated by Cecil County Public Schools. The campus serves as the proud home of the Perryville Panthers.\r\n\r\n【Scope of Work】\r\nMuch like the recent \"Bo Manor\" project completed for CCPS, the athletic field at Perryville suffered from an outdated, under-lit, and high-maintenance lighting system. Additionally, project parameters strictly required seamless integration with the pre-existing pole structures.\r\n\r\n【The Solution】\r\nA comprehensive photometric design was executed to ensure all technical requirements were met. The final retrofit replaced forty (40) legacy 1500W metal halide units with forty-eight (48) of our FL9M-630W LED performance sports lights, delivering superior illumination and efficiency.",
       "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.56:1</strong> — exceeding the project requirements.",
       "image": "images/projects/perryville-high-school/phs-football-02.webp",
       "order": 33,
@@ -2775,7 +2940,7 @@ SEED_DATA = {
       "slug": "mcintosh-county-academy",
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
-      "description": "【Customer Profile】\r\nMcIntosh County Academy is the only public high school in McIntosh County, Georgia, United States. It was formerly known as Darien High School.\r\n【Scope of Work】\r\nMcIntosh County Academy reached out to SolarOne for a solution to upgrade their existing football lighting system to LED. We were able to offer a solution reusing the existing poles and structures helping to keep this project on-time and within budget.\r\n【The Solution】\r\nWe were able to meet IES recommended lighting levels with a one for one replacement using our FL9M-720W. The results were spectacular!",
+      "description": "【Customer Profile】\r\nMcIntosh County Academy is the sole public high school in McIntosh County, Georgia. Formerly known as Darien High School, it serves as a vital educational and athletic hub for the local community.\r\n\r\n【Scope of Work】\r\nThe school sought to upgrade its existing football field lighting to a modern, energy-efficient LED system. A critical project constraint was the requirement to reuse the existing poles and infrastructure to ensure the upgrade remained on schedule and strictly within budget.\r\n\r\n【The Solution】\r\nA precision photometric design was executed to guarantee full compliance with IES recommended lighting levels. The project was seamlessly completed via a one-for-one retrofit using our FL9M-720W LED performance sports lights, delivering spectacular illumination and operational efficiency.",
       "results": "",
       "image": "images/projects/mcintosh-county-academy/mc-football-04.webp",
       "order": 35,
@@ -2802,8 +2967,8 @@ SEED_DATA = {
       "slug": "garrison-forest-school",
       "venue_type": "OUTDOOR",
       "sport_type": "SOCCER_FIELD",
-      "description": "【Customer Profile】\r\nGarrison Forest School (GFS) is a non-denominational private college preparatory boarding and day school located on a 110 acres campus in Owings Mills, Maryland. GFS offers kindergarten through 12th grade for girls as well as a coeducational program for pre-K. The school is accredited by the Middle States Association of Colleges and Secondary Schools and the Association of Independent Maryland Schools.\r\n\r\n【Scope of Work】\r\nWorked directly with the facility management team at Garrison Forest School to install a new LED lighting system. The goal was to provide tournament level lighting with a system that is easy to maintain.\r\n\r\n【The Solution】\r\nOur VSP Sports Lighting system includes FL12M-1000W fixtures and remote mounted driver boxes for ease of accessibility for future maintenance.",
-      "results": "",
+      "description": "【Customer Profile】\r\nGarrison Forest School (GFS) is a premier, non-denominational private college preparatory school located on a 110-acre campus in Owings Mills, Maryland. Serving girls from kindergarten through 12th grade alongside a coeducational pre-K program, GFS is fully accredited by both the Middle States Association of Colleges and Secondary Schools and the Association of Independent Maryland Schools.\r\n\r\n【Scope of Work】\r\nWorking in close collaboration with the school's facility management team, the project aimed to install a state-of-the-art LED lighting system. The primary objectives were to deliver tournament-level illumination for athletic events while ensuring the new system was highly durable and easy to maintain.\r\n\r\n【The Solution】\r\nThe VSP Sports Lighting system was deployed, featuring high-performance FL12M-1000W fixtures. To optimize long-term maintenance, the system utilizes remote-mounted driver boxes, providing facility managers with safe and effortless accessibility for future servicing.",
+      "results": ">50fc",
       "image": "images/projects/garrison-forest-school/Garrison_Forest-1.webp",
       "order": 37,
       "translations": {
@@ -2829,7 +2994,7 @@ SEED_DATA = {
       "slug": "north-creek-community-center",
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
-      "description": "【Customer Profile】\r\nNorth Creek Community Center features meeting room, community rooms, swimming pool, tennis courts, pickleball courts, soccer court, a tot lot, nature study and walking paths. \r\n【Scope of work】\r\nMontgomery Village Foundation was looking to improve the lighting on the sports courts at this facility. The SolarOne design team came up with a lighting layout to meet IES recommended lighting levels while allowing for the Owners to reuse the existing poles and structures.\r\n【Solution】\r\nOnce again, our RT410FL-260W sports light proves why it is our banner product and the perfect LED retrofit solution for sports courts!",
+      "description": "【Customer Profile】\r\nNorth Creek Community Center features meeting room, community rooms, swimming pool, tennis courts, pickleball courts, soccer court, a tot lot, nature study and walking paths. \r\n\r\n【Scope of work】\r\nMontgomery Village Foundation was looking to improve the lighting on the sports courts at this facility. The SolarOne design team came up with a lighting layout to meet IES recommended lighting levels while allowing for the Owners to reuse the existing poles and structures.\r\n\r\n【Solution】\r\nOnce again, our RT410FL-260W sports light proves why it is our banner product and the perfect LED retrofit solution for sports courts!",
       "results": "",
       "image": "images/projects/north-creek-community-center/ncc-tennis-03.webp",
       "order": 39,
@@ -2854,7 +3019,7 @@ SEED_DATA = {
       "slug": "pickle-n-par-club",
       "venue_type": "INDOOR",
       "sport_type": "TENNIS",
-      "description": "【Customer Profile】\r\nPickle N Par is the first and only dedicated indoor Pickleball courts on Long Island. Great surface superb lighting provide a beautiful setting to play. Not to mention the organized play sessions and top notch instructors. This is THE place to play pickleball when visiting New York.\r\n【Scope of Work】\r\nSolarOne was contacted during the Summer of 2019 by our partners at Green Arc Energy Advisors. They were looking for an LED lighting solution for their customer, Pickle N Par's new indoor pickleball facility. The desired goal was to light the courts to competition level standards while maintaining visual comfort for players and spectators alike. Our design team was able to put together a design and supply fixtures for this project, and the results speak for themselves. \r\n【The Solution】\r\nRT400HB-100W recreation series high bay was the exact product needed to achieve the desired results.",
+      "description": "【Customer Profile】\r\nPickle N Par is Long Island’s premier and only dedicated indoor pickleball facility. Renowned for its exceptional court surfaces and superb lighting, the venue provides an ideal setting for players of all levels. Featuring organized play sessions and top-tier instruction, it stands as the ultimate destination for pickleball enthusiasts in New York.\r\n\r\n【Scope of Work】\r\nIn the summer of 2019, our partners at Green Arc Energy Advisors engaged SolarOne to design an LED lighting solution for this new indoor facility. The primary objective was to deliver competition-level illumination while ensuring optimal visual comfort for both players and spectators. Our team developed a precision lighting layout and supplied high-performance fixtures to meet these exacting standards.\r\n\r\n【The Solution】\r\nThe RT400HB-100W Recreation Series high bay fixtures were selected as the perfect solution for this application. Delivering uniform, glare-free illumination, the system successfully achieved competition-grade lighting levels while maintaining exceptional visual comfort, elevating the overall playing experience.",
       "results": "",
       "image": "images/projects/pickle-n-par-club/pap-pickleball-01.webp",
       "order": 41,
@@ -2873,6 +3038,33 @@ SEED_DATA = {
         "images/projects/pickle-n-par-club/pap-pickleball-05.webp"
       ],
       "pdf_url": "files/pickle_n_par_club.pdf"
+    },
+    {
+      "pk": 23,
+      "title": "National Olympic Sports Center (Beijing) Tennis Courts",
+      "location": "Beijing, China",
+      "slug": "national-olympic-sports-center-beijing-tennis-cour",
+      "venue_type": "OUTDOOR",
+      "sport_type": "TENNIS_COURTS",
+      "description": "【Customer Profile】\r\nLocated within the National Olympic Sports Center in Beijing, the Tennis Center is a premier facility featuring 20 high-standard indoor and outdoor courts. It serves as a vital training base for the Chinese National Tennis Team.\r\n\r\n【Scope of Work】\r\nThe project entailed a one-for-one LED upgrade of legacy 400W metal halide fixtures, seamlessly reusing the existing pole infrastructure. Absolute ball clarity, regardless of speed or position, is paramount for elite tennis. Delivering exceptional visibility for high-speed action requires striking contrast, calibrated illumination, and flawless court uniformity.\r\n\r\n【The Solution】\r\nThrough rigorous photometric modeling, we optimized glare control and light output, providing exact aiming directives for every fixture. The SolarOne Vision Smart 200W RT470 Flood Lights integrated effortlessly with the existing infrastructure. Our LED solution outperforms legacy metal halide systems by delivering exceptional aerial and on-court uniformity, while drastically reducing light spill and pollution.",
+      "results": "",
+      "image": "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-02.webp",
+      "order": 43,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-01.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-02.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-03.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-04.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-05.webp"
+      ],
+      "pdf_url": "files/national_olympic_sports_center_beijing_tennis_cour.pdf"
     }
   ],
   "siteconfig": {
@@ -2937,49 +3129,55 @@ SEED_DATA = {
       "title": "M Series",
       "subtitle": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
       "image": "images/products_page/m-series-04.webp",
+      "slug": "m-series",
       "link_url": "/products/m-series/",
       "order": 1,
-      "is_active": true
+      "is_active": True
     },
     {
       "title": "RT410 Series",
       "subtitle": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
-      "image": "",
+      "image": "images/products_page/rt410-series.webp",
+      "slug": "rt410-series",
       "link_url": "/products/rt410-series/",
       "order": 2,
-      "is_active": true
+      "is_active": True
     },
     {
       "title": "VSP series",
       "subtitle": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
-      "image": "",
+      "image": "images/products_page/VSP9M-01.webp",
+      "slug": "vsp-xxxxw-9m-yp",
       "link_url": "/products/vsp-xxxxw-9m-yp/",
       "order": 3,
-      "is_active": true
+      "is_active": True
     },
     {
       "title": "FLOOD LIGHTING",
       "subtitle": "RT180FS ~ RT420FS series flood lighting",
       "image": "images/products_page/flood-light-01.webp",
-      "link_url": "/products/rt590fl-s/",
+      "slug": "rt420fs-s",
+      "link_url": "/products/rt420fs-s/",
       "order": 4,
-      "is_active": true
+      "is_active": True
     },
     {
       "title": "HIGHBAY",
       "subtitle": "Typical Applications High school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
       "image": "images/products_page/highbay-01.webp",
+      "slug": "rt400hb",
       "link_url": "/products/rt400hb/",
       "order": 5,
-      "is_active": true
+      "is_active": True
     },
     {
       "title": "Street Lighting",
       "subtitle": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
-      "image": "images/products_page/RT600SL-T.webp",
+      "image": "images/products_page/street-lighting-series-01.webp",
+      "slug": "rt600sl-t",
       "link_url": "/products/rt600sl-t/",
       "order": 6,
-      "is_active": true
+      "is_active": True
     }
   ]
 }

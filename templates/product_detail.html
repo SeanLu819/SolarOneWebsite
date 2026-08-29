@@ -148,8 +148,7 @@
           </div>
         </div>
 
-        {% if product.slug != 'm-series' %}
-        <!-- Product dimension diagram — hidden only for M-Series overview -->
+        {% if product.slug != 'm-series' and product.category != 'ACCESSORY' %}
         <div class="detail-dimension">
           <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
           {% if product.beam_angle_image_url %}
@@ -171,8 +170,7 @@
         </div>
         {% endif %}
 
-        {% if product.slug != 'm-series' %}
-        <!-- Energy and Performance Data — hidden only for M-Series overview -->
+        {% if product.slug != 'm-series' and product.category != 'ACCESSORY' %}
         <div class="detail-energy-data">
           <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
           <div class="detail-energy-table-wrap">
@@ -261,7 +259,7 @@
         </div>
         {% endif %}
 
-        <!-- Ordering information — unified for all products -->
+        {% if product.category != 'ACCESSORY' %}
         <div class="detail-ordering">
           <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
           {% if product.model_number %}
@@ -299,6 +297,7 @@
           </div>
           {% endif %}
         </div>
+        {% endif %}
 
         <!-- Request a sample CTA -->
         <div class="detail-request-sample">

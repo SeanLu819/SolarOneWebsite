@@ -87,6 +87,11 @@ class Product(models.Model):
         help_text='用于子系列（如 FL1M 属于 M Series）。'
     )
     order = models.IntegerField(default=0)
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Active',
+        help_text='Only active products appear on the public website.'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"name": "...", "description": "...", "category": "..."}, "es": {...}, ...}
     translations = JSONField(default=dict, blank=True)
@@ -822,3 +827,59 @@ def sync_product_image_on_delete(sender, instance, **kwargs):
     product = getattr(instance, 'product', None)
     if product:
         sync_product_on_save(type(product), product)
+
+
+# ============================================================
+# ProductsPageCard image sync (mirrors Product/Project pattern)
+# ============================================================
+
+def _sync_ppc_media_to_static():
+    """Copy ALL active ProductsPageCard images from media/ to
+    static/images/products_page/ with hash suffixes stripped.
+
+    Unlike Product (scoped per slug), PPC assets live in one shared
+    directory because the card image keyed by filename, not slug.
+    """
+    media_root = str(settings.MEDIA_ROOT)
+    static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'products_page')
+    os.makedirs(static_dir, exist_ok=True)
+
+    current_names = set()
+
+    try:
+        from .cards import ProductsPageCard
+    except Exception:
+        return
+
+    for card in ProductsPageCard.objects.all().order_by('pk'):
+        field = getattr(card, 'image', None)
+        fname = getattr(field, 'name', None)
+        if not fname:
+            continue
+        src = os.path.join(media_root, str(fname))
+        if not os.path.exists(src):
+            continue
+        clean_name = _clean_hashed_filename(fname)
+        current_names.add(clean_name)
+        dst = os.path.join(static_dir, clean_name)
+        try:
+            if not os.path.exists(dst) or \
+               os.path.getmtime(src) > os.path.getmtime(dst) or \
+               os.path.getsize(src) != os.path.getsize(dst):
+                shutil.copy2(src, dst)
+        except Exception:
+            pass
+
+    _prune_stale_images(static_dir, current_names)
+
+
+@receiver(post_save, sender=ProductsPageCard)
+def sync_ppc_on_save(sender, instance, **kwargs):
+    _sync_ppc_media_to_static()
+    _invalidate_views_cache()
+
+
+@receiver(post_delete, sender=ProductsPageCard)
+def sync_ppc_on_delete(sender, instance, **kwargs):
+    _sync_ppc_media_to_static()
+    _invalidate_views_cache()
