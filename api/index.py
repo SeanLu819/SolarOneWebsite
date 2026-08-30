@@ -1,7 +1,7 @@
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'solarone.settings')
@@ -13,10 +13,6 @@ if IS_VERCEL and 'DATABASE_URL' not in os.environ:
 
 from django.core.wsgi import get_wsgi_application
 from django.conf import settings
-
-# collectstatic runs at BUILD time (build.sh), not at runtime.
-# This eliminates 5-15s of cold start latency on Vercel.
-# If staticfiles/ is missing at runtime, WhiteNoise falls back to STATICFILES_DIRS.
 
 application = get_wsgi_application()
 
