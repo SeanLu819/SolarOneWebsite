@@ -1,12 +1,18 @@
 {
   "buildCommand": "bash build.sh",
   "outputDirectory": "public",
-  "functions": {
-    "index.py": {
-      "includeFiles": "**"
+  "builds": [
+    {
+      "src": "index.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "includeFiles": "**"
+      }
     }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.py" }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.py" }
   ]
 }
