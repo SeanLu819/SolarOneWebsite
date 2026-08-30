@@ -34,7 +34,7 @@ if IS_VERCEL and SECRET_KEY.startswith('django-insecure-'):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,.solaronelighting.com,localhost,127.0.0.1').split(',')
 
 # Application definition
 INSTALLED_APPS = [
