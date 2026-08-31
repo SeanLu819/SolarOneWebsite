@@ -36,6 +36,18 @@ DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,.solaronelighting.com,localhost,127.0.0.1').split(',')
 
+# Trusted origins for CSRF protection (Django 4+ requires full origin URLs).
+# Without this, POST forms (contact, admin) from the custom domains would
+# fail with 403 once ALLOWED_HOSTS is fixed.
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in os.environ.get(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://solar-one-website.vercel.app,'
+        'https://www.solaronelighting.com,'
+        'https://solaronelighting.com'
+    ).split(',') if o.strip()
+]
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
