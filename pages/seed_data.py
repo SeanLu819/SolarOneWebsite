@@ -684,7 +684,7 @@ SEED_DATA = {
       "specs": [
         {
           "label": "Power",
-          "value": "630W"
+          "value": "720W"
         },
         {
           "label": "Efficacy",
@@ -928,7 +928,7 @@ SEED_DATA = {
       "beam_angle": "18~50°",
       "protection": "",
       "image": "images/products/fl16m/fl16m-01.webp",
-      "banner_image": "images/products/fl16m/fl16m-bar-1.webp",
+      "banner_image": "images/products/fl16m/fl16m-bar-01.webp",
       "dimension_image": "images/products/fl16m/fl16m-3d-view.webp",
       "beam_angle_image": "images/products/fl16m/beamangle-12183050.webp",
       "ordering_image": "",
@@ -1199,7 +1199,7 @@ SEED_DATA = {
     },
     {
       "pk": 11,
-      "name": "VSP series",
+      "name": "VSP-XXXXW-9M-YP",
       "slug": "vsp-xxxxw-9m-yp",
       "category": "SPORTS_LIGHTING",
       "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
@@ -2861,7 +2861,7 @@ SEED_DATA = {
       "sport_type": "KARTING",
       "description": "Red 1 Karting Beijing is a well-known indoor and outdoor comprehensive karting operator in Beijing, featuring China's first CIK-FIA certified international professional karting track.",
       "results": "",
-      "image": "images/projects/red-1-karting-beijing/red1-karting-01.webp",
+      "image": "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
       "order": 29,
       "translations": {
         "fr": {},
@@ -2871,13 +2871,13 @@ SEED_DATA = {
         "ar": {}
       },
       "gallery": [
-        "images/projects/red-1-karting-beijing/red1-karting-01.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-02.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-03.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-04.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-05.webp"
+        "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-1080p-02.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-1080p-03.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-1080p-04.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-1080p-05.webp"
       ],
-      "pdf_url": ""
+      "pdf_url": "files/red_1_karting_beijing.pdf"
     },
     {
       "pk": 17,

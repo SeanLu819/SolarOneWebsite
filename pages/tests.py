@@ -7,16 +7,17 @@ from pages.views import _product_image_url, _get_project_detail_from_json, _enri
 from django.utils.translation import activate
 
 
+# 修改后
 class ProductImagePathResolutionTests(SimpleTestCase):
-    def test_static_fallback_matches_same_stem_with_webp_extension(self):
+    def test_static_fallback_finds_file_in_slug_subdirectory(self):
+        """DB stores old flat path, but assets now live in slug/ subdirectory.
+        The resolver should find the real file even though DB path differs."""
         product = SimpleNamespace(
             slug='fl4m',
             image=SimpleNamespace(name='products/fl4m-01.webp'),
         )
-
         url = _product_image_url(product, 'image')
-
-        self.assertIn('/static/images/products/fl4m-01.webp', url)
+        self.assertIn('/static/images/products/fl4m/fl4m-01.webp', url)  # ← 实际位置
 
     def test_static_fallback_prefers_db_relative_canonical_path(self):
         product = SimpleNamespace(
