@@ -310,9 +310,14 @@ def _list_product_dir_images(slug):
 def _find_project_gallery_files(slug: str):
     """Return list of relative static paths for all gallery images of a project slug.
 
-    Resolution order:
-      1. images/projects/<slug>/ directory (primary — every project should have its own dir)
-      2. images/projects/gallery/ fallback (slug-token matching for legacy projects)
+    Convention: every project keeps its images in images/projects/<slug>/.
+    There is intentionally NO cross-directory fallback here: the former
+    gallery/ slug-token matching could never match (the concatenated slug is
+    always longer than any filename token), so it was dead code. When a
+    project directory is missing or empty this returns [] and the caller
+    falls back to the raw DB/seed paths; pages/seed_sync.py reports any
+    unresolved seed paths at build time so missing assets are committed
+    before deploy.
     """
     results = []
     slug_dir = f'images/projects/{slug}'
@@ -324,20 +329,6 @@ def _find_project_gallery_files(slug: str):
             continue
         if fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
             results.append(f'{slug_dir}/{f}')
-    if not results:
-        gallery_dir = 'images/projects/gallery'
-        gal_files = _list_static_dir(gallery_dir)
-        slug_token = slug.replace('-', '').replace('_', '').lower()
-        matched = []
-        for f in sorted(gal_files):
-            fl = f.lower()
-            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                continue
-            f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
-            if slug_token and slug_token in f_token:
-                matched.append(f'{gallery_dir}/{f}')
-        if matched:
-            results = matched
     return results
 
 
@@ -349,7 +340,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
       2. Prefix heuristic (cover/main/01/1/hero).
       3. First non-excluded image in slug directory.
       4. Legacy processed/ seed placeholders.
-      5. Gallery directory fallback (exact name then slug token match).
+      5. Gallery directory fallback (exact filename match only).
     """
     name = Path(db_path).name if db_path else ''
     clean_name = _clean_hashed_name(name) if name else ''
@@ -391,19 +382,14 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
             return processed
     gallery_dir = 'images/projects/gallery'
     gal_files = _list_static_dir(gallery_dir)
-    if gal_files:
-        if clean_name:
-            clean_lower = clean_name.lower()
-            for f in gal_files:
-                if _clean_hashed_name(f).lower() == clean_lower:
-                    return f'{gallery_dir}/{f}'
-        slug_token = slug.replace('-', '').replace('_', '').lower()
-        for f in sorted(gal_files):
-            fl = f.lower()
-            if not fl.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                continue
-            f_token = fl.rsplit('.', 1)[0].replace('-', '').replace('_', '').lower()
-            if slug_token and slug_token in f_token:
+    if gal_files and clean_name:
+        # Exact filename match only — no fuzzy slug matching. The former
+        # slug-token containment loop could never match (dead code), so it was
+        # removed. This exact match still rescues the "DB path is stale but a
+        # file with the same (hash-cleaned) name exists in gallery/" case.
+        clean_lower = clean_name.lower()
+        for f in gal_files:
+            if _clean_hashed_name(f).lower() == clean_lower:
                 return f'{gallery_dir}/{f}'
     if db_path and db_path.startswith('images/'):
         if _find_static(db_path):
