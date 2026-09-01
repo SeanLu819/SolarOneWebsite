@@ -351,7 +351,7 @@
     letter-spacing: -0.03em;
     display: flex; align-items: center; gap: 8px;
   }
-  .nav-brand img { height: 28px; width: auto; }
+  .nav-brand img { height: 40px; width: auto; }
   .nav-links {
     margin-left: auto;
     display: flex; gap: 4px; align-items: center;
