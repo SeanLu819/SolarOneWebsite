@@ -1,8 +1,8 @@
 from django.urls import path
+from django.conf import settings
 from pages import views
 
 urlpatterns = [
-    path('__diag__/', views.diagnostic, name='diagnostic'),
     path('', views.home, name='home'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),
@@ -15,3 +15,8 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
 ]
+
+# Diagnostic endpoint is ONLY available when DEBUG=True (never in production).
+# It is also staff-only via @staff_member_required on the view itself.
+if settings.DEBUG:
+    urlpatterns.insert(0, path('__diag__/', views.diagnostic, name='diagnostic'))

@@ -1,9 +1,10 @@
 import os
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.urls import reverse
 from django.utils.translation import get_language
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from .common import get_common_context
 from .utils import _load_seed
 
@@ -82,28 +83,21 @@ def sitemap_xml(request):
     return render(request, 'sitemap.xml', {'xml': xml}, content_type='application/xml')
 
 
+@staff_member_required
 def diagnostic(request):
-    base_dir = str(settings.BASE_DIR)
-    static_root = str(settings.STATIC_ROOT)
-    static_dirs = [str(d) for d in settings.STATICFILES_DIRS]
+    """Diagnostic info — staff-only, minimal exposure.
 
+    Only reachable when settings.DEBUG is True (see pages/urls.py).
+    Defense-in-depth: if DEBUG is somehow False at request time, return 404.
+    Removed the root directory listing and absolute filesystem paths to
+    avoid leaking deployment structure.
+    """
+    if not settings.DEBUG:
+        raise Http404
     result = {
-        'BASE_DIR': base_dir,
-        'STATIC_ROOT': static_root,
-        'STATIC_ROOT_exists': os.path.isdir(static_root),
-        'STATICFILES_DIRS': static_dirs,
-        'STATICFILES_DIRS_exist': {d: os.path.isdir(d) for d in static_dirs},
-        'root_listing': sorted(os.listdir(base_dir)) if os.path.isdir(base_dir) else 'NOT FOUND',
+        'debug': settings.DEBUG,
+        'python_version': '{}.{}.{}'.format(*__import__('sys').version_info[:3]),
+        'django_version': __import__('django').get_version(),
+        'static_configured': bool(settings.STATIC_URL),
     }
-
-    if os.path.isdir(static_root):
-        subdirs = [d for d in os.listdir(static_root) if os.path.isdir(os.path.join(static_root, d))]
-        result['STATIC_ROOT_subdirs'] = sorted(subdirs)
-        result['STATIC_ROOT_file_count'] = len([f for f in os.listdir(static_root) if os.path.isfile(os.path.join(static_root, f))])
-
-    for d in static_dirs:
-        if os.path.isdir(d):
-            subdirs = [s for s in os.listdir(d) if os.path.isdir(os.path.join(d, s))]
-            result[f'{d}_subdirs'] = sorted(subdirs)
-
     return JsonResponse(result)
