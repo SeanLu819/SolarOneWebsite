@@ -80,7 +80,7 @@
               <div class="project-card-location">{{ project.location_t }}</div>
               <h3 class="project-card-title">{{ project.title_t }}</h3>
               <p class="project-card-desc">{{ project.description_t }}</p>
-              {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t|safe }}</p>{% endif %}
+              {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t }}</p>{% endif %}
               <span class="project-card-link">{% trans "View project" %} →</span>
             </div>
           </a>

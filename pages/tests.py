@@ -3,6 +3,7 @@ import unittest
 
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase
+from django.urls import reverse
 
 from pages.admin import ProjectAdmin
 from pages.views import _product_image_url, _get_project_detail_from_json, _enrich_project
@@ -108,3 +109,74 @@ class VercelSecureCookieTests(SimpleTestCase):
         resp = self.client.get('/definitely-not-a-real-page/', secure=False)
         self.assertIn(resp.status_code, (301, 302))
         self.assertTrue(resp.headers.get('Location', '').startswith('https://'))
+
+
+class TextFilterSafetyTests(SimpleTestCase):
+    """#9/#10 — template filters must escape untrusted text (XSS)."""
+
+    def test_nl2para_escapes_inline_html(self):
+        from pages.templatetags.text_filters import nl2para
+        out = nl2para('Hello <script>alert(1)</script>\n\nWorld')
+        self.assertNotIn('<script>', out)
+        self.assertIn('&lt;script&gt;', out)
+        self.assertIn('<p>Hello', out)
+        self.assertIn('<p>World</p>', out)
+
+    def test_nl2para_paragraph_and_break_structure(self):
+        from pages.templatetags.text_filters import nl2para
+        out = nl2para('A\nB\n\nC')
+        self.assertIn('<p>A<br>B</p>', out)
+        self.assertIn('<p>C</p>', out)
+
+    def test_linebreaktospaces_escapes_raw_input(self):
+        from pages.templatetags.text_filters import linebreaktospaces
+        out = linebreaktospaces('<script>x</script>')
+        self.assertNotIn('<script>', out)
+        self.assertIn('&lt;script&gt;', out)
+
+    def test_linebreaktospaces_strips_br_from_safe_html(self):
+        from django.utils.safestring import mark_safe
+        from pages.templatetags.text_filters import linebreaktospaces
+        out = linebreaktospaces(mark_safe('<p>A<br>B</p>'))
+        self.assertIn('<p>A B</p>', out)
+
+
+class ContactFormSecurityTests(TestCase):
+    """#13/#15 — rate-limit fail-closed + honeypot spam trap."""
+
+    def test_rate_limit_fails_closed_when_cache_broken(self):
+        from unittest.mock import patch
+        from django.test import RequestFactory
+        from pages.views.views_contact import _is_rate_limited
+        req = RequestFactory().post('/contact/')
+        # RequestFactory requests lack a session (SessionMiddleware not applied)
+        req.session = SimpleNamespace(session_key=None)
+        with patch('pages.views.views_contact.cache.get',
+                   side_effect=Exception('cache down')):
+            self.assertTrue(_is_rate_limited(req),
+                            'cache failure must DENY the request (fail closed)')
+
+    def test_honeypot_silently_drops_bot_submissions(self):
+        resp = self.client.post(reverse('contact'), {
+            'name': 'Spam Bot',
+            'email': 'bot@spam.example',
+            'message': 'buy cheap stuff',
+            'company_website': 'http://spam.example',
+        })
+        self.assertEqual(resp.status_code, 200)
+        from pages.models import ContactMessage
+        self.assertFalse(
+            ContactMessage.objects.filter(email='bot@spam.example').exists(),
+            'honeypot-filled submissions must NOT be saved')
+
+    def test_normal_submission_still_saved(self):
+        resp = self.client.post(reverse('contact'), {
+            'name': 'Real Person',
+            'email': 'real@customer.example',
+            'message': 'Please quote the FL4M series.',
+        })
+        self.assertEqual(resp.status_code, 200)
+        from pages.models import ContactMessage
+        self.assertTrue(
+            ContactMessage.objects.filter(email='real@customer.example').exists(),
+            'normal submissions (no honeypot) must still be saved')

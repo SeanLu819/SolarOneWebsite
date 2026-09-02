@@ -28,8 +28,10 @@ def _is_rate_limited(request):
             return True
         cache.set(key, count + 1, timeout=window)
     except Exception:
-        logger.warning('Rate limit cache unavailable, failing open', exc_info=True)
-        return False
+        # Fail CLOSED (#13): if the rate limit cannot be checked, deny the
+        # request. Spam protection must not depend on cache availability.
+        logger.warning('Rate limit cache unavailable — denying request (fail closed)', exc_info=True)
+        return True
     return False
 
 
@@ -77,6 +79,14 @@ def contact(request):
         context['prefill_ref'] = prefill_ref
 
     if request.method == 'POST':
+        # Honeypot (#15): hidden field humans never fill in. If it arrives
+        # filled, the submitter is a bot — silently drop the submission
+        # but pretend success so bots don't probe further.
+        if request.POST.get('company_website', '').strip():
+            logger.info('Contact honeypot triggered — submission dropped (ip=%s)', _get_client_ip(request))
+            messages.success(request, _('Your message has been sent successfully!'))
+            return render(request, 'contact.html', context)
+
         if _is_rate_limited(request):
             messages.error(
                 request,

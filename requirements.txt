@@ -3,3 +3,4 @@ user-agents>=2.2
 gunicorn>=21.0
 whitenoise>=6.0
 dj-database-url>=2.0
+deep-translator>=1.11  # used by admin auto-translate endpoint (pages/admin.py)
