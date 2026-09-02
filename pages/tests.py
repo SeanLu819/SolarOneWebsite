@@ -203,6 +203,31 @@ class CanonicalOriginTests(TestCase):
         self.assertIn('https://www.solaronelighting.com', content)
 
 
+class VisitorIpHashTests(TestCase):
+    """#16 — visitor IPs are stored hashed, never as plaintext (GDPR)."""
+
+    def test_stored_ip_is_hashed_not_plaintext(self):
+        self.client.get('/', HTTP_X_FORWARDED_FOR='203.0.113.50',
+                        HTTP_USER_AGENT='Mozilla/5.0 (test-suite)')
+        from pages.models import Visitor
+        row = Visitor.objects.order_by('-id').first()
+        self.assertIsNotNone(row)
+        self.assertNotIn('203.0.113.50', row.ip_address)
+        self.assertRegex(row.ip_address, r'^[0-9a-f]{64}$')
+
+    def test_unique_visit_counting_still_works(self):
+        ua = 'Mozilla/5.0 (unique-test)'
+        self.client.get('/', HTTP_X_FORWARDED_FOR='198.51.100.9',
+                        HTTP_USER_AGENT=ua)
+        self.client.get('/', HTTP_X_FORWARDED_FOR='198.51.100.9',
+                        HTTP_USER_AGENT=ua)
+        from pages.models import Visitor
+        rows = list(Visitor.objects.order_by('id'))
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(rows[0].is_unique)
+        self.assertFalse(rows[1].is_unique)
+
+
 class ContactFormSecurityTests(TestCase):
     """#13/#15 — rate-limit fail-closed + honeypot spam trap."""
 

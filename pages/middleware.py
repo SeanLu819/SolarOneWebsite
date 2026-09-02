@@ -1,6 +1,19 @@
+import hashlib
 import user_agents
+from django.conf import settings
 from django.utils import timezone
 from .models import Visitor, DailyStats
+
+
+def _hash_ip(ip):
+    """Return a deterministic salted hash of an IP address (#16/GDPR).
+
+    Unique-visit counting only needs equality, never the IP itself, so we
+    store a SECRET_KEY-peppered SHA-256 hash instead of the plaintext IP.
+    """
+    pepper = settings.SECRET_KEY.encode('utf-8')
+    return hashlib.sha256(pepper + ip.encode('utf-8', 'replace')).hexdigest()
+
 
 class VisitorTrackingMiddleware:
     def __init__(self, get_response):
@@ -18,7 +31,9 @@ class VisitorTrackingMiddleware:
             return response
         
         try:
-            ip = self.get_client_ip(request)
+            raw_ip = self.get_client_ip(request)
+            # Store only a salted hash — never the plaintext IP (#16/GDPR)
+            ip = _hash_ip(raw_ip)
             ua_string = request.META.get('HTTP_USER_AGENT', '')
             
             # Parse user agent

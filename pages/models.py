@@ -500,7 +500,11 @@ class SiteConfig(models.Model):
 
 
 class Visitor(models.Model):
-    ip_address = models.GenericIPAddressField(verbose_name="IP Address")
+    ip_address = models.CharField(
+        max_length=64,
+        verbose_name="IP Address (hashed)",
+        help_text="SHA-256 hash of the visitor IP — plaintext IPs are never stored (#16/GDPR)",
+    )
     path = models.CharField(max_length=500, blank=True, default="/")
     referrer = models.URLField(blank=True)
     user_agent = models.TextField(blank=True)
