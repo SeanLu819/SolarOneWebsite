@@ -61,6 +61,37 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(',') if o.strip()
 ]
 
+# ============ SECURITY: HTTPS, HSTS & secure cookies ============
+# Vercel terminates TLS at its edge and proxies to the app over HTTP.
+# Without SECURE_PROXY_SSL_HEADER, request.is_secure() returns False,
+# which breaks secure-cookie logic and CSRF origin checks (#22).
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+if IS_VERCEL:
+    # Production: force HTTPS and enable HSTS (1 year, preload-ready) (#5).
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Cookies are HTTPS-only in production (#6). Local dev stays False so
+    # plain-http 127.0.0.1 logins/POSTs keep working.
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+else:
+    # Local dev runs on http://127.0.0.1 — no redirect/HSTS there, and
+    # Secure cookies would break plain-http logins/POSTs.
+    SECURE_SSL_REDIRECT = False
+    SECURE_HSTS_SECONDS = 0
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Django 6 renamed this from REFERRER_POLICY.
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+# NOTE: CSRF_COOKIE_HTTPONLY is intentionally left at its default (False):
+# static/admin/js/auto_translate.js reads the csrftoken cookie to send the
+# X-CSRFToken header; marking it HttpOnly would break admin auto-translate.
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -212,7 +243,9 @@ else:
 WHITENOISE_USE_FINDERS = not IS_VERCEL
 WHITENOISE_MANIFEST_STRICT = False
 WHITENOISE_MAX_AGE = 31536000  # 1 year cache for versioned static files
-WHITENOISE_ALLOW_ALL_ORIGINS = True
+# Do NOT send Access-Control-Allow-Origin:* for static assets (#7) —
+# no legitimate third-party site needs to fetch this site's static files.
+WHITENOISE_ALLOW_ALL_ORIGINS = False
 WHITENOISE_EXTRA_PREFIXES = [
     ('/media/', str(BASE_DIR / 'static' / 'media')),
 ]
