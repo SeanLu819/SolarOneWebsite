@@ -32,7 +32,10 @@ if IS_VERCEL and SECRET_KEY.startswith('django-insecure-'):
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'True').lower() == 'true'
+# DEBUG defaults to False everywhere (including local dev) — developers must
+# explicitly set DEBUG=true in their environment to enable debug mode.
+# On Vercel, DEBUG is force-disabled regardless of env var.
+DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,.solaronelighting.com,localhost,127.0.0.1').split(',')
 
