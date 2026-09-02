@@ -4,6 +4,8 @@ Django settings for solarone project.
 
 from pathlib import Path
 import os
+import secrets
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,16 +21,24 @@ IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 IS_RUNTIME = IS_VERCEL and '/tmp/' in os.environ.get('DATABASE_URL', '')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# In production (Vercel), SECRET_KEY should be set as an environment variable.
-# We use .get() with a fallback so the app never crashes on missing env var;
-# if SECRET_KEY is not configured on Vercel, a warning is logged and the
-# insecure fallback is used (still functional, but sessions/CSRF are weak).
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-dev-key-change-in-production-x9k2m')
-if IS_VERCEL and SECRET_KEY.startswith('django-insecure-'):
+# On Vercel (production), SECRET_KEY MUST be set as an environment variable.
+# If missing, we raise ImproperlyConfigured — no insecure fallback.
+# In local dev (non-Vercel), a random key is generated each startup so
+# the app never crashes, but sessions/CSRF will not persist across restarts.
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    if IS_VERCEL:
+        raise ImproperlyConfigured(
+            'SECRET_KEY environment variable is required on Vercel. '
+            'Set it in the Vercel project settings.'
+        )
+    # Local development: generate a random key for this process
+    SECRET_KEY = secrets.token_urlsafe(50)
     import logging
     logging.getLogger('solarone').warning(
-        'SECRET_KEY env var not set on Vercel — using insecure fallback. '
-        'Configure SECRET_KEY in Vercel project settings immediately.'
+        'SECRET_KEY not set in environment — generated a random key for '
+        'local development. Sessions/CSRF will not persist across '
+        'restarts. Set SECRET_KEY=... in your .env for stable local dev.'
     )
 
 # SECURITY WARNING: don't run with debug turned on in production!
