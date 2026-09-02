@@ -141,6 +141,42 @@ class TextFilterSafetyTests(SimpleTestCase):
         self.assertIn('<p>A B</p>', out)
 
 
+class SiteConfigCssValidationTests(SimpleTestCase):
+    """#11 — CSS-typed SiteConfig fields must reject injection payloads."""
+
+    def _assert_invalid(self, **fields):
+        from django.core.exceptions import ValidationError
+        from pages.models import SiteConfig
+        cfg = SiteConfig(**fields)
+        with self.assertRaises(ValidationError):
+            cfg.full_clean()
+
+    def test_accent_color_rejects_css_escape(self):
+        self._assert_invalid(accent_color='#0088FF; } body { background: red')
+
+    def test_accent_color_accepts_valid_hex_and_rgb(self):
+        from pages.models import SiteConfig
+        SiteConfig(accent_color='#FF6B00').full_clean()
+        SiteConfig(accent_color='rgb(0, 136, 255)').full_clean()
+
+    def test_font_size_rejects_injection(self):
+        self._assert_invalid(font_size_base='16px; } * { display: none')
+
+    def test_font_size_accepts_valid_units(self):
+        from pages.models import SiteConfig
+        for value in ('16px', '1.25rem', '1.05em', '50%'):
+            SiteConfig(font_size_base=value).full_clean()
+
+    def test_font_family_rejects_injection(self):
+        self._assert_invalid(font_family_body="'} body{background:url(x)} '")
+
+    def test_font_family_accepts_existing_production_value(self):
+        from pages.models import SiteConfig
+        SiteConfig(
+            font_family_body="'Inter', 'Helvetica Neue', Arial, sans-serif"
+        ).full_clean()
+
+
 class ContactFormSecurityTests(TestCase):
     """#13/#15 — rate-limit fail-closed + honeypot spam trap."""
 

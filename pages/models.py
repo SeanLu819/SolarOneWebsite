@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import JSONField
+from django.core.validators import RegexValidator
 import json
 import os
 import shutil
@@ -8,6 +9,31 @@ from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
+
+
+# --- CSS input validators (#11) -------------------------------------------
+# Admin-entered typography/color values are interpolated into the global
+# <style> block in templates/base.html. These validators guarantee they can
+# never break out of a CSS declaration (no braces, semicolons, angle
+# brackets, or backslashes), blocking CSS injection via the admin panel.
+
+CSS_COLOR_VALIDATOR = RegexValidator(
+    regex=r'^(#[0-9A-Fa-f]{3,8}|rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+)\s*)?\))$',
+    message='Enter a valid CSS color, e.g. #0088FF or rgb(0, 136, 255).',
+)
+
+CSS_LENGTH_VALIDATOR = RegexValidator(
+    regex=r'^\d+(\.\d+)?(px|rem|em|ch|vw|vh|%)$',
+    message='Enter a valid CSS length, e.g. 16px or 1.25rem.',
+)
+
+CSS_FONT_FAMILY_VALIDATOR = RegexValidator(
+    # Whitelist: font names, quotes, commas, spaces, digits, hyphens, dots,
+    # parentheses. Cannot contain braces/semicolons/backslashes needed to
+    # escape the CSS declaration context in base.html.
+    regex=r"^[A-Za-z0-9 \-.,'\"()]+$",
+    message="Enter a valid CSS font-family list, e.g. \"'Inter', Arial, sans-serif\".",
+)
 
 
 def project_pdf_upload_path(instance, filename):
@@ -384,66 +410,77 @@ class SiteConfig(models.Model):
     font_family_body = models.CharField(
         max_length=200, 
         default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        validators=[CSS_FONT_FAMILY_VALIDATOR],
         verbose_name="Body Font Family",
         help_text="CSS font-family value, e.g. 'Inter', sans-serif"
     )
     font_family_heading = models.CharField(
         max_length=200,
         default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        validators=[CSS_FONT_FAMILY_VALIDATOR],
         verbose_name="Heading Font Family",
         help_text="CSS font-family value for headings"
     )
     font_size_base = models.CharField(
         max_length=10,
         default="16px",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Base Font Size",
         help_text="Root font size, e.g. 16px, 18px"
     )
     font_size_nav = models.CharField(
         max_length=10,
         default="17px",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Navigation Font Size",
         help_text="Nav link font size, e.g. 15px, 17px, 18px"
     )
     font_size_hero_title = models.CharField(
         max_length=10,
         default="3.5rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Hero Title Font Size",
         help_text="Hero heading size, e.g. 3.5rem, 4rem"
     )
     font_size_hero_subtitle = models.CharField(
         max_length=10,
         default="1.15rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Hero Subtitle Font Size",
         help_text="Hero subtitle size, e.g. 1.15rem, 1.25rem"
     )
     font_size_section_title = models.CharField(
         max_length=10,
         default="2.25rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Section Title Font Size",
         help_text="Section headings size, e.g. 2.25rem, 2.5rem"
     )
     font_size_body = models.CharField(
         max_length=10,
         default="1.05rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Body Text Font Size",
         help_text="Paragraph text size, e.g. 1.05rem, 1.1rem"
     )
     font_size_card_title = models.CharField(
         max_length=10,
         default="1.25rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Card Title Font Size",
         help_text="Product/Project card title size"
     )
     font_size_card_desc = models.CharField(
         max_length=10,
         default="0.95rem",
+        validators=[CSS_LENGTH_VALIDATOR],
         verbose_name="Card Description Font Size",
         help_text="Product/Project card description size"
     )
     accent_color = models.CharField(
         max_length=20,
         default="#0088FF",
+        validators=[CSS_COLOR_VALIDATOR],
         verbose_name="Accent Color",
         help_text="Primary accent color, e.g. #0088FF, #FF6B00"
     )
