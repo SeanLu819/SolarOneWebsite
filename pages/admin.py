@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.http import JsonResponse
 from django.utils.html import escape, mark_safe
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from .models import (
     Product, ProductImage, Project, ProjectImage,
@@ -915,8 +915,8 @@ LANG_NAMES = {
 }
 
 
+@staff_member_required
 @require_POST
-@csrf_exempt
 def admin_translate(request):
     import json as _json
     import logging
@@ -988,7 +988,7 @@ def admin_translate(request):
                         time.sleep(2)
                         continue
                     logger.error(f'Chunk translate error: {e}')
-                    translated_parts.append(f'[Error: {str(e)[:60]}]')
+                    translated_parts.append('[Translation error]')
         return ' '.join(translated_parts)
 
     # If a single target_lang is specified, only translate to that language.
@@ -1011,7 +1011,7 @@ def admin_translate(request):
                 result[lang][field_name] = translated
             except Exception as e:
                 logger.error(f'Translate error [{lang}/{field_name}]: {e}')
-                result[lang][field_name] = f'[Error: {str(e)[:80]}]'
+                result[lang][field_name] = '[Translation error]'
         # only pause between languages when doing multiple targets
         if not target_lang and idx < len(to_translate) - 1:
             time.sleep(random.uniform(2.5, 4.5))
