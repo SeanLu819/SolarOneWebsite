@@ -47,6 +47,15 @@ if not SECRET_KEY:
 # On Vercel, DEBUG is force-disabled regardless of env var.
 DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'False').lower() == 'true'
 
+# Fixed origin for canonical/SEO URLs (#17): canonical link, hreflang,
+# og:url, JSON-LD, sitemap.xml and robots.txt must NOT depend on the
+# request Host — otherwise any *.vercel.app preview URL (or a spoofed
+# Host header accepted via the ALLOWED_HOSTS wildcard) could become the
+# canonical URL, an SEO/cache-poisoning vector.
+CANONICAL_ORIGIN = os.environ.get(
+    'CANONICAL_ORIGIN', 'https://www.solaronelighting.com'
+).rstrip('/')
+
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,.solaronelighting.com,localhost,127.0.0.1').split(',')
 
 # Trusted origins for CSRF protection (Django 4+ requires full origin URLs).
@@ -137,6 +146,7 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'pages.context_processors.canonical_origin',
             ],
             'debug': DEBUG,  # Match DEBUG setting instead of hardcoded True
         },

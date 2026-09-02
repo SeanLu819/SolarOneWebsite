@@ -40,8 +40,8 @@ def sitemap_xml(request):
     products = data.get('products', [])
     projects = data.get('projects', [])
 
-    scheme = 'https'
-    host = request.get_host()
+    # Fixed canonical origin (#17) — never derive URLs from request.get_host()
+    origin = settings.CANONICAL_ORIGIN
 
     urls = []
 
@@ -55,13 +55,13 @@ def sitemap_xml(request):
     ]
     for name, _, priority in static_pages:
         path = reverse(name)
-        urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>{priority}</priority></url>')
+        urls.append(f'  <url><loc>{origin}{path}</loc><priority>{priority}</priority></url>')
 
     for p in products:
         slug = p.get('slug', '')
         if slug:
             path = reverse('product_detail', args=[slug])
-            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.7</priority></url>')
+            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
 
     seen_series = set()
     for p in products:
@@ -69,13 +69,13 @@ def sitemap_xml(request):
         if parent_slug and parent_slug not in seen_series:
             seen_series.add(parent_slug)
             path = reverse('product_series', args=[parent_slug])
-            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.7</priority></url>')
+            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
 
     for proj in projects:
         slug = proj.get('slug', '')
         if slug:
             path = reverse('project_detail', args=[slug])
-            urls.append(f'  <url><loc>{scheme}://{host}{path}</loc><priority>0.7</priority></url>')
+            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
 
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     xml += '\n'.join(urls)

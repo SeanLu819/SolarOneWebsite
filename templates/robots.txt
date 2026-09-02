@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /media/
 
-Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+Sitemap: {{ canonical_origin }}/sitemap.xml

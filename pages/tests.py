@@ -177,6 +177,32 @@ class SiteConfigCssValidationTests(SimpleTestCase):
         ).full_clean()
 
 
+class CanonicalOriginTests(TestCase):
+    """#17 — SEO URLs must use the fixed CANONICAL_ORIGIN, never the Host."""
+
+    def test_sitemap_uses_fixed_origin(self):
+        resp = self.client.get('/sitemap.xml', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        content = resp.content.decode()
+        self.assertIn('https://www.solaronelighting.com', content)
+        self.assertNotIn('evil.vercel.app', content)
+
+    def test_robots_txt_uses_fixed_origin(self):
+        resp = self.client.get('/robots.txt', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        content = resp.content.decode()
+        self.assertIn(
+            'Sitemap: https://www.solaronelighting.com/sitemap.xml', content)
+        self.assertNotIn('evil.vercel.app', content)
+
+    def test_home_canonical_and_jsonld_use_fixed_origin(self):
+        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        content = resp.content.decode()
+        self.assertNotIn('evil.vercel.app', content)
+        self.assertIn('https://www.solaronelighting.com', content)
+
+
 class ContactFormSecurityTests(TestCase):
     """#13/#15 — rate-limit fail-closed + honeypot spam trap."""
 

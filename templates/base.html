@@ -8,11 +8,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}{{ config.meta_title }}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}">
-<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<link rel="canonical" href="{{ canonical_origin }}{{ request.path }}">
 {% hreflang_links %}
 <meta property="og:title" content="{% block og_title %}{{ config.meta_title }}{% endblock %}">
 <meta property="og:description" content="{% block og_description %}{{ config.meta_description }}{% endblock %}">
-<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:url" content="{{ canonical_origin }}{{ request.path }}">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
 <meta property="og:site_name" content="{{ config.brand_name }}">
@@ -465,7 +465,7 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "{{ config.brand_name }}",
-  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "url": "{{ canonical_origin }}",
   "logo": "{{ config.logo_url }}",
   "description": "{{ config.meta_description }}",
   "contactPoint": {

@@ -100,10 +100,10 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "{{ config.brand_name }}",
-  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "url": "{{ canonical_origin }}",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "{{ request.scheme }}://{{ request.get_host }}/en/products/?q={search_term_string}",
+    "target": "{{ canonical_origin }}/en/products/?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }

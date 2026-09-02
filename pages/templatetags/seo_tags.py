@@ -31,20 +31,19 @@ def hreflang_links(context):
     if not request:
         return ''
 
-    scheme = request.scheme
-    host = request.get_host()
+    origin = settings.CANONICAL_ORIGIN
     clean_path = _strip_lang_prefix(request.path)
 
     links = []
     for code, _name in settings.LANGUAGES:
         if code == 'en':
-            url = f'{scheme}://{host}{clean_path}'
+            url = f'{origin}{clean_path}'
         else:
-            url = f'{scheme}://{host}/{code}{clean_path}'
+            url = f'{origin}/{code}{clean_path}'
         links.append(f'<link rel="alternate" hreflang="{code}" href="{url}">')
 
     # x-default points to the English (default) version
-    x_default_url = f'{scheme}://{host}{clean_path}'
+    x_default_url = f'{origin}{clean_path}'
     links.append(f'<link rel="alternate" hreflang="x-default" href="{x_default_url}">')
 
     return mark_safe('\n  '.join(links))
