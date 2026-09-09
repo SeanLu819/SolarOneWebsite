@@ -1,0 +1,16 @@
+{% load i18n %}
+{% comment %}
+Single source of truth for the main navigation.
+Included by BOTH the desktop `.nav-links` bar and the mobile side panel
+in base.html. Add / remove / rename a nav entry HERE ONLY — never
+duplicate the link list in either place.
+
+`.nav-item-contact` is hidden on desktop (the styled `.nav-cta` button
+takes its place) and shown inside the mobile panel.
+{% endcomment %}
+<li><a href="{% url 'home' %}" data-nav="home">{% trans "Home" %}</a></li>
+<li><a href="{% url 'products' %}" data-nav="products">{% trans "Products" %}</a></li>
+<li><a href="{% url 'projects' %}" data-nav="projects">{% trans "Projects" %}</a></li>
+<li><a href="{% url 'news' %}" data-nav="news">{% trans "News" %}</a></li>
+<li><a href="{% url 'about' %}" data-nav="about">{% trans "About" %}</a></li>
+<li class="nav-item-contact"><a href="{% url 'contact' %}" data-nav="contact">{% trans "Contact" %}</a></li>

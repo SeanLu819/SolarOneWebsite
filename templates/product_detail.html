@@ -26,9 +26,11 @@
 <!-- Product detail page — full-width two-column layout -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="sidebar-layout" style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+    <div class="sidebar-layout">
 
       <!-- ===== LEFT SIDEBAR ===== -->
+      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
+      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
       <aside class="sidebar-nav" style="position: sticky; top: 100px;">
         <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
         <nav class="sidebar-nav-list">

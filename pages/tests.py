@@ -1,3 +1,4 @@
+from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
@@ -267,3 +268,159 @@ class ContactFormSecurityTests(TestCase):
         self.assertTrue(
             ContactMessage.objects.filter(email='real@customer.example').exists(),
             'normal submissions (no honeypot) must still be saved')
+
+class ResponsiveNavTests(TestCase):
+    """阶段一 F1' — 导航单一数据源 + 移动端功能不丢失（渲染 DOM 契约，§6.2/§8.5）。
+
+    断言的是"渲染出的 DOM"而非 CSS 字符串，因此能捕获：
+    1) 汉堡/nav-links/面板结构的回归；
+    2) 桌面与移动面板导航不同步（双份数据源）；
+    3) 多行 `{# #}` 未闭合注释泄漏到 HTML（Django 的 silent 行为）。
+    """
+
+    def _home(self):
+        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode()
+
+    def test_hamburger_present_with_aria(self):
+        html = self._home()
+        self.assertIn('id="hamburgerBtn"', html)
+        self.assertIn('aria-expanded="false"', html)
+        self.assertIn('aria-controls="mobilePanel"', html)
+
+    def test_nav_links_is_ul(self):
+        # 外部工具会向 base.html 全部元素注入 data-page-node-id 等属性，
+        # 故用正则匹配标签而非精确串（精确串会因多出的属性失配，v1.1.4）
+
+        html = self._home()
+        self.assertRegex(html, r'<ul\s+class="nav-links"[\s>]')
+
+    def test_legacy_duplicate_ids_removed(self):
+        # 改为多实例 class 绑定后，旧的单例 id 必须移除（否则出现重复 id）
+        html = self._home()
+        self.assertNotIn('id="themeToggle"', html)
+        self.assertNotIn('id="langSwitchBtn"', html)
+        self.assertNotIn('id="langSwitchMenu"', html)
+
+    def test_no_unclosed_django_comment_leaks(self):
+        # `{# ... #}` 是单行注释；跨行未闭合时 Django 不报错、原文进 HTML
+        html = self._home()
+        self.assertNotIn('{#', html)
+
+    def test_mobile_panel_has_full_navigation(self):
+        # 移动端不丢任何入口：5 项主链接 + Contact + 主题 + 语言
+        html = self._home()
+        panel = html.split('id="mobilePanel"')[1]
+        for slug in ('home', 'products', 'projects', 'news', 'about', 'contact'):
+            self.assertIn(f'data-nav="{slug}"', panel)
+        self.assertIn('theme-toggle', panel)
+        self.assertIn('lang-switch-option', panel)
+
+    def test_desktop_and_panel_share_single_source(self):
+        # 桌面 .nav-links 与移动面板必须来自同一份 include，顺序与集合完全一致
+        import re
+        html = self._home()
+        desktop = html.split('class="nav-links"')[1].split('</ul>')[0]
+        panel = html.split('class="mobile-panel-links"')[1].split('</ul>')[0]
+        self.assertEqual(
+            re.findall(r'data-nav="(\w+)"', desktop),
+            re.findall(r'data-nav="(\w+)"', panel),
+        )
+class ResponsivePhase1Tests(TestCase):
+    """阶段一其余项（N-1/N-5/N-8/N-9/N-10/F4'/F5'）— v1.1.5。
+
+    按 §6.8.3 策略，iOS/OS 级行为不模拟，改为断言"防御性 CSS/HTML 是否存在"
+    （比真机更可回归）；F4' 为渲染 DOM 契约断言。CSS/HTML 直接读源码文件
+    （L1 针对源码状态；部署产物由 collectstatic 在发布时生成）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.css = Path(settings.BASE_DIR, 'static', 'css', 'base.css').read_text(encoding='utf-8')
+        cls.base_html = Path(settings.BASE_DIR, 'templates', 'base.html').read_text(encoding='utf-8')
+
+    def _get(self, url):
+        resp = self.client.get(url, HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200, f'{url} must render')
+        return resp.content.decode()
+
+    # ---- N-1: 输入框 font-size >= 16px（iOS 聚焦自动放大且不回弹） ----
+    def test_n1_form_inputs_16px(self):
+        # contact.html 表单控件用内联样式（非 .form-group 结构）——
+        # 内联 font-size:0.9rem(<16px) 会让 iOS 聚焦自动放大且不回弹。
+        # 断言渲染 DOM（L2 首跑发现纯 CSS 规则断言抓不到该问题，v1.1.6）。
+        # 仅限 <form id="contactForm"> 片段：页内联系信息文本（地址/电话等
+        # span/a）用 0.9rem 属正常展示排版，与 N-1 无关。
+        html = self._get('/contact/')
+        form = html.split('id="contactForm"', 1)[1].split('</form>', 1)[0]
+        self.assertNotIn('font-size: 0.9rem', form)
+        self.assertIn('font-size: 16px', form)
+        # 通用兜底：base.css 中 .form-group 的 16px 覆盖规则仍在
+        self.assertRegex(
+            self.css,
+            r'\.form-group input,\s*\.form-group textarea\s*\{\s*font-size:\s*16px',
+        )
+
+    # ---- N-10: 全局长词换行保护 ----
+    def test_n10_body_overflow_wrap_anywhere(self):
+        self.assertRegex(self.css, r'body\s*\{[^}]*overflow-wrap:\s*anywhere')
+
+    # ---- N-8: reduced-motion 下关闭平滑滚动（CSS + JS 两侧） ----
+    def test_n8_reduced_motion_disables_smooth_scroll(self):
+        self.assertRegex(
+            self.css,
+            r'@media \(prefers-reduced-motion: reduce\)\s*\{\s*html\s*\{\s*scroll-behavior:\s*auto',
+        )
+        self.assertIn("matchMedia('(prefers-reduced-motion: reduce)')", self.base_html)
+
+    # ---- N-9: 移动端触摸目标 >=44px（伪元素扩大命中区，视觉尺寸不变） ----
+    def test_n9_touch_target_hit_areas(self):
+        self.assertRegex(self.css, r'\.theme-toggle::after\s*\{[^}]*inset:\s*-4px')
+        self.assertRegex(self.css, r'\.lang-switch-btn::after\s*\{[^}]*inset:\s*-9px')
+
+    # ---- N-5: Google Fonts 异步加载 + noscript 兜底 ----
+    def test_n5_fonts_async_with_noscript_fallback(self):
+        html = self._get('/')
+        self.assertIn('media="print"', html)
+        self.assertIn("this.media='all'", html)
+        self.assertRegex(
+            html,
+            r'<noscript><link href="https://fonts\.googleapis\.com/[^"]*" rel="stylesheet"',
+        )
+
+    # ---- F5': 移动端字号 min(max()) 收口 + -admin 间接层（桌面零改动） ----
+    def test_f5_mobile_typography_clamp(self):
+        self.assertRegex(
+            self.css,
+            r'--fs-hero-title:\s*min\(var\(--fs-hero-title-admin\),\s*max\(30px, calc\(1rem \+ 4vw\)\)\)',
+        )
+        self.assertRegex(
+            self.css,
+            r'--fs-section-title:\s*min\(var\(--fs-section-title-admin\),\s*max\(22px, calc\(0\.85rem \+ 2\.4vw\)\)\)',
+        )
+        html = self._get('/')
+        self.assertIn('--fs-hero-title-admin:', html)
+        self.assertIn('--fs-section-title-admin:', html)
+
+    # ---- F4': 侧栏 checkbox hack —— input/label/aside 同级且按序（~ 选择器前提） ----
+    def test_f4_sidebar_toggle_dom_contract(self):
+        for url in ('/products/', '/projects/', '/news/'):
+            html = self._get(url)
+            self.assertIn('class="sidebar-toggle-input"', html, url)
+            self.assertIn('for="sidebarToggle"', html, url)
+            self.assertRegex(
+                html,
+                r'<input type="checkbox" id="sidebarToggle"[^>]*>'
+                r'\s*<label for="sidebarToggle"[^>]*>[^<]*</label>'
+                r'\s*<aside class="sidebar-nav"',
+                url,
+            )
+
+    def test_f4_sidebar_toggle_css_rules(self):
+        self.assertIn(
+            '.sidebar-toggle-input:not(:checked) ~ .sidebar-nav { display: none; }',
+            self.css,
+        )
+        self.assertRegex(self.css, r'\.sidebar-toggle-label\s*\{[^}]*display:\s*flex')
