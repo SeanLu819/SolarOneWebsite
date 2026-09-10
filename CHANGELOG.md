@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.0 - 2026-09-10
+
+### Admin package split + seed_data section headers
+
+- **`pages/admin.py` (1246 lines) → `pages/admin/` package**:
+  - `__init__.py` — admin branding + re-exports (`admin_translate`, `ProjectAdmin`)
+  - `widgets.py` — Specs / EnergyData / OrderingInfo / Translations widgets + `ENERGY_DATA_FIELDS` / `ORDERING_COLUMNS` / `ORDERING_DEFAULTS`
+  - `mixins.py` — `CacheClearMixin` (cache invalidation + seed sync)
+  - `product.py` — `ProductAdmin` with `_sync_product_images()` (4 widgets wired)
+  - `project.py` — `ProjectAdmin` with `_sync_project_images()` + `_update_seed_pdf_url()`
+  - `news.py` / `contact.py` / `siteconfig.py` / `visitor.py` — one admin class each
+  - `products_page.py` — `ProductsPageCardAdmin` + custom `/admin/products-page/` view + URL hook
+  - `translate.py` — `admin_translate` POST endpoint (MyMemory bulk translate)
+- **External API preserved**: `from pages.admin import admin_translate, ProjectAdmin` still works via re-exports. `solarone/urls.py` and `pages/tests.py` unchanged.
+- **`pages/seed_data.py` section headers** — added 4 inline `# ─────` comment blocks before each top-level key (`products` / `projects` / `siteconfig` / `productspagecards`) so Ctrl+G jumps to the right section. Total 3183 → 3192 lines (+9). Python dict literal still parses correctly; admin's `re.search(r'"slug": "..."')` still matches (comments are on their own lines, not inside the dict entries).
+- **Validation**: `manage.py check` clean, `manage.py test` 73 tests OK (skipped=2), Playwright L2 ALL CHECKS PASSED across 6 viewports including 768×1024 iPad portrait. Admin registered 10 models on first import (verified by inspecting `admin.site._registry`).
+
 ## v1.4.6 - 2026-09-10
 
 ### Responsive fix (F8 mobile)

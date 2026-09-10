@@ -6,6 +6,12 @@ available via a normal Python import.
 """
 
 SEED_DATA = {
+  # ──────────────────────────────────────────────────────────────────────────
+  # products (~20 items, lines 9-2335)
+  #   Each item is a Product record with fields: name / slug / category /
+  #   description / specs (≤6) / energy_data (≤17) / ordering_info (≤9 cols) /
+  #   translations (5-lang dict). Use Ctrl+G → "products": [ to jump here.
+  # ──────────────────────────────────────────────────────────────────────────
   "products": [
     {
       "pk": 1,
@@ -2333,6 +2339,12 @@ SEED_DATA = {
       ]
     }
   ],
+  # ──────────────────────────────────────────────────────────────────────────
+  # projects (~22 items, lines 2339-3073)
+  #   Each item is a Project (case study) record: title / slug / venue_type / sport_type /
+  #      location / description / results / image / gallery[] / pdf_url / translations
+  #      (5-lang dict). Use Ctrl+G → "projects": [ to jump here.
+  # ──────────────────────────────────────────────────────────────────────────
   "projects": [
     {
       "pk": 1,
@@ -3067,6 +3079,13 @@ SEED_DATA = {
       "pdf_url": "files/national_olympic_sports_center_beijing_tennis_cour.pdf"
     }
   ],
+  # ──────────────────────────────────────────────────────────────────────────
+  # siteconfig (singleton, lines 3074-3130)
+  #   One SiteConfig instance. Fields: brand / logo / typography (8 font sizes) /
+  #      hero (title / subtitle / background / 4 stats) / products_section /
+  #      projects_section / about_section (text + 4 stats) / contact_section /
+  #      social_media (5 platforms) / footer.
+  # ──────────────────────────────────────────────────────────────────────────
   "siteconfig": {
     "hero_title": "The Next Generation Lighting Systems For Every Area",
     "hero_subtitle": "Professional SolarOne sports lighting solutions trusted in over 50 countries. From community fields to broadcast-ready stadiums, engineered for performance, built to outlast.",
@@ -3124,6 +3143,12 @@ SEED_DATA = {
     "font_size_card_desc": "0.95rem",
     "accent_color": "#0088FF"
   },
+  # ──────────────────────────────────────────────────────────────────────────
+  # productspagecards (6 cards, lines 3131-end)
+  #   One entry per card on /products/ page: title / subtitle / slug / link_url /
+  #      order / is_active / etc. Slugs must stay in PRODUCTS_PAGE_WHITELIST
+  #      (pages/admin/products_page.py) for public listing.
+  # ──────────────────────────────────────────────────────────────────────────
   "productspagecards": [
     {
       "title": "M Series",
