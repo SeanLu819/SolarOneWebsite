@@ -820,7 +820,13 @@ class ResponsivePhase2Tests(TestCase):
                 r'@media \(max-width: 1024px\)\s*\{[^}]*detail-grid\s*\{[^}]*grid-template-columns:\s*1fr',
                 f'{name}.html: detail-grid 折单列必须提升到 1024px 断点')
 
-    def test_detail_specs_single_column_on_mobile(self):
+    def test_detail_specs_two_columns_on_mobile(self):
+        """F8 修正（2026-09-10 真机复核发现）：detail-specs 移动端恢复 2 列。
+
+        原 F8 当初因 1.35rem 字号过大把 mobile 改 1 列（1xN 堆叠），
+        用户反馈 4 项参数在 390px 视口按 2x2 更紧凑、6 项 2x3 最多 3 行。
+        防御性双向断言：必须有 2 列，且不得退回 1 列。
+        """
         pd = Path(settings.BASE_DIR,
                   'templates/product_detail.html').read_text(encoding='utf-8')
         import re
@@ -829,7 +835,13 @@ class ResponsivePhase2Tests(TestCase):
             r'@media \(max-width: 767px\) \{(?:[^{}]|\{[^{}]*\})*\.detail-specs\s*\{[^}]*\}',
             pd, re.DOTALL)
         self.assertIsNotNone(block, '767px 块内 .detail-specs 覆盖缺失')
-        self.assertIn('grid-template-columns: 1fr', block.group(0))
+        matched = block.group(0)
+        self.assertIn('repeat(2, 1fr)', matched,
+                      'detail-specs 移动端必须 2 列（用户偏好 2x3 紧凑布局）')
+        # 抓 1 列回归：先把 repeat(2, 1fr) 摘除，再检查裸 1fr
+        stripped = matched.replace('repeat(2, 1fr)', '')
+        self.assertNotIn('grid-template-columns: 1fr', stripped,
+                         'detail-specs 不得退回 1 列布局（F8-修正规则）')
 
     # ---- F9: banner 自适应 ----
     def test_products_banner_no_hard_aspect_ratio(self):

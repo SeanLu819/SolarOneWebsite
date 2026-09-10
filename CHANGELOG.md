@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.6 - 2026-09-10
+
+### Responsive fix (F8 mobile)
+
+- **`product_detail.html:866-880`** — `.detail-specs` on `≤767px` reverted from `1fr` back to `repeat(2, 1fr)` (matches desktop layout). Original F8 decision was wrong: with the desktop font sizes (1.35 rem value, 0.8 rem label) the grid was forced to single column "to avoid cramming", but the right move was to scale the typography, not to collapse the grid. On a 390 px viewport, 4 specs (the `rt410-series` page) now lay out as 2×2 (each 171 px wide, value 17.6 px / label 11.2 px — clearly readable); 6 specs will lay out 2×3 (the documented "two columns, three rows" cap). Gap tightened from 16 px 32 px to 12 px 16 px on mobile.
+- **L1 guard strengthened**: `ResponsivePhase2Tests.test_detail_specs_single_column_on_mobile` renamed to `test_detail_specs_two_columns_on_mobile` with **reverse assertion** — must contain `repeat(2, 1fr)` AND (after stripping that token) must NOT contain `grid-template-columns: 1fr`. Prevents the same regression from reappearing.
+- **L2 verification**: Playwright + Edge headless on `rt410-series` at 390×844 confirms `grid-template-columns: 171px 171px`, items in 2 rows × 2 cols. Probe saved as `.workbuddy/tmp/probe_detail_specs_2col.py` (permanent regression template).
+
+### Docs
+
+- `docs/三屏响应式优化方案.md` → **v1.1.24** (§15.5 F8 correction record added; update-log entry + status-table row).
+- `docs/优化建议清单.md` → **v1.1.5** (N-31 added and closed; priority table updated).
+
 ## v1.4.3 - 2026-09-10
 
 ### CI
