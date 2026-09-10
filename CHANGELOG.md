@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.3 - 2026-09-10
+
+### CI
+
+- **GitHub Actions added**: `.github/workflows/ci.yml`. Triggers on `push` to `main` and on every `pull_request`. Runs Python 3.12 → `pip install -r requirements.txt` → `python manage.py test` (73 tests, ~3.3 s) → `pip audit -r requirements.txt` (advisory, `continue-on-error: true`). **Closes** `docs/优化建议清单.md` N-25 (the manual test gap that had already caused one "CSS changed, no test run, only real device caught it" regression during the responsive phase-1 work).
+- `SECRET_KEY` is supplied via env (non-empty placeholder); `DEBUG=true` is set so the test runner uses the dev `ALLOWED_HOSTS` defaults — both are required because `solarone/settings.py` reads them from the environment.
+
+### Tooling
+- `scripts/dev_preview.py`: add a startup-time LAN troubleshooting block covering the three typical failure points (same-WiFi check, Windows firewall `netsh advfirewall firewall add rule …` template, and the "don't replace this script with bare `manage.py runserver`" warning). `runserver <port>` without a bind address only listens on `127.0.0.1`, which is the original cause of "phone can't reach the laptop preview".
+
 ## v1.4.2 - 2026-09-10
 
 ### Responsive phase 2 — three-screen consistency (F7-F11 + N-4/N-6/N-11/N-16)

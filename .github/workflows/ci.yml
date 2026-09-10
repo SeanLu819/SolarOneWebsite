@@ -1,0 +1,50 @@
+name: CI
+
+# 触发：push 到 main 与任意 PR 都会跑。
+# 目的：用 GitHub Actions 把当前手动跑的 73 个 Django 测试（~5 秒）转成强制门禁，
+#       杜绝「改了 CSS/模板没跑测试、问题只在真机暴露」的回归路径（v1.1.19 教训）。
+#       附 `pip audit` 做依赖漏洞扫描（advisory，不阻塞主流程）。
+# 关联：
+#   - docs/优化建议清单.md N-25（72 → 73 个测试仍靠手动跑，无 CI）
+#   - docs/三屏响应式优化方案.md §16.3 第 ④ 项
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Django test suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 测试用默认 sqlite，Django Test Client 不会真的发 HTTP，
+      # 所以 ALLOWED_HOSTS / CSRF 都不影响。
+      # SECRET_KEY 给个非空占位（settings.py:52 走 os.environ.get('SECRET_KEY')），
+      # DEBUG 走环境变量开关，本地默认走 False；CI 里设 true 以放宽 host/check。
+      - name: Run tests
+        env:
+          SECRET_KEY: ci-test-secret-key-not-for-prod
+          DEBUG: 'true'
+        run: python manage.py test --verbosity=2
+
+      - name: pip audit (advisory, non-blocking)
+        # 依赖漏洞扫描：失败不阻塞主流程，但会在 PR 标注 warning。
+        # 如需强制 gate，去掉 continue-on-error 即可。
+        continue-on-error: true
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt
