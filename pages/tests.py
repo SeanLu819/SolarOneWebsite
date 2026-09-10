@@ -424,3 +424,38 @@ class ResponsivePhase1Tests(TestCase):
             self.css,
         )
         self.assertRegex(self.css, r'\.sidebar-toggle-label\s*\{[^}]*display:\s*flex')
+
+
+class ResponsiveDeviceFixesTests(TestCase):
+    """真机反馈修复（N-22 / N-24）的防回归断言。
+
+    N-22（RTL 抽屉方向）与 N-24（reduced-motion 不得停轮播）都发生在
+    渲染层之外——前者是纯 CSS 方向，后者是 JS 分支——Django Test Client
+    拿不到计算结果，所以按 §6.8.3 的策略断言「防御性写法是否存在」。
+    这比真机更强：真机只能证明这次没坏，断言保证永远不会坏。
+    """
+
+    def _home_html(self):
+        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode()
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.css = Path(settings.BASE_DIR, 'static/css/base.css').read_text(
+            encoding='utf-8')
+
+    def test_rtl_drawer_slides_from_left(self):
+        # N-22: 阿拉伯语下抽屉必须从左侧滑出，否则与阅读方向相反
+        self.assertIn('[dir="rtl"] .mobile-panel:not(.open)', self.css)
+        self.assertIn('transform: translateX(-100%)', self.css)
+
+    def test_carousel_not_gated_by_reduced_motion(self):
+        # N-24: reduced-motion 只能去掉淡入淡出，不能停掉轮播，
+        # 否则开了「减弱动态效果」的用户永远看不到第 2..n 张图
+        html = self._home_html()
+        self.assertNotIn(".matches) return;", html)
+        self.assertIn('setInterval(next, interval);', html)
+        # 淡入淡出仍需在 reduced-motion 下关闭
+        self.assertIn('.hero-slide { transition: none; }', self.css)

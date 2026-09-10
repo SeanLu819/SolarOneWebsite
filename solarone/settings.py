@@ -10,6 +10,30 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ---- Local development .env loader (optional) ----
+# Read a gitignored .env file from the project root so local development can
+# keep a stable SECRET_KEY (sessions/CSRF survive restarts). Real environment
+# variables always win. Minimal parser on purpose — no interpolation/expansion —
+# so a missing .env never affects Vercel/production deployments.
+def _load_local_env(path):
+    for _line in path.read_text(encoding='utf-8').splitlines():
+        _line = _line.strip()
+        if not _line or _line.startswith('#') or '=' not in _line:
+            continue
+        _key, _value = _line.split('=', 1)
+        _key = _key.strip()
+        _value = _value.strip()
+        # Strip surrounding single/double quotes, e.g. SECRET_KEY="abc"
+        if len(_value) >= 2 and _value[0] == _value[-1] and _value[0] in ('"', "'"):
+            _value = _value[1:-1]
+        if _key and _key not in os.environ:
+            os.environ[_key] = _value
+
+_ENV_FILE = BASE_DIR / '.env'
+if _ENV_FILE.exists():
+    _load_local_env(_ENV_FILE)
+del _load_local_env, _ENV_FILE
+
 # Detect Vercel environment
 IS_VERCEL = os.environ.get('VERCEL', '') == '1'
 
@@ -227,6 +251,13 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # build.sh outputs to ./staticfiles (per vercel.json distDir: "staticfiles"),
 # and at runtime we also serve from ./staticfiles via WhiteNoise.
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise 6.x emits a "No directory at: <STATIC_ROOT>" UserWarning at
+# middleware-init time when STATIC_ROOT does not exist. build.sh creates
+# staticfiles/ during Vercel builds and the directory is gitignored, so on a
+# fresh local clone it is absent — create it to keep local startup clean.
+if not IS_VERCEL:
+    STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 # Media files (User uploads).
 # CRITICAL: Vercel's serverless filesystem is ephemeral — files written at

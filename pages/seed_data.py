@@ -1679,7 +1679,7 @@ SEED_DATA = {
       "beam_angle": "",
       "protection": "",
       "image": "images/products/rt400hb/rt400hb-01.webp",
-      "banner_image": "images/products/rt400hb/rt400hb-barnner-01.webp",
+      "banner_image": "images/products/rt400hb/rt400hb-barnner-02.webp",
       "dimension_image": "images/products/rt400hb/rt400hb-3d-view01.webp",
       "beam_angle_image": "images/products/rt400hb/rt400hb-beamangle-254590.png",
       "ordering_image": "",

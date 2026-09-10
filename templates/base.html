@@ -33,7 +33,7 @@
   else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
-<link rel="stylesheet" href="{% static 'css/base.css' %}?v=10" data-page-node-id="perqmmTuPccKGMCGnKWuUg">
+<link rel="stylesheet" href="{% static 'css/base.css' %}?v=11" data-page-node-id="perqmmTuPccKGMCGnKWuUg">
 <style>
   /* === Dynamic typography from admin ===
      All admin-controlled values are injected as CSS custom properties,
@@ -445,9 +445,10 @@
       slides[current].classList.add('active');
     }
 
-    // Respect reduced-motion preference
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
+    // N-24: reduced-motion must NOT stop the rotation. With the old early
+    // `return`, slides 2..n were permanently unreachable for users who have
+    // "Reduce Motion" on — a WCAG 1.1.1 failure caused by the N-8 fix itself.
+    // Reduced-motion only suppresses the cross-fade; see the CSS media query.
     setInterval(next, interval);
   })();
 </script>
