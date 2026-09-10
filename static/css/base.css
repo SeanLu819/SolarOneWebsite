@@ -17,9 +17,26 @@
     --line:         rgba(255, 255, 255, 0.07);
     --line-strong:  rgba(255, 255, 255, 0.14);
 
-    --ff-display:   'Space Grotesk', system-ui, sans-serif;
-    --ff-body:      'Inter', system-ui, sans-serif;
-    --ff-mono:      'IBM Plex Mono', ui-monospace, monospace;
+    /* Font stack: Inter 是品牌字体（从 Google Fonts 加载）；
+       中文 fallback 必须显式声明——浏览器自带的 system-ui 在 iOS 是 SF Pro
+       (英文) + PingFang SC (中文)，两者 baseline / 字宽不同 → 中英文混排
+       看起来「参差」；安卓 system-ui 是 Roboto (英文) + Noto Sans CJK (中文)，
+       Noto 家族设计上保持中英文字宽统一 → 看起来「整齐」。
+       解决方案：iOS 优先用 PingFang SC 接管（苹方是设计为中英文字宽统一的多
+       语言字体），安卓优先用 Noto Sans CJK / 思源黑体；中间塞 -apple-system
+       和 BlinkMacSystemFont 让 iOS 显式认 SF Pro。 */
+    --ff-display: 'Space Grotesk',
+                  -apple-system, BlinkMacSystemFont, system-ui,
+                  "PingFang SC", "Hiragino Sans GB",
+                  "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC",
+                  sans-serif;
+    --ff-body:    'Inter',
+                  -apple-system, BlinkMacSystemFont, system-ui,
+                  "PingFang SC", "Hiragino Sans GB",
+                  "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC",
+                  Roboto,
+                  sans-serif;
+    --ff-mono:    'IBM Plex Mono', ui-monospace, "SF Mono", Menlo, monospace;
 
     /* Font-size variables. Default values mirror the original hardcoded
        sizes so the site renders correctly even before the admin-injected
@@ -438,12 +455,22 @@
     .lang-switch-btn::after { content: ""; position: absolute; inset: -9px -4px; }
   }
 
-  /* Mobile side panel */
+  /* Mobile side panel
+     Width: 240px (down from 260px / 300px). Drawer content is just 6 short
+     nav links + 2 utility buttons, so 240px is plenty (longest word
+     "Products" at 18px ≈ 75px). max-width: 72vw still caps it on very
+     narrow devices.
+     Bottom padding uses env(safe-area-inset-bottom) — REQUIRES
+     `viewport-fit=cover` in the meta viewport tag, otherwise env() returns
+     0 and the bottom buttons get hidden under the iOS Home Indicator. */
   .mobile-panel {
     position: fixed;
     top: 0; right: 0;
-    width: 260px;
-    max-width: 72vw;
+    /* v1.1.14: 抽屉收紧到「按钮完整 + margin」最窄宽
+       估算：Theme 按钮 ~112px (icon 18 + gap 8 + "Theme" 50 + padding 14×2)
+             + panel padding 14×2 = 140 → 取 160px 留 6px×2 呼吸 */
+    width: 160px;
+    max-width: 56vw;
     height: 100vh;
     height: 100dvh;
     /* Glass. Alpha dropped 0.92 -> 0.72: at 0.92 the blur was invisible
@@ -506,18 +533,48 @@
      nav bar keeps just the brand and the hamburger. */
   .panel-actions {
     margin-top: auto;
-    padding-top: 24px;
+    padding-top: 20px;
+    /* N-26: 安卓 WebView（百度 App / 微信内置 / 部分 Chrome）下
+       env(safe-area-inset-bottom) 经常返回 0 或不支持，
+       仅用 env() 会让主题/语言按钮贴底被遮（实测安卓机被完全遮住）。
+       用 max() 兜底：env 支持则取 env+48，不支持则固定 80px，
+       80px ≈ 安卓底部导航条(50) + 手势条(24)，任一设备都不会被遮。
+       iOS 不加 viewport-fit=cover 时，env 也会返回 0，同样走兜底分支 */
+    padding-bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 48px));
     border-top: 1px solid var(--line);
     display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    /* v1.1.14: 用户反馈"按钮太大"，竖向排列 + 抽屉宽度收紧到刚好装下 */
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    /* 防止 panel 内容过多时被挤到按钮后面 */
+    flex-shrink: 0;
   }
+  /* v1.1.14: panel 内的 Theme 按钮铺满 + 横向文字对齐 */
   .panel-actions .theme-toggle {
-    width: auto;
+    width: 100%;
     height: 36px;
-    padding: 0 12px;
+    padding: 0 14px;
     gap: 8px;
+    justify-content: flex-start;
+  }
+  /* v1.1.14: panel 内的语言切换器 — 与 Theme 按钮完全对齐
+     关键：外层 div 清 padding（避免双重 padding 让文字右偏 10px），
+     内层 button 自己接管 padding:0 14px，与 Theme 按钮一致 → "EN" 起点 = 14px，
+     与上方菜单 "Home" 文字起点（panel padding 14px）完全对齐。
+     高度 36px + border-radius 8px + gap:8px 也与 Theme 一致 →
+     两按钮视觉同构（图标到文字距离完全相同，Theme 文字 x=294 / Lang 文字 x=294）。 */
+  .panel-actions .lang-switch {
+    width: 100%;
+    padding: 0;
+  }
+  .panel-actions .lang-switch-btn {
+    width: 100%;
+    height: 36px;
+    padding: 0 14px;
+    gap: 8px;
+    justify-content: flex-start;
+    border-radius: 8px;
   }
   .panel-action-label {
     font-family: var(--ff-mono);
@@ -572,6 +629,10 @@
     position: absolute;
     inset: 0;
   }
+  /* 用 <picture> 切换横版/竖版 hero 后，picture 自身是 inline 元素，会在
+     track 内留下一个空行盒；display:contents 让它不参与布局，内部 img 的
+     absolute 定位行为与改造前完全一致（N-26）。 */
+  .hero-carousel-track > picture { display: contents; }
   .hero-slide {
     width: 100%;
     height: 100%;
@@ -1771,6 +1832,19 @@
     grid-template-columns: 270px 1fr;
     gap: 20px;
     align-items: start;
+  }
+  /* N-25（grid blowout 根本解）：grid item 的 min-width 默认 auto，会把所在
+     轨道顶到内容的 min-content 宽度。产品详情页因此整页撑到 921px（390 视口
+     仅可见 390），用户在手机端"只能看到很小的一部分"。
+     元凶是 .detail-ordering-table(min-width:900px) 与 .detail-energy-table
+     (th white-space:nowrap → 899px)；它们虽被 overflow-x:auto 容器包裹，
+     但 min-width:auto 让 blowout 绕过容器一路传导到 html。
+     min-width:0 作用在 grid item 上，不依赖轨道写法，**不会被模板内联的
+     `1fr !important` 反杀**（N-21 的 minmax(0,1fr) 就被 10 处内联覆盖了）。 */
+  .sidebar-layout > *,
+  .about-story-grid > *,
+  .contact-grid > * {
+    min-width: 0;
   }
 
 

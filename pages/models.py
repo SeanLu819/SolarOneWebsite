@@ -407,16 +407,30 @@ class SiteConfig(models.Model):
     og_image = models.ImageField(upload_to='site/', blank=True, help_text="Social sharing preview image")
 
     # Typography
+    # v1.1.14: 显式中文 fallback 让 iOS / 安卓 中英文混排 baseline 对齐
+    # ——iOS 自动 fallback 是 SF Pro(英文) + PingFang SC(中文)，baseline 错位；
+    # 安卓是 Roboto(英文) + Noto Sans CJK(中文)，Noto 家族保持中英文字宽一致。
+    # 让 admin 默认值就带上中文字体，无需懂 CSS 也能跨平台字体一致。
     font_family_body = models.CharField(
-        max_length=200, 
-        default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        max_length=200,
+        default=(
+            "'Inter', -apple-system, BlinkMacSystemFont, system-ui, "
+            "'PingFang SC', 'Hiragino Sans GB', "
+            "'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', "
+            "Roboto, sans-serif"
+        ),
         validators=[CSS_FONT_FAMILY_VALIDATOR],
         verbose_name="Body Font Family",
         help_text="CSS font-family value, e.g. 'Inter', sans-serif"
     )
     font_family_heading = models.CharField(
         max_length=200,
-        default="'Inter', 'Helvetica Neue', Arial, sans-serif",
+        default=(
+            "'Inter', -apple-system, BlinkMacSystemFont, system-ui, "
+            "'PingFang SC', 'Hiragino Sans GB', "
+            "'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', "
+            "Roboto, sans-serif"
+        ),
         validators=[CSS_FONT_FAMILY_VALIDATOR],
         verbose_name="Heading Font Family",
         help_text="CSS font-family value for headings"

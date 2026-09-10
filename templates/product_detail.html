@@ -273,6 +273,7 @@
           </div>
           {% endif %}
           {% if product.ordering_cols %}
+          <p class="scroll-hint">{% trans "Swipe to view all columns" %} &#8594;</p>
           <div class="detail-ordering-table-wrap">
             <table class="detail-ordering-table">
               <thead>
@@ -601,6 +602,16 @@
     border-radius: 12px;
     background: var(--bg-soft);
   }
+  /* 仅在窄屏出现（9 列表格保留横向滚动，需要提示用户可滑动） */
+  .scroll-hint {
+    display: none;
+    margin: 10px 0 0;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
   .detail-ordering-table {
     width: 100%;
     min-width: 900px;
@@ -846,8 +857,11 @@
 
   /* Responsive */
   @media (max-width: 900px) {
+    /* N-25: 必须是 minmax(0, 1fr)（同 base.css N-21/N-25）。
+       写 `1fr` 等价于 minmax(auto, 1fr)，会被 .detail-ordering-table(900px)
+       顶到 921px 整页宽 → 手机端只能看到约 42% 的页面。 */
     .sidebar-layout {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
     .sidebar-nav {
       position: relative !important;
@@ -878,6 +892,30 @@
     }
     .detail-btn {
       width: 100%;
+    }
+
+    /* N-25：宽表格移动端重排。
+       只堵溢出（min-width:0）会让 900px 的表格塞进 390px 视口变成"看不全"，
+       所以表格自身也要适配：
+       - energy 表是 2 列（参数名 / 值），去掉 th 的 nowrap 即可自然换行
+         （nowrap 正是它被撑到 899px 的原因），无需横向滚动；
+       - ordering 表是 9 列，强行换行会散架，保留横向滚动并给出提示。 */
+    .detail-energy-table {
+      font-size: 0.9rem;
+    }
+    .detail-energy-table th {
+      white-space: normal;
+      width: 46%;
+    }
+    .detail-energy-table th,
+    .detail-energy-table td {
+      padding: 8px 10px;
+    }
+    .detail-ordering-table-wrap {
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-hint {
+      display: block;
     }
   }
 </style>

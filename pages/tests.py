@@ -459,3 +459,240 @@ class ResponsiveDeviceFixesTests(TestCase):
         self.assertIn('setInterval(next, interval);', html)
         # 淡入淡出仍需在 reduced-motion 下关闭
         self.assertIn('.hero-slide { transition: none; }', self.css)
+
+
+class ResponsiveBlowoutAndHeroTests(TestCase):
+    """N-25（grid blowout）/ N-26（hero 竖版 <picture>）防回归。
+
+    N-25 的失效模式很隐蔽：模板内联 <style> 里的 `1fr !important` 加载在
+    base.css 之后，会反杀 N-21 的 minmax(0, 1fr)，让修复静默失效——
+    manage.py check / test 全绿，只有真实渲染才看得见。产品详情页因此在
+    390px 视口被撑到 921px，手机端只能看到约 42% 的页面。
+    这里同时断言「根本解存在」与「反杀写法不存在」。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.css = Path(settings.BASE_DIR, 'static/css/base.css').read_text(
+            encoding='utf-8')
+        cls.templates = {
+            p.name: p.read_text(encoding='utf-8')
+            for p in Path(settings.BASE_DIR, 'templates').glob('*.html')
+        }
+
+    def test_grid_items_have_min_width_zero(self):
+        # N-25 根本解：grid item 的 min-width:auto 是 blowout 的传导路径，
+        # 归零后无论轨道写成 1fr 还是 minmax(0,1fr) 都不会撑破页面
+        self.assertIn('.sidebar-layout > *', self.css)
+        self.assertIn('min-width: 0;', self.css)
+
+    def test_no_bare_1fr_sidebar_override(self):
+        for name, src in self.templates.items():
+            self.assertNotIn(
+                'grid-template-columns: 1fr !important', src,
+                f"{name} 仍在使用 `1fr !important`，会反杀 N-21/N-25 并重新"
+                f"触发 grid blowout（应改为 minmax(0, 1fr) !important）")
+
+    def test_sidebar_uses_minmax_zero(self):
+        for name in ('product_detail.html', 'product_series.html',
+                     'project_detail.html', 'news.html'):
+            self.assertIn('grid-template-columns: minmax(0, 1fr) !important',
+                          self.templates[name])
+
+    def test_energy_table_wraps_on_mobile(self):
+        # th 的 nowrap 是 energy 表被撑到 899px 的原因：
+        # 桌面保留 nowrap（排版需要），窄屏必须放开让它自然换行
+        src = self.templates['product_detail.html']
+        self.assertIn('white-space: nowrap', src)
+        self.assertIn('white-space: normal', src)
+
+    def test_hero_uses_picture_with_portrait_source(self):
+        src = self.templates['home.html']
+        self.assertIn('<picture>', src)
+        self.assertIn('media="(max-width: 767px)"', src)
+        for i in (1, 2, 3):
+            self.assertIn(f'images/hero-main-{i}-portrait.webp', src)
+
+    def test_hero_portrait_files_exist(self):
+        # <picture> 的 source 一旦 media 匹配就不会回退到 img，
+        # 文件缺失 = 手机端 hero 直接白屏，比裁切严重得多
+        for i in (1, 2, 3):
+            p = Path(settings.BASE_DIR, 'static/images',
+                     f'hero-main-{i}-portrait.webp')
+            self.assertTrue(p.exists(), f"缺少竖版 hero 图：{p.name}")
+
+    def test_hero_portrait_is_actually_portrait(self):
+        try:
+            from PIL import Image
+        except ImportError:  # pragma: no cover
+            self.skipTest("PIL 未安装")
+        for i in (1, 2, 3):
+            p = Path(settings.BASE_DIR, 'static/images',
+                     f'hero-main-{i}-portrait.webp')
+            with Image.open(p) as im:
+                w, h = im.size
+            self.assertGreater(h, w, f"{p.name} 不是竖版：{w}x{h}")
+            self.assertLess(abs(w / h - 0.75), 0.03,
+                            f"{p.name} 比例偏离 3:4 过多：{w}x{h}")
+
+    def test_picture_does_not_break_slider_layout(self):
+        # picture 是 inline 元素，会在 track 内留下空行盒
+        self.assertIn(
+            '.hero-carousel-track > picture { display: contents; }', self.css)
+
+
+class ResponsiveIOSSafeAreaTests(TestCase):
+    """N-27（移动端底部按钮被系统 UI 遮住）防回归，v1.1.12 改判方向。
+
+    早期 v1.1.11 的判断把问题归到 iOS Home Indicator（错的）：
+      → 加 viewport-fit=cover、靠 env() 让出 34px。
+    真机复核（iPhone 14 + 安卓百度 App）揭示真实情况：
+      → iOS Safari/Chrome **自己就会避让 Home Indicator**，按钮正常显示。
+      → **安卓**百度 App 内嵌 WebView、微信内置、部分 Chrome
+        env(safe-area-inset-bottom) **几乎都返回 0 或直接不支持**，
+        底部 Theme/Lang 按钮贴底被完全遮住。
+    因此正确解是：删掉 viewport-fit=cover（破坏桌面布局、对 iOS 也没用），
+    改用 max() 兜底：env() 支持则取 env+48，不支持则固定 80px。
+    80px ≈ 安卓底部导航条(50) + 手势条(24)，任一设备都不会被遮。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.css = Path(settings.BASE_DIR, 'static/css/base.css').read_text(
+            encoding='utf-8')
+
+    def _get_html(self):
+        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode()
+
+    def test_viewport_meta_no_cover(self):
+        # N-27 改判后：viewport-fit=cover **不应**存在——
+        # 它会让桌面浏览器误判可视区、还会让 iOS 把 Home Indicator 区域
+        # 暴露到 layout 区内从而把按钮往下推
+        html = self._get_html()
+        self.assertNotIn('viewport-fit=cover', html)
+        self.assertIn('width=device-width', html)
+
+    def test_panel_actions_uses_max_fallback(self):
+        # 关键：.panel-actions 必须用 max() 兜底，
+        # 让 env() 返回 0 的安卓 WebView 也能避开底部 UI
+        import re
+        block = re.search(
+            r'\.panel-actions\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(block, '.panel-actions 块不存在')
+        body = block.group(0)
+        self.assertIn('padding-bottom', body)
+        self.assertIn('max(', body,
+            '必须用 max() 兜底——单纯 env() 在安卓上返回 0 会让按钮被遮')
+        self.assertIn('env(safe-area-inset-bottom', body)
+
+    def test_panel_actions_fallback_at_least_72(self):
+        # 兜底值必须 ≥ 72px（约 安卓导航 50 + 手势 24 - 2 的安全余量）
+        # 72/64/48/32 都不允许——任何缩水都会被这条抓到
+        import re
+        block = re.search(
+            r'\.panel-actions\s*\{[^}]*\}', self.css, re.DOTALL)
+        body = block.group(0)
+        # 抽出 max() 里的第一个参数（兜底值）
+        m = re.search(r'max\(\s*(\d+)px', body)
+        self.assertIsNotNone(m, 'max() 的第一个参数必须是 px 数字')
+        v = int(m.group(1))
+        self.assertGreaterEqual(v, 72,
+            f'兜底值 {v}px 太小，安卓底部 UI 仍可能遮住按钮')
+
+    def test_mobile_panel_width_shrunk(self):
+        # 抽屉从 260px → 240px → 160px（v1.1.11→13→14）
+        # 用户反馈"宽度还是太宽" + "按钮上下排列后宽度再减"
+        # 250/200/180/170 都不允许——任何回退都会被这条抓到
+        self.assertIn('width: 160px;', self.css)
+        self.assertNotIn('width: 170px;', self.css)
+        self.assertNotIn('width: 180px;', self.css)
+        self.assertNotIn('width: 200px;', self.css)
+        self.assertNotIn('width: 240px;', self.css)
+        self.assertNotIn('width: 260px;', self.css)
+        self.assertNotIn('width: 280px;', self.css)
+        self.assertNotIn('width: 300px;', self.css)
+
+    def test_panel_actions_vertical_layout(self):
+        # v1.1.14: Theme/Lang 按钮竖向排列
+        import re
+        block = re.search(
+            r'\.panel-actions\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(block)
+        body = block.group(0)
+        self.assertIn('flex-direction: column', body,
+            'panel-actions 必须竖向排列（用户反馈按钮太大）')
+        # 按钮 width:100% 铺满
+        self.assertIn('width: 100%', self.css)
+
+    def test_panel_buttons_same_alignment(self):
+        # v1.1.15: 用户要求"按钮宽度一致，与上方菜单文字左对齐"
+        # 关键：lang-switch 外层 div 不能有 padding（会双重缩进），
+        # 两个按钮都要 padding:0 14px + height:36px + justify-content:flex-start
+        # → "EN" / "Theme" 起点 = 14px，与 panel padding 14 一致
+        import re
+        # Theme 按钮
+        theme = re.search(
+            r'\.panel-actions\s+\.theme-toggle\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(theme, '.panel-actions .theme-toggle 块缺失')
+        t = theme.group(0)
+        self.assertIn('width: 100%', t)
+        self.assertIn('height: 36px', t)
+        self.assertIn('padding: 0 14px', t,
+            'Theme 按钮必须 padding:0 14px，文字起点 14px 与菜单对齐')
+        self.assertIn('justify-content: flex-start', t)
+        # Lang 按钮外层
+        lang_wrap = re.search(
+            r'\.panel-actions\s+\.lang-switch\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(lang_wrap, '.panel-actions .lang-switch 块缺失')
+        w = lang_wrap.group(0)
+        self.assertIn('width: 100%', w)
+        self.assertNotIn('padding: 0 14px', w,
+            '外层 lang-switch 不能有 padding（会双重缩进，文字起点变 24px）')
+        # Lang 按钮内层 button
+        lang_btn = re.search(
+            r'\.panel-actions\s+\.lang-switch-btn\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(lang_btn, '.panel-actions .lang-switch-btn 块缺失')
+        lb = lang_btn.group(0)
+        self.assertIn('width: 100%', lb)
+        self.assertIn('height: 36px', lb,
+            'Lang 按钮必须 height:36px 与 Theme 一致')
+        self.assertIn('padding: 0 14px', lb,
+            'Lang 按钮必须 padding:0 14px，文字起点与 Theme 一致')
+
+    def test_admin_font_injection_uses_safe(self):
+        # v1.1.14: admin 的 font_family_body 必须用 |safe 强制不转义，
+        # 否则 Django 会把 'Inter' 里的单引号转成 &#x27; 实体，
+        # 整个站点 fallback 到 system-ui → Times New Roman，
+        # iOS 与安卓的字体观感就会"看起来不一样"。
+        # （这是用户报告"安卓字体更好"的真正根因，不是设备差异。）
+        from pathlib import Path
+        import re
+        base = Path(settings.BASE_DIR, 'templates', 'base.html').read_text(
+            encoding='utf-8')
+        block = re.search(
+            r'<style>\s*/\* === Dynamic typography.*?</style>', base, re.DOTALL)
+        self.assertIsNotNone(block, 'admin 注入 :root 块缺失')
+        body = block.group(0)
+        self.assertIn('font_family_body|safe', body,
+            'admin font_family_body 必须用 |safe 否则单引号被 Django 转义')
+        self.assertIn('font_family_heading|safe', body,
+            'admin font_family_heading 必须用 |safe')
+
+    def test_font_stack_has_chinese_fallback(self):
+        # v1.1.14: 字体栈必须显式包含中文 fallback，
+        # 否则 iOS 自动 fallback 到 SF Pro + PingFang SC 两套字体，
+        # baseline 不对齐导致中英文混排"参差"（用户反馈"安卓字体更好"）
+        # ——安卓 Roboto + Noto Sans CJK 设计上保持中英文字宽统一
+        self.assertIn('--ff-body:', self.css)
+        self.assertIn('PingFang SC', self.css,
+            'iOS 必须显式声明 PingFang SC，否则中英文 baseline 错位')
+        self.assertIn('Noto Sans CJK', self.css,
+            '安卓/海外必须声明 Noto Sans CJK 兜底')
+        self.assertIn('Microsoft YaHei', self.css,
+            'Windows 必须声明微软雅黑兜底')
+        # 还要有 -apple-system 才能让 iOS 显式识别 SF Pro
+        self.assertIn('-apple-system', self.css)

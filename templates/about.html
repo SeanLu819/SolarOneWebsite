@@ -283,7 +283,7 @@
   /* Responsive */
   @media (max-width: 768px) {
     .about-story-grid {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
       gap: 40px !important;
     }
     .about-story-image {
@@ -294,16 +294,16 @@
       gap: 24px !important;
     }
     .about-tech-pillars {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
     .about-optics-grid {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
     .about-services-grid {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
     div[style*="grid-template-columns: 1fr 1fr 1fr"] {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
   }
 </style>

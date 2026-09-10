@@ -13,9 +13,33 @@
 <section class="hero">
   <div class="hero-bg hero-carousel" data-carousel>
     <div class="hero-carousel-track">
-      <img src="{% static 'images/hero-main-1.webp' %}" alt="LED sports stadium lighting" class="hero-slide active" width="1920" height="1080">
-      <img src="{% static 'images/hero-main-2.webp' %}" alt="Football field LED lighting" class="hero-slide" loading="lazy" width="1920" height="1078">
-      <img src="{% static 'images/hero-main-3.webp' %}" alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" width="1920" height="1078">
+      {% comment %}
+      Hero 轮播图：<picture> 按视口宽度切换横版 / 竖版，彻底解决手机端裁切。
+
+      · <=767px 走竖版 hero-main-{n}-portrait.webp（3:4），与移动端 .hero-bg
+        实际比例（390x502 ≈ 0.777）几乎一致，cover 只裁掉约 18px 高度，
+        可见内容从改造前的约 27% 提升到接近 100%。
+      · >=768px 走原有 16:9 横版，桌面/平板观感不变。
+      · 首图不加 loading="lazy"（LCP 图片），并标记 fetchpriority=high；
+        第 2/3 张保持 lazy。
+      · 不再写 width/height：.hero-slide 是 position:absolute + inset:0，
+        尺寸完全由 CSS 决定，写死的属性反而会给出错误的宽高比提示。
+
+      替换图片时保持同名即可，无需改动本模板。
+      竖版建议 1170x1560（3:4），构图安全区见 docs/三屏响应式优化方案.md §13。
+      {% endcomment %}
+      <picture>
+        <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-1-portrait.webp' %}" type="image/webp">
+        <img src="{% static 'images/hero-main-1.webp' %}" alt="LED sports stadium lighting" class="hero-slide active" fetchpriority="high" decoding="async">
+      </picture>
+      <picture>
+        <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-2-portrait.webp' %}" type="image/webp">
+        <img src="{% static 'images/hero-main-2.webp' %}" alt="Football field LED lighting" class="hero-slide" loading="lazy" decoding="async">
+      </picture>
+      <picture>
+        <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-3-portrait.webp' %}" type="image/webp">
+        <img src="{% static 'images/hero-main-3.webp' %}" alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" decoding="async">
+      </picture>
     </div>
   </div>
   <div class="hero-grid"></div>

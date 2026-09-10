@@ -369,8 +369,9 @@
 
   /* Responsive */
   @media (max-width: 900px) {
+    /* N-25: minmax(0, 1fr)，理由同 product_detail.html */
     .sidebar-layout {
-      grid-template-columns: 1fr !important;
+      grid-template-columns: minmax(0, 1fr) !important;
     }
     .sidebar-nav {
       position: relative !important;

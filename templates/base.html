@@ -33,15 +33,19 @@
   else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
-<link rel="stylesheet" href="{% static 'css/base.css' %}?v=11" data-page-node-id="perqmmTuPccKGMCGnKWuUg">
+<link rel="stylesheet" href="{% static 'css/base.css' %}?v=17" data-page-node-id="perqmmTuPccKGMCGnKWuUg">
 <style>
   /* === Dynamic typography from admin ===
-     All admin-controlled values are injected as CSS custom properties,
-     then base.css references them via var(). This avoids !important and
-     lets admin override the display font (--ff-display) correctly. */
+     Admin can override FONT FAMILY + SIZES + accent color via SiteConfig.
+     Font-family values contain unescaped single quotes (e.g. 'Inter');
+     |safe is required to prevent Django auto-escape turning ' into &#x27;
+     (which would silently break the CSS variable → system-ui → Times
+     New Roman fallback → font "looks different" between iOS and Android).
+     XSS risk: only admins reach this template; input is also validated by
+     CSS_FONT_FAMILY_VALIDATOR to allow only safe chars. */
   :root {
-    --ff-body: {{ config.font_family_body }};
-    --ff-display: {{ config.font_family_heading }};
+    --ff-body: {{ config.font_family_body|safe }};
+    --ff-display: {{ config.font_family_heading|safe }};
     --fs-base: {{ config.font_size_base }};
     --fs-nav: {{ config.font_size_nav }};
     --fs-hero-title-admin: {{ config.font_size_hero_title }};

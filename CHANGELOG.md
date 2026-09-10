@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.1 - 2026-09-10
+
+### Fixes (responsive phase 1.5 — iOS/Android real-device feedback)
+- **N-22 RTL mobile drawer direction**: Arabic/Hebrew users had the drawer sliding from the right (against text flow). Now slides from the left via `[dir="rtl"] .mobile-panel:not(.open){transform:translateX(-100%)}`. `:not(.open)` avoids out-specifying `.mobile-panel.open`.
+- **N-23 hero cropping relief**: `.hero-bg` compressed to 62% with `mask-image` linear-gradient fade so iPhone's visible width rose from 27.1% → 43.7%. Root fix (vertical hero + `<picture>`) is §13 / N-26.
+- **N-24 carousel gated by reduced-motion**: Users with "Reduce Motion" on were stuck on the first hero slide. Removed the early-return; carousel now switches slides but uses `transition:none` under `prefers-reduced-motion`.
+- **N-25 grid blowout resurgent**: Ten `1fr !important` in inline `<style>` blocks were silently overriding N-21's `minmax(0,1fr)`. Product detail `docScrollWidth` measured **921px at 390pt viewport** (only 42% of page visible). Root fix: `.sidebar-layout > *, .about-story-grid > *, .contact-grid > * { min-width: 0 }` on grid items themselves — survives any `!important` on the parent track. All 10 inline overrides rewritten to `minmax(0, 1fr) !important`. Result: 921 → 390, **0 overflow** across all 7 main pages × 3 viewports.
+- **N-26 hero portrait + `<picture>`** (root fix for N-23): zero-upscale crops of the existing 1920×1080 hero → 810×1080 portrait webp (3 files, 73/118/98 KB) so the site ships vertical art immediately. Brand spec §13: 1170×1560 / 3:4 / subject in 12–55% vertical band.
+- **N-27 mobile bottom buttons hidden by Android UI** (re-judged from v1.1.11): iOS Safari/Chrome auto-avoids the Home Indicator, but Android WebView (Baidu App, WeChat, some Chrome) `env(safe-area-inset-bottom)` returns 0 or is unsupported. **Reverted** the v1.1.11 `viewport-fit=cover` (it actually broke iOS's own avoidance) and now `.panel-actions { padding-bottom: max(80px, calc(env(safe-area-inset-bottom, 0px) + 48px)) }` — max() fallback guarantees coverage on any device.
+- **N-28 drawer button vertical + 160px width**: per user feedback "按钮太大、横排占空间" → `.panel-actions { flex-direction: column }`, buttons `width:100%`; drawer 240px → **160px** (`max-width:56vw`).
+- **N-29 iOS/Android font visual mismatch (real root cause)**: CSS variable `--ff-body` was being silently rendered as `&#x27;` (HTML entity) because `templates/base.html` `{{ config.font_family_body }}` ran through Django's HTML auto-escape and admin's stored value `'Inter'` got its apostrophes converted. Result: the entire site was falling back to system-ui → Times New Roman; iOS's auto-fallback to **SF Pro (latin) + PingFang SC (CJK)** has a baseline mismatch and looked "mismatched", while Android's fallback to Roboto + Noto Sans CJK is by design baseline-consistent. **Fix in 4 places**: (1) template uses `|safe`; (2) base.css font-stack includes explicit CJK fallback (`-apple-system, BlinkMacSystemFont, system-ui, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC", Roboto, sans-serif`); (3) `SiteConfig.font_family_body/heading` defaults updated; (4) `migrations/0024_update_siteconfig_font_chinese_fallback.py` data-migrates existing singleton rows (only if their value matches an old-default pattern — preserves admin customizations).
+- **N-30 drawer buttons left-aligned with menu links**: Lang wrapper `<div>` was carrying its own `padding: 0 14px` while the inner button carried another `padding: 6px 10px` — double-padding pushed "EN" 10px to the right. Wrapper padding cleared; inner button owns `padding:0 14px / height:36px / gap:8px / border-radius:8px / justify-content:flex-start`. L2 probe confirms 5 container elements share x=253, both button labels share x=294 — perfect left-alignment with menu links above.
+
+### Tooling
+- **`scripts/dev_preview.py`**: starts `manage.py runserver 0.0.0.0:PORT` with `ALLOWED_HOSTS` extended via env var (no settings.py edit). Prints LAN IP for phone testing — solves the "black box, only see results after deploy" pain.
+- **`scripts/e2e/visual_review.py`**: Playwright (`channel="msedge"`, zero download) renders each URL at 390 / 768 / 1280, scans for elements whose content width exceeds the viewport (using the **configured** viewport constant, not `innerWidth` — mobile content-overflow inflates it), then writes a self-contained HTML report at `.workbuddy/preview/review_<ts>/index.html` with side-by-side shots + overflow element list.
+
+### Tests
+- `pages/tests.py` grew from 44 to **60 cases** (all OK, 2 skipped Vercel-only). New regression coverage:
+  - `ResponsiveDeviceFixesTests` (N-22 RTL drawer, N-24 reduced-motion carousel — both defensive style-assertions).
+  - `ResponsiveBlowoutAndHeroTests` (N-25: min-width:0 grid-item root + minmax(0,1fr) in all 10 inline overrides + N-26 portrait files exist + ratio + `picture{display:contents}`).
+  - `ResponsiveIOSSafeAreaTests` (`viewport` meta must NOT contain `viewport-fit=cover`, panel-actions uses `max()` fallback ≥72px, drawer width 160px, buttons vertical, both buttons share `padding:0 14px` and `height:36px`, font-stack has `PingFang SC` + `Noto Sans CJK` + `-apple-system` + `Microsoft YaHei`, admin font injection uses `|safe`).
+
+### Cleanup (this commit)
+- Removed 8 stale `review_*/` directories from `.workbuddy/preview/` (~17 MB), keeping only the latest `review_20260910_122600/` (N-25 baseline) and `panel_buttons/` (N-28/30 drawer proof).
+- Removed `.workbuddy/tmp/probe_root.py` and `probe_deep.py` (superseded by `probe_font.py` and `probe_align.py`).
+- Removed root `_sf.txt`, `_tmp_git.txt` (UTF-16 debug leftovers from earlier diagnosis), and `/tmp/devsrv.log`.
+- Kept `.workbuddy/tmp/`'s four probe templates (`probe_font`, `probe_align`, `probe_button_width`, `probe_panel_buttons`) — these are the documented debugging tools for similar future regressions.
+- Verified dead-code still gone: `pages/views_old.py` (82 KB) and `pages/storage.py` (4 KB) — both confirmed absent.
+- `pages/seed_data.py` (3183 lines) is **kept** — referenced by `pages/admin.py` for Vercel deployment sync.
+
+### Notes
+- CSS `?v=10 → ?v=17` across this phase (must bump on every CSS edit).
+- Documentation: `docs/三屏响应式优化方案.md` v1.1.10 → **v1.1.16** (added §13 hero portrait spec, §14 local review workflow, N-22..N-30 issue records).
+
+---
+
 ## v1.4.0 - 2026-09-09
 
 ### Features
