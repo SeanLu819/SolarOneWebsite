@@ -67,6 +67,16 @@ def main():
     print("=" * 62)
     print("提示：改完代码刷新手机页面即可看到（模板/CSS 即时生效；")
     print("      CSS 若未更新，把 templates/base.html 里的 ?v=N 加 1 或强刷）。")
+    print()
+    print("  ⚠️ 手机打不开？按顺序排查：")
+    print("     1) 手机与电脑必须是**同一个 WiFi**（不能一个走 5G 一个走 2.4G 之外的网，")
+    print("        也不能手机用蜂窝数据）。")
+    print("     2) Windows 防火墙会拦入站。用**管理员** PowerShell 执行一次：")
+    print(f"        netsh advfirewall firewall add rule name=\"Django Dev {args.port}\" "
+          f"dir=in action=allow protocol=TCP localport={args.port}")
+    print("        （只需做一次，之后一直有效）")
+    print("     3) 直接 `manage.py runserver` 不带地址时**只监听 127.0.0.1**，")
+    print("        局域网必然连不上 —— 本脚本已用 0.0.0.0，不要改成手动 runserver。")
     print("Ctrl+C 结束\n")
 
     cmd = [sys.executable, "manage.py", "runserver",
