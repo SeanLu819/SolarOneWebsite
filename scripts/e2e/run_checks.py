@@ -24,7 +24,8 @@ BASE_URL = f"http://127.0.0.1:{PORT}"
 SHOTS = BASE_DIR / "screenshots"
 
 PAGES = ["/", "/products/", "/projects/", "/news/", "/about/", "/contact/"]
-SIZES = [(320, 568), (390, 844), (768, 1024), (1024, 768), (1440, 900)]
+# N-12/F7: 覆盖 1024–1279 夹缝区（900 拆栏 / 1024 栅格的中间地带）+ 平板竖屏
+SIZES = [(320, 568), (390, 844), (768, 1024), (820, 1180), (1024, 768), (1440, 900)]
 SIDEBAR_PAGES = ("/products/", "/projects/", "/news/")
 
 failures = []
@@ -101,11 +102,12 @@ def run_checks(browser):
                 check(not pg.locator(".nav-actions").is_visible(),
                       f"{url} .nav-actions hidden")
 
-            # 3) F4' 侧栏契约：≤900px 默认收起+可展开；桌面恒展开且无 toggle
+            # 3) F4' 侧栏契约：≤767px 默认收起+可展开；平板/桌面恒展开且无 toggle
+            #    （F7: 折叠断点 900 → 767 收敛）
             if url in SIDEBAR_PAGES:
                 label = pg.locator(".sidebar-toggle-label").first
                 nav = pg.locator(".sidebar-nav").first
-                if w <= 900:
+                if w <= 767:
                     check(label.is_visible(), f"{url} sidebar toggle label visible")
                     check(not nav.is_visible(), f"{url} sidebar collapsed by default")
                     label.click()

@@ -602,16 +602,8 @@
     border-radius: 12px;
     background: var(--bg-soft);
   }
-  /* 仅在窄屏出现（9 列表格保留横向滚动，需要提示用户可滑动） */
-  .scroll-hint {
-    display: none;
-    margin: 10px 0 0;
-    font-family: var(--ff-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
+  /* 仅在窄屏出现（9 列表格保留横向滚动，需要提示用户可滑动）：
+     样式已全局化到 base.css（N-16），此处只保留本页的显示规则。 */
   .detail-ordering-table {
     width: 100%;
     min-width: 900px;
@@ -856,7 +848,8 @@
   }
 
   /* Responsive */
-  @media (max-width: 900px) {
+  /* F7：侧栏折叠断点从 900 收敛到 767（与 base.css 一致）；平板档侧栏恢复正常两列。 */
+  @media (max-width: 767px) {
     /* N-25: 必须是 minmax(0, 1fr)（同 base.css N-21/N-25）。
        写 `1fr` 等价于 minmax(auto, 1fr)，会被 .detail-ordering-table(900px)
        顶到 921px 整页宽 → 手机端只能看到约 42% 的页面。 */
@@ -867,31 +860,12 @@
       position: relative !important;
       top: auto !important;
     }
-    .detail-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .detail-image {
-      min-height: 240px;
-    }
     .series-hero { height: 160px; }
     .series-hero-content { top: 20px; left: 20px; }
-    .detail-request-sample {
-      flex-direction: column;
-      padding: 28px 24px;
-      gap: 24px;
-      text-align: center;
-    }
-    .detail-request-sample-desc {
-      max-width: 100%;
-    }
-    .detail-request-sample-buttons {
-      width: 100%;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .detail-btn {
-      width: 100%;
+
+    /* F8: detail-specs 移动端 1 列（2 列在手机上过挤） */
+    .detail-specs {
+      grid-template-columns: 1fr;
     }
 
     /* N-25：宽表格移动端重排。
@@ -916,6 +890,35 @@
     }
     .scroll-hint {
       display: block;
+    }
+  }
+
+  /* F8：详情页主区折单列从 900 提前到 1024（P1-6: 平板 901-1024 双列过挤）。
+     detail-grid / detail-image / request-sample 一同提前，平板不再拥挤。 */
+  @media (max-width: 1024px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .detail-image {
+      min-height: 240px;
+    }
+    .detail-request-sample {
+      flex-direction: column;
+      padding: 28px 24px;
+      gap: 24px;
+      text-align: center;
+    }
+    .detail-request-sample-desc {
+      max-width: 100%;
+    }
+    .detail-request-sample-buttons {
+      width: 100%;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .detail-btn {
+      width: 100%;
     }
   }
 </style>

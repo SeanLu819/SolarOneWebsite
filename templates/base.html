@@ -6,6 +6,7 @@
 <head data-page-node-id="TpjcyWEZiOkTnIwlNRilHr">
 <meta charset="UTF-8" data-page-node-id="GclPk2LNvRsBYMGbGpG8Ha">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="1DEJrx5cU0lADilX5VZLMD">
+<script>document.documentElement.classList.add('js');</script> <!-- F11: 在 CSS 渲染前标记 JS 可用 → html.js .reveal 才初始隐藏；无 JS 则内容默认可见 -->
 <title>{% block title %}{{ config.meta_title }}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}" data-page-node-id="TyUdVTUYr2xYOMtRP5H3Ty">
 <link rel="canonical" href="{{ canonical_origin }}{{ request.path }}" data-page-node-id="7Vd6YaI41Fgy707J8odEnj">
@@ -33,7 +34,7 @@
   else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
-<link rel="stylesheet" href="{% static 'css/base.css' %}?v=17" data-page-node-id="perqmmTuPccKGMCGnKWuUg">
+<link rel="stylesheet" href="{% static 'css/base.css' %}?v=19">
 <style>
   /* === Dynamic typography from admin ===
      Admin can override FONT FAMILY + SIZES + accent color via SiteConfig.
@@ -458,7 +459,7 @@
 </script>
 
 {% if not request.COOKIES.cookie_consent_accepted %}
-<div id="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--surface);border-top:1px solid var(--line);padding:20px;display:none;font-family:var(--ff-body);" data-page-node-id="2JaUK8wSc3Qwl7JYqprM3F">
+<div id="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--surface);border-top:1px solid var(--line);padding:20px;padding-bottom:max(20px, calc(env(safe-area-inset-bottom, 0px) + 8px));display:none;font-family:var(--ff-body);">
   <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;" data-page-node-id="msYA7z2FbwXox074q1AQlT">
     <div style="flex:1;min-width:280px;" data-page-node-id="Nj9eR4thVJxQnZcVuGw1ty">
       <p id="cookie-desc" style="margin:0;font-size:14px;color:var(--ink-mute);" data-page-node-id="HxmwkILOq5UlLIMqLwm3iM">

@@ -313,7 +313,7 @@
   .home-preview-card.reversed .home-preview-text {
     order: 1;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .home-preview-card,
     .home-preview-card.reversed {
       grid-template-columns: 1fr;
@@ -650,7 +650,9 @@
   [data-theme="light"] .hero-slide {
     filter: brightness(0.95);
   }
-  @media (min-width: 768px) { .hero { min-height: 100vh; } }
+  @media (min-width: 768px) {
+    .hero { min-height: 100vh; min-height: 100svh; } /* N-11: svh 跟随动态视口；100vh 为不支持 svh 的旧浏览器降级（成对，§6.8.3） */
+  }
   .hero-grid {
     position: absolute; inset: 0;
     background-image:
@@ -951,7 +953,7 @@
   /* ============ SECTION GENERIC ============ */
   section { position: relative; padding: 80px 0; }
   @media (min-width: 768px) { section { padding: 120px 0; } }
-  @media (min-width: 1024px) { section { padding: 140px 0; } }
+  @media (min-width: 1200px) { section { padding: 140px 0; } } /* F7: 1024→1200，断点收敛 3 档 */
   .section-label {
     font-family: var(--ff-mono);
     font-size: 11px;
@@ -1006,7 +1008,7 @@
     border-left: 1px solid var(--line);
   }
   @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(2, 1fr); margin-top: 40px; } }
-  @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(3, 1fr); margin-top: 48px; } }
+  @media (min-width: 1200px) { .products-grid { grid-template-columns: repeat(3, 1fr); margin-top: 48px; } } /* F7: 1024→1200 */
   .product-card {
     background: transparent;
     border-right: 1px solid var(--line);
@@ -1114,7 +1116,7 @@
     margin-top: 12px;
   }
   @media (min-width: 768px) { .projects-grid { gap: 16px; margin-top: 12px; } }
-  @media (min-width: 1024px) { .projects-grid { gap: 16px; margin-top: 12px; } }
+  @media (min-width: 1200px) { .projects-grid { gap: 16px; margin-top: 12px; } } /* F7: 1024→1200 */
   .project-card {
     background: var(--bg-soft);
     border: 1px solid var(--line);
@@ -1253,6 +1255,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  /* F10: 移动端允许换行（桌面卡片窄保留 ellipsis；移动端全宽本有空间） */
+  @media (max-width: 767px) {
+    .project-card-title { white-space: normal; overflow: visible; }
+  }
   .project-card-desc {
     font-size: var(--fs-card-desc);
     line-height: 1.55;
@@ -1346,7 +1352,7 @@
     margin-top: 48px;
   }
   @media (min-width: 768px) { .contact-grid { grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 64px; } }
-  @media (min-width: 1024px) { .contact-grid { margin-top: 80px; } }
+  @media (min-width: 1200px) { .contact-grid { margin-top: 80px; } } /* F7: 1024→1200 */
 
   .contact-info-list {
     list-style: none;
@@ -1484,7 +1490,7 @@
     margin-bottom: 16px;
   }
   @media (min-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 20px; } }
-  @media (min-width: 1024px) { .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 24px; margin-bottom: 20px; } }
+  @media (min-width: 1200px) { .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 24px; margin-bottom: 20px; } } /* F7: 1024→1200 */
   .footer-brand-name {
     font-family: var(--ff-display);
     font-size: clamp(22px, 2vw, 28px);
@@ -1848,7 +1854,7 @@
   }
 
 
-  @media (max-width: 900px) {
+  @media (max-width: 767px) {
     /* N-21: 必须是 minmax(0, 1fr) 而不是 1fr。
        `1fr` 等价于 minmax(auto, 1fr)，其最小值取轨道内容的 min-content；
        .project-card 的 min-content 约 347px，在 320/360 档会把轨道顶到
@@ -1863,21 +1869,22 @@
       top: auto !important;
     }
   }
-  @media (min-width: 768px) and (max-width: 1024px) {
+  /* F7: 768–1199 平板档保持窄侧栏；≥1200 用桌面默认 270px。3 档：≤767 / 768–1199 / ≥1200 */
+  @media (min-width: 768px) and (max-width: 1199px) {
     .products-page-with-sidebar .sidebar-layout {
       grid-template-columns: 260px 1fr !important;
     }
   }
 
   /* ============ SIDEBAR COLLAPSE (F4' — checkbox hack, D2/D3) ============ */
-  /* Desktop: toggle hidden, tree always expanded. At the existing
-     sidebar-layout single-column breakpoint (<=900px) the label appears and
-     the tree collapses unless the box is checked. "Expanded" is the HTML
-     default — collapsing is the enhancement, so no-JS users never lose the
-     category navigation (§8.2). */
+  /* Desktop/tablet: toggle hidden, tree always expanded. At the ≤767px
+     (F7: 原 900 收敛) sidebar-layout single-column breakpoint the label
+     appears and the tree collapses unless the box is checked. "Expanded"
+     is the HTML default — collapsing is the enhancement, so no-JS users
+     never lose the category navigation (§8.2). */
   .sidebar-toggle-input,
   .sidebar-toggle-label { display: none; }
-  @media (max-width: 900px) {
+  @media (max-width: 767px) {
     .sidebar-toggle-input {
       position: absolute;
       width: 1px;
@@ -1917,19 +1924,33 @@
     .sidebar-toggle-input:not(:checked) ~ .sidebar-nav { display: none; }
   }
 
+  /* ============ TABLE HORIZONTAL-SCROLL HINT (N-16) ============ */
+  /* 全局滑动提示：任意可横滑表格容器（如 .detail-ordering-table-wrap）在其上方
+     放 <p class="scroll-hint"> 即有统一样式；display 由各页在 ≤767px 显形。 */
+  .scroll-hint {
+    display: none;
+    margin: 10px 0 0;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
   /* ============ REVEAL ============ */
-  .reveal {
+  /* F11: 仅在有 JS 时（html.js 前缀）初始隐藏；无 JS 时这些规则不命中 → 内容默认可见（P1-9 根治） */
+  html.js .reveal {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.9s ease, transform 0.9s ease;
   }
-  .reveal.is-visible {
+  html.js .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; } /* N-8: CSS side; JS anchor scrolling checks the same media query */
-    .reveal { opacity: 1; transform: none; transition: none; }
+    html.js .reveal { opacity: 1; transform: none; transition: none; }
     .hero-field-lines::before,
     .hero-field-lines::after { animation: none; }
     /* N-24: kill the cross-fade only — the rotation itself must keep running */
@@ -1955,7 +1976,7 @@
     gap: 64px;
     align-items: center;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .about-story-grid { grid-template-columns: 1fr; }
   }
 
@@ -1976,7 +1997,7 @@
     max-width: 900px;
     margin: 48px auto 0;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .about-story-stats { grid-template-columns: repeat(2, 1fr); }
   }
 
@@ -2031,7 +2052,7 @@
     max-width: 1100px;
     margin: 0 auto;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .about-tech-pillars { grid-template-columns: 1fr; }
   }
 
@@ -2067,7 +2088,7 @@
     max-width: 1100px;
     margin: 0 auto;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .about-optics-grid { grid-template-columns: 1fr; }
   }
 
@@ -2076,6 +2097,6 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .about-simple-steps { grid-template-columns: 1fr; }
   }

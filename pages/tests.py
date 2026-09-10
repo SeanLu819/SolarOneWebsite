@@ -696,3 +696,179 @@ class ResponsiveIOSSafeAreaTests(TestCase):
             'Windows 必须声明微软雅黑兜底')
         # 还要有 -apple-system 才能让 iOS 显式识别 SF Pro
         self.assertIn('-apple-system', self.css)
+
+
+class ResponsivePhase2Tests(TestCase):
+    """阶段二（F7-F11 + N-4/N-6/N-11/N-16）防回归断言，v1.1.17。
+
+    §15.2 实施清单的静态防御（§6.8.3 策略）：
+      - N-11: 平板 hero min-height 必须 100svh + 100vh 成对
+      - N-6:  Cookie 横幅 padding-bottom 用 max()+env() 兜底（N-27 改判后不用 viewport-fit）
+      - F10:  .project-card-title 移动端允许换行
+      - F11:  .reveal 初始隐藏必须带 html.js 前缀 + base.html 有 classList.add('js') 注入
+      - F7:   断点收敛——源码中不得再出现 @media (max-width: 900px) / min-width: 1024px
+      - F8:   detail-grid 折单列断点提升到 1024；detail-specs 移动端 1 列
+      - F9:   products-banner 不再用 aspect-ratio:1920/442
+      - N-4:  hero 桌面 <img> 有 1280w 档 srcset 且 1280 文件存在
+      - N-16: .scroll-hint 全局样式在 base.css
+    """
+
+    def setUp(self):
+        self.css = Path(settings.BASE_DIR, 'static/css/base.css').read_text(
+            encoding='utf-8')
+        self.base_html = Path(settings.BASE_DIR, 'templates/base.html').read_text(
+            encoding='utf-8')
+
+    # ---- N-11: 平板 hero svh ----
+    def test_hero_tablet_uses_svh_with_vh_fallback(self):
+        self.assertIn('min-height: 100vh; min-height: 100svh;', self.css,
+            '平板 hero 必须 100svh（动态视口）+ 100vh 降级成对')
+
+    # ---- N-6: Cookie 横幅 safe-area ----
+    def test_cookie_banner_uses_env_fallback(self):
+        import re
+        self.assertRegex(self.base_html,
+            r'padding-bottom:\s*max\(\s*20px,\s*calc\(\s*env\(safe-area-inset-bottom,\s*0px\)\s*\+\s*8px\)\s*\)',
+            'Cookie 横幅 padding-bottom 必须 max()+env() 兜底（N-27 改判后的正确方向）')
+
+    # ---- F10: 卡片标题换行 ----
+    def test_project_card_title_wraps_on_mobile(self):
+        import re
+        block = re.search(
+            r'@media \(max-width: 767px\) \{\s*\.project-card-title\s*\{[^}]*\}',
+            self.css, re.DOTALL)
+        self.assertIsNotNone(block, '767px 块内 .project-card-title 覆盖缺失')
+        body = block.group(0)
+        self.assertIn('white-space: normal', body,
+            '移动端必须允许换行，否则长项目名被截成…（P1-8）')
+
+    # ---- F11: reveal 渐进增强 ----
+    def test_reveal_gated_by_html_js_class(self):
+        # 前缀必须存在：无 JS 时 .reveal 不受 opacity:0 影响 → 内容可见
+        self.assertRegex(self.css,
+            r'html\.js \.reveal\s*\{[^}]*opacity:\s*0',
+            '.reveal 初始隐藏必须带 html.js 前缀')
+        self.assertIn("document.documentElement.classList.add('js')",
+            self.base_html,
+            'base.html 必须在 <head> 注入 html.js 类（渲染阻塞前）')
+
+    def test_reveal_hidden_rule_has_no_bare_selector(self):
+        # 裸 .reveal { opacity:0 } 会重新导致无 JS 白屏 —— 必须一律带 html.js 前缀。
+        # 先把带前缀的替换掉再找裸规则，避免误报。
+        import re
+        # 替换串不能含 ".reveal"，否则 findall 会把替换后的文本再匹配回来
+        stripped = re.sub(r'html\.js \.reveal', 'REVEAL_GATED', self.css)
+        bare = re.findall(r'(?<![\w-])\.reveal\s*\{[^}]*opacity:\s*0', stripped)
+        self.assertEqual(bare, [], f'发现裸 .reveal{{opacity:0}}: {bare}')
+
+    # ---- F7: 断点收敛 ----
+    def test_no_legacy_900px_breakpoint_in_source(self):
+        import re
+        paths = [Path(settings.BASE_DIR, 'static/css/base.css')]
+        paths += Path(settings.BASE_DIR, 'templates').rglob('*.html')
+        for path in paths:
+            text = path.read_text(encoding='utf-8')
+            hits = re.findall(r'@media\s*\(\s*max-width:\s*900px\s*\)', text)
+            self.assertEqual(hits, [], f'{path}: 遗留 900px 断点 → {hits}')
+
+    def test_breakpoints_use_canonical_values(self):
+        """N-31 防回归：断点只允许白名单值（黑名单改白名单）。
+
+        教训（v1.1.19）：原先只禁 900px，结果漏掉 8 处 `max-width:768px`——
+        它与平板档 `min-width:768px` 在 768px 点上重叠，而 L1 全绿没暴露。
+        「收敛/统一」类改造的断言必须枚举**所有**可能旧值与边界值，
+        因此这里改用白名单：任何不在允许集合内的断点值一律失败。
+
+        允许集合（F7 三档 + 两个有意例外）：
+          max-width ∈ {767, 1024, 1199}
+            - 767  手机档上界（F7）
+            - 1024 F8 detail-grid 折单列的有意例外（≥1200 才双列）
+            - 1199 平板档封闭区间上界 `@media (min-width:768px) and (max-width:1199px)`
+          min-width ∈ {768, 1200}
+        """
+        import re
+        allowed = {
+            'max-width': {'767px', '1024px', '1199px'},
+            'min-width': {'768px', '1200px'},
+        }
+        paths = [Path(settings.BASE_DIR, 'static/css/base.css')]
+        paths += sorted(Path(settings.BASE_DIR, 'templates').rglob('*.html'))
+        media_cond = re.compile(r'@media([^{]*)\{')
+        width_val = re.compile(r'(max|min)-width:\s*(\d+px)')
+        for path in paths:
+            text = path.read_text(encoding='utf-8')
+            for cond in media_cond.findall(text):
+                for kind, value in width_val.findall(cond):
+                    key = f'{kind}-width'
+                    self.assertIn(
+                        value, allowed[key],
+                        f'{path}: 非标准断点 `@media{cond.strip()}` → '
+                        f'{key}:{value}（允许 {sorted(allowed[key])}）')
+
+    def test_no_legacy_1024px_grid_in_css(self):
+        self.assertNotIn('@media (min-width: 1024px)', self.css)
+        self.assertIn('@media (min-width: 1200px)', self.css)
+
+    # ---- F8: 详情页折单列提前 ----
+    def test_detail_grid_collapses_at_1024(self):
+        pd = Path(settings.BASE_DIR,
+                  'templates/product_detail.html').read_text(encoding='utf-8')
+        ps = Path(settings.BASE_DIR,
+                  'templates/product_series.html').read_text(encoding='utf-8')
+        for name, text in [('product_detail', pd), ('product_series', ps)]:
+            self.assertRegex(text,
+                r'@media \(max-width: 1024px\)\s*\{[^}]*detail-grid\s*\{[^}]*grid-template-columns:\s*1fr',
+                f'{name}.html: detail-grid 折单列必须提升到 1024px 断点')
+
+    def test_detail_specs_single_column_on_mobile(self):
+        pd = Path(settings.BASE_DIR,
+                  'templates/product_detail.html').read_text(encoding='utf-8')
+        import re
+        # 767px 块内 .detail-specs 之前可能还有内层块（如 .sidebar-layout），需允许一层嵌套
+        block = re.search(
+            r'@media \(max-width: 767px\) \{(?:[^{}]|\{[^{}]*\})*\.detail-specs\s*\{[^}]*\}',
+            pd, re.DOTALL)
+        self.assertIsNotNone(block, '767px 块内 .detail-specs 覆盖缺失')
+        self.assertIn('grid-template-columns: 1fr', block.group(0))
+
+    # ---- F9: banner 自适应 ----
+    def test_products_banner_no_hard_aspect_ratio(self):
+        products = Path(settings.BASE_DIR,
+                        'templates/products.html').read_text(encoding='utf-8')
+        self.assertNotIn('aspect-ratio: 1920 / 442', products)
+        self.assertIn('min-height: 120px', products)
+        import re
+        self.assertRegex(products,
+            r'@media \(max-width: 767px\)\s*\{[^}]*products-banner\s*\{[^}]*min-height',
+            '移动端 products-banner 必须有 min-height 收口')
+
+    # ---- N-4: hero 桌面分档 ----
+    def test_hero_img_has_1280_srcset(self):
+        home = Path(settings.BASE_DIR,
+                    'templates/home.html').read_text(encoding='utf-8')
+        for i in (1, 2, 3):
+            f = Path(settings.BASE_DIR, 'static/images',
+                     f'hero-main-{i}-1280.webp')
+            self.assertTrue(f.is_file(),
+                            f'hero-main-{i}-1280.webp 不存在（N-4 桌面分档）')
+            self.assertIn(f'hero-main-{i}-1280.webp', home,
+                          f'home.html 第 {i} 张 hero 缺 1280w srcset 档')
+        # sizes 与 F7 三档一致
+        self.assertIn('sizes="(min-width: 1200px) 1920px, 1280px"', home)
+
+    # ---- N-16: 滑动提示全局化 ----
+    def test_scroll_hint_global_in_base_css(self):
+        import re
+        block = re.search(r'\.scroll-hint\s*\{[^}]*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(block, 'base.css 必须有全局 .scroll-hint')
+        body = block.group(0)
+        self.assertIn('text-transform: uppercase', body)
+        # product_detail 只允许保留「显形」规则（display:block，≤767px），
+        # 不得再内联「样式」定义（font-family/margin 等）→ 防止两处漂移
+        pd = Path(settings.BASE_DIR,
+                  'templates/product_detail.html').read_text(encoding='utf-8')
+        hint = re.search(r'\.scroll-hint\s*\{[^}]*\}', pd, re.DOTALL)
+        if hint is not None:
+            self.assertNotIn('font-family', hint.group(0),
+                'product_detail.html 只应保留 display 显形规则，样式定义已全局化到 base.css')
+            self.assertIn('display: block', hint.group(0))

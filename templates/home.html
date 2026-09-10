@@ -30,15 +30,24 @@
       {% endcomment %}
       <picture>
         <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-1-portrait.webp' %}" type="image/webp">
-        <img src="{% static 'images/hero-main-1.webp' %}" alt="LED sports stadium lighting" class="hero-slide active" fetchpriority="high" decoding="async">
+        <img src="{% static 'images/hero-main-1.webp' %}"
+             srcset="{% static 'images/hero-main-1-1280.webp' %} 1280w, {% static 'images/hero-main-1.webp' %} 1920w"
+             sizes="(min-width: 1200px) 1920px, 1280px"
+             alt="LED sports stadium lighting" class="hero-slide active" fetchpriority="high" decoding="async">
       </picture>
       <picture>
         <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-2-portrait.webp' %}" type="image/webp">
-        <img src="{% static 'images/hero-main-2.webp' %}" alt="Football field LED lighting" class="hero-slide" loading="lazy" decoding="async">
+        <img src="{% static 'images/hero-main-2.webp' %}"
+             srcset="{% static 'images/hero-main-2-1280.webp' %} 1280w, {% static 'images/hero-main-2.webp' %} 1920w"
+             sizes="(min-width: 1200px) 1920px, 1280px"
+             alt="Football field LED lighting" class="hero-slide" loading="lazy" decoding="async">
       </picture>
       <picture>
         <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-3-portrait.webp' %}" type="image/webp">
-        <img src="{% static 'images/hero-main-3.webp' %}" alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" decoding="async">
+        <img src="{% static 'images/hero-main-3.webp' %}"
+             srcset="{% static 'images/hero-main-3-1280.webp' %} 1280w, {% static 'images/hero-main-3.webp' %} 1920w"
+             sizes="(min-width: 1200px) 1920px, 1280px"
+             alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" decoding="async">
       </picture>
     </div>
   </div>

@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.4.2 - 2026-09-10
+
+### Responsive phase 2 — three-screen consistency (F7-F11 + N-4/N-6/N-11/N-16)
+
+- **F7 breakpoint unification**: all `@media (max-width:900px)` blocks (base.css + 6 templates) collapsed to **767px**; the `768–1024px` special-case removed; content grids moved `min-width:1024px` → **1200px**. Final 3-tier system: `≤767 / 768–1199 / ≥1200`. L2 sidebar assertions re-anchored to 767; **820×1180 added as a new viewport**.
+- **F8 detail page single-column earlier**: `.detail-grid{1fr}` moved from `900px` to `@media (max-width:1024px)` in product_detail.html & product_series.html (fixes 901–1024 crowding, P1-6); `.detail-specs` collapses to 1 column ≤767px.
+- **F9 products-banner adaptive**: hard `aspect-ratio:1920/442` replaced by `min-height:120px` (mobile `max(90px, 22vw)`), killing ultra-narrow clipping (P1-7).
+- **F10 card titles wrap**: `.project-card-title` allows `white-space:normal` on mobile — long project names are no longer truncated to "…" (P1-8).
+- **F11 reveal progressive enhancement**: `.reveal{opacity:0}` now gated behind `html.js` prefix everywhere (incl. reduced-motion override); `<head>` injects `document.documentElement.classList.add('js')` pre-render. No-JS visitors see all content (P1-9 root fix).
+- **N-11 tablet hero svh**: `.hero` uses `min-height:100vh; min-height:100svh` pair — no address-bar jump on iPad/Android tablets.
+- **N-6 cookie banner safe-area (re-judged approach)**: `padding-bottom:max(20px, calc(env(safe-area-inset-bottom, 0px) + 8px))` — max() fallback per N-27 lesson; `viewport-fit=cover` stays out.
+- **N-4 desktop hero tiers (option B)**: new `hero-main-{1,2,3}-1280.webp` (downscaled from 1920 sources) + desktop `srcset` `1280w/1920w` with `sizes="(min-width:1200px) 1920px, 1280px"` aligned to the F7 tiers. Non-first-frame lazy deferred (absolute-positioned slides defeat `loading="lazy"`; recorded for later).
+- **N-16 global scroll-hint style**: `.scroll-hint` definition centralized in base.css (product_detail keeps only its `display:block` reveal rule).
+- **N-31 breakpoint leak (P1)**: 8 leftover `@media (max-width:768px)` blocks (base.css ×6, about.html, contact.html) collapsed to **767px**. They overlapped the tablet tier (`min-width:768px`) exactly at the 768px point — i.e. iPad portrait — so which rule won depended on source order. Missed by the original F7 guard because it only banned `900px`.
+
+### Tests
+- `pages/tests.py`: new `ResponsivePhase2Tests` — **12 regression guards** (svh pairing, banner env() fallback, title wrap, html.js gating + no-bare-rule, no 900px breakpoint in any source, 1024→1200 grid, detail-grid 1024 collapse, specs 1-col, banner aspect-ratio ban, hero 1280 srcset + files exist, scroll-hint global). Suite now **73 tests, OK (2 skipped Vercel-only)**.
+- New `test_breakpoints_use_canonical_values`: a **white-list** guard replacing the black-list style — every `@media` width must be `max-width ∈ {767,1024,1199}` / `min-width ∈ {768,1200}`. Black-listing a single value (900px) is what allowed the 768px leak in the first place.
+- Fixed 3 flawed assertions found during implementation (regex self-matching after prefix substitution; `[^}]*` unable to cross nested blocks; scroll-hint reveal rule misjudged as drift). No source defects involved.
+
+### Tooling
+- `scripts/e2e/run_checks.py`: viewport list extended with 820×1180 (tablet tier); sidebar toggle assertions follow the new 767px breakpoint. **L2: ALL CHECKS PASSED (6 viewports + reduced-motion)**.
+
+### Assets
+- `?v=17 → ?v=19` cache bump (18 for phase 2, 19 for the N-31 breakpoint fix); `collectstatic` refreshed (`staticfiles/css/base.css` now carries phase-2 rules).
+
 ## v1.4.1 - 2026-09-10
 
 ### Fixes (responsive phase 1.5 — iOS/Android real-device feedback)
