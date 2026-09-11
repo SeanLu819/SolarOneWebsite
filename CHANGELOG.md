@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.1 - 2026-09-11
+
+### seed_data.py → git-ignored build artifact (closes N-22)
+
+- **`pages/seed_data.py` is no longer committed.** It was a ~3192-line generated
+  file rebuilt from `seed_data.json` on every Vercel build (`build.sh` calls
+  `python -m pages.seed_sync --json`). It is now `git-ignore`d, so the repo no
+  longer carries the duplicated data — `seed_data.json` is the single source of truth.
+- **`pages/seed_sync.py`**: JSON mode (`sync_seed_from_json`) now writes **only**
+  `pages/seed_data.py` and never writes back to `seed_data.json` (previously it
+  rewrote the JSON on every build — wrong, since the JSON is the source of truth).
+  DB mode still writes both (DB → JSON + py).
+- **Generated `.py` stays navigable**: section banners (`# ── products (20 items)`,
+  etc.) are injected by `_write_seed_files`, so the artifact remains readable.
+- **Local-dev safety**: new `python manage.py regenerate_seed` command rebuilds
+  `pages/seed_data.py` from `seed_data.json` (e.g. after a fresh clone). On Vercel
+  this is automatic; `pages/views/utils._load_seed` also falls back to the JSON
+  file if the module import fails.
+- **CI**: `.github/workflows/ci.yml` regenerates `seed_data.py` before tests so the
+  test environment matches production (admin imports the module at runtime).
+- **`seed_data.json` normalization**: one project cover path fixed
+  (`red1-karting-01.webp` → `red1-karting-1080p-01.webp`, the file that exists).
+
 ## v1.5.0 - 2026-09-10
 
 ### Admin package split + seed_data section headers

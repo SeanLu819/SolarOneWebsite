@@ -35,6 +35,10 @@ jobs:
       # 所以 ALLOWED_HOSTS / CSRF 都不影响。
       # SECRET_KEY 给个非空占位（settings.py:52 走 os.environ.get('SECRET_KEY')），
       # DEBUG 走环境变量开关，本地默认走 False；CI 里设 true 以放宽 host/check。
+      # pages/seed_data.py 是 git-ignored 的生成产物，先从 seed_data.json 重建，
+      # 保证测试运行环境（admin 运行时会 import 它）与生产一致。
+      - name: Regenerate seed_data.py from seed_data.json
+        run: python -m pages.seed_sync --json
       - name: Run tests
         env:
           SECRET_KEY: ci-test-secret-key-not-for-prod

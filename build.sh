@@ -44,7 +44,8 @@ echo "=== [build.sh] pip install done ==="
 
 # 1.5. Regenerate pages/seed_data.py from seed_data.json (Vercel only uses seed_data.py).
 # Uses the unified seed_sync.py in JSON mode (no Django DB needed on Vercel).
-# This also validates image paths and prints warnings for missing files.
+# pages/seed_data.py is git-ignored — this step is what produces it on every build.
+# seed_data.json is the source of truth and is left untouched.
 echo "=== [build.sh] Regenerating seed_data.py from seed_data.json ==="
 python -m pages.seed_sync --json 2>&1
 
