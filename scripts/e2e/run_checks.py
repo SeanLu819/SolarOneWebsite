@@ -418,6 +418,50 @@ def run_phase3_review(browser):
     ctx.close()
 
 
+def run_phase4_review(browser):
+    """P1 — above-the-fold (LCP) images must be eager, high priority, and loaded."""
+    print("\n=== PHASE 4 (LCP / above-the-fold images) ===")
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+
+    probe = (
+        "((sel)=>{const e=document.querySelector(sel); if(!e) return null;"
+        " return {loading:e.getAttribute('loading'), fp:e.getAttribute('fetchpriority'),"
+        " decoding:e.getAttribute('decoding'), w:e.naturalWidth};})"
+    )
+    targets = [
+        ("/", "img.hero-slide.active"),
+        ("/products/", "img.products-banner-dark"),
+        ("/products/rt410-series/", "img.series-hero-bg"),
+        ("/products/series/rt410-series/", "img.series-hero-bg"),
+    ]
+    for path, sel in targets:
+        pg.goto(BASE_URL + path, wait_until="domcontentloaded")
+        pg.wait_for_timeout(250)
+        attrs = pg.evaluate(probe, sel)
+        if attrs is None:
+            check(False, f"P1 {path} 未找到 {sel}")
+            continue
+        ok = (attrs["loading"] != "lazy" and attrs["fp"] == "high"
+              and attrs["decoding"] == "async" and attrs["w"] > 0)
+        check(ok,
+              f"P1 {path} {sel} loading={attrs['loading']} "
+              f"fetchpriority={attrs['fp']} decoding={attrs['decoding']} "
+              f"naturalWidth={attrs['w']}")
+
+    # 主题变体：浅色 banner 必须 eager（浅色偏好用户首帧即可见）但不高优先
+    pg.goto(BASE_URL + "/products/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(200)
+    light = pg.evaluate(probe, "img.products-banner-light")
+    if light is None:
+        check(False, "P1 /products/ 未找到 img.products-banner-light")
+    else:
+        check(light["loading"] != "lazy" and light["fp"] is None,
+              f"P1 /products/ light banner loading={light['loading']} "
+              f"fetchpriority={light['fp']} (应为 eager 且无优先级)")
+    ctx.close()
+
+
 def main():
     try:
         from playwright.sync_api import sync_playwright
@@ -448,6 +492,7 @@ def main():
                 run_checks(browser)
                 run_phase2_review(browser)
                 run_phase3_review(browser)
+                run_phase4_review(browser)
             finally:
                 browser.close()
     finally:

@@ -72,7 +72,8 @@
         {% if product %}
         {% if banner_image %}
         <div class="series-hero">
-          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg" loading="lazy">
+          {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg" fetchpriority="high" decoding="async">
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{{ banner_label }}</span>
@@ -118,7 +119,8 @@
             </div>
 
             {% elif product.image_url %}
-            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" loading="lazy">
+            {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
+            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" fetchpriority="high" decoding="async">
             {% else %}
             <div class="detail-image-placeholder">
               <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>

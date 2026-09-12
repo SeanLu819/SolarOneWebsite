@@ -69,7 +69,8 @@
         <!-- Hero with banner image as background, title at top-left -->
         {% static 'images/products/fl4m/fl4m-bar-1.webp' as fl4m_hero_fallback %}
         <div class="series-hero">
-          <img src="{{ series_hero_image|default:fl4m_hero_fallback }}" alt="{{ series_title }} — SolarOne LED lighting application" class="series-hero-bg" loading="lazy">
+          {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
+          <img src="{{ series_hero_image|default:fl4m_hero_fallback }}" alt="{{ series_title }} — SolarOne LED lighting application" class="series-hero-bg" fetchpriority="high" decoding="async">
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{% trans "M Series" %}</span>

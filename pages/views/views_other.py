@@ -2,7 +2,7 @@ import os
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from django.urls import reverse
-from django.utils.translation import get_language
+from django.utils.translation import get_language, override
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from .common import get_common_context
@@ -36,48 +36,78 @@ def robots_txt(request):
 
 
 def sitemap_xml(request):
+    """Multi-language sitemap.
+
+    The site has 6 languages served from one origin (`/` for English, `/{code}/`
+    for the rest) and already emits <link rel="alternate" hreflang> in the HTML
+    head (see pages/templatetags/seo_tags.py). This sitemap mirrors that: each
+    canonical path gets one <url> entry carrying xhtml:link alternates for all
+    languages plus x-default -> English, so translated URLs are discoverable even
+    though the sitemap is fetched from the unprefixed (English) origin.
+
+    Paths are reversed with the language forced to 'en' so they stay
+    language-neutral even when requested via a prefixed URL (/fr/sitemap.xml).
+    """
     data = _load_seed()
     products = data.get('products', [])
     projects = data.get('projects', [])
 
     # Fixed canonical origin (#17) — never derive URLs from request.get_host()
     origin = settings.CANONICAL_ORIGIN
+    langs = [code for code, _ in settings.LANGUAGES]
+
+    def _loc(path, code):
+        return f'{origin}{path}' if code == 'en' else f'{origin}/{code}{path}'
+
+    def _entry(path, priority):
+        en_loc = _loc(path, 'en')
+        parts = [f'<loc>{en_loc}</loc>']
+        for code in langs:
+            parts.append(
+                f'<xhtml:link rel="alternate" hreflang="{code}" href="{_loc(path, code)}"/>'
+            )
+        parts.append(
+            f'<xhtml:link rel="alternate" hreflang="x-default" href="{en_loc}"/>'
+        )
+        parts.append(f'<priority>{priority}</priority>')
+        return '  <url>' + ''.join(parts) + '</url>'
 
     urls = []
 
-    static_pages = [
-        ('home', None, '0.9'),
-        ('products', None, '0.9'),
-        ('projects', None, '0.9'),
-        ('news', None, '0.7'),
-        ('about', None, '0.7'),
-        ('contact', None, '0.7'),
-    ]
-    for name, _, priority in static_pages:
-        path = reverse(name)
-        urls.append(f'  <url><loc>{origin}{path}</loc><priority>{priority}</priority></url>')
+    with override('en'):
+        static_pages = [
+            ('home', '0.9'),
+            ('products', '0.9'),
+            ('projects', '0.9'),
+            ('news', '0.7'),
+            ('about', '0.7'),
+            ('contact', '0.7'),
+        ]
+        for name, priority in static_pages:
+            urls.append(_entry(reverse(name), priority))
 
-    for p in products:
-        slug = p.get('slug', '')
-        if slug:
-            path = reverse('product_detail', args=[slug])
-            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
+        for p in products:
+            slug = p.get('slug', '')
+            if slug:
+                urls.append(_entry(reverse('product_detail', args=[slug]), '0.7'))
 
-    seen_series = set()
-    for p in products:
-        parent_slug = p.get('parent_slug', '')
-        if parent_slug and parent_slug not in seen_series:
-            seen_series.add(parent_slug)
-            path = reverse('product_series', args=[parent_slug])
-            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
+        seen_series = set()
+        for p in products:
+            parent_slug = p.get('parent_slug', '')
+            if parent_slug and parent_slug not in seen_series:
+                seen_series.add(parent_slug)
+                urls.append(_entry(reverse('product_series', args=[parent_slug]), '0.7'))
 
-    for proj in projects:
-        slug = proj.get('slug', '')
-        if slug:
-            path = reverse('project_detail', args=[slug])
-            urls.append(f'  <url><loc>{origin}{path}</loc><priority>0.7</priority></url>')
+        for proj in projects:
+            slug = proj.get('slug', '')
+            if slug:
+                urls.append(_entry(reverse('project_detail', args=[slug]), '0.7'))
 
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+        '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+    )
     xml += '\n'.join(urls)
     xml += '\n</urlset>'
     return render(request, 'sitemap.xml', {'xml': xml}, content_type='application/xml')

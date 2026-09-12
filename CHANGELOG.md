@@ -2,6 +2,60 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.2 - 2026-09-12
+
+### Loading performance: content-hashed static assets (P0, closes N-32)
+
+- **Static storage is now content-hashed in production.** Live probing showed
+  static assets already hit the Vercel edge (`X-Vercel-Cache: HIT`) but were
+  served with `Cache-Control: public, max-age=0, must-revalidate`, so repeat
+  visitors re-validated CSS/JS/images on every visit.
+- **Root cause:** Django 6.0 **removed** the `STATICFILES_STORAGE` setting and
+  silently ignores it. The project only assigned a backend through that legacy
+  setting, so `collectstatic` kept emitting un-hashed filenames.
+- **Fix:** configure the backend through the `STORAGES` dict, conditionally:
+  production (`IS_VERCEL`) uses
+  `whitenoise.storage.CompressedManifestStaticFilesStorage` (hashed filenames →
+  Vercel's edge serves them `immutable, max-age=31536000`); local dev keeps plain
+  `StaticFilesStorage`, because WhiteNoise's finders serve un-hashed files from
+  the source `static/` tree and hashed URLs would 404 everywhere locally.
+- `templates/base.html` drops the manual `?v=19` cache-buster (hashing now
+  handles invalidation). `pages/tests.py` no longer asserts exact un-hashed image
+  paths.
+- `APP_VERSION` was stale at `1.2.1` and now tracks `VERSION`.
+
+### Loading performance: above-the-fold (LCP) images (P1, closes N-33)
+
+- First-screen images no longer carry `loading="lazy"` — they are the Largest
+  Contentful Paint candidates, and lazy-loading them delayed the layout:
+  `products.html` banner, `product_detail.html` hero plus its no-banner fallback,
+  and `product_series.html` hero. Each now uses
+  `fetchpriority="high" decoding="async"`.
+- The light-theme banner variant stays eager but carries **no** `fetchpriority`,
+  so it never competes with the primary (dark) banner for bandwidth.
+- Deliberately left lazy: the below-the-fold `ps-banner` on series pages, plus
+  carousels, thumbnails and galleries.
+
+### SEO: multilingual sitemap (P1, closes N-33)
+
+- Corrections to the previous audit: `robots.txt` and `sitemap.xml` were **not**
+  missing — both are routed and return 200. The real gap was that the sitemap
+  listed only the 49 English URLs for a six-language site.
+- `/sitemap.xml` now emits one `<url>` per canonical path carrying
+  `xhtml:link rel="alternate"` entries for all six languages plus `x-default`.
+- Paths are reversed inside `with override('en')`, so requesting
+  `/fr/sitemap.xml` no longer produces doubly-prefixed `/fr/fr/` URLs.
+- No `<lastmod>` is emitted: there is no trustworthy last-modified source, and a
+  wrong value is worse than none.
+
+### Tests
+
+- L1: **80 tests OK** (was 73) — new `SitemapMultilingualTests` (3) and
+  `AboveTheFoldImageTests` (4).
+- L2: new `run_phase4_review()` asserts, in a real browser DOM, that each LCP
+  image is eager, `fetchpriority="high"`, `decoding="async"` and actually loaded
+  (`naturalWidth > 0`). Full suite: ALL CHECKS PASSED.
+
 ## v1.5.1 - 2026-09-11
 
 ### seed_data.py → git-ignored build artifact (closes N-22)

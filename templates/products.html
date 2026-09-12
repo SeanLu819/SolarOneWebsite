@@ -65,8 +65,11 @@
       <!-- ===== MAIN CONTENT ===== -->
       <div class="sidebar-content">
         <div class="products-banner">
-          <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark" loading="lazy">
-          <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" loading="lazy">
+          {# LCP banner: 首屏元素，不加 loading="lazy"。默认主题为 dark（服务端 data-theme="dark"），
+             故 dark 变体标 fetchpriority="high" 抢首帧；light 变体保持 eager（浅色偏好用户在首帧即为
+             display:block，lazy 会推迟其 LCP），但不加优先级以免与主图抢带宽。 #}
+          <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark" fetchpriority="high" decoding="async">
+          <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" decoding="async">
           <div class="products-banner-overlay"></div>
           <div class="products-banner-content">
             <span class="products-banner-label">{% trans "LED Lighting Products" %}</span>

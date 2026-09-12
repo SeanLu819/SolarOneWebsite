@@ -215,6 +215,85 @@ class CanonicalOriginTests(TestCase):
         self.assertIn('https://www.solaronelighting.com', content)
 
 
+class SitemapMultilingualTests(TestCase):
+    """P1 — the sitemap must expose all 6 languages via xhtml:link alternates."""
+
+    def test_sitemap_declares_xhtml_namespace_and_alternates(self):
+        content = self.client.get('/sitemap.xml').content.decode()
+        self.assertIn('xmlns:xhtml="http://www.w3.org/1999/xhtml"', content)
+        for code in ('en', 'fr', 'es', 'de', 'ru', 'ar'):
+            self.assertIn(f'hreflang="{code}"', content)
+        self.assertIn('hreflang="x-default"', content)
+
+    def test_sitemap_loc_entries_are_language_neutral_even_when_prefixed(self):
+        """Requesting /fr/sitemap.xml must not double-prefix the <loc> URLs."""
+        root_locs = re.findall(r'<loc>(.*?)</loc>',
+                               self.client.get('/sitemap.xml').content.decode())
+        prefixed = self.client.get('/fr/sitemap.xml')
+        self.assertEqual(prefixed.status_code, 200)
+        prefixed_text = prefixed.content.decode()
+        prefixed_locs = re.findall(r'<loc>(.*?)</loc>', prefixed_text)
+        self.assertEqual(root_locs, prefixed_locs)
+        self.assertNotIn('/fr/fr/', prefixed_text)
+
+    def test_sitemap_alternates_point_at_every_language(self):
+        content = self.client.get('/sitemap.xml').content.decode()
+        for code, suffix in (('fr', '/fr/'), ('ar', '/ar/'), ('ru', '/ru/')):
+            self.assertIn(
+                f'hreflang="{code}" href="https://www.solaronelighting.com{suffix}"',
+                content,
+            )
+
+
+class AboveTheFoldImageTests(SimpleTestCase):
+    """P1 — first-screen (LCP) images must be eager and high priority.
+
+    Guards against regressions where a hero/banner image gets re-tagged
+    `loading="lazy"`, which delays Largest Contentful Paint.
+    """
+
+    def _read(self, name):
+        return (Path(settings.BASE_DIR) / 'templates' / name).read_text(encoding='utf-8')
+
+    def _assert_lcp(self, tag):
+        self.assertNotIn('loading="lazy"', tag)
+        self.assertIn('fetchpriority="high"', tag)
+        self.assertIn('decoding="async"', tag)
+
+    def test_product_detail_hero_is_lcp(self):
+        tags = re.findall(r'<img[^>]*series-hero-bg[^>]*>',
+                          self._read('product_detail.html'))
+        self.assertEqual(len(tags), 1)
+        self._assert_lcp(tags[0])
+
+    def test_product_series_hero_is_lcp(self):
+        tags = re.findall(r'<img[^>]*series-hero-bg[^>]*>',
+                          self._read('product_series.html'))
+        self.assertEqual(len(tags), 1)
+        self._assert_lcp(tags[0])
+
+    def test_home_hero_first_slide_is_lcp(self):
+        tags = re.findall(r'<img[^>]*class="hero-slide active"[^>]*>',
+                          self._read('home.html'))
+        self.assertEqual(len(tags), 1)
+        self._assert_lcp(tags[0])
+
+    def test_products_page_banner_not_lazy(self):
+        """Both theme variants are eager; only the default (dark) one is high
+        priority, so the light asset never competes with the LCP candidate."""
+        tags = re.findall(r'<img[^>]*products-banner-img[^>]*>',
+                          self._read('products.html'))
+        self.assertEqual(len(tags), 2)
+        dark = [t for t in tags if 'products-banner-dark' in t]
+        light = [t for t in tags if 'products-banner-light' in t]
+        self.assertEqual(len(dark), 1)
+        self.assertEqual(len(light), 1)
+        for tag in tags:
+            self.assertNotIn('loading="lazy"', tag)
+        self.assertIn('fetchpriority="high"', dark[0])
+        self.assertNotIn('fetchpriority', light[0])
+
+
 class VisitorIpHashTests(TestCase):
     """#16 — visitor IPs are stored hashed, never as plaintext (GDPR)."""
 
