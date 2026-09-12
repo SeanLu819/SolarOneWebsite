@@ -65,9 +65,13 @@
       <!-- ===== MAIN CONTENT ===== -->
       <div class="sidebar-content">
         <div class="products-banner">
-          {# LCP banner: 首屏元素，不加 loading="lazy"。默认主题为 dark（服务端 data-theme="dark"），
-             故 dark 变体标 fetchpriority="high" 抢首帧；light 变体保持 eager（浅色偏好用户在首帧即为
-             display:block，lazy 会推迟其 LCP），但不加优先级以免与主图抢带宽。 #}
+          {% comment %}
+          LCP banner: 首屏元素，不加 loading="lazy"。默认主题为 dark（服务端 data-theme="dark"），
+          故 dark 变体标 fetchpriority="high" 抢首帧；light 变体保持 eager（浅色偏好用户在首帧即为
+          display:block，lazy 会推迟其 LCP），但不加优先级以免与主图抢带宽。
+          注意：这里必须用 {% comment %}，`{# #}` 只注释单行 —— 跨行写法会把注释原样输出为
+          可见文本（v1.5.2 曾因此泄漏，且该文本在流内会撑高 banner 容器）。
+          {% endcomment %}
           <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark" fetchpriority="high" decoding="async">
           <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" decoding="async">
           <div class="products-banner-overlay"></div>
@@ -142,10 +146,16 @@
   }
 
   /* Products page hero banner — switches image by theme */
-  /* F9: 固定 aspect-ratio → min-height，杜绝超窄屏文字裁切（P1-7） */
+  /* F9: aspect-ratio 给「首选高度」，min-height 只做窄屏地板，杜绝超窄屏文字裁切（P1-7）。
+     v1.5.6 修正：F9 当初把 aspect-ratio 整条删掉只留 min-height，但 banner 三个子元素
+     （img / overlay / content）全是 position:absolute → 容器高度就等于地板 120px。
+     图是 1920×442（4.34:1），object-fit:cover 在 120px 高的盒子里会上下各裁掉约 22%
+     （桌面约 920px 宽时正确高度应 ≈212px）。两条属性并存才是原意：
+       桌面/平板 → 取比值（整图无裁切）；≤767px 极窄屏 → 被地板抬起，保住文字空间。 */
   .products-banner {
     position: relative;
     width: 100%;
+    aspect-ratio: 1920 / 442;
     min-height: 120px;
     overflow: hidden;
     margin-bottom: 24px;

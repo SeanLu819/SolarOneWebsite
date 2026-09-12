@@ -299,6 +299,38 @@ class AboveTheFoldImageTests(SimpleTestCase):
         self.assertNotIn('fetchpriority', light[0])
 
 
+class TemplateCommentHygieneTests(TestCase):
+    """`{# #}` 只注释**单行** —— 跨行写法会把注释原样输出成可见文本。
+
+    事故（v1.5.2 引入，v1.5.6 发现）：products.html 的 LCP banner 注释写了 3 行，
+    Django lexer 不报错，注释原文进入渲染结果——落进 `.products-banner` 成为**流内**
+    inline 文本（其余子元素全是 absolute），后果有二：
+      1. 泄漏可读文本（屏幕阅读器会念，且图片加载失败时直接可见）；
+      2. 把容器撑到 179.2px（390px 视口），掩盖了「高度只由 CSS 决定」的真实契约，
+         让 F9 的 min-height 地板看起来「没问题」。
+    双向断言：静态扫模板 + 渲染结果不得含 `{#`。
+    """
+
+    def test_no_multiline_hash_comment_in_templates(self):
+        for path in sorted(Path(settings.BASE_DIR, 'templates').rglob('*.html')):
+            text = path.read_text(encoding='utf-8')
+            for m in re.finditer(r'\{#', text):
+                end = text.find('#}', m.start())
+                self.assertNotEqual(
+                    end, -1, f'{path.name}: 未闭合的 `{{#`（off={m.start()}）')
+                seg = text[m.start():end]
+                line = text[:m.start()].count('\n') + 1
+                self.assertNotIn(
+                    '\n', seg,
+                    f'{path.name}:{line} 跨行 `{{# #}}` 会原样输出为可见文本，'
+                    f'请改用 `{{% comment %}}...{{% endcomment %}}`')
+
+    def test_rendered_pages_leak_no_template_comment(self):
+        for url in ('/', '/products/', '/about/', '/contact/', '/projects/'):
+            html = self.client.get(url).content.decode('utf-8')
+            self.assertNotIn('{#', html, f'{url} 渲染结果里出现模板注释原文')
+
+
 class VisitorIpHashTests(TestCase):
     """#16 — visitor IPs are stored hashed, never as plaintext (GDPR)."""
 
@@ -803,7 +835,7 @@ class ResponsivePhase2Tests(TestCase):
       - F11:  .reveal 初始隐藏必须带 html.js 前缀 + base.html 有 classList.add('js') 注入
       - F7:   断点收敛——源码中不得再出现 @media (max-width: 900px) / min-width: 1024px
       - F8:   detail-grid 折单列断点提升到 1024；detail-specs 移动端 1 列
-      - F9:   products-banner 不再用 aspect-ratio:1920/442
+      - F9:   products-banner 必须 aspect-ratio:1920/442 与 min-height 地板并存
       - N-4:  hero 桌面 <img> 有 1280w 档 srcset 且 1280 文件存在
       - N-16: .scroll-hint 全局样式在 base.css
     """
@@ -939,12 +971,25 @@ class ResponsivePhase2Tests(TestCase):
                          'detail-specs 不得退回 1 列布局（F8-修正规则）')
 
     # ---- F9: banner 自适应 ----
-    def test_products_banner_no_hard_aspect_ratio(self):
+    def test_products_banner_aspect_ratio_and_floor(self):
+        """F9 修正（v1.5.6 线上复核发现）：aspect-ratio 与 min-height 必须**并存**。
+
+        原断言（v1.4.2）是「必须没有 aspect-ratio」——方向写反了：
+        banner 的 img/overlay/content 全是绝对定位，容器高度完全由 CSS 决定，
+        删掉 aspect-ratio 后高度塌到地板 120px，1920×442 的图被 object-fit:cover
+        上下各裁约 22%（用户反馈「banner 高度变小、图上下被截断」）。
+        正确形态：aspect-ratio 提供首选高度，min-height 只做窄屏地板。
+        双向断言：必须有比值，也必须有地板。
+        """
         products = Path(settings.BASE_DIR,
                         'templates/products.html').read_text(encoding='utf-8')
-        self.assertNotIn('aspect-ratio: 1920 / 442', products)
-        self.assertIn('min-height: 120px', products)
-        import re
+        block = re.search(r'\.products-banner\s*\{[^}]*\}', products)
+        self.assertIsNotNone(block, 'products.html 缺 .products-banner 规则块')
+        body = block.group(0)
+        self.assertIn('aspect-ratio: 1920 / 442', body,
+                      'F9-修正：必须保留 aspect-ratio 首选高度，否则 1920×442 被上下裁切')
+        self.assertIn('min-height: 120px', body,
+                      '窄屏地板 min-height 仍需保留（P1-7 超窄屏文字空间）')
         self.assertRegex(products,
             r'@media \(max-width: 767px\)\s*\{[^}]*products-banner\s*\{[^}]*min-height',
             '移动端 products-banner 必须有 min-height 收口')

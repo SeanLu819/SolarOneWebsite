@@ -182,9 +182,11 @@ def run_phase2_review(browser):
     # F10: 移动端长项目名允许换行不截断
     check("white-space: normal; overflow: visible" in base_css,
           "F10 `.project-card-title` 移动端 `white-space:normal` (base.css)")
-    # F9: products banner 弃固定 aspect-ratio，改 min-height 杜绝超窄屏裁切
-    check("min-height: 120px" in products_html and "aspect-ratio:1920/442" not in products_html,
-          "F9 products banner 弃 `aspect-ratio` 改 `min-height` (products.html)")
+    # F9: products banner 必须 aspect-ratio(首选高度) + min-height(窄屏地板) 并存
+    #     v1.5.6 修正：原先断言「必须没有 aspect-ratio」方向写反，导致桌面 banner
+    #     塌到 120px 地板、1920×442 被上下裁切（线上回归）。
+    check("aspect-ratio: 1920 / 442" in products_html and "min-height: 120px" in products_html,
+          "F9 products banner 同时有 `aspect-ratio:1920/442` 与 `min-height` 地板 (products.html)")
     # F8: 详情页主区折单列从 900 提前到 1024（平板 901-1024 不拥挤）
     check("@media (max-width: 1024px)" in pd_html and "grid-template-columns: 1fr" in pd_html,
           "F8 详情页 `.detail-grid` ≤1024 折单列 (product_detail.html)")
@@ -228,7 +230,7 @@ def run_phase2_review(browser):
           f"F10 `/projects/` 移动端 `.project-card-title` white-space=normal (sample={ws[:3]})")
     ctx.close()
 
-    # F9: /products/ 320 & 360 下 banner 无 aspect-ratio + 标题不裁切
+    # F9: /products/ 320 & 360 下 banner 有窄屏地板 + 标题不裁切（P1-7 方向）
     for w in (320, 360):
         ctx = browser.new_context(viewport={"width": w, "height": 720},
                                   is_mobile=True, has_touch=True, device_scale_factor=3)
@@ -246,8 +248,32 @@ def run_phase2_review(browser):
             " const t=document.querySelector('.products-banner-title'); if(!b||!t) return null;"
             " const bb=b.getBoundingClientRect(), tb=t.getBoundingClientRect();"
             " return tb.right - bb.right; })()")
-        ok = (ar in ("auto", "normal", "")) and mh >= 80 and (clip is None or clip <= 1)
-        check(ok, f"F9 `/products/` {w}px banner 无 aspect-ratio(ar={ar}, minH={mh}, titleOverflow={clip})")
+        ok = (ar not in ("auto", "normal", "")) and mh >= 80 and (clip is None or clip <= 1)
+        check(ok, f"F9 `/products/` {w}px banner 保留 aspect-ratio(ar={ar}, minH={mh}, titleOverflow={clip})")
+        ctx.close()
+
+    # F9: /products/ 桌面 banner 不得纵向裁切（v1.5.6 回归守卫）。
+    #     图片固有比 1920:442；容器取同一比值时 object-fit:cover 才不裁切。
+    #     允许 2% 容差（子像素 + 侧栏宽度取整）。
+    for w in (1440, 1280):
+        ctx = browser.new_context(viewport={"width": w, "height": 900})
+        pg = ctx.new_page()
+        pg.goto(BASE_URL + "/products/", wait_until="domcontentloaded")
+        pg.wait_for_timeout(300)
+        box = pg.evaluate(
+            "(() => { const b=document.querySelector('.products-banner');"
+            " const i=document.querySelector('.products-banner-dark'); if(!b||!i) return null;"
+            " const r=b.getBoundingClientRect();"
+            " return {w:r.width, h:r.height, nw:i.naturalWidth, nh:i.naturalHeight}; })()")
+        if not box or not box["nw"]:
+            check(False, f"F9 桌面 {w}px 未取到 banner 尺寸 {box}")
+        else:
+            img_ar = box["nw"] / box["nh"]
+            box_ar = box["w"] / box["h"]
+            dev = abs(box_ar - img_ar) / img_ar
+            check(dev <= 0.02,
+                  f"F9 `/products/` 桌面 {w}px banner 无纵向裁切 "
+                  f"(w={box['w']:.1f}, h={box['h']:.1f}, boxAR={box_ar:.3f}, imgAR={img_ar:.3f}, dev={dev*100:.1f}%)")
         ctx.close()
 
     # F8: 详情页 1024px 下 .detail-grid 单列（1 个栅格轨道）

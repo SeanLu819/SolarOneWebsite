@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.6 - 2026-09-12
+
+### Fix: `/products/` banner collapsed to its `min-height` floor, cropping the image
+
+- **Symptom (reported on production):** on `https://www.solaronelighting.com/products/`
+  the banner got much shorter and the 1920×442 artwork was cut off at the top **and**
+  bottom.
+- **Root cause:** the F9 change (v1.4.2) removed `aspect-ratio: 1920 / 442` from
+  `.products-banner` and kept only `min-height: 120px`. Every child of that box
+  (`img`, `.products-banner-overlay`, `.products-banner-content`) is
+  `position: absolute`, so the container has **no in-flow content** — its height
+  was *exactly* the floor value.
+
+  | Viewport | box | box AR | image AR | vertical crop from `object-fit: cover` |
+  | --- | --- | --- | --- | --- |
+  | 1440 (before) | 926 × 120 | 7.72 | 4.34 | **43.7%** |
+  | 1440 (after) | 926 × 213.2 | 4.344 | 4.344 | **0.0%** |
+  | 390 (both) | 358 × 90 | 3.98 | 4.34 | 0% (tiny horizontal crop, as F9 intends) |
+
+- **Fix:** both declarations must coexist — `aspect-ratio` supplies the *preferred*
+  height, `min-height` stays as the narrow-screen floor that keeps the text room
+  (the original P1-7 goal).
+- **Why the guards missed it:** the L1 test `test_products_banner_no_hard_aspect_ratio`
+  and the L2 static check asserted the *inverted* rule ("must **not** have
+  `aspect-ratio`") — a guard written to match the bug is no guard at all. Both are
+  now bidirectional, plus a new browser-level assertion that the desktop box AR
+  matches the image AR within 2% (the only check that actually catches this class
+  of regression).
+
+### Fix: multi-line `{# #}` comment leaked into the rendered page
+
+- `templates/products.html` had a 3-line `{# ... #}` comment around the LCP banner.
+  Django's `{# #}` only comments a **single line** and the lexer does **not** raise,
+  so the comment body was emitted verbatim. It landed inside `.products-banner` as
+  **in-flow** inline text (all siblings are absolute), which:
+  1. leaked readable text (screen readers announce it; visible if images fail);
+  2. inflated the container to 179.2px at a 390px viewport — masking the real
+     "height is CSS-only" contract and making the F9 bug look harmless on mobile.
+- Fixed with `{% comment %}...{% endcomment %}`; new `TemplateCommentHygieneTests`
+  scans every template for multi-line/unterminated `{#` **and** asserts rendered
+  pages never contain `{#`.
+- This is the second time this trap bit the project (see v1.1.3 `nav_items.html`);
+  it is now machine-checked.
+
+### Verification
+
+- L1: 101 → **103 tests OK (skipped=2)**.
+- L2 (Playwright + Edge): **ALL CHECKS PASSED** — desktop 1440/1280 banner AR
+  deviation 0.0%, 320/360 banner keeps the ratio + floor, no title overflow.
+
 ## v1.5.5 - 2026-09-12
 
 ### Hotfix: every page returned HTTP 500 on Vercel (missing static manifest)
