@@ -306,8 +306,16 @@ WHITENOISE_EXTRA_PREFIXES = [
 # files are NOT hash-renamed. If we hashed locally, {% static %} would emit
 # hashed URLs that finders cannot resolve -> 404 on every asset. Hashing only
 # matters where collectstatic actually runs (the Vercel build).
+#
+# v1.5.5: production uses pages.storage.BundledManifestStaticFilesStorage, which
+# reads the hash map from the build-time generated pages/static_index_data.py
+# instead of the on-disk staticfiles/staticfiles.json. That JSON cannot be relied
+# on: staticfiles/ is excluded from the function bundle to stay under Vercel's
+# 225 MB limit, and a MISSING manifest makes every {% static %} raise
+# ("The file 'css/base.css' could not be found") -> HTTP 500 on every page.
+# The subclass also degrades to un-hashed URLs instead of raising.
 if IS_VERCEL:
-    _STATIC_BACKEND = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    _STATIC_BACKEND = 'pages.storage.BundledManifestStaticFilesStorage'
 else:
     _STATIC_BACKEND = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -360,4 +368,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.5.4'
+APP_VERSION = '1.5.5'

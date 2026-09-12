@@ -4,8 +4,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/index.py": {
-      "excludeFiles": "{static,staticfiles,media,docs,screenshots}/**",
-      "includeFiles": "staticfiles/staticfiles.json"
+      "excludeFiles": "{static,staticfiles,media,docs,screenshots}/**"
     }
   },
   "rewrites": [

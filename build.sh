@@ -82,8 +82,14 @@ echo "=== [build.sh] collectstatic done ==="
 # static files exist, but static/ + staticfiles/ are EXCLUDED from the Python
 # function bundle (vercel.json -> functions.excludeFiles) because they are
 # ~118 MB of assets already served by the edge CDN from public/static/.
-# This step keeps that lookup working inside the Lambda. git-ignored, rebuilt
-# on every deploy — mirrors how pages/seed_data.py is produced below/above.
+# This step keeps that lookup working inside the Lambda.
+#
+# The SAME module also carries HASHED_FILES (copied from staticfiles.json).
+# Production uses content-hashed static URLs; the manifest MUST be readable at
+# runtime or every page 500s ("The file 'css/base.css' could not be found").
+# staticfiles.json itself is excluded from the bundle, so the mapping has to
+# travel as bundled Python source — see pages/storage.py.
+# git-ignored, rebuilt on every deploy.
 echo "=== [build.sh] Generating static index (pages/static_index_data.py) ==="
 python -m pages.static_index --root staticfiles --out pages/static_index_data.py 2>&1
 

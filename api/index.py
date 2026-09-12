@@ -86,3 +86,31 @@ _product_test = '/static/images/products/fl4m-01.webp'
 _wn_found2 = _product_test in getattr(application, 'files', {})
 sys.stderr.write(f'[whitenoise] test product file {_product_test}: found={_wn_found2}\n')
 sys.stderr.flush()
+
+# --- static storage self-check -------------------------------------------------
+# Content-hashed static URLs need the manifest at request time. If it is missing,
+# {% static %} raises and EVERY page becomes a 500 (incident 2026-09-12). Log the
+# decisive facts on cold start so a future failure is diagnosable in one glance.
+try:
+    from django.contrib.staticfiles.storage import staticfiles_storage
+
+    sys.stderr.write(f'[index.py] static storage = {type(staticfiles_storage).__name__}\n')
+    try:
+        from pages.storage import bundled_hashed_files
+        _bundled = bundled_hashed_files()
+        sys.stderr.write(f'[index.py] bundled manifest entries = {len(_bundled)}\n')
+        if not _bundled:
+            sys.stderr.write(
+                '[index.py] WARNING: bundled manifest is empty — static URLs will be '
+                'un-hashed. Check that build.sh ran pages.static_index.\n'
+            )
+    except Exception as exc:
+        sys.stderr.write(f'[index.py] bundled manifest check skipped: {exc!r}\n')
+    for _probe in ('css/base.css', 'images/hero-main.webp'):
+        try:
+            sys.stderr.write(f'[index.py] static("{_probe}") -> {staticfiles_storage.url(_probe)}\n')
+        except Exception as exc:
+            sys.stderr.write(f'[index.py] static("{_probe}") FAILED: {exc!r}\n')
+except Exception as exc:  # never let diagnostics break the app
+    sys.stderr.write(f'[index.py] static self-check failed: {exc!r}\n')
+sys.stderr.flush()

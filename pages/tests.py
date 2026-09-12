@@ -1,6 +1,8 @@
 import json
 import re
+import sys
 import tempfile
+import types
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -1008,14 +1010,47 @@ class StaticIndexBuildTests(unittest.TestCase):
     def test_build_index_missing_root_returns_empty(self):
         from pages.static_index import build_index
         self.assertEqual(build_index(str(Path(tempfile.gettempdir(), 'no-such-dir-xyz'))),
-                         {'dirs': {}})
+                         {'dirs': {}, 'hashed': {}})
+
+    def test_build_index_collects_hashed_names_from_manifest(self):
+        """staticfiles.json 的 paths 必须被带进生成物（生产存储靠它出哈希 URL）。"""
+        from pages.static_index import build_index
+
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, 'css').mkdir()
+            Path(tmp, 'css', 'base.css').write_text('body{}', encoding='utf-8')
+            Path(tmp, 'css', 'base.280e03822c88.css').write_text('body{}', encoding='utf-8')
+            Path(tmp, 'staticfiles.json').write_text(json.dumps({
+                'paths': {'css/base.css': 'css/base.280e03822c88.css'},
+                'version': '1.1',
+                'hash': 'deadbeef',
+            }), encoding='utf-8')
+
+            index = build_index(tmp)
+            self.assertEqual(index['hashed'], {'css/base.css': 'css/base.280e03822c88.css'})
+
+    def test_read_hashed_files_tolerates_garbage(self):
+        from pages.static_index import read_hashed_files
+
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(read_hashed_files(tmp), {}, '没有清单时应返回空字典')
+
+            Path(tmp, 'staticfiles.json').write_text('{not json', encoding='utf-8')
+            self.assertEqual(read_hashed_files(tmp), {}, '清单损坏不应抛异常')
+
+            Path(tmp, 'staticfiles.json').write_text(
+                json.dumps({'paths': {'a.css': 'a.1.css', 'bad': 3}}), encoding='utf-8')
+            self.assertEqual(read_hashed_files(tmp), {'a.css': 'a.1.css'},
+                             '非字符串条目应被丢弃')
 
     def test_rendered_module_is_valid_python(self):
         from pages.static_index import render_module
-        src = render_module({'dirs': {'images/products/demo': ['a.webp']}})
+        src = render_module({'dirs': {'images/products/demo': ['a.webp']},
+                             'hashed': {'a.webp': 'a.0123456789ab.webp'}})
         ns = {}
         exec(compile(src, '<static_index_data>', 'exec'), ns)
         self.assertEqual(ns['STATIC_INDEX']['dirs']['images/products/demo'], ['a.webp'])
+        self.assertEqual(ns['HASHED_FILES'], {'a.webp': 'a.0123456789ab.webp'})
 
 
 class StaticIndexFallbackTests(SimpleTestCase):
@@ -1109,6 +1144,125 @@ class GeneratedStaticIndexCoverageTests(SimpleTestCase):
 
 
 # ---------------------------------------------------------------------------
+# 生产静态存储（pages/storage.py）回归守卫
+# ---------------------------------------------------------------------------
+# 事故（v1.5.4，2026-09-12）：vercel.json 把 staticfiles/ 排除出函数包以压到
+# 225 MB 以内，但 CompressedManifestStaticFilesStorage 运行时必须能读到
+# 「原名 → 哈希名」映射。清单不在磁盘上时，{% static %} 会抛
+#   ValueError: The file 'css/base.css' could not be found with <...>
+# 而 base.html 每个页面都要它 —— 于是**全站 500**。
+#
+# 修法：① 构建期把 paths 写进包内 Python 模块 pages/static_index_data.py；
+#       ② 存储层任何情况下都不抛异常，退回未哈希 URL（v1.5.2 之前的行为）。
+# 下面这组测试正是那次事故的最小复现与防回归。
+_WHITENOISE_MANIFEST_BACKEND = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+_BUNDLED_BACKEND = 'pages.storage.BundledManifestStaticFilesStorage'
+
+_MISSING_ROOT = str(Path(tempfile.gettempdir(), 'solarone-static-root-absent'))
+
+
+class BundledStaticManifestTests(TestCase):
+    def setUp(self):
+        from pages import storage as storage_mod
+        self.storage_mod = storage_mod
+        self._saved_cache = storage_mod._bundled_cache
+        storage_mod._bundled_cache = None
+        self.addCleanup(setattr, storage_mod, '_bundled_cache', self._saved_cache)
+
+    def _inject(self, hashed_files):
+        mod = types.ModuleType('pages.static_index_data')
+        mod.STATIC_INDEX = {'dirs': {}}
+        mod.HASHED_FILES = hashed_files
+        self._saved_module = sys.modules.get('pages.static_index_data')
+        sys.modules['pages.static_index_data'] = mod
+        self.storage_mod._bundled_cache = None
+        self.addCleanup(self._restore_module)
+
+    def _restore_module(self):
+        if self._saved_module is not None:
+            sys.modules['pages.static_index_data'] = self._saved_module
+        else:
+            sys.modules.pop('pages.static_index_data', None)
+
+    def _url(self, name, root=_MISSING_ROOT):
+        from django.contrib.staticfiles.storage import staticfiles_storage
+        with override_settings(
+            STATIC_ROOT=root,
+            STATICFILES_DIRS=[],
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': _BUNDLED_BACKEND},
+            },
+        ):
+            return staticfiles_storage.url(name)
+
+    def test_bundled_manifest_provides_hashed_urls(self):
+        self._inject({'css/base.css': 'css/base.280e03822c88.css'})
+        self.assertEqual(self._url('css/base.css'),
+                         '/static/css/base.280e03822c88.css')
+
+    def test_unknown_name_falls_back_instead_of_raising(self):
+        """磁盘上没有 static/、清单里也没有这个名字 —— 必须返回未哈希 URL。"""
+        self._inject({'css/base.css': 'css/base.280e03822c88.css'})
+        self.assertEqual(self._url('images/definitely-missing.webp'),
+                         '/static/images/definitely-missing.webp')
+
+    def test_no_manifest_at_all_still_serves_unhashed_urls(self):
+        self.storage_mod._bundled_cache = {}
+        self.assertEqual(self._url('css/base.css'), '/static/css/base.css')
+
+    def test_corrupt_manifest_file_does_not_raise(self):
+        """清单文件存在但版本/格式非法：Django 原生实现会抛 ValueError。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, 'staticfiles.json').write_text('{"version": "9.9"}',
+                                                     encoding='utf-8')
+            self.storage_mod._bundled_cache = {}
+            self.assertEqual(self._url('css/base.css', root=tmp), '/static/css/base.css')
+
+    def test_old_backend_raises_in_the_same_situation(self):
+        """反向断言：记录事故的失败模式，证明这个子类不是多余的。"""
+        from django.contrib.staticfiles.storage import staticfiles_storage
+        with override_settings(
+            STATIC_ROOT=_MISSING_ROOT,
+            STATICFILES_DIRS=[],
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': _WHITENOISE_MANIFEST_BACKEND},
+            },
+        ):
+            with self.assertRaises(ValueError):
+                staticfiles_storage.url('css/base.css')
+
+    def test_home_page_renders_when_static_trees_are_absent(self):
+        """端到端：函数包里没有 static/、没有 staticfiles/ —— 首页仍必须 200。"""
+        self.storage_mod._bundled_cache = {}
+        with override_settings(
+            STATIC_ROOT=_MISSING_ROOT,
+            STATICFILES_DIRS=[],
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': _BUNDLED_BACKEND},
+            },
+        ):
+            response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_home_page_uses_hashed_stylesheet_when_manifest_is_bundled(self):
+        self._inject({'css/base.css': 'css/base.280e03822c88.css'})
+        with override_settings(
+            STATIC_ROOT=_MISSING_ROOT,
+            STATICFILES_DIRS=[],
+            STORAGES={
+                'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+                'staticfiles': {'BACKEND': _BUNDLED_BACKEND},
+            },
+        ):
+            html = self.client.get('/').content.decode('utf-8')
+        self.assertIn('/static/css/base.280e03822c88.css', html,
+                      '包内清单可用时必须出哈希 URL（immutable 缓存的前提）')
+
+
+# ---------------------------------------------------------------------------
 # vercel.json 配置守卫（离线校验）
 # ---------------------------------------------------------------------------
 # 背景（v1.5.3 → v1.5.4）：functions.excludeFiles 曾被写成**数组**，Vercel 在
@@ -1195,8 +1349,13 @@ class VercelConfigTests(SimpleTestCase):
                     f'functions["{pattern}"].{key} 超过 schema 的 maxLength={_STRING_OPTION_MAXLEN}',
                 )
 
-    def test_heavy_static_trees_excluded_and_manifest_kept(self):
-        """体积修复的核心不变量：static/ 与 staticfiles/ 不进函数包，但清单必须在包内。"""
+    def test_heavy_static_trees_excluded(self):
+        """体积修复的核心不变量：static/ 与 staticfiles/ 不进函数包。
+
+        清单**不再**依赖 includeFiles：哈希映射改由包内 Python 模块提供，少一个
+        会和 excludeFiles 抢文件的机制（v1.5.4 全站 500 的根源）。见
+        BundledStaticManifestTests。
+        """
         functions = self._cfg().get('functions') or {}
         if not functions:
             self.skipTest('vercel.json 未配置 functions')
@@ -1206,10 +1365,6 @@ class VercelConfigTests(SimpleTestCase):
         self.assertIn('static/**', excluded, '源码 static/ 未排除 → 函数包会超 225 MB')
         self.assertIn('staticfiles/**', excluded,
                       'collectstatic 产物 staticfiles/ 未排除 → 函数包会超 225 MB')
-
-        included = _expand_braces(options.get('includeFiles') or '')
-        self.assertIn('staticfiles/staticfiles.json', included,
-                      'staticfiles.json 必须留在函数包内，否则 {% static %} 拿不到哈希映射')
 
     def test_brace_glob_expansion_helper(self):
         self.assertEqual(_expand_braces('a/**'), ['a/**'])

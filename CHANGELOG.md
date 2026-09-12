@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.5 - 2026-09-12
+
+### Hotfix: every page returned HTTP 500 on Vercel (missing static manifest)
+
+- **Symptom:** the deploy finally succeeded (v1.5.4), but every page answered
+  *"Server Error — Something went wrong on our end"* (500).
+- **Root cause:** v1.5.3 excluded `staticfiles/**` from the Python function
+  bundle (necessary: it is ~59 MB of already-CDN-served assets), which also
+  removed **`staticfiles.json`** — the manifest that
+  `CompressedManifestStaticFilesStorage` needs at *request* time. With the
+  manifest gone the storage falls back to looking the original file up on disk,
+  but `static/` is excluded too, so it raised:
+
+  ```
+  ValueError: The file 'css/base.css' could not be found with
+              <whitenoise.storage.CompressedManifestStaticFilesStorage ...>
+  ```
+
+  `base.html` calls `{% static %}` on every page, so a single unresolvable name
+  takes the **whole site** down. `includeFiles: "staticfiles/staticfiles.json"`
+  did not reliably put it back (and the file itself is only ~1 file among
+  hundreds the builder juggles).
+
+- **Fix — two layers:**
+  1. **Ship the manifest as bundled Python source.** `pages/static_index.py`
+     (already run by `build.sh` after `collectstatic`) now also copies the
+     `staticfiles.json` → `paths` map into `pages/static_index_data.py` as
+     `HASHED_FILES`. That module lives under `pages/`, which is never excluded,
+     so the mapping is guaranteed to be inside the Lambda.
+     `vercel.json` no longer needs `includeFiles` at all.
+  2. **Never raise.** New backend
+     `pages/storage.BundledManifestStaticFilesStorage` (used when `IS_VERCEL`)
+     loads the map from the bundled module, falls back to Django's file-based
+     manifest, and wraps `stored_name()` so an unresolvable name degrades to the
+     **un-hashed URL** (the pre-v1.5.2 behaviour, still served by the edge CDN
+     because WhiteNoise keeps both copies). Losing one cache header is an
+     acceptable price; 500-ing the entire site is not.
+
+- **Why the earlier verification missed it:** the v1.5.3 smoke test ran with the
+  *local* plain `StaticFilesStorage` (only `IS_VERCEL` selects the Manifest
+  backend), so the storage that actually breaks in production was never
+  exercised. Fix confirmed by replaying both configurations:
+  old backend + no manifest → **18/20 pages 500** (identical traceback); new
+  backend → **20/20 pages 200**, hashed URLs when the map is present and
+  un-hashed ones when it is not.
+
+- **Diagnosability:** `api/index.py` now logs, at cold start, which storage class
+  is active, how many entries the bundled manifest has, and the resolved URL for
+  `css/base.css` / `images/hero-main.webp` — the exact facts that were missing
+  while debugging this.
+
+- **Tests:** `BundledStaticManifestTests` (7) + index-generator manifest tests
+  (2). Includes an **inverted guard** asserting the old backend *does* raise
+  `ValueError` in the same situation, so the subclass cannot be "simplified
+  away". L1: 92 → **101 tests OK (skipped=2)**.
+
 ## v1.5.4 - 2026-09-12
 
 ### Hotfix: v1.5.3 wrote an invalid `vercel.json` (deploy blocked before build)
