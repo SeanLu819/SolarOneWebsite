@@ -19,6 +19,45 @@ _seed_cache = None
 _static_file_set = None
 _dir_listing_cache = {}
 _PRODUCT_DIR_IMAGE_CACHE = {}
+_static_index = None
+
+
+def _load_static_index():
+    """Load the build-time static asset index (pages.static_index_data).
+
+    On Vercel the source `static/` tree is intentionally kept OUT of the
+    Python function bundle (see vercel.json -> functions.excludeFiles): the
+    ~118 MB of assets are served by the edge CDN from public/static/. Image
+    path resolution, however, needs to know which files exist — so build.sh
+    writes a names-only index that we import here. Returns {} when the file
+    is absent (local dev / CI), in which case disk scanning is authoritative.
+    """
+    global _static_index
+    if _static_index is not None:
+        return _static_index
+    try:
+        from pages.static_index_data import STATIC_INDEX
+        _static_index = STATIC_INDEX if isinstance(STATIC_INDEX, dict) else {}
+    except Exception:
+        _static_index = {}
+    return _static_index
+
+
+def _index_file_set():
+    """Set of relative static paths recorded in the generated index."""
+    out = set()
+    for rel_dir, names in (_load_static_index().get('dirs') or {}).items():
+        prefix = (rel_dir + '/') if rel_dir else ''
+        for name in names:
+            out.add(prefix + name)
+    return out
+
+
+def _index_dir_listing(rel_dir):
+    """File names recorded for one directory in the generated index."""
+    rel_dir = (rel_dir or '').replace('\\', '/').strip('/')
+    names = (_load_static_index().get('dirs') or {}).get(rel_dir) or []
+    return set(names)
 
 
 def _load_seed():
@@ -53,7 +92,9 @@ def _build_static_file_set():
     if _static_file_set is not None:
         return _static_file_set
 
-    file_set = set()
+    # Names-only build-time index first: on Vercel neither STATIC_ROOT nor
+    # STATICFILES_DIRS exists inside the function bundle.
+    file_set = set(_index_file_set())
     dirs_to_scan = []
 
     static_root = str(settings.STATIC_ROOT)
@@ -92,7 +133,7 @@ def _list_static_dir(rel_dir):
     if rel_dir in _dir_listing_cache:
         return _dir_listing_cache[rel_dir]
 
-    results = set()
+    results = set(_index_dir_listing(rel_dir))
     dirs_to_check = []
 
     base = os.path.join(settings.BASE_DIR, 'static', rel_dir)
@@ -284,25 +325,18 @@ def _product_image_url(product, field_name):
 
 
 def _list_product_dir_images(slug):
-    """List image files in a product's static directory (cached)."""
+    """List image files in a product's static directory (cached).
+
+    Delegates to _list_static_dir so the build-time static index is honoured
+    when static/ is not present in the function bundle (Vercel).
+    """
     if slug in _PRODUCT_DIR_IMAGE_CACHE:
         return _PRODUCT_DIR_IMAGE_CACHE[slug]
-    results = []
-    dirs_to_check = []
-    static_root = str(getattr(settings, 'STATIC_ROOT', ''))
-    if static_root:
-        dirs_to_check.append(os.path.join(static_root, 'images', 'products', slug))
-    for d in getattr(settings, 'STATICFILES_DIRS', []):
-        dirs_to_check.append(os.path.join(str(d), 'images', 'products', slug))
-    for d in dirs_to_check:
-        if os.path.isdir(d):
-            try:
-                for f in os.listdir(d):
-                    if f.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                        results.append(f)
-                break
-            except OSError:
-                pass
+    names = _list_static_dir(f'images/products/{slug}')
+    results = sorted(
+        f for f in names
+        if f.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif'))
+    )
     _PRODUCT_DIR_IMAGE_CACHE[slug] = results
     return results
 

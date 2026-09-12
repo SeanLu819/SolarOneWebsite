@@ -1,12 +1,14 @@
 name: CI
 
 # 触发：push 到 main 与任意 PR 都会跑。
-# 目的：用 GitHub Actions 把当前手动跑的 73 个 Django 测试（~5 秒）转成强制门禁，
+# 目的：用 GitHub Actions 把当前手动跑的 88 个 Django 测试（~4 秒）转成强制门禁，
 #       杜绝「改了 CSS/模板没跑测试、问题只在真机暴露」的回归路径（v1.1.19 教训）。
 #       附 `pip audit` 做依赖漏洞扫描（advisory，不阻塞主流程）。
 # 关联：
 #   - docs/优化建议清单.md N-25（72 → 73 个测试仍靠手动跑，无 CI）
 #   - docs/三屏响应式优化方案.md §16.3 第 ④ 项
+#   - v1.5.3 起：requirements.txt 必须含 Pillow，否则干净环境下 14 个 ImageField
+#     触发 fields.E210，测试直接 SystemCheckError 中断（CI run #1–#5 全红的原因）
 
 on:
   push:
@@ -39,6 +41,14 @@ jobs:
       # 保证测试运行环境（admin 运行时会 import 它）与生产一致。
       - name: Regenerate seed_data.py from seed_data.json
         run: python -m pages.seed_sync --json
+
+      # pages/static_index_data.py 同样是 git-ignored 的构建产物（build.sh 从
+      # staticfiles/ 生成）。CI 里从 static/ 生成一份，让
+      # GeneratedStaticIndexCoverageTests 真正校验索引覆盖了全部静态资源。
+      # 同时保证测试环境与 Vercel 一致：请求期图片解析走索引而非磁盘。
+      - name: Generate static index (pages/static_index_data.py)
+        run: python -m pages.static_index --root static --out pages/static_index_data.py
+
       - name: Run tests
         env:
           SECRET_KEY: ci-test-secret-key-not-for-prod

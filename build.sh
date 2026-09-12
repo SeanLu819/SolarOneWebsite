@@ -77,6 +77,16 @@ fi
 
 echo "=== [build.sh] collectstatic done ==="
 
+# 2.5. Generate the names-only static index (pages/static_index_data.py).
+# Runtime image path resolution (pages/views/utils.py) needs to know which
+# static files exist, but static/ + staticfiles/ are EXCLUDED from the Python
+# function bundle (vercel.json -> functions.excludeFiles) because they are
+# ~118 MB of assets already served by the edge CDN from public/static/.
+# This step keeps that lookup working inside the Lambda. git-ignored, rebuilt
+# on every deploy — mirrors how pages/seed_data.py is produced below/above.
+echo "=== [build.sh] Generating static index (pages/static_index_data.py) ==="
+python -m pages.static_index --root staticfiles --out pages/static_index_data.py 2>&1
+
 # 3. Mirror staticfiles/* into public/static/*  (Vercel CDN auto-deploys public/)
 echo "=== [build.sh] Creating public/ directory for Vercel CDN ==="
 rm -rf public

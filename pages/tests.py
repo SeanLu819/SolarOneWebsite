@@ -1,10 +1,12 @@
 import re
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 from django.conf import settings
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
 from pages.admin import ProjectAdmin
@@ -974,3 +976,133 @@ class ResponsivePhase2Tests(TestCase):
             self.assertNotIn('font-family', hint.group(0),
                 'product_detail.html 只应保留 display 显形规则，样式定义已全局化到 base.css')
             self.assertIn('display: block', hint.group(0))
+
+
+class StaticIndexBuildTests(unittest.TestCase):
+    """构建期静态索引生成器（pages/static_index.py）—— 供 Vercel 函数包瘦身使用。
+
+    背景：static/ 与 staticfiles/ 被 vercel.json 的 excludeFiles 排除出 Python
+    函数包（~118MB 的图片/PDF 改由边缘 CDN 服务），运行时磁盘上不再有这两个目录，
+    图片路径解析改由构建期生成的索引兜底。
+    """
+
+    def test_build_index_groups_files_by_directory(self):
+        from pages.static_index import build_index
+
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, 'images', 'products', 'demo').mkdir(parents=True)
+            Path(tmp, 'images', 'products', 'demo', 'demo-01.webp').write_bytes(b'x')
+            Path(tmp, 'images', 'products', 'demo', 'demo-02.webp').write_bytes(b'x')
+            Path(tmp, 'css').mkdir()
+            Path(tmp, 'css', 'base.css').write_text('body{}', encoding='utf-8')
+            Path(tmp, '.DS_Store').write_bytes(b'junk')
+
+            index = build_index(tmp)
+            self.assertEqual(index['dirs']['images/products/demo'],
+                             ['demo-01.webp', 'demo-02.webp'])
+            self.assertEqual(index['dirs']['css'], ['base.css'])
+            self.assertNotIn('.DS_Store', index['dirs'].get('', []),
+                             '系统垃圾文件不应进入索引')
+
+    def test_build_index_missing_root_returns_empty(self):
+        from pages.static_index import build_index
+        self.assertEqual(build_index(str(Path(tempfile.gettempdir(), 'no-such-dir-xyz'))),
+                         {'dirs': {}})
+
+    def test_rendered_module_is_valid_python(self):
+        from pages.static_index import render_module
+        src = render_module({'dirs': {'images/products/demo': ['a.webp']}})
+        ns = {}
+        exec(compile(src, '<static_index_data>', 'exec'), ns)
+        self.assertEqual(ns['STATIC_INDEX']['dirs']['images/products/demo'], ['a.webp'])
+
+
+class StaticIndexFallbackTests(SimpleTestCase):
+    """static/ 不在磁盘上时（Vercel 函数包），图片解析必须仍然可用。"""
+
+    FAKE_INDEX = {'dirs': {
+        'images/products/demo': ['demo-01.webp', 'demo-bar-1.webp'],
+        'images/projects/demo': ['cover.webp', 'gallery-01.webp'],
+        'files': ['brochure.pdf'],
+    }}
+
+    def setUp(self):
+        from pages.views import utils
+        self.utils = utils
+        self._saved = (utils._static_file_set, utils._static_index)
+        utils._static_file_set = None
+        utils._static_index = self.FAKE_INDEX
+        utils._dir_listing_cache.clear()
+        utils._PRODUCT_DIR_IMAGE_CACHE.clear()
+        self._missing = str(Path(tempfile.gettempdir(), 'solarone-no-static-xyz'))
+        self._override = override_settings(STATICFILES_DIRS=[], STATIC_ROOT=self._missing)
+        self._override.enable()
+        self.addCleanup(self._restore)
+
+    def _restore(self):
+        self._override.disable()
+        self.utils._static_file_set, self.utils._static_index = self._saved
+        self.utils._dir_listing_cache.clear()
+        self.utils._PRODUCT_DIR_IMAGE_CACHE.clear()
+
+    def test_find_static_uses_index_when_disk_is_absent(self):
+        self.assertFalse(Path(self._missing).is_dir())
+        self.assertTrue(self.utils._find_static('images/products/demo/demo-01.webp'))
+        self.assertTrue(self.utils._find_static('files/brochure.pdf'))
+        self.assertFalse(self.utils._find_static('images/products/demo/nope.webp'))
+
+    def test_list_static_dir_uses_index(self):
+        self.assertEqual(self.utils._list_static_dir('images/projects/demo'),
+                         {'cover.webp', 'gallery-01.webp'})
+
+    def test_product_image_url_resolves_without_disk(self):
+        product = SimpleNamespace(
+            slug='demo',
+            image=SimpleNamespace(name='products/demo-01.webp'),
+        )
+        url = _strip_static_hash(self.utils._product_image_url(product, 'image'))
+        self.assertIn('/static/images/products/demo/demo-01.webp', url)
+
+    def test_product_dir_images_prefers_non_banner_card_image(self):
+        # DB 里存的是 banner 图 → 卡片位应改用同目录非 banner 图（索引提供目录列表）
+        product = SimpleNamespace(
+            slug='demo',
+            image=SimpleNamespace(name='products/demo-bar-1.webp'),
+        )
+        url = _strip_static_hash(self.utils._product_image_url(product, 'image'))
+        self.assertIn('/static/images/products/demo/demo-01.webp', url)
+        self.assertNotIn('demo-bar-1.webp', url)
+
+
+class GeneratedStaticIndexCoverageTests(SimpleTestCase):
+    """若构建期索引存在（build.sh / CI 会生成），必须覆盖 static/ 下全部资源。
+
+    防止索引过期或 collectstatic 范围变化后，线上出现「图片解析不到」的静默回归。
+    """
+
+    def _load(self):
+        try:
+            from pages.static_index_data import STATIC_INDEX
+        except Exception:
+            self.skipTest('pages/static_index_data.py 未生成（本地/CI 未跑构建步骤）')
+        return STATIC_INDEX
+
+    def test_index_covers_every_committed_static_file(self):
+        index = self._load()
+        indexed = set()
+        for rel_dir, names in (index.get('dirs') or {}).items():
+            prefix = (rel_dir + '/') if rel_dir else ''
+            indexed.update(prefix + n for n in names)
+
+        static_dir = Path(settings.BASE_DIR, 'static')
+        missing = []
+        for path in static_dir.rglob('*'):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(static_dir).as_posix()
+            if rel.startswith('admin/'):
+                continue
+            if rel not in indexed:
+                missing.append(rel)
+        self.assertEqual(missing, [], f'索引遗漏了 {len(missing)} 个 static/ 文件')
+

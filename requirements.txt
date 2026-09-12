@@ -1,4 +1,5 @@
 django>=6.0,<7.0
+Pillow>=10.0  # Django ImageField 运行期依赖：缺失会让系统检查报 fields.E210 并中断 CI
 user-agents>=2.2
 gunicorn>=21.0
 whitenoise>=6.0

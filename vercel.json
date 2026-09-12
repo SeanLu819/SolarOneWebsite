@@ -1,9 +1,17 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "bash build.sh",
   "outputDirectory": "public",
   "functions": {
     "api/index.py": {
-      "includeFiles": "**"
+      "excludeFiles": [
+        "static/**",
+        "staticfiles/**",
+        "media/**",
+        "docs/**",
+        "screenshots/**"
+      ],
+      "includeFiles": "staticfiles/staticfiles.json"
     }
   },
   "rewrites": [

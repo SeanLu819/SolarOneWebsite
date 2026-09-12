@@ -2,6 +2,73 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.3 - 2026-09-12
+
+### Deploy blocker: Vercel function bundle exceeded the size limit (closes N-34)
+
+- **Symptom:** the v1.5.2 deploy failed with *"Total bundle size (270.23 MB)
+  exceeds the maximum function size (225 MB)"*.
+- **Root cause:** `vercel.json` pinned `"includeFiles": "**"` on `api/index.py`.
+  Vercel's Python builder globs `**` (excluding built-ins) and applies
+  `includeFiles` **after** `excludeFiles`, so the wildcard forced the entire
+  repository — including the 58 MB source `static/` tree and the 59 MB
+  `staticfiles/` collectstatic output — into the Lambda. Static assets were
+  then shipped twice: once to the edge CDN (via `public/`) and once into the
+  function. Verified by reading `@vercel/python@latest` (`dist/index.js`):
+  `files = glob("**", {ignore: [...excludeFiles]})` then
+  `for (pattern of includeFiles) Object.assign(files, glob(pattern, workPath))`.
+- **Fix:** `includeFiles` no longer contains `**`; the heavy trees are listed in
+  `excludeFiles` (`static/**`, `staticfiles/**`, `media/**`, `docs/**`,
+  `screenshots/**`). `public/**` was already excluded by the runtime itself.
+  Expected bundle: ~270 MB → ~150 MB.
+- **Static manifest kept:** `whitenoise`'s `CompressedManifestStaticFilesStorage`
+  needs `staticfiles.json` at runtime. It is force-included with
+  `"includeFiles": "staticfiles/staticfiles.json"` (applied last, so it survives
+  the exclusion), and the Python builder also re-copies it for Django projects.
+- **No asset cleanup was needed:** a DB-aware orphan audit (templates + CSS +
+  `seed_data.json` + every text column of `db.sqlite3`) found **0** unreferenced
+  files under `static/` and `media/` — all 377 images and 17 PDFs are live.
+
+### Static index: image resolution survives the slim bundle (closes N-35)
+
+- Removing `static/` from the function bundle would have broken request-time
+  image resolution: `pages/views/utils.py` walks `STATICFILES_DIRS`/`STATIC_ROOT`
+  to decide which candidate path really exists (`_find_static`) and to discover
+  gallery/product images (`_list_static_dir`, `_list_product_dir_images`).
+  Without it, products and project galleries would silently fall back to
+  `/media/...` URLs that do not exist on Vercel.
+- New `pages/static_index.py` writes a names-only index
+  (`pages/static_index_data.py`, ~20 KB, git-ignored, rebuilt every deploy by
+  `build.sh` after `collectstatic`) — the same convention as `pages/seed_data.py`.
+- `utils.py` imports that index and treats it as a **union** with the disk scan,
+  so local dev and CI behaviour is unchanged. `_list_product_dir_images` now
+  delegates to `_list_static_dir` instead of its own `os.listdir` loop.
+- Verified by simulating the Vercel filesystem (no `static/`, no `staticfiles/`):
+  all 6 page types return 200 with identical static-image counts to the
+  disk-backed baseline (`/`=6, `/products/`=9, `/projects/`=11, `/about/`=5,
+  `/contact/`=4, `/news/`=1, project detail gallery=12) and **zero** `media-src`
+  or empty-`src` regressions.
+
+### CI was never green: missing Pillow (closes N-25 follow-up)
+
+- All five CI runs so far failed (`run #1`–`#5`), including at `e0c1d85` and
+  `9075205` — the failure predates v1.5.2 and was masked because the suite is
+  usually run locally, where Pillow happens to be installed globally.
+- **Root cause:** `requirements.txt` never declared Pillow, so a clean install
+  fails Django's system check for all 14 `ImageField`s
+  (`fields.E210: Cannot use ImageField because Pillow is not installed`) and
+  `manage.py test` aborts with `SystemCheckError`. `Pillow>=10.0` added.
+- Reproduced and verified in a disposable venv with `django>=6.0,<7.0`
+  resolving to 6.1.1 (same as Vercel): before the fix
+  `SystemCheckError (14 issues)`, after `Ran 80 tests … OK (skipped=2)`.
+- CI now also generates `pages/static_index_data.py` before running tests, so
+  `GeneratedStaticIndexCoverageTests` guards the index against going stale.
+
+### Tests
+
+- L1: **88 tests OK** (was 80, skipped=2) — new `StaticIndexBuildTests` (3),
+  `StaticIndexFallbackTests` (4), `GeneratedStaticIndexCoverageTests` (1).
+
 ## v1.5.2 - 2026-09-12
 
 ### Loading performance: content-hashed static assets (P0, closes N-32)
