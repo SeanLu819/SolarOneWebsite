@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -11,7 +12,17 @@ from pages.views import _product_image_url, _get_project_detail_from_json, _enri
 from django.utils.translation import activate
 
 
-# 修改后
+# In production the static storage is content-hashed (Manifest storage), so
+# resolved URLs look like /static/.../name.<12-hex>.webp; locally they are
+# un-hashed. These tests care about *path* resolution (slug subdirectory
+# fallback), so strip any content hash first to stay storage-agnostic.
+_HASH_RE = re.compile(r'\.[0-9a-f]{12}(\.[A-Za-z0-9]+)$')
+
+
+def _strip_static_hash(url: str) -> str:
+    return _HASH_RE.sub(r'\1', url)
+
+
 class ProductImagePathResolutionTests(SimpleTestCase):
     def test_static_fallback_finds_file_in_slug_subdirectory(self):
         """DB stores old flat path, but assets now live in slug/ subdirectory.
@@ -20,7 +31,7 @@ class ProductImagePathResolutionTests(SimpleTestCase):
             slug='fl4m',
             image=SimpleNamespace(name='products/fl4m-01.webp'),
         )
-        url = _product_image_url(product, 'image')
+        url = _strip_static_hash(_product_image_url(product, 'image'))
         self.assertIn('/static/images/products/fl4m/fl4m-01.webp', url)  # ← 实际位置
 
     def test_static_fallback_prefers_db_relative_canonical_path(self):
@@ -29,7 +40,7 @@ class ProductImagePathResolutionTests(SimpleTestCase):
             banner_image=SimpleNamespace(name='products/vsp/vsp-bar-1.webp'),
         )
 
-        url = _product_image_url(product, 'banner_image')
+        url = _strip_static_hash(_product_image_url(product, 'banner_image'))
 
         self.assertIn('/static/images/products/vsp/vsp-bar-1.webp', url)
 

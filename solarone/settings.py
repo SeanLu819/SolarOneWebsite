@@ -290,7 +290,31 @@ WHITENOISE_ALLOW_ALL_ORIGINS = False
 WHITENOISE_EXTRA_PREFIXES = [
     ('/media/', str(BASE_DIR / 'static' / 'media')),
 ]
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# ============ STATIC STORAGE (content hashing -> immutable CDN cache) ============
+# P0 speed win: on production, serve CSS/JS/images from a content-hashed filename
+# so Vercel's edge CDN returns `Cache-Control: immutable, max-age=31536000`
+# (verified live via probe), replacing the old `max-age=0, must-revalidate` on
+# un-hashed files. Repeat visitors then cache assets for a year.
+#
+# CRITICAL (Django 6.0): the legacy `STATICFILES_STORAGE` setting was REMOVED and
+# is SILENTLY IGNORED — setting it has no effect at all. The storage MUST be
+# configured via the `STORAGES` dict under the "staticfiles" key. (Root-caused
+# here: with only STATICFILES_STORAGE set, collectstatic emitted un-hashed files.)
+#
+# Local/dev keeps the PLAIN storage on purpose: the dev server serves static via
+# WhiteNoise finders (WHITENOISE_USE_FINDERS=True) straight from ./static, where
+# files are NOT hash-renamed. If we hashed locally, {% static %} would emit
+# hashed URLs that finders cannot resolve -> 404 on every asset. Hashing only
+# matters where collectstatic actually runs (the Vercel build).
+if IS_VERCEL:
+    _STATIC_BACKEND = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    _STATIC_BACKEND = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {'BACKEND': _STATIC_BACKEND},
+}
 
 # ============ CACHE ============
 # Local dev uses LocMem (in-process). On Vercel there's no persistent cache
@@ -336,4 +360,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.2.1'
+APP_VERSION = '1.5.1'

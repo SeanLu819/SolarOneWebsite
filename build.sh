@@ -6,8 +6,12 @@
 # into ./public/static/. This way /static/* is served FIRST by Vercel's global
 # edge CDN — no Python Lambda coldstart, no WhiteNoise needed for plain assets.
 #
-# CRITICAL: vercel.json must include { "handle": "filesystem" } as the FIRST
-# route so that Vercel checks public/ before falling through to index.py.
+# NOTE (verified live 2026-09-12): the catch-all rewrite alone is sufficient —
+# Vercel's edge CDN already serves public/static/* (probe returns
+# `X-Vercel-Cache: HIT`), so NO `handle: filesystem` route is required.
+# Long-term caching comes from the content-hashed filenames emitted by
+# CompressedManifestStaticFilesStorage (settings.py -> STORAGES): Vercel then
+# serves them `immutable, max-age=31536000` instead of `max-age=0, must-revalidate`.
 
 set -e
 set -o pipefail
