@@ -1,3 +1,4 @@
+import json
 import re
 import tempfile
 from pathlib import Path
@@ -1105,4 +1106,117 @@ class GeneratedStaticIndexCoverageTests(SimpleTestCase):
             if rel not in indexed:
                 missing.append(rel)
         self.assertEqual(missing, [], f'索引遗漏了 {len(missing)} 个 static/ 文件')
+
+
+# ---------------------------------------------------------------------------
+# vercel.json 配置守卫（离线校验）
+# ---------------------------------------------------------------------------
+# 背景（v1.5.3 → v1.5.4）：functions.excludeFiles 曾被写成**数组**，Vercel 在
+# **构建开始前**（15s）就以
+# 「A Configuration error — Vercel couldn't load a valid project configuration」
+# 拒绝部署 —— 与函数包体积无关，纯粹是 schema 校验失败。
+#
+# 官方 schema（https://openapi.vercel.sh/vercel.json）规定 functions 每个条目的
+# excludeFiles / includeFiles 均为 {type: "string", maxLength: 256}，且该
+# patternProperties 节点是 additionalProperties: false —— 数组直接判非法。
+# 排除多个目录只能靠**花括号展开的单条 glob**（构建器 normalizeGlobs 不会按逗号拆分，
+# 但它下游的 npm `glob` / minimatch 支持 `{a,b}`）。
+#
+# 以下断言全部离线（不联网），目的是让 CI 拦住同类配置错误。
+_FUNCTION_OPTIONS = frozenset({
+    'excludeFiles', 'includeFiles', 'maxDuration', 'maxConcurrency', 'memory',
+    'runtime', 'regions', 'functionFailoverRegions', 'supportsCancellation',
+    'experimentalTriggers',
+})
+_TOP_LEVEL_KEYS = frozenset({
+    '$schema', 'alias', 'build', 'buildCommand', 'builds', 'bulkRedirectsPath',
+    'bunVersion', 'cleanUrls', 'crons', 'devCommand', 'env',
+    'experimentalAtproto', 'experimentalBYOC', 'experimentalEnvironmentVariables',
+    'experimentalServiceGroups', 'experimentalServices', 'experimentalServicesV2',
+    'fluid', 'framework', 'functionFailoverRegions', 'functions', 'git', 'github',
+    'headers', 'ignoreCommand', 'images', 'installCommand', 'name',
+    'outputDirectory', 'passiveRegions', 'proxy', 'redirects', 'regions',
+    'relatedProjects', 'rewrites', 'routes', 'schedules', 'scope', 'services',
+    'trailingSlash', 'version', 'wildcard',
+})
+_STRING_OPTION_MAXLEN = 256
+
+
+def _expand_braces(pattern):
+    """把 ``{a,b}/**`` 展开为 ``['a/**', 'b/**']``；不含花括号时原样返回。"""
+    match = re.search(r'\{([^{}]*)\}', pattern)
+    if not match:
+        return [pattern]
+    expanded = []
+    for alt in match.group(1).split(','):
+        expanded.extend(
+            _expand_braces(pattern[:match.start()] + alt + pattern[match.end():])
+        )
+    return expanded
+
+
+class VercelConfigTests(SimpleTestCase):
+    """vercel.json 必须符合官方 schema —— 违规会让 Vercel 在构建前直接拒绝部署。"""
+
+    def _cfg(self):
+        path = Path(settings.BASE_DIR, 'vercel.json')
+        if not path.is_file():
+            self.skipTest('vercel.json 不存在')
+        return json.loads(path.read_text(encoding='utf-8'))
+
+    def test_top_level_keys_are_known(self):
+        unknown = set(self._cfg()) - _TOP_LEVEL_KEYS
+        self.assertEqual(
+            unknown, set(),
+            f'vercel.json 顶层出现 schema 不认识的键（会被直接拒绝）: {sorted(unknown)}',
+        )
+
+    def test_function_options_match_schema_types(self):
+        for pattern, options in (self._cfg().get('functions') or {}).items():
+            self.assertLessEqual(len(pattern), _STRING_OPTION_MAXLEN,
+                                 'functions 的键超过 schema maxLength')
+            self.assertIsInstance(options, dict)
+            unknown = set(options) - _FUNCTION_OPTIONS
+            self.assertEqual(
+                unknown, set(),
+                f'functions["{pattern}"] 含非法选项（additionalProperties:false）: {sorted(unknown)}',
+            )
+            for key in ('excludeFiles', 'includeFiles'):
+                if key not in options:
+                    continue
+                value = options[key]
+                self.assertIsInstance(
+                    value, str,
+                    f'functions["{pattern}"].{key} 必须是 string（schema: type=string）；'
+                    f'写成 {type(value).__name__} 会让 Vercel 报 Configuration error',
+                )
+                self.assertLessEqual(
+                    len(value), _STRING_OPTION_MAXLEN,
+                    f'functions["{pattern}"].{key} 超过 schema 的 maxLength={_STRING_OPTION_MAXLEN}',
+                )
+
+    def test_heavy_static_trees_excluded_and_manifest_kept(self):
+        """体积修复的核心不变量：static/ 与 staticfiles/ 不进函数包，但清单必须在包内。"""
+        functions = self._cfg().get('functions') or {}
+        if not functions:
+            self.skipTest('vercel.json 未配置 functions')
+        options = next(iter(functions.values()))
+
+        excluded = _expand_braces(options.get('excludeFiles') or '')
+        self.assertIn('static/**', excluded, '源码 static/ 未排除 → 函数包会超 225 MB')
+        self.assertIn('staticfiles/**', excluded,
+                      'collectstatic 产物 staticfiles/ 未排除 → 函数包会超 225 MB')
+
+        included = _expand_braces(options.get('includeFiles') or '')
+        self.assertIn('staticfiles/staticfiles.json', included,
+                      'staticfiles.json 必须留在函数包内，否则 {% static %} 拿不到哈希映射')
+
+    def test_brace_glob_expansion_helper(self):
+        self.assertEqual(_expand_braces('a/**'), ['a/**'])
+        self.assertEqual(_expand_braces('{a,b}/**'), ['a/**', 'b/**'])
+        self.assertEqual(
+            _expand_braces('{static,staticfiles,media}/**'),
+            ['static/**', 'staticfiles/**', 'media/**'],
+        )
+
 

@@ -2,7 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.4 - 2026-09-12
+
+### Hotfix: v1.5.3 wrote an invalid `vercel.json` (deploy blocked before build)
+
+- **Symptom:** pushing v1.5.3 made Vercel fail in ~15 s with
+  *"A Configuration error — Vercel couldn't load a valid project configuration
+  for this deployment"*. This is a **config-schema** failure, not a bundle-size
+  failure: the build never started.
+- **Root cause:** `functions["api/index.py"].excludeFiles` was written as an
+  **array**. Per the official schema (`https://openapi.vercel.sh/vercel.json`)
+  both `excludeFiles` and `includeFiles` are `{"type": "string", "maxLength": 256}`,
+  and that `patternProperties` node has `"additionalProperties": false` — so any
+  array value is rejected outright. (`$schema` itself is a legal top-level key.)
+- **Fix:** collapse the list into a **single glob with brace expansion**:
+  `"excludeFiles": "{static,staticfiles,media,docs,screenshots}/**"`.
+  - The builder's `normalizeGlobs()` wraps a string as `[value]` and **does not
+    split on commas**; the pattern ends up in `@vercel/build-utils`' `glob()`
+    (npm `glob` / minimatch underneath), and minimatch **does** support `{a,b}`.
+  - **Verified with node + the real `glob` package** on a synthetic tree that
+    mirrors the repo, replaying the builder's exact order
+    (`glob("**", {cwd, ignore:[...predefined, ...excludeFiles]})` then
+    `Object.assign(files, glob(includeFiles))`): zero heavy-directory files leak.
+- **Belt and suspenders:** the builder additionally does
+  `if (djangoStatic?.manifestRelPath) files[manifestRelPath] = new FileFsRef(...)`,
+  i.e. it force-adds `staticfiles.json` back for Django projects regardless of
+  excludes — so the explicit `includeFiles` is redundant but kept as insurance.
+- **Reusable check:** a small script that downloads the official schema and
+  asserts ① every top-level key exists in `properties` and ② each `functions`
+  entry matches the declared `type` / `maxLength` / `additionalProperties`.
+  It reproduces Vercel's error exactly on the v1.5.3 config
+  (`excludeFiles : expected string, got list`).
+- **New offline guard:** `pages/tests.py` → `VercelConfigTests` (4 tests, no
+  network). It asserts top-level keys are known, `excludeFiles` / `includeFiles`
+  are **strings** within `maxLength: 256`, no unknown function options are used,
+  and the size fix's invariants hold (`static/**` + `staticfiles/**` excluded
+  while `staticfiles/staticfiles.json` stays included). L1: **92 tests OK**
+  (was 88, skipped=2).
+
 ## v1.5.3 - 2026-09-12
+
+> ⚠️ **Superseded by v1.5.4** — the `excludeFiles` array below is invalid config
+> and blocks the deploy. Use the v1.5.4 single-string form.
 
 ### Deploy blocker: Vercel function bundle exceeded the size limit (closes N-34)
 
