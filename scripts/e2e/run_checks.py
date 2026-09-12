@@ -281,6 +281,143 @@ def run_phase2_review(browser):
     ctx.close()
 
 
+def run_phase3_review(browser):
+    """阶段三 F12-F15 + N-13/N-14/N-15/N-17 —— 自动化回归（F15）。
+
+    覆盖：N-13 about 内联 grid hack 消除 + 收敛；N-14 死代码删除；
+    N-15 theme-color 跟随；N-17 抽屉焦点管理；F13 RTL(inset-inline-start)。
+    源码级断言为主，关键交互项叠加浏览器级渲染断言。
+    """
+    base_css = (BASE_DIR / "static/css/base.css").read_text(encoding="utf-8")
+    base_html = (BASE_DIR / "templates/base.html").read_text(encoding="utf-8")
+    about_html = (BASE_DIR / "templates/about.html").read_text(encoding="utf-8")
+    ps_html = (BASE_DIR / "templates/product_series.html").read_text(encoding="utf-8")
+    pd_html = (BASE_DIR / "templates/product_detail.html").read_text(encoding="utf-8")
+
+    print("\n=== 阶段三 源码级防御断言（N-13/N-14/N-15/N-17/F13）===")
+    # N-13 / F12：about.html 内联 <style> 块已删除，属性选择器 hack 消失；
+    #         .about-services-grid 已收敛进 base.css
+    check(about_html.count("<style>") == 0,
+          "N-13/F12 about.html 内联 <style> 块已移除")
+    check("div[style*=\"grid-template-columns: 1fr 1fr 1fr\"]" not in about_html,
+          "N-13 about.html 属性选择器 hack 已删除")
+    check("grid-template-columns: 1fr 1fr 1fr" not in about_html,
+          "N-13 about.html 内联 3 列 grid 已收敛")
+    check(".about-services-grid {" in base_css,
+          "N-13/F12 `.about-services-grid` 已入 base.css")
+
+    # N-14：数字滚动死代码（data-count / about-stat）已从 base.html 移除
+    check("[data-count]" not in base_html and ".about-stat" not in base_html,
+          "N-14 死代码 data-count/.about-stat 已从 base.html 删除")
+
+    # N-15：theme-color meta + JS 跟随 data-theme
+    check('<meta name="theme-color"' in base_html and "themeColorMeta" in base_html,
+          "N-15 theme-color meta 已注入 base.html")
+    check("meta.setAttribute('content', isLight ? '#F5F7FA' : '#080D1F')" in base_html,
+          "N-15 theme-color 随 data-theme 切换（深 #080D1F / 浅 #F5F7FA）")
+
+    # N-17：移动抽屉 a11y —— role/aria-modal + 焦点管理函数
+    check('role="dialog"' in base_html and 'aria-modal="true"' in base_html,
+          "N-17 #mobilePanel role=dialog + aria-modal=true")
+    check("setBackgroundInert" in base_html and "focusablesInPanel" in base_html,
+          "N-17 背景 inert / 焦点陷阱函数已接")
+
+    # F13：series-hero 物理 left → inset-inline-start，并补 [dir=rtl] 变体
+    check("inset-inline-start: 32px" in ps_html and "inset-inline-start: 32px" in pd_html,
+          "F13 series-hero 物理 `left` → `inset-inline-start` (series/detail)")
+    check('[dir="rtl"] .series-hero-content' in ps_html and '[dir="rtl"] .series-hero-content' in pd_html,
+          "F13 补 `[dir=rtl] .series-hero-content` 右对齐变体")
+    check('[dir="rtl"] .series-hero-overlay' in ps_html and '[dir="rtl"] .series-hero-overlay' in pd_html,
+          "F13 补 `[dir=rtl] .series-hero-overlay` 镜像渐变")
+
+    # ---- 浏览器级渲染断言 ----
+    print("\n=== 阶段三 浏览器级模拟断言 ===")
+    # N-15：theme-color meta 存在且默认深色；桌面点导航主题切换后跟随浅色
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(200)
+    meta0 = pg.evaluate("(()=>{const m=document.querySelector('meta[name=theme-color]');return m?m.getAttribute('content'):null;})()")
+    check(meta0 == "#080D1F", f"N-15 默认深色 theme-color={meta0}")
+    # 导航栏主题切换（移动端 .theme-toggle 在抽屉内不可见，故用桌面视口点 .nav 内那个）
+    btn = pg.locator(".nav .theme-toggle")
+    if btn.is_visible():
+        btn.click()
+        pg.wait_for_timeout(150)
+        meta1 = pg.evaluate("(()=>{const m=document.querySelector('meta[name=theme-color]');return m?m.getAttribute('content'):null;})()")
+        check(meta1 == "#F5F7FA", f"N-15 切浅色后 theme-color={meta1}")
+    else:
+        print("  [SKIP] N-15 导航主题切换按钮不可见，跳过跟随断言")
+    ctx.close()
+
+    # N-17：手机端打开抽屉 → 背景（footer）置 inert；关闭后恢复
+    ctx = browser.new_context(viewport={"width": 390, "height": 844},
+                              is_mobile=True, has_touch=True, device_scale_factor=3)
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(200)
+    role = pg.get_attribute("#mobilePanel", "role")
+    am = pg.get_attribute("#mobilePanel", "aria-modal")
+    check(role == "dialog" and am == "true",
+          f"N-17 #mobilePanel role={role} aria-modal={am}")
+    pg.locator("#hamburgerBtn").click()
+    pg.wait_for_timeout(250)
+    bg_inert = pg.evaluate("(()=>{const f=document.querySelector('footer');return f?f.inert:null;})()")
+    check(bg_inert is True, f"N-17 抽屉打开时背景 footer.inert={bg_inert}")
+    panel_focus = pg.evaluate("document.activeElement === document.getElementById('mobileClose')"
+                              " || document.activeElement.closest('#mobilePanel') !== null")
+    check(panel_focus, "N-17 抽屉打开后焦点进入面板")
+    pg.locator("#mobileClose").click()
+    pg.wait_for_timeout(250)
+    bg_restored = pg.evaluate("(()=>{const f=document.querySelector('footer');return f?f.inert:null;})()")
+    check(bg_restored is False, f"N-17 抽屉关闭后背景 footer.inert 恢复={bg_restored}")
+    ctx.close()
+
+    # N-13：/about/ 移动端 .about-services-grid / .about-optics-grid 计算为 grid，
+    #      且页面无残留内联 grid-template-columns
+    ctx = browser.new_context(viewport={"width": 390, "height": 844},
+                              is_mobile=True, has_touch=True, device_scale_factor=3)
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/about/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    grids = pg.evaluate(
+        "(()=>{const sel=['.about-services-grid','.about-optics-grid'];"
+        " const disp=sel.map(s=>{const e=document.querySelector(s);"
+        " return e?getComputedStyle(e).display:'MISSING';});"
+        " const inline=document.querySelectorAll('[style*=grid-template-columns]').length;"
+        " return {disp, inline};})()")
+    check(grids["disp"][0] == "grid" and grids["disp"][1] == "grid",
+          f"N-13 `/about/` 两栅格计算为 grid (services={grids['disp'][0]}, optics={grids['disp'][1]})")
+    check(grids["inline"] == 0, f"N-13 `/about/` 无残留内联 grid-template-columns (count={grids['inline']})")
+    ctx.close()
+
+    # F13：LTR 详情页 .series-hero-content 计算 left=32px；RTL 阿语版计算 right=32px
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/products/rt410-series/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    ltr_left = pg.evaluate(
+        "(()=>{const e=document.querySelector('.series-hero-content');return e?getComputedStyle(e).left:'MISSING';})()")
+    check(ltr_left == "32px", f"F13 LTR `.series-hero-content` left={ltr_left}")
+    ctx.close()
+
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/ar/products/rt410-series/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    rtl = pg.evaluate(
+        "(()=>{const e=document.querySelector('.series-hero-content');"
+        " if(!e) return {miss:true, dir:document.documentElement.dir};"
+        " return {miss:false, dir:document.documentElement.dir, right:getComputedStyle(e).right,"
+        " left:getComputedStyle(e).left};})()")
+    if rtl.get("miss"):
+        print(f"  [SKIP] F13 RTL 页面无 .series-hero-content (dir={rtl.get('dir')})")
+    else:
+        check(rtl["dir"] == "rtl" and rtl["right"] == "32px",
+              f"F13 RTL `.series-hero-content` dir={rtl['dir']} right={rtl['right']} (left={rtl['left']})")
+    ctx.close()
+
+
 def main():
     try:
         from playwright.sync_api import sync_playwright
@@ -310,6 +447,7 @@ def main():
             try:
                 run_checks(browser)
                 run_phase2_review(browser)
+                run_phase3_review(browser)
             finally:
                 browser.close()
     finally:

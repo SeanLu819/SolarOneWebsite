@@ -344,7 +344,7 @@
   .series-hero-content {
     position: absolute;
     top: 32px;
-    left: 32px;
+    inset-inline-start: 32px; /* F13: RTL 自动映射到 right */
     z-index: 2;
   }
   .series-hero-label {
@@ -364,8 +364,12 @@
   }
   @media (max-width: 767px) {
     .series-hero { height: 160px; }
-    .series-hero-content { top: 20px; left: 20px; }
+    .series-hero-content { top: 20px; inset-inline-start: 20px; }
   }
+
+  /* F13: RTL 适配 */
+  [dir="rtl"] .series-hero-content { text-align: right; }
+  [dir="rtl"] .series-hero-overlay { background: linear-gradient(225deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%); }
 
   /* Responsive */
   /* F7: 侧栏折叠收敛到 767；detail-grid 折单列提前到 1024（F8，P1-6） */

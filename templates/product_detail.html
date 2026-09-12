@@ -401,7 +401,7 @@
   .series-hero-content {
     position: absolute;
     top: 32px;
-    left: 32px;
+    inset-inline-start: 32px; /* F13: RTL 自动映射到 right */
     z-index: 2;
   }
   .series-hero-label {
@@ -861,7 +861,11 @@
       top: auto !important;
     }
     .series-hero { height: 160px; }
-    .series-hero-content { top: 20px; left: 20px; }
+    .series-hero-content { top: 20px; inset-inline-start: 20px; }
+
+    /* F13: RTL 适配 */
+    [dir="rtl"] .series-hero-content { text-align: right; }
+    [dir="rtl"] .series-hero-overlay { background: linear-gradient(225deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%); }
 
     /* F8 修正：detail-specs 移动端恢复 2 列（与桌面端一致，
        4 项参数排 2x2、6 项排 2x3，最多 3 行；优于 1 列 6 行的纵向堆叠）。

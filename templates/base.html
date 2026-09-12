@@ -6,6 +6,7 @@
 <head data-page-node-id="TpjcyWEZiOkTnIwlNRilHr">
 <meta charset="UTF-8" data-page-node-id="GclPk2LNvRsBYMGbGpG8Ha">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="1DEJrx5cU0lADilX5VZLMD">
+<meta name="theme-color" id="themeColorMeta" content="#080D1F"> <!-- N-15: 跟随 data-theme 由 JS 更新（深 #080D1F / 浅 #F5F7FA） -->
 <script>document.documentElement.classList.add('js');</script> <!-- F11: 在 CSS 渲染前标记 JS 可用 → html.js .reveal 才初始隐藏；无 JS 则内容默认可见 -->
 <title>{% block title %}{{ config.meta_title }}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}" data-page-node-id="TyUdVTUYr2xYOMtRP5H3Ty">
@@ -65,7 +66,7 @@
 <div class="mobile-panel-overlay" id="mobileOverlay" data-page-node-id="E6171cU1yk9g6nNRtyHMeI"></div>
 
 <!-- ============ MOBILE SIDE PANEL ============ -->
-<div class="mobile-panel" id="mobilePanel" data-page-node-id="scXbbfmTaKBpNrGQAAvCAW">
+<div class="mobile-panel" id="mobilePanel" role="dialog" aria-modal="true" aria-label="{% trans 'Main menu' %}" data-page-node-id="scXbbfmTaKBpNrGQAAvCAW">
   <button class="mobile-panel-close" id="mobileClose" aria-label="{% trans 'Close menu' %}" data-page-node-id="xGzt8fuWaM85IZwkw9oSKU">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="bXJySffDvEHP5dU1thZrJx"><line x1="18" y1="6" x2="6" y2="18" data-page-node-id="JWdKqfDCguLhSaK7xL3wDq"/><line x1="6" y1="6" x2="18" y2="18" data-page-node-id="EYU7nbktYnhUCnXFfwMuDe"/></svg>
   </button>
@@ -211,24 +212,71 @@
   'use strict';
 
   // ============ MOBILE PANEL ============
+  // N-17: 焦点管理 —— 打开时背景内容 inert + aria-hidden，关闭后焦点回到汉堡按钮；
+  //       panel 自身 role=dialog aria-modal 已在模板标注。
   var hamburger = document.getElementById('hamburgerBtn');
   var panel = document.getElementById('mobilePanel');
   var overlay = document.getElementById('mobileOverlay');
   var closeBtn = document.getElementById('mobileClose');
   var mobileLinks = document.querySelectorAll('.mobile-panel-links a');
+  var lastFocused = null;
+  var backgroundEls = [];
+
+  function setBackgroundInert(state) {
+    // 背景 = mobilePanel/overlay 之外的 body 直接子元素（nav、各页面 section、footer、脚本）
+    var kids = document.body.children;
+    backgroundEls = [];
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i];
+      if (el === panel || el === overlay) continue;
+      backgroundEls.push(el);
+      if (state) {
+        el.setAttribute('inert', '');
+        el.setAttribute('aria-hidden', 'true');
+      } else {
+        el.removeAttribute('inert');
+        el.removeAttribute('aria-hidden');
+      }
+    }
+  }
+
+  function focusablesInPanel() {
+    return panel.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+  }
 
   function openPanel() {
+    lastFocused = document.activeElement;
     panel.classList.add('open');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    setBackgroundInert(true);
     if (hamburger) hamburger.setAttribute('aria-expanded', 'true');
+    // 焦点移入面板（关闭按钮优先，否则首个可聚焦元素）
+    var f = focusablesInPanel();
+    (closeBtn && f.length) ? closeBtn.focus() : (f.length && f[0].focus());
   }
   function closePanel() {
     panel.classList.remove('open');
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    setBackgroundInert(false);
     if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+    lastFocused = null;
   }
+
+  // N-17: 面板内焦点陷阱（Tab / Shift+Tab 循环）
+  panel.addEventListener('keydown', function(e) {
+    if (e.key !== 'Tab') return;
+    var f = focusablesInPanel();
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
 
   hamburger.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
@@ -267,46 +315,6 @@
       el.style.opacity = '1';
       el.style.transform = 'translateY(0)';
     });
-  });
-
-  // ============ COUNTER ANIMATION ============
-  var counters = document.querySelectorAll('[data-count]');
-
-  function animateCounter(el) {
-    var target = parseInt(el.getAttribute('data-count'), 10);
-    var duration = 2000;
-    var startTime = null;
-
-    function step(timestamp) {
-      if (!startTime) startTime = timestamp;
-      var progress = Math.min((timestamp - startTime) / duration, 1);
-      // Ease-out cubic
-      var eased = 1 - Math.pow(1 - progress, 3);
-      var current = Math.round(eased * target);
-      el.textContent = current;
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else {
-        el.textContent = target;
-      }
-    }
-    requestAnimationFrame(step);
-  }
-
-  var counterObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        var counterEl = entry.target.querySelector('[data-count]');
-        if (counterEl) {
-          animateCounter(counterEl);
-        }
-        counterObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
-
-  document.querySelectorAll('.about-stat').forEach(function(stat) {
-    counterObserver.observe(stat);
   });
 
   // ============ FORM HANDLING (Django backend) ============
@@ -358,6 +366,8 @@
     var isLight = document.documentElement.getAttribute('data-theme') === 'light';
     iconSuns.forEach(function(icon) { icon.style.display = isLight ? 'block' : 'none'; });
     iconMoons.forEach(function(icon) { icon.style.display = isLight ? 'none' : 'block'; });
+    var meta = document.getElementById('themeColorMeta'); // N-15
+    if (meta) meta.setAttribute('content', isLight ? '#F5F7FA' : '#080D1F');
   }
   updateThemeIcon();
 

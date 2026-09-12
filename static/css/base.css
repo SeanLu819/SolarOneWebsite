@@ -2092,6 +2092,35 @@
     .about-optics-grid { grid-template-columns: 1fr; }
   }
 
+  /* About page — converged from about.html inline <style> (N-13/F12, v1.6) */
+  .about-services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  @media (max-width: 767px) {
+    .about-services-grid { grid-template-columns: 1fr; }
+  }
+  .about-pillar, .about-service-card, .about-optic-card {
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  }
+  .about-service-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px -12px rgba(0, 119, 237, 0.15);
+  }
+  .about-pillar:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 119, 237, 0.2);
+  }
+  .about-optic-card:hover {
+    border-color: var(--accent-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px -16px rgba(0, 119, 237, 0.15);
+  }
+
   .about-simple-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
