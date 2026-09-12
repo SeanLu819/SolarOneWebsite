@@ -25,7 +25,8 @@ SHOTS = BASE_DIR / "screenshots"
 
 PAGES = ["/", "/products/", "/projects/", "/news/", "/about/", "/contact/"]
 # N-12/F7: 覆盖 1024–1279 夹缝区（900 拆栏 / 1024 栅格的中间地带）+ 平板竖屏
-SIZES = [(320, 568), (390, 844), (768, 1024), (820, 1180), (1024, 768), (1440, 900)]
+# 补 375(iPhone SE/8) 与 360(安卓常见宽) 强化 §15.3 F7 全断点无横向溢出
+SIZES = [(320, 568), (360, 800), (375, 667), (390, 844), (768, 1024), (820, 1180), (1024, 768), (1440, 900)]
 SIDEBAR_PAGES = ("/products/", "/projects/", "/news/")
 
 failures = []
@@ -158,6 +159,128 @@ def run_checks(browser):
     check(sb == "auto", f"reduced-motion: html scroll-behavior=auto (got {sb})")
     ctx.close()
 
+def run_phase2_review(browser):
+    """§15.3 阶段二真机复核 7 项 —— 自动化闭环（替代一次性真机点检）。
+
+    设计原则（见 §6.8.3 / §15.4 遗留说明）：
+    - iOS 特有项（N-6 / N-11）与防御性 CSS 项：**断言「防御性写法是否存在」**，
+      比模拟真机更可靠、可无限重跑。故以源码级断言为主。
+    - 可在浏览器内验证的项（F9/F10/F8/F11/N-16 机制）：叠加浏览器级渲染断言。
+    """
+    base_css = (BASE_DIR / "static/css/base.css").read_text(encoding="utf-8")
+    base_html = (BASE_DIR / "templates/base.html").read_text(encoding="utf-8")
+    products_html = (BASE_DIR / "templates/products.html").read_text(encoding="utf-8")
+    pd_html = (BASE_DIR / "templates/product_detail.html").read_text(encoding="utf-8")
+
+    print("\n=== §15.3 源码级防御断言（N-11/N-6/F10/F9/F8/N-16/F11）===")
+    # N-11: 平板 hero 用 svh 跟随动态视口，100vh 作降级，二者成对
+    check("min-height: 100vh" in base_css and "min-height: 100svh" in base_css,
+          "N-11 .hero 平板 `100vh`+`100svh` 成对降级 (base.css)")
+    # N-6: Cookie 横幅不被 Home Indicator / 安卓工具栏遮 —— max() + safe-area 兜底
+    check("padding-bottom:max(20px, calc(env(safe-area-inset-bottom, 0px) + 8px))" in base_html,
+          "N-6 Cookie 横幅 `padding-bottom:max(20px, calc(env(safe-area-inset-bottom,0px)+8px))` (base.html)")
+    # F10: 移动端长项目名允许换行不截断
+    check("white-space: normal; overflow: visible" in base_css,
+          "F10 `.project-card-title` 移动端 `white-space:normal` (base.css)")
+    # F9: products banner 弃固定 aspect-ratio，改 min-height 杜绝超窄屏裁切
+    check("min-height: 120px" in products_html and "aspect-ratio:1920/442" not in products_html,
+          "F9 products banner 弃 `aspect-ratio` 改 `min-height` (products.html)")
+    # F8: 详情页主区折单列从 900 提前到 1024（平板 901-1024 不拥挤）
+    check("@media (max-width: 1024px)" in pd_html and "grid-template-columns: 1fr" in pd_html,
+          "F8 详情页 `.detail-grid` ≤1024 折单列 (product_detail.html)")
+    # N-16: 全局滑动提示样式 + 订购表实例已接（数据触发时自动显形）
+    check(".scroll-hint {" in base_css,
+          "N-16 `.scroll-hint` 全局样式存在 (base.css)")
+    check('class="scroll-hint"' in pd_html,
+          "N-16 订购表 `scroll-hint` 实例已接 (product_detail.html)")
+    # F11: 无 JS 时 `.reveal` 默认可见 —— 依赖 html.js 前缀 + 注入
+    check("classList.add('js')" in base_html and "html.js .reveal {" in base_css,
+          "F11 `html.js` 前缀 + 注入存在，无 JS 时 `.reveal` 默认可见 (base.html/base.css)")
+
+    # ---- 浏览器级渲染断言 ----
+    print("\n=== §15.3 浏览器级模拟断言 ===")
+    # F11: 关 JS 上下文，.reveal 必须全部可见（opacity != 0）
+    ctx = browser.new_context(
+        viewport={"width": 390, "height": 844},
+        is_mobile=True, has_touch=True, device_scale_factor=3,
+        java_script_enabled=False,
+    )
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/contact/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    res = pg.evaluate(
+        "(() => { const all=document.querySelectorAll('.reveal');"
+        " const hidden=[...all].filter(el=>parseFloat(getComputedStyle(el).opacity)===0);"
+        " return {total:all.length, hidden:hidden.length}; })()")
+    check(res["total"] > 0 and res["hidden"] == 0,
+          f"F11 无 JS 时 `.reveal` 全可见 (total={res['total']}, hidden={res['hidden']})")
+    ctx.close()
+
+    # F10: /projects/ 移动端 .project-card-title 计算 white-space == normal
+    ctx = browser.new_context(viewport={"width": 390, "height": 844},
+                              is_mobile=True, has_touch=True, device_scale_factor=3)
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/projects/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    ws = pg.evaluate(
+        "Array.from(document.querySelectorAll('.project-card-title')).map(el=>getComputedStyle(el).whiteSpace)")
+    check(bool(ws) and all(v == "normal" for v in ws),
+          f"F10 `/projects/` 移动端 `.project-card-title` white-space=normal (sample={ws[:3]})")
+    ctx.close()
+
+    # F9: /products/ 320 & 360 下 banner 无 aspect-ratio + 标题不裁切
+    for w in (320, 360):
+        ctx = browser.new_context(viewport={"width": w, "height": 720},
+                                  is_mobile=True, has_touch=True, device_scale_factor=3)
+        pg = ctx.new_page()
+        pg.goto(BASE_URL + "/products/", wait_until="domcontentloaded")
+        try:
+            pg.wait_for_function("document.fonts.status === 'loaded'", timeout=3000)
+        except Exception:
+            pass
+        pg.wait_for_timeout(300)
+        ar = pg.evaluate("getComputedStyle(document.querySelector('.products-banner')).aspectRatio")
+        mh = pg.evaluate("parseFloat(getComputedStyle(document.querySelector('.products-banner')).minHeight)")
+        clip = pg.evaluate(
+            "(() => { const b=document.querySelector('.products-banner');"
+            " const t=document.querySelector('.products-banner-title'); if(!b||!t) return null;"
+            " const bb=b.getBoundingClientRect(), tb=t.getBoundingClientRect();"
+            " return tb.right - bb.right; })()")
+        ok = (ar in ("auto", "normal", "")) and mh >= 80 and (clip is None or clip <= 1)
+        check(ok, f"F9 `/products/` {w}px banner 无 aspect-ratio(ar={ar}, minH={mh}, titleOverflow={clip})")
+        ctx.close()
+
+    # F8: 详情页 1024px 下 .detail-grid 单列（1 个栅格轨道）
+    ctx = browser.new_context(viewport={"width": 1024, "height": 768})
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/products/rt410-series/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    gtc = pg.evaluate("getComputedStyle(document.querySelector('.detail-grid')).gridTemplateColumns")
+    tracks = len([t for t in gtc.split() if t.strip()])
+    check(tracks == 1, f"F8 详情页 1024px `.detail-grid` 单列 (tracks={tracks}: '{gtc}')")
+    ctx.close()
+
+    # N-16 机制：产品详情页移动端，能量表容器不得真实横滑（自然换行，无需提示）；
+    # 若页面存在 scroll-hint 实例则必须可见。
+    ctx = browser.new_context(viewport={"width": 390, "height": 844},
+                              is_mobile=True, has_touch=True, device_scale_factor=3)
+    pg = ctx.new_page()
+    pg.goto(BASE_URL + "/products/rt400hb/", wait_until="domcontentloaded")
+    pg.wait_for_timeout(300)
+    energy_overflow = pg.evaluate(
+        "(() => { const w=document.querySelector('.detail-energy-table-wrap');"
+        " if(!w) return null; return w.scrollWidth - w.clientWidth; })()")
+    check(energy_overflow is not None and energy_overflow <= 1,
+          f"N-16 能量表移动端不横滑 (overflow={energy_overflow}px)")
+    hint_count = pg.locator(".scroll-hint").count()
+    if hint_count > 0:
+        check(pg.locator(".scroll-hint").first.is_visible(),
+              "N-16 存在的 scroll-hint 移动端可见")
+    else:
+        print("  [SKIP] N-16 当前无产品含 ordering_cols → scroll-hint 休眠（机制已接，数据触发即显形）")
+    ctx.close()
+
+
 def main():
     try:
         from playwright.sync_api import sync_playwright
@@ -186,6 +309,7 @@ def main():
                 return 2
             try:
                 run_checks(browser)
+                run_phase2_review(browser)
             finally:
                 browser.close()
     finally:
