@@ -38,6 +38,13 @@ def _is_rate_limited(request):
 def _send_contact_notification(contact_msg):
     notify_to = getattr(settings, 'CONTACT_NOTIFY_EMAIL', '')
     if not notify_to:
+        if getattr(settings, 'IS_VERCEL', False):
+            logger.error(
+                'CONTACT_NOTIFY_EMAIL is not set on Vercel — contact submissions are '
+                'saved to the ephemeral /tmp SQLite DB and will be LOST on redeploy. '
+                'Configure CONTACT_NOTIFY_EMAIL + SMTP, or point DATABASE_URL at a '
+                'persistent DB (Neon/Supabase).'
+            )
         return False
     subject = f'[Contact] New message from {contact_msg.name}'
     body_lines = [
@@ -58,7 +65,7 @@ def _send_contact_notification(contact_msg):
             message='\n'.join(body_lines),
             from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@solarone.com'),
             recipient_list=[notify_to],
-            fail_silently=True,
+            fail_silently=False,
         )
         return True
     except Exception:
@@ -105,8 +112,21 @@ def contact(request):
                 contact_msg = ContactMessage.objects.create(
                     name=name, email=email, phone=phone, message=message
                 )
-                _send_contact_notification(contact_msg)
-                messages.success(request, _('Your message has been sent successfully!'))
+                notify_ok = _send_contact_notification(contact_msg)
+                if notify_ok:
+                    messages.success(request, _('Your message has been sent successfully!'))
+                elif getattr(settings, 'IS_RUNTIME', False):
+                    # Ephemeral /tmp DB + no email delivery => submission will be
+                    # lost on the next redeploy. Be honest with the user instead of
+                    # claiming success (incident 2026-09-13).
+                    logger.error('Contact submission saved but NOT delivered (no notify email, ephemeral DB).')
+                    messages.error(
+                        request,
+                        _('We could not deliver your message right now. '
+                          'Please try again later or email us directly using the address on this site.'),
+                    )
+                else:
+                    messages.success(request, _('Your message has been sent successfully!'))
             except Exception:
                 logger.warning('Failed to save contact message', exc_info=True)
                 messages.error(request, _('Sorry, we could not save your message. Please try again.'))

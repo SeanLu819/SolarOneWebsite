@@ -113,4 +113,25 @@ try:
             sys.stderr.write(f'[index.py] static("{_probe}") FAILED: {exc!r}\n')
 except Exception as exc:  # never let diagnostics break the app
     sys.stderr.write(f'[index.py] static self-check failed: {exc!r}\n')
+
+# --- contact-form persistence self-check --------------------------------------
+# On Vercel the contact form stores submissions in the ephemeral /tmp SQLite DB
+# (lost on redeploy). The only durable channel is email, gated by CONTACT_NOTIFY_EMAIL
+# + SMTP. If neither is configured, submissions are silently lost (incident 2026-09-13).
+try:
+    _notify = getattr(settings, 'CONTACT_NOTIFY_EMAIL', '')
+    _email_backend = getattr(settings, 'EMAIL_BACKEND', '')
+    _db_url = os.environ.get('DATABASE_URL', '')
+    _ephemeral = '/tmp/' in _db_url
+    sys.stderr.write(f'[index.py] contact notify_email set = {bool(_notify)}\n')
+    sys.stderr.write(f'[index.py] email backend = {_email_backend}\n')
+    sys.stderr.write(f'[index.py] DB ephemeral(/tmp) = {_ephemeral} (url={_db_url})\n')
+    if getattr(settings, 'IS_VERCEL', False) and not _notify:
+        sys.stderr.write(
+            '[index.py] WARNING: contact form has NO durable delivery on Vercel '
+            '(notify_email empty, DB ephemeral). Submissions will be LOST. '
+            'Set CONTACT_NOTIFY_EMAIL + EMAIL_HOST_USER/PASSWORD, or point DATABASE_URL at Neon/Supabase.\n'
+        )
+except Exception as exc:  # never let diagnostics break the app
+    sys.stderr.write(f'[index.py] contact self-check failed: {exc!r}\n')
 sys.stderr.flush()

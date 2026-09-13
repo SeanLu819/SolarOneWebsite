@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.7 - 2026-09-13
+
+### Fix: contact form silently loses submissions on Vercel (N-39)
+
+- **Root cause (confirmed):** `ContactMessage` is saved to `DATABASE_URL=sqlite:///tmp/db.sqlite3`
+  on Vercel (wiped on every redeploy/cold start). `CONTACT_NOTIFY_EMAIL` is empty by default, so
+  `_send_contact_notification` early-returns and `send_mail(fail_silently=True)` + a `locmem`
+  `EMAIL_BACKEND` fallback mean **no email is ever sent**. Users saw "success" but nothing persisted.
+- **Hardening (no env change required to stop the silent loss):**
+  - `send_mail(fail_silently=False)` so real SMTP errors are caught and logged.
+  - When `CONTACT_NOTIFY_EMAIL` is empty **and** `IS_VERCEL`, log an explicit `logger.error`.
+  - On `IS_RUNTIME` (ephemeral `/tmp` DB) with no email delivery, the form **no longer claims
+    success** — it tells the user to retry later or email directly.
+  - New `pages/checks.check_contact_persistence` (id `pages.W001`): emits a `Warning` when
+    Vercel + ephemeral DB + no notify email, so `manage.py check` / CI surfaces it.
+  - `api/index.py` cold-start self-check now prints contact persistence facts
+    (notify_email set / email backend / DB ephemeral).
+- **Guard:** `ContactPersistenceCheckTests` (4) in `pages/tests.py`.
+- **The durable fix still requires Vercel env vars:** `CONTACT_NOTIFY_EMAIL` + `EMAIL_HOST_USER` /
+  `EMAIL_HOST_PASSWORD` (SMTP). Long term, point `DATABASE_URL` at Neon/Supabase and run migrations.
+
 ## v1.5.6 - 2026-09-12
 
 ### Fix: `/products/` banner collapsed to its `min-height` floor, cropping the image

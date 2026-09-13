@@ -396,6 +396,40 @@ class ContactFormSecurityTests(TestCase):
             ContactMessage.objects.filter(email='real@customer.example').exists(),
             'normal submissions (no honeypot) must still be saved')
 
+
+class ContactPersistenceCheckTests(TestCase):
+    """Production guard: contact submissions must have a durable delivery channel.
+
+    On Vercel the default DB is the ephemeral /tmp SQLite (lost on redeploy). The
+    only durable channel is email (CONTACT_NOTIFY_EMAIL + SMTP). If neither is
+    configured, check_contact_persistence must warn so the loss is caught in CI
+    / `manage.py check`, not discovered via silent data loss (incident 2026-09-13).
+    """
+
+    def _run(self, *, vercel, db_url, notify):
+        from pages.checks import check_contact_persistence
+        with mock.patch.dict('os.environ', {'DATABASE_URL': db_url}), \
+                override_settings(IS_VERCEL=vercel, CONTACT_NOTIFY_EMAIL=notify):
+            return check_contact_persistence(None)
+
+    def test_vercel_ephemeral_db_without_email_warns(self):
+        errors = self._run(vercel=True, db_url='sqlite:////tmp/db.sqlite3', notify='')
+        self.assertEqual(len(errors), 1, 'must warn when Vercel + /tmp DB + no notify email')
+        self.assertEqual(errors[0].id, 'pages.W001')
+
+    def test_vercel_ephemeral_db_with_email_ok(self):
+        errors = self._run(vercel=True, db_url='sqlite:////tmp/db.sqlite3', notify='sales@solarone.com')
+        self.assertEqual(errors, [], 'email configured => durable channel exists')
+
+    def test_vercel_persistent_db_without_email_ok(self):
+        errors = self._run(vercel=True, db_url='postgres://u:p@neon/db', notify='')
+        self.assertEqual(errors, [], 'persistent DB => durable even without email')
+
+    def test_local_dev_not_flagged(self):
+        errors = self._run(vercel=False, db_url='', notify='')
+        self.assertEqual(errors, [], 'non-Vercel must never warn')
+
+
 class ResponsiveNavTests(TestCase):
     """阶段一 F1' — 导航单一数据源 + 移动端功能不丢失（渲染 DOM 契约，§6.2/§8.5）。
 

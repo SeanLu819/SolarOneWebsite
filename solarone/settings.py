@@ -133,7 +133,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pages',
+    'pages.apps.PagesConfig',
     # 'django_cleanup',  # Uncomment after installing: pip install django-cleanup
 ]
 
@@ -368,4 +368,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.5.6'
+APP_VERSION = '1.5.7'
