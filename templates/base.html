@@ -2,32 +2,32 @@
 {% load i18n %}
 {% load seo_tags %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" data-theme="dark"{% if LANGUAGE_CODE == 'ar' %} dir="rtl"{% endif %} data-page-node-id="N7Hf4sb93BXnYUpfa9MO78">
-<head data-page-node-id="TpjcyWEZiOkTnIwlNRilHr">
-<meta charset="UTF-8" data-page-node-id="GclPk2LNvRsBYMGbGpG8Ha">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="1DEJrx5cU0lADilX5VZLMD">
+<html lang="{{ LANGUAGE_CODE }}" data-theme="dark"{% if LANGUAGE_CODE == 'ar' %} dir="rtl"{% endif %}>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" id="themeColorMeta" content="#080D1F"> <!-- N-15: 跟随 data-theme 由 JS 更新（深 #080D1F / 浅 #F5F7FA） -->
 <script>document.documentElement.classList.add('js');</script> <!-- F11: 在 CSS 渲染前标记 JS 可用 → html.js .reveal 才初始隐藏；无 JS 则内容默认可见 -->
 <title>{% block title %}{{ config.meta_title }}{% endblock %}</title>
-<meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}" data-page-node-id="TyUdVTUYr2xYOMtRP5H3Ty">
-<link rel="canonical" href="{{ canonical_origin }}{{ request.path }}" data-page-node-id="7Vd6YaI41Fgy707J8odEnj">
+<meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}">
+<link rel="canonical" href="{{ canonical_origin }}{{ request.path }}">
 {% hreflang_links %}
-<meta property="og:title" content="{% block og_title %}{{ config.meta_title }}{% endblock %}" data-page-node-id="UEqVZeF2Vn82QzVHY3hNyb">
-<meta property="og:description" content="{% block og_description %}{{ config.meta_description }}{% endblock %}" data-page-node-id="RMPAWXQzETCiunemmEECje">
-<meta property="og:url" content="{{ canonical_origin }}{{ request.path }}" data-page-node-id="qHCSQFJCN7qBsGOA1bNGiy">
-<meta property="og:type" content="website" data-page-node-id="2CNdMb2uA8gEEGOyEDIm1R">
-<meta property="og:locale" content="{{ LANGUAGE_CODE }}" data-page-node-id="yOeVJULhrLHAUAcFJ9NYi5">
-<meta property="og:site_name" content="{{ config.brand_name }}" data-page-node-id="leMAwNetTt46ASX2eo6yJp">
-{% if config.og_image %}<meta property="og:image" content="{{ config.og_image.url }}" data-page-node-id="X5i2EwpfsYx7ArvFGOIBn2">{% endif %}
-<meta name="twitter:card" content="summary_large_image" data-page-node-id="K50ABkIH0tgwRtHjD0WAiF">
-<meta name="twitter:title" content="{% block twitter_title %}{{ config.meta_title }}{% endblock %}" data-page-node-id="Qs92vwuhw5WVcUSs3CAqxh">
-<meta name="twitter:description" content="{% block twitter_description %}{{ config.meta_description }}{% endblock %}" data-page-node-id="jVSbVMI6oZ3iwI6Iw5j16M">
-{% if config.og_image %}<meta name="twitter:image" content="{{ config.og_image.url }}" data-page-node-id="qRDIWXAN2xaRz7pAVP9MDq">{% endif %}
-<link rel="icon" type="image/webp" href="{% static 'images/favicon.webp' %}" data-page-node-id="y11sinUwuXcsH71amCMtA9">
-<link rel="preconnect" href="https://fonts.googleapis.com" data-page-node-id="VoPhg51Yq707IIizgtUzyB">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-page-node-id="AAMEonNTisx4lpLbShYBm3">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" data-page-node-id="zRxL9BGBZOPa6xpaGnBpru">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" data-page-node-id="zRxL9BGBZOPa6xpaGnBpruNoScript"></noscript>
+<meta property="og:title" content="{% block og_title %}{{ config.meta_title }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{{ config.meta_description }}{% endblock %}">
+<meta property="og:url" content="{{ canonical_origin }}{{ request.path }}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+<meta property="og:site_name" content="{{ config.brand_name }}">
+{% if config.og_image %}<meta property="og:image" content="{{ config.og_image.url }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}{{ config.meta_title }}{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}{{ config.meta_description }}{% endblock %}">
+{% if config.og_image %}<meta name="twitter:image" content="{{ config.og_image.url }}">{% endif %}
+<link rel="icon" type="image/webp" href="{% static 'images/favicon.webp' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet"></noscript>
 <script>
 (function(){
   var saved=localStorage.getItem('theme');
@@ -60,34 +60,34 @@
   }
 </style>
 </head>
-<body data-page-node-id="S4cvErNPS0wa4OWisF0znn">
+<body>
 
 <!-- ============ MOBILE PANEL OVERLAY ============ -->
-<div class="mobile-panel-overlay" id="mobileOverlay" data-page-node-id="E6171cU1yk9g6nNRtyHMeI"></div>
+<div class="mobile-panel-overlay" id="mobileOverlay"></div>
 
 <!-- ============ MOBILE SIDE PANEL ============ -->
-<div class="mobile-panel" id="mobilePanel" role="dialog" aria-modal="true" aria-label="{% trans 'Main menu' %}" data-page-node-id="scXbbfmTaKBpNrGQAAvCAW">
-  <button class="mobile-panel-close" id="mobileClose" aria-label="{% trans 'Close menu' %}" data-page-node-id="xGzt8fuWaM85IZwkw9oSKU">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="bXJySffDvEHP5dU1thZrJx"><line x1="18" y1="6" x2="6" y2="18" data-page-node-id="JWdKqfDCguLhSaK7xL3wDq"/><line x1="6" y1="6" x2="18" y2="18" data-page-node-id="EYU7nbktYnhUCnXFfwMuDe"/></svg>
+<div class="mobile-panel" id="mobilePanel" role="dialog" aria-modal="true" aria-label="{% trans 'Main menu' %}">
+  <button class="mobile-panel-close" id="mobileClose" aria-label="{% trans 'Close menu' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <ul class="mobile-panel-links" data-page-node-id="MLRXjhFTGt1mElhJTV4rwr">
+  <ul class="mobile-panel-links">
     {% include "includes/nav_items.html" %}
   </ul>
-  <div class="panel-actions" data-page-node-id="DdQU7ZM0ultvKjZ1GTiuWy">
-    <button class="theme-toggle panel-action" type="button" aria-label="{% trans 'Toggle light/dark theme' %}" data-page-node-id="DHicrJHTsHWCTd9Raaq9kw">
-      <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;" data-page-node-id="uSCekzCfWDHTP705HsETvz"><circle cx="12" cy="12" r="5" data-page-node-id="64F5furYPmVSQIv99ZCywp"/><line x1="12" y1="1" x2="12" y2="3" data-page-node-id="2ynOPXjCQ13mO4zuu9BO1w"/><line x1="12" y1="21" x2="12" y2="23" data-page-node-id="qBO12t0jAloyqkBTnyasXr"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-page-node-id="4YVB9rpCKSqGczZGgTiu9l"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-page-node-id="ghNoUeAnTQAClAwgX1LDtW"/><line x1="1" y1="12" x2="3" y2="12" data-page-node-id="MGoRmyvu6It16ZE84ZYDVA"/><line x1="21" y1="12" x2="23" y2="12" data-page-node-id="kd7otmoPPCy1YxPWtek8qq"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-page-node-id="oWbeXEGupakbz3xYnfILCm"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-page-node-id="fZuaIM2MnI4GsSYOBpBM4w"/></svg>
-      <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="RYyVZ5lFvH7HEyMDlYKdGw"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" data-page-node-id="d5iWNsGoG4wGHhlwkmtoKW"/></svg>
-      <span class="panel-action-label" data-page-node-id="h0UcVhmYOtCWo2sBu0DvTY">{% trans "Theme" %}</span>
+  <div class="panel-actions">
+    <button class="theme-toggle panel-action" type="button" aria-label="{% trans 'Toggle light/dark theme' %}">
+      <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <span class="panel-action-label">{% trans "Theme" %}</span>
     </button>
-    <div class="lang-switch panel-action" data-page-node-id="5ODFWQvgxoAXYZnhjijDrN">
-      <button class="lang-switch-btn" type="button" aria-label="{% trans 'Change language' %}" data-page-node-id="vg2avvfBRXOBeb2ju2fHGH">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;" data-page-node-id="0GMHS9PchNsKAI4D960kBv"><circle cx="12" cy="12" r="10" data-page-node-id="JsGpQ5bsLqW2EEG1XWEUH2"/><line x1="2" y1="12" x2="22" y2="12" data-page-node-id="2I6jAJ1Ic73pa86ZCbq7Bj"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-page-node-id="A9uijiVY32S7aiSAsH8hgp"/></svg>
-        <span class="lang-switch-current" data-page-node-id="vYzHMQ72QHR0KF62nX2ib6">{{ LANGUAGE_CODE|upper }}</span>
+    <div class="lang-switch panel-action">
+      <button class="lang-switch-btn" type="button" aria-label="{% trans 'Change language' %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lang-switch-current">{{ LANGUAGE_CODE|upper }}</span>
       </button>
-      <div class="lang-switch-menu" data-page-node-id="PPFR4BvWkmjWsaiVnxtMT0">
+      <div class="lang-switch-menu">
         {% get_current_language as LANG_CODE %}
         {% for lang_code, lang_name in LANGUAGES %}
-        <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}" data-page-node-id="I0peTJAC4Gb1WNw2KsAaon">
+        <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
           {{ lang_name }}
         </a>
         {% endfor %}
@@ -97,37 +97,37 @@
 </div>
 
 <!-- ============ NAV ============ -->
-<nav class="nav" id="mainNav" data-page-node-id="lqqHcPDT16Am5sfAkTBD9U">
-  <div class="container nav-inner" data-page-node-id="qNV8PZFIwNiKdA5s1HAJcd">
-    <a href="{% url 'home' %}" class="nav-brand" data-page-node-id="3Fm5PvWqkialbyLELnu1vi">
-      <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'" data-page-node-id="LMQ1aGZAGEAoHeCulTRd5J"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)" data-page-node-id="yVWJBcHevaasYK55YLleQR">{{ config.brand_name }}</span>
+<nav class="nav" id="mainNav">
+  <div class="container nav-inner">
+    <a href="{% url 'home' %}" class="nav-brand">
+      <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)">{{ config.brand_name }}</span>
     </a>
-    <ul class="nav-links" data-page-node-id="49SNAIDqqAPGIzXZE2U501">
+    <ul class="nav-links">
       {% include "includes/nav_items.html" %}
     </ul>
-    <div class="nav-actions" data-page-node-id="rDiYS8TSTEVmDm8UbMmoLO">
-      <a href="{% url 'contact' %}" class="nav-cta" data-page-node-id="3PhygvJrVvHm3pdKPEpswN">{% trans "Contact Us" %} <span class="arrow" data-page-node-id="TaZ9SOUb9T7TG9iJxklFIG">&#8250;</span></a>
-      <button class="theme-toggle" type="button" aria-label="Toggle theme" title="{% trans 'Toggle light/dark theme' %}" data-page-node-id="MwwgBAUTP2yNVGjnkcTHCA">
-        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;" data-page-node-id="XHdkdAFiE6Ib6byN4Vr3O8"><circle cx="12" cy="12" r="5" data-page-node-id="pVS34h0wG6slDzW6TFB2eX"/><line x1="12" y1="1" x2="12" y2="3" data-page-node-id="HuMCxCJOJpEqrepvR6SPot"/><line x1="12" y1="21" x2="12" y2="23" data-page-node-id="fKs4ZOEhKMseCbH7noHZQF"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-page-node-id="LlCKpRJloAiGEJGt1xbNHF"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-page-node-id="MWWNC7psLCqfw5dTnnGjPE"/><line x1="1" y1="12" x2="3" y2="12" data-page-node-id="4tIbRky9PjIhoA7DavNJQB"/><line x1="21" y1="12" x2="23" y2="12" data-page-node-id="lTPWHacbVBjOe164HhTdGB"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-page-node-id="AX6PVJBGG6M3fFP2y5kE3W"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-page-node-id="y6hEFASYG5FjTZ3ChaQ3CT"/></svg>
-        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="zOOIYEy5WD4frZ9cFbKCo1"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" data-page-node-id="Jt7aeQZq2nBsBuRC2p8Klq"/></svg>
+    <div class="nav-actions">
+      <a href="{% url 'contact' %}" class="nav-cta">{% trans "Contact Us" %} <span class="arrow">&#8250;</span></a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme" title="{% trans 'Toggle light/dark theme' %}">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
-      <div class="lang-switch" data-page-node-id="zBF5ZsbcWyRLF9qeKG6UuD">
-        <button class="lang-switch-btn" type="button" aria-label="Change language" data-page-node-id="ti4XuqhZCR12UZ5THu6n4h">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;" data-page-node-id="MAILw5Y49YhKEgzIm9ly5k"><circle cx="12" cy="12" r="10" data-page-node-id="YxX18dAg2bb5fi5dljErzw"/><line x1="2" y1="12" x2="22" y2="12" data-page-node-id="f6lq3d2HVwXKAeU0P4DOTI"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-page-node-id="nEGaDh3bBxNBQP3kx3iBnP"/></svg>
-          <span class="lang-switch-current" data-page-node-id="JpFTvpk3FVzeR1lDjitxRs">{{ LANGUAGE_CODE|upper }}</span>
+      <div class="lang-switch">
+        <button class="lang-switch-btn" type="button" aria-label="Change language">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span class="lang-switch-current">{{ LANGUAGE_CODE|upper }}</span>
         </button>
-        <div class="lang-switch-menu" data-page-node-id="ajGcuAsvDF7uxfZ8UXEKsr">
+        <div class="lang-switch-menu">
           {% get_current_language as LANG_CODE %}
           {% for lang_code, lang_name in LANGUAGES %}
-          <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}" data-page-node-id="1V2QVCiwWTrFriT2PPfVA9">
+          <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
             {{ lang_name }}
           </a>
           {% endfor %}
         </div>
       </div>
     </div>
-    <button class="hamburger" id="hamburgerBtn" aria-label="{% trans 'Open menu' %}" aria-expanded="false" aria-controls="mobilePanel" data-page-node-id="1OcLcEuzunEXfANjJVUIb5">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" data-page-node-id="AyhW6e54LG2zK1BAjPAOZG"><line x1="3" y1="6" x2="21" y2="6" data-page-node-id="f1QxKbFgZvk9R9ugXtkU4K"/><line x1="3" y1="12" x2="21" y2="12" data-page-node-id="wQryDd5XEBhNAxmhO2HANE"/><line x1="3" y1="18" x2="21" y2="18" data-page-node-id="zXiO4HzUijR47Rlj5mrA6E"/></svg>
+    <button class="hamburger" id="hamburgerBtn" aria-label="{% trans 'Open menu' %}" aria-expanded="false" aria-controls="mobilePanel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
   </div>
 </nav>
@@ -135,73 +135,73 @@
 {% block content %}{% endblock %}
 
 <!-- ============ FOOTER ============ -->
-<footer data-page-node-id="DpvOmuuFmByGU8FohOCsUm">
-  <div class="container" data-page-node-id="ajbSNoOZNkmIQ5PGnBUXRF">
-    <div class="footer-grid" data-page-node-id="nBUwWVSuCB6qp5c1bVy0oF">
-      <div class="footer-brand-block" data-page-node-id="7fRjLv8dBaf8DVRFN3do7d">
-        <div class="footer-brand-name" data-page-node-id="n2R8DKMnSkJIuaO0Tc8TXj">{{ config.brand_name }}</div>
-        <p class="footer-brand-text" data-page-node-id="wfDT9TnMVtoWHGvsCqbEzi">{{ config.footer_description }}</p>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand-block">
+        <div class="footer-brand-name">{{ config.brand_name }}</div>
+        <p class="footer-brand-text">{{ config.footer_description }}</p>
       </div>
-      <div data-page-node-id="Rvuv29Juf398OvkrxyteEe">
-        <div class="footer-col-label" data-page-node-id="6MlWjAbFZRCe117AFVBO7x">{% trans "Quick Links" %}</div>
-        <ul class="footer-list" data-page-node-id="L9HuRGkQSGsWGeEkxvEETy">
-          <li data-page-node-id="iWjccfZBTnBEdCNCzb2RWH"><a href="{% url 'products' %}" data-page-node-id="w4YrA6ftpDjwjHtXIJIzqC">{% trans "Products" %}</a></li>
-          <li data-page-node-id="nWT80WCNWsHX2CrBbfwhdc"><a href="{% url 'projects' %}" data-page-node-id="hTXVgMGRviJrIlnxLpsZFT">{% trans "Projects" %}</a></li>
-          <li data-page-node-id="udJX3Ci83Uyui5KMMwnVH6"><a href="{% url 'news' %}" data-page-node-id="HRlZcIUPuuxCiVXQDIBFqs">{% trans "News" %}</a></li>
-          <li data-page-node-id="2zAraxA6PJ7uyzhGbF2kfB"><a href="{% url 'about' %}" data-page-node-id="ABagozaB8Mw8nDOBTMWzsN">{% trans "About" %}</a></li>
-          <li data-page-node-id="bO1CsKzcJSE9ApsB2w075T"><a href="{% url 'contact' %}" data-page-node-id="fm1GQDdEwfUd02cPT7ztLb">{% trans "Contact" %}</a></li>
+      <div>
+        <div class="footer-col-label">{% trans "Quick Links" %}</div>
+        <ul class="footer-list">
+          <li><a href="{% url 'products' %}">{% trans "Products" %}</a></li>
+          <li><a href="{% url 'projects' %}">{% trans "Projects" %}</a></li>
+          <li><a href="{% url 'news' %}">{% trans "News" %}</a></li>
+          <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+          <li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
         </ul>
       </div>
-      <div data-page-node-id="XMLn3X4ZSMjoBiRm2jC2IX">
-        <div class="footer-col-label" data-page-node-id="bkif4Fv6eAJlp5rvHZI8Ov">{% trans "Social Media" %}</div>
-        <div class="footer-social" data-page-node-id="7hBjYKZTnsCmu63ACfISnK">
+      <div>
+        <div class="footer-col-label">{% trans "Social Media" %}</div>
+        <div class="footer-social">
           {% if config.social_facebook %}
           <!-- Facebook -->
-          <a href="{{ config.social_facebook }}" aria-label="Facebook" target="_blank" rel="noopener" data-page-node-id="YEravM9Y6eL1sB1z2yBa9S">
-            <svg viewBox="0 0 24 24" fill="currentColor" data-page-node-id="xG0YPC8Y0HexR7EJNs9JSY"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" data-page-node-id="l3sCqn5uRGKrZBtF0texOG"/></svg>
+          <a href="{{ config.social_facebook }}" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
           {% endif %}
           {% if config.social_youtube %}
           <!-- YouTube -->
-          <a href="{{ config.social_youtube }}" aria-label="YouTube" target="_blank" rel="noopener" data-page-node-id="PqKh1yN0qOvfbKQbPhEEyz">
-            <svg viewBox="0 0 24 24" fill="currentColor" data-page-node-id="cPxV2cPGDxi25rt7OfxSmg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" data-page-node-id="IggdnA19skd1khSsBByOXt"/></svg>
+          <a href="{{ config.social_youtube }}" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </a>
           {% endif %}
           {% if config.social_instagram %}
           <!-- Instagram -->
-          <a href="{{ config.social_instagram }}" aria-label="Instagram" target="_blank" rel="noopener" data-page-node-id="sbszrbmClUgNePuKHEZnec">
-            <svg viewBox="0 0 24 24" fill="currentColor" data-page-node-id="ZFiAlxfp2glElf9UXA7d6r"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" data-page-node-id="9ZL81rh0VUhuM8m9Rk26yH"/></svg>
+          <a href="{{ config.social_instagram }}" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
           {% endif %}
           {% if config.social_tiktok %}
           <!-- TikTok -->
-          <a href="{{ config.social_tiktok }}" aria-label="TikTok" target="_blank" rel="noopener" data-page-node-id="OZ1CGkxG4250xITP93FVrW">
-            <svg viewBox="0 0 24 24" fill="currentColor" data-page-node-id="9bSEb6UrqPHtkhwkw13cLC"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" data-page-node-id="A9LpX9AmxpYFuItpQCDoci"/></svg>
+          <a href="{{ config.social_tiktok }}" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
           </a>
           {% endif %}
           {% if config.social_linkedin %}
           <!-- LinkedIn -->
-          <a href="{{ config.social_linkedin }}" aria-label="LinkedIn" target="_blank" rel="noopener" data-page-node-id="ioVQraDjkaCrnhrBHXPfwa">
-            <svg viewBox="0 0 24 24" fill="currentColor" data-page-node-id="W1RV3KBr3HQJG8eURkUfBp"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" data-page-node-id="teRqw5xgC6G0YNUW82Po5a"/></svg>
+          <a href="{{ config.social_linkedin }}" aria-label="LinkedIn" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </a>
           {% endif %}
         </div>
       </div>
-      <div data-page-node-id="v7jAxBNbFCaSeBEBWnZXdF">
-        <div class="footer-col-label" data-page-node-id="ryaOjSg4MskY0NDqPCWdsz">{% trans "Contact" %}</div>
-        <ul class="footer-list" data-page-node-id="pEn8pdbi8A1Ec4D6cET6f4">
-          <li data-page-node-id="WvGYWhUdxQAOz6Hfg1GfDA"><a href="mailto:{{ config.contact_email }}" data-page-node-id="JnY43g6mnEj7mtBvAU3un3">{{ config.contact_email }}</a></li>
-          <li data-page-node-id="SeaFQpUbg6JTbjHkFbucQA"><a href="tel:{{ config.contact_phone_1 }}" data-page-node-id="cOn4AbpnVBklRhpvNnLTri">{{ config.contact_phone_1 }}</a></li>
-          <li data-page-node-id="54NO5l4XaJreH4yTHDt6wf"><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener" data-page-node-id="7DtEuKuOSczDfC6kOzpxo0">{% trans "WhatsApp:" %} {{ config.contact_whatsapp }}</a></li>
-          <li data-page-node-id="oqHEZGVk8Y2ROWNP8LO7vP"><span data-page-node-id="ZQKxT1jbY97D4rLGER2Ryd">{{ config.contact_address }}</span></li>
+      <div>
+        <div class="footer-col-label">{% trans "Contact" %}</div>
+        <ul class="footer-list">
+          <li><a href="mailto:{{ config.contact_email }}">{{ config.contact_email }}</a></li>
+          <li><a href="tel:{{ config.contact_phone_1 }}">{{ config.contact_phone_1 }}</a></li>
+          <li><a href="https://wa.me/{{ config.contact_whatsapp|cut:' ' }}" target="_blank" rel="noopener">{% trans "WhatsApp:" %} {{ config.contact_whatsapp }}</a></li>
+          <li><span>{{ config.contact_address }}</span></li>
         </ul>
       </div>
     </div>
-    <div class="footer-bottom" data-page-node-id="s9GdcIQFMjcQInREdskXGR">
-      <span class="footer-copy" data-page-node-id="IMlezigLbCOhOEJ1Fx9rY1">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. {% trans "All rights reserved." %}</span>
-      <div class="footer-legal" data-page-node-id="0MslvH0PWaJQZ0hZ80lkLX">
-        <span data-page-node-id="43VT3mhA3FquHg6AZzb2LJ">{% trans "Privacy Policy" %}</span>
-        <span data-page-node-id="YHrKNFN235dGOOvhRyGbnr">{% trans "Terms of Service" %}</span>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. {% trans "All rights reserved." %}</span>
+      <div class="footer-legal">
+        <span>{% trans "Privacy Policy" %}</span>
+        <span>{% trans "Terms of Service" %}</span>
       </div>
     </div>
   </div>
@@ -470,16 +470,16 @@
 
 {% if not request.COOKIES.cookie_consent_accepted %}
 <div id="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--surface);border-top:1px solid var(--line);padding:20px;padding-bottom:max(20px, calc(env(safe-area-inset-bottom, 0px) + 8px));display:none;font-family:var(--ff-body);">
-  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;" data-page-node-id="msYA7z2FbwXox074q1AQlT">
-    <div style="flex:1;min-width:280px;" data-page-node-id="Nj9eR4thVJxQnZcVuGw1ty">
-      <p id="cookie-desc" style="margin:0;font-size:14px;color:var(--ink-mute);" data-page-node-id="HxmwkILOq5UlLIMqLwm3iM">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:16px;">
+    <div style="flex:1;min-width:280px;">
+      <p id="cookie-desc" style="margin:0;font-size:14px;color:var(--ink-mute);">
         {% trans "We use cookies to enhance your browsing experience and analyze site traffic. By clicking 'Accept', you consent to our use of cookies." %}
-        <a href="{% url 'about' %}#privacy" style="color:var(--accent);text-decoration:underline;" data-page-node-id="4e4luqpMtDmeLZcuXp8Xzj">{% trans "Privacy Policy" %}</a>
+        <a href="{% url 'about' %}#privacy" style="color:var(--accent);text-decoration:underline;">{% trans "Privacy Policy" %}</a>
       </p>
     </div>
-    <div style="display:flex;gap:12px;flex-shrink:0;" data-page-node-id="TiRHTmQGKwE7k3kMaLRnU6">
-      <button id="cookie-reject" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'" data-page-node-id="EWcj0AK6jFDXxYYqNATlBY">{% trans "Reject" %}</button>
-      <button id="cookie-accept" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--accent);border:1px solid var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'" data-page-node-id="36ds8BSZwvYUdzCWz2QWIe">{% trans "Accept All" %}</button>
+    <div style="display:flex;gap:12px;flex-shrink:0;">
+      <button id="cookie-reject" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'">{% trans "Reject" %}</button>
+      <button id="cookie-accept" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--accent);border:1px solid var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">{% trans "Accept All" %}</button>
     </div>
   </div>
 </div>

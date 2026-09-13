@@ -330,6 +330,22 @@ class TemplateCommentHygieneTests(TestCase):
             html = self.client.get(url).content.decode('utf-8')
             self.assertNotIn('{#', html, f'{url} 渲染结果里出现模板注释原文')
 
+    def test_no_external_editor_injected_attributes(self):
+        # 外部可视化编辑器会向模板元素注入 data-page-node-id 等噪声属性，
+        # 仅膨胀 HTML、无运行时用途（v1.5.8 已将 base.html 的 150 处全清）。
+        # 双向断言：① 所有模板源码不含该属性；② 渲染结果也不含。
+        tpl_dir = Path(settings.BASE_DIR, 'templates')
+        for path in sorted(tpl_dir.rglob('*.html')):
+            text = path.read_text(encoding='utf-8')
+            self.assertEqual(
+                text.count('data-page-node-id'), 0,
+                f'{path.name} 仍存在 data-page-node-id（外部编辑器回填？）')
+        for url in ('/', '/products/', '/about/', '/contact/', '/projects/'):
+            html = self.client.get(url).content.decode('utf-8')
+            self.assertNotIn(
+                'data-page-node-id', html,
+                f'{url} 渲染结果含 data-page-node-id')
+
 
 class VisitorIpHashTests(TestCase):
     """#16 — visitor IPs are stored hashed, never as plaintext (GDPR)."""
@@ -451,8 +467,8 @@ class ResponsiveNavTests(TestCase):
         self.assertIn('aria-controls="mobilePanel"', html)
 
     def test_nav_links_is_ul(self):
-        # 外部工具会向 base.html 全部元素注入 data-page-node-id 等属性，
-        # 故用正则匹配标签而非精确串（精确串会因多出的属性失配，v1.1.4）
+        # 用正则匹配标签而非精确串：即便未来模板标签内多出属性（如外部编辑器
+        # 回填 data-page-node-id，已在 v1.5.8 清空但保留正则以防复发），精确串也会失配。
 
         html = self._home()
         self.assertRegex(html, r'<ul\s+class="nav-links"[\s>]')
