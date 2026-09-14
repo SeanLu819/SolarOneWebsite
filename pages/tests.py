@@ -1506,3 +1506,91 @@ class VercelConfigTests(SimpleTestCase):
         )
 
 
+# ---------------------------------------------------------------------------
+# Production statelessness (A1 / B3 / B4 / B7, v1.6.0)
+# ---------------------------------------------------------------------------
+# Decision (2026-09-14): the committed seed_data.json is the single source of
+# truth for content. In production (IS_VERCEL=True) no request reads content
+# from the database; the DB is only a local admin preview. These guards prove
+# the prod code paths never touch the DB for content.
+
+class StatelessProductionTests(TestCase):
+    """Production must be fully stateless — content from seed JSON, never the DB."""
+
+    # ---- A1 + B7: products/projects loaders skip the DB on Vercel ----
+    @override_settings(IS_VERCEL=True)
+    def test_prod_loaders_skip_db(self):
+        from pages.views import data_loaders
+
+        with mock.patch('pages.models.Product.objects') as prod_mock:
+            result = data_loaders._get_products_from_db('en')
+            self.assertIsInstance(result, list, 'products loader must return a list')
+            self.assertFalse(
+                prod_mock.called,
+                'products loader must NOT query the DB on Vercel (A1/B7)',
+            )
+
+        with mock.patch('pages.models.Project.objects') as proj_mock:
+            result = data_loaders._get_projects_from_db('en')
+            self.assertIsInstance(result, list, 'projects loader must return a list')
+            self.assertFalse(
+                proj_mock.called,
+                'projects loader must NOT query the DB on Vercel (A1/B7)',
+            )
+
+    # ---- A1.1 + B4: get_common_context never writes to the DB ----
+    def test_get_common_context_no_db_write(self):
+        from pages.views.common import get_common_context
+        from django.core.cache import cache
+        from pages.models import SiteConfig
+
+        # Variant A — local dev (IS_VERCEL=False): when the SiteConfig singleton is
+        # missing, the OLD code called SiteConfig.objects.create() on a GET (a hidden
+        # write). It must now fall back to seed defaults instead (B4).
+        SiteConfig.objects.all().delete()
+        cache.clear()
+        with override_settings(IS_VERCEL=False):
+            with mock.patch('pages.models.SiteConfig.objects.create') as create_mock:
+                context = get_common_context()
+                config = context['config']
+                self.assertFalse(
+                    create_mock.called,
+                    'get_common_context must NOT auto-create a SiteConfig row (B4)',
+                )
+                self.assertTrue(
+                    getattr(config, 'hero_bg_url', ''),
+                    'seed-fallback config must still resolve hero_bg_url',
+                )
+
+        # Variant B — production (IS_VERCEL=True): the DB must not be queried at all.
+        cache.clear()
+        with override_settings(IS_VERCEL=True):
+            with mock.patch('pages.models.SiteConfig.objects') as cfg_mock:
+                get_common_context()
+                self.assertFalse(
+                    cfg_mock.called,
+                    'get_common_context must NOT query the DB on Vercel (A1.1)',
+                )
+
+    # ---- B3: news view falls back to the seed JSON in production ----
+    @override_settings(IS_VERCEL=True)
+    def test_news_seed_fallback(self):
+        from pages.views import views_other
+
+        seed = {'news': [{
+            'slug': 'x',
+            'title': 'T',
+            'summary': 's',
+            'content': 'c',
+            'image': 'images/news/x.webp',
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+        }]}
+        with mock.patch('pages.views.views_other._load_seed', return_value=seed):
+            resp = self.client.get(reverse('news'))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('T', resp.content.decode('utf-8'))
+
+
+

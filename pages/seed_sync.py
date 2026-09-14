@@ -308,6 +308,30 @@ def _project_to_dict(project):
     }
 
 
+def _news_to_dict(article):
+    """Convert a NewsArticle model instance to a seed dict.
+
+    Mirrors the product/project convention: the uploaded image is resolved to a
+    static-relative path so it is served from the edge CDN on Vercel (where the
+    database is never touched for content). ``published_at`` is serialized as an
+    ISO-8601 string; ``is_published`` is carried so the production view can filter
+    exactly like the local DB query (``filter(is_published=True)``).
+    """
+    img = getattr(article, 'image', None)
+    image_path = ''
+    if img and getattr(img, 'name', ''):
+        image_path = _resolve_static_path(img.name, article.slug, 'news', field_name='image')
+    return {
+        'slug': article.slug,
+        'title': article.title,
+        'summary': article.summary or '',
+        'content': article.content,
+        'image': image_path,
+        'published_at': article.published_at.isoformat() if article.published_at else '',
+        'is_published': bool(article.is_published),
+    }
+
+
 def _write_seed_files(seed_data, base_dir=None, write_json=True):
     """Write seed_data.json and/or pages/seed_data.py from a seed dict.
 
@@ -365,11 +389,13 @@ def _seed_section_comments(seed_data):
     projects = seed_data.get('projects', [])
     cards = seed_data.get('productspagecards', [])
     siteconfig = seed_data.get('siteconfig', {})
+    news = seed_data.get('news', [])
     return {
         'products': '# ── products (%d items): Product records' % len(products),
         'projects': '# ── projects (%d items): Project / case-study records' % len(projects),
         'siteconfig': '# ── siteconfig: single SiteConfig dict (%d keys)' % len(siteconfig),
         'productspagecards': '# ── productspagecards (%d items): homepage product cards' % len(cards),
+        'news': '# ── news (%d items): NewsArticle records' % len(news),
     }
 
 
@@ -423,7 +449,7 @@ def sync_seed_from_db():
     Returns True on success, False on failure.
     """
     try:
-        from pages.models import Product, Project, SiteConfig
+        from pages.models import Product, Project, SiteConfig, NewsArticle
         from pages.cards import ProductsPageCard
 
         products = [
@@ -455,19 +481,28 @@ def sync_seed_from_db():
                 'is_active': card.is_active,
             })
 
+        # News articles (B3): serialize all of them so the production seed JSON
+        # carries the full news dataset; the production view filters is_published.
+        news = [
+            _news_to_dict(a)
+            for a in NewsArticle.objects.all().order_by('-published_at')
+        ]
+
         seed_data = {
             'products': products,
             'projects': projects,
             'siteconfig': siteconfig,
             'productspagecards': cards,
+            'news': news,
         }
 
         json_path, py_path = _write_seed_files(seed_data)
 
         product_count = len(products)
         project_count = len(projects)
+        news_count = len(news)
         gallery_count = sum(len(p['gallery']) for p in products)
-        print(f'[seed_sync] DB → seed: {product_count} products ({gallery_count} gallery images), {project_count} projects')
+        print(f'[seed_sync] DB → seed: {product_count} products ({gallery_count} gallery images), {project_count} projects, {news_count} news')
         return True
     except Exception as e:
         import logging

@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from django.urls import reverse
@@ -18,15 +19,58 @@ def about(request):
     return render(request, 'about.html', context)
 
 
+def _normalize_news_article(a):
+    """Normalize a seed ``news`` dict into the shape the template expects.
+
+    The template renders ``article.published_at|date:"Y-m-d"`` (which requires a
+    real ``datetime``) and ``article.image_url``. We parse the ISO ``published_at``
+    string back into a datetime and resolve the image to a static URL so the seed
+    path and the local-DB path present an identical interface to the template.
+    """
+    from .utils import _static_url
+    raw = a.get('published_at', '') or ''
+    published_at = raw
+    try:
+        published_at = datetime.fromisoformat(raw)
+    except (ValueError, TypeError):
+        published_at = raw
+    return {
+        'slug': a.get('slug', ''),
+        'title': a.get('title', ''),
+        'summary': a.get('summary', ''),
+        'content': a.get('content', ''),
+        'published_at': published_at,
+        'image_url': _static_url(a.get('image', '')),
+    }
+
+
 def news(request):
     context = get_common_context()
-    articles = []
-    try:
-        from pages.models import NewsArticle
-        articles = list(NewsArticle.objects.filter(is_published=True).order_by('-published_at'))
-    except Exception:
-        import logging
-        logging.getLogger(__name__).warning('DB news query failed', exc_info=True)
+    if getattr(settings, 'IS_VERCEL', False):
+        # Production is stateless: content comes from the committed seed JSON,
+        # never the database (B3). Only published articles are shown, matching the
+        # local DB query (``filter(is_published=True)``).
+        from .utils import _load_seed
+        seed_news = _load_seed().get('news', []) or []
+        articles = [
+            _normalize_news_article(a)
+            for a in seed_news
+            if a.get('is_published', True)
+        ]
+    else:
+        articles = []
+        try:
+            from pages.models import NewsArticle
+            articles = list(
+                NewsArticle.objects.filter(is_published=True).order_by('-published_at')
+            )
+            # Unify the template interface: carry a resolved image_url on each
+            # DB object so news.html can use article.image_url for both paths.
+            for a in articles:
+                a.image_url = a.image.url if a.image else ''
+        except Exception:
+            import logging
+            logging.getLogger(__name__).warning('DB news query failed', exc_info=True)
     context['articles'] = articles
     return render(request, 'news.html', context)
 

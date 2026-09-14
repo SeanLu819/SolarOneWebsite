@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.6.0 - 2026-09-14
+
+### Production becomes fully stateless — seed JSON is the sole content source (A1 / B3 / B4 / B7)
+
+Decision (user, 2026-09-14): **the committed `seed_data.json` is the single source of truth for
+content; the database is only a local admin preview.** In production (`IS_VERCEL=True`) no request
+ever reads content from the database; the DB (SQLite `/tmp` or `DATABASE_URL`) is reserved for the
+local admin preview only.
+
+- **A1 + B7 — products/projects never touch the DB in production.** `pages/views/data_loaders.py`:
+  each of the four `_get_*_from_db` / `_get_*_detail_from_db` loaders now early-returns to its
+  `_get_*_from_json` counterpart when `settings.IS_VERCEL` is true. This removes the DB-first query
+  path (and the per-request DB retry that could mask a missing connection) for every content view.
+  Local dev is unchanged.
+- **A1.1 + B4 — `get_common_context()` builds from seed in prod, no hidden GET-write.** Extracted
+  `_build_siteconfig_from_seed()` (mirrors the old `except` fallback). When `IS_VERCEL` is true the
+  site config is built from seed and the database is never queried. In local dev the `if not config`
+  branch no longer calls `SiteConfig.objects.create()` on a GET — when the singleton row is missing
+  it now falls back to seed defaults instead of auto-creating a DB row (removes the hidden write
+  that the production path could have triggered). The hero/logo URL + translation enrichment runs
+  for **both** paths, so production renders identically to local.
+- **B3 — news seeded + seed fallback.** `pages/seed_sync.sync_seed_from_db()` now serializes
+  `NewsArticle` rows into a new top-level `news` key in `seed_data.json` (fields `slug, title,
+  summary, content, image` (static-resolved path), `published_at` (ISO string), `is_published`),
+  carrying all keys through to the generated `.py`. `pages/views/views_other.py::news()` gains an
+  `IS_VERCEL` branch that renders from `_load_seed()['news']` (filtered by `is_published`); the local
+  branch is unchanged except it now also sets `article.image_url` so the template is unified.
+  `templates/news.html` renders `article.image_url` (works for both DB objects and seed dicts).
+  `seed_data.json` gained `"news": []` (mechanism ready; content appears once news is added locally
+  and re-synced).
+- **Version**: `VERSION` and `solarone/settings.py:APP_VERSION` → `1.6.0`.
+- **Docs**: `docs/优化建议清单.md` updated (new changelog row + A1/B3/B4/B7 marked done).
+- **Verification**: 3 new regression guards in `pages/tests.py`
+  (`test_prod_loaders_skip_db`, `test_get_common_context_no_db_write`, `test_news_seed_fallback`).
+  Full suite green; `git status` shows no deletions.
+
 ## v1.5.9 - 2026-09-14
 
 ### B 组立即可做项 + 基础 CSP（无需架构改动）

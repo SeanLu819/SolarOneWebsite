@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 from pages.models import Product, Project
 from .utils import _load_seed, _DictProduct, _DictProject
 from .enrich import (
@@ -15,6 +16,11 @@ logger = logging.getLogger(__name__)
 
 def _get_products_from_db(lang, active_category='', active_series=''):
     """Try loading products from DB. Returns None on failure."""
+    # Production is fully stateless: content comes from the committed seed JSON,
+    # never the database. Bypass the DB entirely (also removes the per-request
+    # DB retry that could mask a missing connection). See A1 / B7.
+    if getattr(settings, 'IS_VERCEL', False):
+        return _get_products_from_json(lang, active_category, active_series)
     cached = _get_cached_products(lang, active_category, active_series)
     if cached is not None:
         return cached
@@ -63,6 +69,8 @@ def _get_products_from_json(lang, active_category='', active_series=''):
 
 def _get_product_detail_from_db(slug, lang):
     """Try loading a single product from DB. Returns None on failure."""
+    if getattr(settings, 'IS_VERCEL', False):
+        return _get_product_detail_from_json(slug, lang)
     cached = _get_cached_product_detail(slug, lang)
     if cached is not None:
         return cached
@@ -95,6 +103,8 @@ def _get_product_detail_from_json(slug, lang):
 
 def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
     """Try loading projects from DB. Returns None on failure."""
+    if getattr(settings, 'IS_VERCEL', False):
+        return _get_projects_from_json(lang, active_venue_type, active_sport_type)
     cached = _get_cached_projects(lang, active_venue_type, active_sport_type)
     if cached is not None:
         return cached
@@ -137,6 +147,8 @@ def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
 
 def _get_project_detail_from_db(slug, lang):
     """Try loading a single project from DB. Returns None on failure."""
+    if getattr(settings, 'IS_VERCEL', False):
+        return _get_project_detail_from_json(slug, lang)
     cached = _get_cached_project_detail(slug, lang)
     if cached is not None:
         return cached

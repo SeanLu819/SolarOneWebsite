@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 from django.core.cache import cache
 from django.templatetags.static import static
 from django.utils.translation import get_language
@@ -9,30 +10,54 @@ from .i18n import _t
 logger = logging.getLogger(__name__)
 
 
+def _build_siteconfig_from_seed():
+    """Build an in-memory SiteConfig from the committed seed JSON — no DB access.
+
+    Used in production (IS_VERCEL), where content must come from the seed and the
+    database is never touched for content, and as a fallback locally when the
+    SiteConfig singleton is missing or the DB query fails.
+
+    Image fields (hero_background / logo / og_image) are skipped here because they
+    are resolved to static URLs later in get_common_context(); carrying the raw
+    upload path on an unsaved instance would make ``config.hero_background.name``
+    blow up the enrichment block. All other (scalar) fields are assigned if present.
+    """
+    data = _load_seed()
+    cfg = data.get('siteconfig', {})
+    config = SiteConfig()
+    _image_fields = {'hero_background', 'logo', 'og_image'}
+    for key, val in cfg.items():
+        if key in _image_fields:
+            continue
+        if hasattr(config, key):
+            try:
+                setattr(config, key, val)
+            except Exception:
+                pass
+    return config
+
+
 def get_common_context():
     """Get context shared across all pages"""
     config = cache.get('site_config')
     if not config:
-        try:
-            config = SiteConfig.objects.first()
-            if not config:
-                config = SiteConfig.objects.create()
+        if getattr(settings, 'IS_VERCEL', False):
+            # Production is fully stateless: load content from the committed seed
+            # JSON and never touch the database for content (A1 / B4).
+            config = _build_siteconfig_from_seed()
             cache.set('site_config', config, timeout=300)
-        except Exception:
-            logger.warning('DB SiteConfig query failed, building from seed JSON', exc_info=True)
-            data = _load_seed()
-            cfg = data.get('siteconfig', {})
-            config = SiteConfig()
-            _image_fields = {'hero_background', 'logo', 'og_image'}
-            for key, val in cfg.items():
-                if key in _image_fields:
-                    continue
-                if hasattr(config, key):
-                    try:
-                        setattr(config, key, val)
-                    except Exception:
-                        pass
-            cache.set('site_config', config, timeout=300)
+        else:
+            try:
+                config = SiteConfig.objects.first()
+                if not config:
+                    # Do NOT auto-create a DB row on a GET (that was a hidden write
+                    # to the database). Fall back to seed defaults instead (B4).
+                    config = _build_siteconfig_from_seed()
+                cache.set('site_config', config, timeout=300)
+            except Exception:
+                logger.warning('DB SiteConfig query failed, building from seed JSON', exc_info=True)
+                config = _build_siteconfig_from_seed()
+                cache.set('site_config', config, timeout=300)
 
     hero_bg = getattr(config, 'hero_background', '')
     hero_name = getattr(hero_bg, 'name', hero_bg) if hero_bg else ''
