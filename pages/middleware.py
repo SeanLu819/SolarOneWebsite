@@ -80,7 +80,7 @@ class VisitorTrackingMiddleware:
             
         except Exception:
             pass  # Never let tracking break the site
-        
+
         return response
 
     def get_client_ip(self, request):
@@ -90,3 +90,25 @@ class VisitorTrackingMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+
+class ContentSecurityPolicyMiddleware:
+    """Emit a baseline Content-Security-Policy response header (v1.5.9, E1).
+
+    The policy is read from ``settings.CONTENT_SECURITY_POLICY`` so it can be
+    tightened (nonces / hashes) in a later iteration without code changes. It
+    intentionally allows ``'unsafe-inline'`` for now because the templates still
+    ship inline ``<script>``/``<style>`` blocks and inline event handlers;
+    removing that is a separate, larger follow-up. The header is only set when
+    absent, so an upstream middleware / view can still override it.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self._policy = getattr(settings, 'CONTENT_SECURITY_POLICY', '')
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if self._policy and 'Content-Security-Policy' not in response:
+            response['Content-Security-Policy'] = self._policy
+        return response

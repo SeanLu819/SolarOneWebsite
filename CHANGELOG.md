@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.5.9 - 2026-09-14
+
+### B 组立即可做项 + 基础 CSP（无需架构改动）
+
+- **A3 锁依赖版本上界**：`Django>=6.0,<6.1`（把本地 6.0.7 与 Vercel 6.1.1 收敛到 6.0.x，规避 Django 6.x `STATICFILES_STORAGE` 移除类静默大版本升级）；Pillow/whitenoise/dj-database-url/deep-translator/gunicorn/user-agents 加次版本上界以降低漂移（保留 Pillow 注释说明其为 ImageField 运行期依赖）。
+- **A2 `build.sh` 受保护 migrate**：`collectstatic` 之后仅在真正外部 DB（`DATABASE_URL` 非空且不含 `/tmp/`）时才跑 `migrate --noinput`；无状态 seed 模式下（`/tmp/` 或空）跳过，避免无意义建表/报错。
+- **E1 基础 CSP 响应头**：新增 `pages/middleware.py:ContentSecurityPolicyMiddleware`，在 `process_response` 写入 `Content-Security-Policy`（策略读自 `settings.CONTENT_SECURITY_POLICY`，默认先放行 `unsafe-inline` 换纵深防御）；在 `MIDDLEWARE` 的 `SecurityMiddleware` 之后插入；新增 `ContentSecurityPolicyHeaderTests` 断言首页响应含该头。
+- **C1 内容图防 CLS + 懒加载**：`products/projects/product_detail/about/contact` 首屏之下 `<img>` 加 `loading="lazy" decoding="async"`；`about-main.webp` 加显式 `width/height`（800×448），产品卡/项目图/详情图靠容器 `aspect-ratio` 兜底防抖动；不新生成 `-1280` 变体。
+- **D2 去掉本地恒跳过的测试**：`VercelSecureCookieTests` 改 `@override_settings(IS_VERCEL=True, SECURE_SSL_REDIRECT=True, SECURE_HSTS_SECONDS=31536000, SESSION_COOKIE_SECURE=True, CSRF_COOKIE_SECURE=True)` 本地可跑；`GeneratedStaticIndexCoverageTests` 改在 `setUp` 用 `pages.static_index.build_index` 基于 `static/` 临时构建索引本地可跑（skipped 2 → 0）。
+- **D3 收敛重复哈希解析函数**：新增单一 `pages/utils.py:strip_hash_suffix`，`pages/views/utils.py:_clean_hashed_name` / `pages/models.py:_clean_hashed_filename` / `pages/seed_sync.py:_strip_hash_suffix` 三处改薄包装调用（行为不变，全量测试无回归）。
+- **G4 内联首屏关键 CSS**：`templates/base.html` `<head>` 内联首屏 above-the-fold 关键样式（导航 / hero 容器 / body 基础字体背景 / 关键布局 + :root 变量，约 2KB），其余仍走 `base.css` 的 `<link>`，消除首屏 CSS 渲染阻塞 / FOUC 兜底。
+- **版本**：`VERSION` 与 `solarone/settings.py:APP_VERSION` → `1.5.9`。
+- **验证**：`manage.py test pages --keepdb` 全量 OK，`skipped` 由 2 降到 0；首页响应含 `Content-Security-Policy`。
+
 ## v1.5.7 - 2026-09-13
 
 ### Fix: contact form silently loses submissions on Vercel (N-39)

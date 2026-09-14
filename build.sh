@@ -63,6 +63,16 @@ if [ $COLLECTSTATIC_EXIT -ne 0 ]; then
     echo "  WARNING: collectstatic failed with exit code $COLLECTSTATIC_EXIT"
 fi
 
+# 2.3. Protected migrate — only when a REAL external DB is configured.
+# In the stateless seed mode DATABASE_URL is empty or points at /tmp/ (Vercel
+# runtime uses sqlite:///tmp/db.sqlite3), so we skip migrate there to avoid
+# building tables that are never used / spurious errors. A genuine external
+# DATABASE_URL (e.g. Neon/Supabase) triggers the migration.
+if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" != *"/tmp/"* ]]; then
+  echo "=== [build.sh] Running migrate (external DB detected) ==="
+  python manage.py migrate --noinput
+fi
+
 echo "=== [build.sh] Checking staticfiles/ ==="
 if [ -d staticfiles ]; then
     echo "  staticfiles/ exists ✓"

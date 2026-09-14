@@ -35,6 +35,51 @@
   else{document.documentElement.setAttribute('data-theme','dark')}
 })();
 </script>
+<!-- G4 (v1.5.9): 首屏关键 CSS 内联 —— 消除首屏 CSS 渲染阻塞 / FOUC 兜底。
+     仅含 above-the-fold 必需样式（:root 变量 + body 基础 + 导航 + hero 骨架 +
+     容器 + 页脚底色），约 2KB。完整样式仍由下方 base.css 的 <link> 提供；
+     本块位于 base.css 之前，作为未来把 base.css 改为异步加载时的首帧兜底。
+     受 CSP style-src 'self' 'unsafe-inline' 允许。 -->
+<style id="critical-css">
+:root{
+  --bg:#080D1F;--bg-soft:#111827;--bg-raised:#1A2035;
+  --ink:#FFFFFF;--ink-soft:#D9D9E3;--ink-mute:#8A8A95;--ink-subtle:#5A5A65;
+  --accent:#0077ED;--accent-hover:#0090FF;--accent-soft:rgba(0,119,237,0.10);
+  --accent-glow:rgba(0,119,237,0.22);--accent-deep:#005BB5;
+  --success:#22C55E;--info:#38BDF8;--warning:#F59E0B;
+  --line:rgba(255,255,255,0.07);--line-strong:rgba(255,255,255,0.14);
+  --ff-display:'Space Grotesk',-apple-system,BlinkMacSystemFont,system-ui,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans CN","Noto Sans CJK SC",sans-serif;
+  --ff-body:'Inter',-apple-system,BlinkMacSystemFont,system-ui,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans CN","Noto Sans CJK SC",Roboto,sans-serif;
+  --ff-mono:'IBM Plex Mono',ui-monospace,"SF Mono",Menlo,monospace;
+  --fs-base:clamp(15px, 0.9375rem + 0.125vw, 18px);--fs-nav:17px;
+  --fs-hero-title:clamp(36px, 7vw, 72px);--fs-section-title:clamp(34px, 5vw, 64px)
+}
+[data-theme="light"]{
+  --bg:#F5F7FA;--bg-soft:#EBEEF3;--bg-raised:#FFFFFF;
+  --ink:#111827;--ink-soft:#374151;--ink-mute:#6B7280;--ink-subtle:#9CA3AF;
+  --accent:#0062C4;--accent-hover:#0077ED;--accent-soft:rgba(0,98,196,0.08);
+  --accent-glow:rgba(0,98,196,0.12);--accent-deep:#004A99;
+  --line:rgba(0,0,0,0.07);--line-strong:rgba(0,0,0,0.12)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--ff-body);font-size:var(--fs-base);line-height:1.6;color:var(--ink-soft);background:var(--bg);overflow-x:hidden;overflow-wrap:anywhere}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.container{max-width:1280px;margin:0 auto;padding:0 16px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:8px 0;background:rgba(10,14,26,0.18);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-brand{font-family:var(--ff-display);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-0.03em;display:flex;align-items:center;gap:8px}
+.nav-brand img{height:40px;width:auto}
+.nav-links{margin-left:auto;display:flex;gap:4px;align-items:center;list-style:none;margin-top:0;margin-bottom:0;padding:0}
+.nav-links a{font-family:var(--ff-body);font-size:var(--fs-nav);font-weight:600;color:var(--ink-soft);padding:6px 12px;letter-spacing:0.01em}
+.nav-actions{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hero{position:relative;min-height:85vh;padding:100px 0 70px;display:flex;align-items:center;overflow:hidden}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px;margin:0 auto}
+.hero-title{font-family:var(--ff-display);font-size:var(--fs-hero-title);font-weight:500;line-height:0.95;letter-spacing:-0.04em;color:var(--ink);margin-bottom:40px}
+.footer{background:var(--bg);border-top:1px solid var(--line);padding:28px 0 16px}
+</style>
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <style>
   /* === Dynamic typography from admin ===

@@ -21,17 +21,16 @@ import copy
 import sys
 
 from django.db import models
+from pages.utils import strip_hash_suffix
 
 
 def _strip_hash_suffix(filename):
-    """Strip Django upload hash suffix like _abcX123 from a filename."""
-    if not filename:
-        return ''
-    stem, ext = os.path.splitext(filename)
-    m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
-    if m:
-        return f'{stem[:m.start()]}{ext}'
-    return filename
+    """Strip Django upload hash suffix like _abcX123 from a filename.
+
+    Thin wrapper over the canonical implementation in ``pages.utils``
+    (see D3 / v1.5.9) so the three near-duplicate strippers live in one place.
+    """
+    return strip_hash_suffix(filename)
 
 
 def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):

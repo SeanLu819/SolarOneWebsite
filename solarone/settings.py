@@ -141,8 +141,27 @@ INSTALLED_APPS = [
 if IS_VERCEL:
     SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
+# ============ CONTENT SECURITY POLICY (E1, v1.5.9) ============
+# Baseline CSP response header. Initially permissive (unsafe-inline) because
+# templates still contain inline <script>/<style> and inline event handlers;
+# this is defense-in-depth without breaking the site. Tighten (nonces / hashes)
+# later once inline code is migrated out. The header is emitted by
+# pages.middleware.ContentSecurityPolicyMiddleware, inserted right after
+# SecurityMiddleware below.
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "img-src 'self' data:; "
+    "style-src 'self' 'unsafe-inline'; "
+    "script-src 'self' 'unsafe-inline'; "
+    "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; "
+    "connect-src 'self'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'"
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'pages.middleware.ContentSecurityPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',

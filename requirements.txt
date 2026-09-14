@@ -1,7 +1,7 @@
-django>=6.0,<7.0
-Pillow>=10.0  # Django ImageField 运行期依赖：缺失会让系统检查报 fields.E210 并中断 CI
-user-agents>=2.2
-gunicorn>=21.0
-whitenoise>=6.0
-dj-database-url>=2.0
-deep-translator>=1.11  # used by admin auto-translate endpoint (pages/admin.py)
+django>=6.0,<6.1
+Pillow>=10.0,<12  # Django ImageField 运行期依赖：缺失会让系统检查报 fields.E210 并中断 CI
+user-agents>=2.2,<3
+gunicorn>=21.0,<23
+whitenoise>=6.0,<7
+dj-database-url>=2.0,<3
+deep-translator>=1.11,<2  # used by admin auto-translate endpoint (pages/admin.py)

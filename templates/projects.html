@@ -71,7 +71,7 @@
           <a href="{% url 'project_detail' project.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
             <div class="project-card-img">
               {% if project.image_url %}
-              <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy">
+              <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy" decoding="async">
               {% else %}
               <div class="project-card-img-placeholder stadium">
                 <span class="field-label">{% trans "Project Image" %}</span>

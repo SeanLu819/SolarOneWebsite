@@ -95,7 +95,7 @@
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
+                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
                 </div>
                 {% endfor %}
               </div>
@@ -113,7 +113,7 @@
             <div class="ps-thumbnails">
               {% for img in gallery %}
               <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
+                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
               </button>
               {% endfor %}
             </div>
@@ -271,7 +271,7 @@
           {% endif %}
           {% if product.ordering_image_url %}
           <div class="detail-ordering-image">
-            <img src="{{ product.ordering_image_url }}" alt="Ordering Information" loading="lazy">
+            <img src="{{ product.ordering_image_url }}" alt="Ordering Information" loading="lazy" decoding="async">
           </div>
           {% endif %}
           {% if product.ordering_cols %}

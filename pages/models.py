@@ -9,6 +9,7 @@ from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
+from pages.utils import strip_hash_suffix
 
 
 # --- CSS input validators (#11) -------------------------------------------
@@ -782,16 +783,11 @@ def _update_seed_project(project):
 def _clean_hashed_filename(fname):
     """Strip Django upload hash suffix (7 alphanumeric chars after underscore).
 
-    Django's default storage appends a hash like _abcX123 when a file with the
-    same name already exists. We strip it so static filenames are stable and
-    match what seed_sync.py resolves.
+    Thin wrapper over ``pages.utils.strip_hash_suffix`` (D3 / v1.5.9). Keeps the
+    original basename-only behaviour (callers re-add the slug directory) by
+    stripping the directory component before delegating.
     """
-    base = os.path.basename(fname)
-    stem, ext = os.path.splitext(base)
-    m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
-    if m:
-        return f'{stem[:m.start()]}{ext}'
-    return base
+    return os.path.basename(strip_hash_suffix(fname))
 
 
 def _prune_stale_images(static_dir, current_names):

@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from pathlib import Path
 from django.conf import settings
 from django.templatetags.static import static
+from pages.utils import strip_hash_suffix
 
 logger = logging.getLogger(__name__)
 
@@ -180,20 +181,10 @@ def _normalize_static_rel(path):
 def _clean_hashed_name(name: str) -> str:
     """Strip Django-upload hashed suffix like _yPJsGNE or _jlmQVlR from filename.
 
-    Django's default storage appends a 7-char alphanumeric hash when a file
-    with the same name already exists. We match that exact pattern.
+    Thin wrapper over the single canonical implementation in ``pages.utils``
+    (see D3 / v1.5.9) so the three near-duplicate strippers stay in one place.
     """
-    if not name:
-        return ''
-    try:
-        stem = name.rsplit('.', 1)[0]
-        ext = name.rsplit('.', 1)[-1]
-    except (ValueError, IndexError):
-        return name
-    m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
-    if m:
-        stem = stem[:m.start()]
-    return f'{stem}.{ext}'
+    return strip_hash_suffix(name)
 
 
 def _static_url(path):
