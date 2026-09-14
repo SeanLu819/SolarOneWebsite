@@ -80,7 +80,15 @@ CANONICAL_ORIGIN = os.environ.get(
     'CANONICAL_ORIGIN', 'https://www.solaronelighting.com'
 ).rstrip('/')
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.vercel.app,.solaronelighting.com,localhost,127.0.0.1').split(',')
+# #4 (v1.6.1): tighten ALLOWED_HOSTS — drop the bare `.vercel.app` wildcard that
+# let ANY *.vercel.app host (incl. attacker-controlled) be accepted, an SEO/canonical
+# poisoning vector (see CANONICAL_ORIGIN below). Keep the known preview host +
+# production custom domains + localhost. Random branch-preview *.vercel.app URLs must
+# set ALLOWED_HOSTS env (Vercel "Preview" scope) if they must be served.
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    'www.solaronelighting.com,solaronelighting.com,solar-one-website.vercel.app,localhost,127.0.0.1'
+).split(',')
 
 # Trusted origins for CSRF protection (Django 4+ requires full origin URLs).
 # Without this, POST forms (contact, admin) from the custom domains would
@@ -387,4 +395,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.6.0'
+APP_VERSION = '1.6.1'

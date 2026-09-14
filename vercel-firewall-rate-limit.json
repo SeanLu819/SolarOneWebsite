@@ -1,0 +1,28 @@
+{
+  "action": "rules.insert",
+  "value": {
+    "name": "Rate limit contact form (POST /contact/)",
+    "active": true,
+    "description": "Edge rate limit for the public contact form. vercel.json cannot express rate_limit (only challenge/deny) — apply this via the Vercel Firewall dashboard or PATCH /v1/security/firewall/config. The in-code LocMem limiter in views_contact.py remains a per-instance fail-closed safety net.",
+    "conditionGroup": [
+      {
+        "conditions": [
+          { "type": "path", "op": "re", "value": "^/contact/" },
+          { "type": "method", "op": "re", "value": "POST" }
+        ]
+      }
+    ],
+    "action": {
+      "mitigate": {
+        "action": "rate_limit",
+        "rateLimit": {
+          "algo": "fixed_window",
+          "window": 60,
+          "limit": 10,
+          "keys": ["ip"],
+          "action": "deny"
+        }
+      }
+    }
+  }
+}

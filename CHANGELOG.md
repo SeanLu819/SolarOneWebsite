@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.6.1 - 2026-09-14
+
+### Low-cost / independent hardening: ALLOWED_HOSTS lockdown, self-hosted fonts, edge rate limiting (#4 / #2 / #5)
+
+- **#4 — ALLOWED_HOSTS lockdown.** `solarone/settings.py:83` drops the bare `.vercel.app`
+  wildcard (which let ANY `*.vercel.app` host — incl. attacker-controlled — be accepted, an
+  SEO/canonical-poisoning vector given the fixed `CANONICAL_ORIGIN`). Default is now the
+  production custom domains + the known Vercel preview host `solar-one-website.vercel.app` +
+  `localhost`/`127.0.0.1`; still overridable via the `ALLOWED_HOSTS` env var. Random
+  per-branch preview URLs need `ALLOWED_HOSTS` set in the Vercel "Preview" env scope.
+  New guard `pages/tests.py::test_disallowed_host_rejected` asserts a spoofed
+  `evil.vercel.app` Host returns HTTP 400.
+- **#2 — self-hosted fonts (no third-party request).** Downloaded Space Grotesk (400/600/700),
+  Inter (400/600) and IBM Plex Mono (400) woff2 subsets into `static/fonts/` and added
+  `static/css/fonts.css` with `@font-face { font-display: swap }`. Removed the Google Fonts
+  `<link>`/`preconnect` from `templates/base.html`; CSP tightened to `font-src 'self'`
+  (the prior `https://fonts.googleapis.com https://fonts.gstatic.com` allowance is gone).
+  Fonts are committed and served by the Vercel CDN from our own origin — GDPR-friendly, no
+  render-blocking third party, identical coverage to Google Fonts for en/fr/es/de/ru (ar falls
+  back to system Arabic as before).
+- **#5 — edge rate limiting.** `vercel.json`'s `routes[].mitigate` only supports `challenge`
+  and `deny`; **`rate_limit` cannot be expressed in `vercel.json`** (confirmed against Vercel
+  docs — it requires the dashboard or the REST API). The in-code app-layer limiter
+  (`pages/views/views_contact.py::_is_rate_limited`, LocMem cache, fail-closed) is kept as a
+  per-instance best-effort safety net. A ready-to-apply Vercel Firewall rule is shipped as
+  `vercel-firewall-rate-limit.json` (rate_limit, fixed_window 60s, 10/min, keyed by IP, deny
+  on breach, scoped to POST `/contact/`) — enable it in the Vercel Firewall UI or via
+  `PATCH /v1/security/firewall/config` to get true distributed edge rate limiting.
+- **Version**: `VERSION` and `solarone/settings.py:APP_VERSION` → `1.6.1`.
+- **Verification**: full `manage.py test` suite green; `git status` shows no deletions.
+
 ## v1.6.0 - 2026-09-14
 
 ### Production becomes fully stateless — seed JSON is the sole content source (A1 / B3 / B4 / B7)

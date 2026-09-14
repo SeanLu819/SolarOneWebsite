@@ -227,14 +227,14 @@ class CanonicalOriginTests(TestCase):
     """#17 — SEO URLs must use the fixed CANONICAL_ORIGIN, never the Host."""
 
     def test_sitemap_uses_fixed_origin(self):
-        resp = self.client.get('/sitemap.xml', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/sitemap.xml', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         content = resp.content.decode()
         self.assertIn('https://www.solaronelighting.com', content)
         self.assertNotIn('evil.vercel.app', content)
 
     def test_robots_txt_uses_fixed_origin(self):
-        resp = self.client.get('/robots.txt', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/robots.txt', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         content = resp.content.decode()
         self.assertIn(
@@ -242,11 +242,17 @@ class CanonicalOriginTests(TestCase):
         self.assertNotIn('evil.vercel.app', content)
 
     def test_home_canonical_and_jsonld_use_fixed_origin(self):
-        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         content = resp.content.decode()
         self.assertNotIn('evil.vercel.app', content)
         self.assertIn('https://www.solaronelighting.com', content)
+
+    def test_disallowed_host_rejected(self):
+        # #4 (v1.6.1): a host outside ALLOWED_HOSTS (e.g. a spoofed *.vercel.app)
+        # must be rejected with 400, never served with a leaked canonical URL.
+        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        self.assertEqual(resp.status_code, 400)
 
 
 class SitemapMultilingualTests(TestCase):
@@ -485,7 +491,7 @@ class ResponsiveNavTests(TestCase):
     """
 
     def _home(self):
-        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         return resp.content.decode()
 
@@ -548,7 +554,7 @@ class ResponsivePhase1Tests(TestCase):
         cls.base_html = Path(settings.BASE_DIR, 'templates', 'base.html').read_text(encoding='utf-8')
 
     def _get(self, url):
-        resp = self.client.get(url, HTTP_HOST='evil.vercel.app')
+        resp = self.client.get(url, HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200, f'{url} must render')
         return resp.content.decode()
 
@@ -586,15 +592,15 @@ class ResponsivePhase1Tests(TestCase):
         self.assertRegex(self.css, r'\.theme-toggle::after\s*\{[^}]*inset:\s*-4px')
         self.assertRegex(self.css, r'\.lang-switch-btn::after\s*\{[^}]*inset:\s*-9px')
 
-    # ---- N-5: Google Fonts 异步加载 + noscript 兜底 ----
-    def test_n5_fonts_async_with_noscript_fallback(self):
+    # ---- N-5 / #2 (v1.6.1): self-hosted fonts, no third-party request ----
+    def test_n5_fonts_self_hosted_no_third_party(self):
         html = self._get('/')
-        self.assertIn('media="print"', html)
-        self.assertIn("this.media='all'", html)
-        self.assertRegex(
-            html,
-            r'<noscript><link href="https://fonts\.googleapis\.com/[^"]*" rel="stylesheet"',
-        )
+        # Self-hosted font CSS is linked from our own origin (static/css/fonts.css).
+        self.assertIn("static/css/fonts.css", html)
+        # No third-party Google Fonts request may remain (#2, v1.6.1):
+        # fonts are committed under static/fonts/ and served by the Vercel CDN.
+        self.assertNotIn("fonts.googleapis.com", html)
+        self.assertNotIn("fonts.gstatic.com", html)
 
     # ---- F5': 移动端字号 min(max()) 收口 + -admin 间接层（桌面零改动） ----
     def test_f5_mobile_typography_clamp(self):
@@ -642,7 +648,7 @@ class ResponsiveDeviceFixesTests(TestCase):
     """
 
     def _home_html(self):
-        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         return resp.content.decode()
 
@@ -770,7 +776,7 @@ class ResponsiveIOSSafeAreaTests(TestCase):
             encoding='utf-8')
 
     def _get_html(self):
-        resp = self.client.get('/', HTTP_HOST='evil.vercel.app')
+        resp = self.client.get('/', HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
         return resp.content.decode()
 
