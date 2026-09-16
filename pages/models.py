@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models import JSONField
 from django.core.validators import RegexValidator
-import json
 import os
 import shutil
 import re
@@ -672,65 +671,6 @@ def _sync_project_media_to_static(project):
     return cover_rel, gallery_paths
 
 
-def _rewrite_seed_project(slug, cover_rel, gallery_paths):
-    """Rewrite seed_data.json + pages/seed_data.py with current project image/gallery.
-
-    Gallery is REPLACED (not merged) with the current DB state — the database
-    is the source of truth. Old images removed from the admin are also removed
-    from seed to prevent accumulation of stale files in the carousel.
-    """
-    seed_path = os.path.join(str(settings.BASE_DIR), 'seed_data.json')
-    seed_py_path = os.path.join(str(settings.BASE_DIR), 'pages', 'seed_data.py')
-
-    changed = False
-    try:
-        with open(seed_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        for p in data.get('projects', []):
-            if p.get('slug') == slug:
-                if cover_rel and p.get('image') != cover_rel:
-                    p['image'] = cover_rel
-                    changed = True
-                gal = list(p.get('gallery', []) or [])
-                new_gal = list(gallery_paths)
-                if new_gal != gal:
-                    p['gallery'] = new_gal
-                    changed = True
-                break
-        if changed:
-            with open(seed_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-                f.write('\n')
-    except Exception:
-        pass
-
-    try:
-        with open(seed_py_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-        idx = content.find(f'"slug": "{slug}"')
-        if idx >= 0:
-            new_content = content
-            if cover_rel:
-                img_match = re.search(r'"image":\s*"([^"]*)"', new_content[idx:])
-                if img_match:
-                    i_start = img_match.start() + idx
-                    val_start = new_content.find('"', i_start) + 1
-                    val_end = new_content.find('"', val_start)
-                    if new_content[val_start:val_end] != cover_rel:
-                        new_content = new_content[:val_start] + cover_rel + new_content[val_end:]
-            gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', new_content[idx:])
-            if gal_match:
-                g_start = gal_match.start() + idx
-                g_end = gal_match.end()
-                existing = gal_match.group(0)
-                new_block = '"gallery": ' + json.dumps(gallery_paths)
-                if new_block != existing:
-                    new_content = new_content[:g_start] + new_block + new_content[g_end:]
-            if new_content != content:
-                with open(seed_py_path, 'w', encoding='utf-8') as f:
-                    f.write(new_content)
-    except Exception:
-        pass
 
 
 def _invalidate_views_cache():
@@ -749,8 +689,7 @@ def _invalidate_views_cache():
 
 @receiver(post_save, sender=Project)
 def sync_project_on_save(sender, instance, **kwargs):
-    cover_rel, gallery_rel = _sync_project_media_to_static(instance)
-    _rewrite_seed_project(instance.slug, cover_rel, gallery_rel)
+    _sync_project_media_to_static(instance)
     _invalidate_views_cache()
 
 
@@ -759,8 +698,7 @@ def sync_project_image_on_save(sender, instance, **kwargs):
     project = getattr(instance, 'project', None)
     if not project:
         return
-    cover_rel, gallery_rel = _sync_project_media_to_static(project)
-    _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+    _sync_project_media_to_static(project)
     _invalidate_views_cache()
 
 
@@ -769,15 +707,13 @@ def sync_project_image_on_delete(sender, instance, **kwargs):
     project = getattr(instance, 'project', None)
     if not project:
         return
-    cover_rel, gallery_rel = _sync_project_media_to_static(project)
-    _rewrite_seed_project(project.slug, cover_rel, gallery_rel)
+    _sync_project_media_to_static(project)
     _invalidate_views_cache()
 
 
 # Legacy helper retained for external callers.
 def _update_seed_project(project):
-    cover_rel, gallery_rel = _sync_project_media_to_static(project)
-    _rewrite_seed_project(getattr(project, 'slug', ''), cover_rel, gallery_rel)
+    _sync_project_media_to_static(project)
 
 
 def _clean_hashed_filename(fname):

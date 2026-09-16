@@ -10,7 +10,7 @@
 
 {% block content %}
 {% if product %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -327,7 +327,7 @@
   </div>
 </section>
 
-<style>
+<style nonce="{{ request.csp_nonce }}">
   /* Sidebar nav styles inherited from base.html */
 
   /* === Detail page two-column layout === */
@@ -938,7 +938,7 @@
   }
 </style>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   (function () {
     const carousel = document.getElementById('psCarousel');
     if (!carousel) return;
@@ -1005,7 +1005,7 @@
 </script>
 
 {% if product %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Product",

@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" id="themeColorMeta" content="#080D1F"> <!-- N-15: 跟随 data-theme 由 JS 更新（深 #080D1F / 浅 #F5F7FA） -->
-<script>document.documentElement.classList.add('js');</script> <!-- F11: 在 CSS 渲染前标记 JS 可用 → html.js .reveal 才初始隐藏；无 JS 则内容默认可见 -->
+<script nonce="{{ request.csp_nonce }}">document.documentElement.classList.add('js');</script> <!-- F11: 在 CSS 渲染前标记 JS 可用 → html.js .reveal 才初始隐藏；无 JS 则内容默认可见 -->
 <title>{% block title %}{{ config.meta_title }}{% endblock %}</title>
 <meta name="description" content="{% block meta_description %}{{ config.meta_description }}{% endblock %}">
 <link rel="canonical" href="{{ canonical_origin }}{{ request.path }}">
@@ -25,7 +25,7 @@
 {% if config.og_image %}<meta name="twitter:image" content="{{ config.og_image.url }}">{% endif %}
 <link rel="icon" type="image/webp" href="{% static 'images/favicon.webp' %}">
 <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
-<script>
+<script nonce="{{ request.csp_nonce }}">
 (function(){
   var saved=localStorage.getItem('theme');
   if(saved==='dark'||saved==='light'){document.documentElement.setAttribute('data-theme',saved)}
@@ -37,7 +37,7 @@
      容器 + 页脚底色），约 2KB。完整样式仍由下方 base.css 的 <link> 提供；
      本块位于 base.css 之前，作为未来把 base.css 改为异步加载时的首帧兜底。
      受 CSP style-src 'self' 'unsafe-inline' 允许。 -->
-<style id="critical-css">
+<style nonce="{{ request.csp_nonce }}" id="critical-css">
 :root{
   --bg:#080D1F;--bg-soft:#111827;--bg-raised:#1A2035;
   --ink:#FFFFFF;--ink-soft:#D9D9E3;--ink-mute:#8A8A95;--ink-subtle:#5A5A65;
@@ -78,7 +78,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .footer{background:var(--bg);border-top:1px solid var(--line);padding:28px 0 16px}
 </style>
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
-<style>
+<style nonce="{{ request.csp_nonce }}">
   /* === Dynamic typography from admin ===
      Admin can override FONT FAMILY + SIZES + accent color via SiteConfig.
      Font-family values contain unescaped single quotes (e.g. 'Inter');
@@ -142,7 +142,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <nav class="nav" id="mainNav">
   <div class="container nav-inner">
     <a href="{% url 'home' %}" class="nav-brand">
-      <img src="{{ config.logo_url }}" alt="{{ config.brand_name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)">{{ config.brand_name }}</span>
+      <img id="brandLogo" src="{{ config.logo_url }}" alt="{{ config.brand_name }}"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)">{{ config.brand_name }}</span>
     </a>
     <ul class="nav-links">
       {% include "includes/nav_items.html" %}
@@ -249,9 +249,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   </div>
 </footer>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
 (function() {
   'use strict';
+
+  // Brand logo fallback (replaces onerror=; CSP nonce tightening, v1.6.2)
+  var brandLogo = document.getElementById('brandLogo');
+  if (brandLogo) {
+    var hideBrokenLogo = function(img) {
+      img.style.display = 'none';
+      var sib = img.nextElementSibling;
+      if (sib) sib.style.display = 'inline-block';
+    };
+    brandLogo.addEventListener('error', function() { hideBrokenLogo(this); });
+    if (brandLogo.complete && brandLogo.naturalWidth === 0) hideBrokenLogo(brandLogo);
+  }
 
   // ============ MOBILE PANEL ============
   // N-17: 焦点管理 —— 打开时背景内容 inert + aria-hidden，关闭后焦点回到汉堡按钮；
@@ -464,7 +476,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 })();
 </script>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   // Shared sidebar accordion toggle for series with subseries (e.g. M Series).
   // Only the arrow button toggles; clicking the label link navigates normally.
   (function () {
@@ -485,7 +497,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   })();
 </script>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   // Hero background carousel — autoplay only, no dots, no arrows.
   (function () {
     const carousel = document.querySelector('[data-carousel]');
@@ -520,12 +532,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       </p>
     </div>
     <div style="display:flex;gap:12px;flex-shrink:0;">
-      <button id="cookie-reject" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'">{% trans "Reject" %}</button>
-      <button id="cookie-accept" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--accent);border:1px solid var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">{% trans "Accept All" %}</button>
+      <button id="cookie-reject" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:all 0.2s;">{% trans "Reject" %}</button>
+      <button id="cookie-accept" type="button" style="padding:10px 20px;font-family:var(--ff-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;background:var(--accent);border:1px solid var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;">{% trans "Accept All" %}</button>
     </div>
   </div>
 </div>
-<script>
+<script nonce="{{ request.csp_nonce }}">
 (function(){
   var banner = document.getElementById('cookie-banner');
   if (!banner) return;
@@ -542,11 +554,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     banner.style.display = 'none';
     document.cookie = 'cookie_consent_accepted=rejected;path=/;max-age=31536000;SameSite=Lax';
   };
+  // Hover states (replaces onmouseover/onmouseout=; CSP nonce tightening, v1.6.2)
+  var rejectBtn = document.getElementById('cookie-reject');
+  var acceptBtn = document.getElementById('cookie-accept');
+  if (rejectBtn) {
+    rejectBtn.addEventListener('mouseover', function() { this.style.borderColor = 'var(--accent)'; });
+    rejectBtn.addEventListener('mouseout', function() { this.style.borderColor = 'var(--line)'; });
+  }
+  if (acceptBtn) {
+    acceptBtn.addEventListener('mouseover', function() { this.style.opacity = '0.85'; });
+    acceptBtn.addEventListener('mouseout', function() { this.style.opacity = '1'; });
+  }
 })();
 </script>
 {% endif %}
 
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",

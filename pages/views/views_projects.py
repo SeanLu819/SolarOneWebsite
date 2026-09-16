@@ -3,10 +3,7 @@ from django.core.paginator import Paginator
 from django.utils.translation import get_language
 from .common import get_common_context
 from .i18n import _get_projects_sidebar, _resolve_project_sidebar
-from .data_loaders import (
-    _get_projects_from_db, _get_projects_from_json,
-    _get_project_detail_from_db, _get_project_detail_from_json,
-)
+from .data_loaders import get_projects, get_project_detail
 
 
 def projects(request):
@@ -34,9 +31,7 @@ def projects(request):
     context['active_venue_type_label'] = active_venue_type_label
     context['active_sport_type_label'] = active_sport_type_label
 
-    projects_list = _get_projects_from_db(lang, active_venue_type, active_sport_type)
-    if not projects_list:
-        projects_list = _get_projects_from_json(lang, active_venue_type, active_sport_type)
+    projects_list = get_projects(lang, active_venue_type, active_sport_type)
 
     paginator = Paginator(projects_list or [], 10)
     page_number = request.GET.get('page')
@@ -55,9 +50,7 @@ def project_detail(request, slug):
     venue_types = _get_projects_sidebar(lang)
     context['venue_types'] = venue_types
 
-    project = _get_project_detail_from_db(slug, lang)
-    if project is None:
-        project = _get_project_detail_from_json(slug, lang)
+    project = get_project_detail(slug, lang)
 
     if project:
         context['project'] = project

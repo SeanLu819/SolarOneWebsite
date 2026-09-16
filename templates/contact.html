@@ -155,7 +155,7 @@
   </div>
 </section>
 
-<style>
+<style nonce="{{ request.csp_nonce }}">
   a[href^="mailto"], a[href^="tel"] { transition: color 0.2s; }
   a[href^="mailto"]:hover, a[href^="tel"]:hover { color: var(--accent) !important; }
   a[href^="https://www.solar-one"]:hover { color: var(--accent-hover) !important; }

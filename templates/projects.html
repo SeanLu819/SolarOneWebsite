@@ -8,7 +8,7 @@
 {% block og_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities.{% endblock %}
 
 {% block content %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -124,7 +124,7 @@
   </div>
 </section>
 
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
@@ -136,7 +136,7 @@
 }
 </script>
 
-<style>
+<style nonce="{{ request.csp_nonce }}">
   /* Sidebar nav styles inherited from base.html */
   .project-card-link {
     display: inline-block;

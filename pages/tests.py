@@ -143,7 +143,10 @@ class VercelSecureCookieTests(SimpleTestCase):
 
 
 class ContentSecurityPolicyHeaderTests(SimpleTestCase):
-    """E1 (v1.5.9): every response must carry a Content-Security-Policy header."""
+    """E1 (v1.5.9): every response must carry a Content-Security-Policy header.
+
+    v1.6.2: script-src must use a per-request nonce and drop 'unsafe-inline'.
+    """
 
     # The home page renders ``get_common_context()`` which reads ``SiteConfig``
     # from the DB; allow DB access for this otherwise-DB-free test (D2 / v1.5.9).
@@ -155,6 +158,30 @@ class ContentSecurityPolicyHeaderTests(SimpleTestCase):
 
     def test_csp_policy_is_configurable(self):
         self.assertTrue(getattr(settings, 'CONTENT_SECURITY_POLICY', ''))
+
+    def test_script_src_uses_nonce_and_drops_unsafe_inline(self):
+        resp = self.client.get('/')
+        csp = resp.headers['Content-Security-Policy']
+        self.assertIn("'nonce-", csp)
+        self.assertIn("script-src 'self'", csp)
+        self.assertNotIn("script-src 'self' 'unsafe-inline'", csp)
+        # nonce is 22 chars (secrets.token_urlsafe(16)) — assert a real value
+        m = re.search(r"'nonce-([^']+)'", csp)
+        self.assertIsNotNone(m)
+        self.assertGreater(len(m.group(1)), 8)
+
+    def test_inline_script_tags_carry_matching_nonce(self):
+        resp = self.client.get('/')
+        csp = resp.headers['Content-Security-Policy']
+        nonce = re.search(r"'nonce-([^']+)'", csp).group(1)
+        content = resp.content.decode('utf-8')
+        # Collect every inline <script> (no external src) open tag.
+        inline = [t for t in re.findall(r'<script\b[^>]*>', content) if 'src=' not in t]
+        self.assertGreater(len(inline), 0, 'no inline <script> tags found to verify')
+        # Every inline <script> must carry the matching nonce attribute.
+        for tag in inline:
+            self.assertIn("nonce=\"%s\"" % nonce, tag,
+                          "inline script missing matching nonce: %s" % tag)
 
 
 class TextFilterSafetyTests(SimpleTestCase):
@@ -447,6 +474,27 @@ class ContactFormSecurityTests(TestCase):
             ContactMessage.objects.filter(email='real@customer.example').exists(),
             'normal submissions (no honeypot) must still be saved')
 
+    def test_runtime_notify_failure_shows_honest_error(self):
+        # On Vercel (IS_RUNTIME), a saved-but-undelivered submission (notify set
+        # but SMTP send fails) must surface an HONEST error to the visitor — not
+        # a fake "success" that hides the lost lead (incident 2026-09-13).
+        from unittest.mock import patch
+        with override_settings(IS_RUNTIME=True, CONTACT_NOTIFY_EMAIL='sales@solarone.com'), \
+                patch('django.core.mail.send_mail', side_effect=Exception('SMTP down')):
+            resp = self.client.post(reverse('contact'), {
+                'name': 'Real Person',
+                'email': 'real@customer.example',
+                'message': 'Please quote the FL4M series.',
+            })
+        self.assertEqual(resp.status_code, 200)
+        from pages.models import ContactMessage
+        self.assertTrue(
+            ContactMessage.objects.filter(email='real@customer.example').exists(),
+            'submission must still be saved to the DB')
+        content = resp.content.decode()
+        self.assertIn('could not deliver', content,
+                      'visitor must see an honest failure, never a fake success')
+
 
 class ContactPersistenceCheckTests(TestCase):
     """Production guard: contact submissions must have a durable delivery channel.
@@ -457,10 +505,11 @@ class ContactPersistenceCheckTests(TestCase):
     / `manage.py check`, not discovered via silent data loss (incident 2026-09-13).
     """
 
-    def _run(self, *, vercel, db_url, notify):
+    def _run(self, *, vercel, db_url, notify, smtp_user='', smtp_pass=''):
         from pages.checks import check_contact_persistence
         with mock.patch.dict('os.environ', {'DATABASE_URL': db_url}), \
-                override_settings(IS_VERCEL=vercel, CONTACT_NOTIFY_EMAIL=notify):
+                override_settings(IS_VERCEL=vercel, CONTACT_NOTIFY_EMAIL=notify,
+                                  EMAIL_HOST_USER=smtp_user, EMAIL_HOST_PASSWORD=smtp_pass):
             return check_contact_persistence(None)
 
     def test_vercel_ephemeral_db_without_email_warns(self):
@@ -468,9 +517,19 @@ class ContactPersistenceCheckTests(TestCase):
         self.assertEqual(len(errors), 1, 'must warn when Vercel + /tmp DB + no notify email')
         self.assertEqual(errors[0].id, 'pages.W001')
 
-    def test_vercel_ephemeral_db_with_email_ok(self):
-        errors = self._run(vercel=True, db_url='sqlite:////tmp/db.sqlite3', notify='sales@solarone.com')
-        self.assertEqual(errors, [], 'email configured => durable channel exists')
+    def test_vercel_ephemeral_db_notify_without_smtp_warns(self):
+        # Half-config: notify set but no SMTP creds => locmem swallows the mail
+        # and the lead is still lost on redeploy. This used to be missed.
+        errors = self._run(vercel=True, db_url='sqlite:////tmp/db.sqlite3',
+                           notify='sales@solarone.com', smtp_user='', smtp_pass='')
+        self.assertEqual(len(errors), 1,
+                         'notify WITHOUT smtp creds must still warn (half-config)')
+        self.assertEqual(errors[0].id, 'pages.W001')
+
+    def test_vercel_ephemeral_db_notify_with_smtp_ok(self):
+        errors = self._run(vercel=True, db_url='sqlite:////tmp/db.sqlite3',
+                           notify='sales@solarone.com', smtp_user='u', smtp_pass='p')
+        self.assertEqual(errors, [], 'notify + smtp creds => durable channel exists')
 
     def test_vercel_persistent_db_without_email_ok(self):
         errors = self._run(vercel=True, db_url='postgres://u:p@neon/db', notify='')
@@ -886,7 +945,7 @@ class ResponsiveIOSSafeAreaTests(TestCase):
         base = Path(settings.BASE_DIR, 'templates', 'base.html').read_text(
             encoding='utf-8')
         block = re.search(
-            r'<style>\s*/\* === Dynamic typography.*?</style>', base, re.DOTALL)
+            r'<style[^>]*>\s*/\* === Dynamic typography.*?</style>', base, re.DOTALL)
         self.assertIsNotNone(block, 'admin 注入 :root 块缺失')
         body = block.group(0)
         self.assertIn('font_family_body|safe', body,

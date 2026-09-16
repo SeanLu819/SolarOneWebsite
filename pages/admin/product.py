@@ -12,9 +12,7 @@ The most complex ModelAdmin in the project:
 
 Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 """
-import json
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -176,47 +174,6 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                     dst = os.path.join(gallery_dir, filename)
                     shutil.copy2(src, dst)
                     gallery_paths.append(f'images/products/{slug}/{filename}')
-
-        seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
-        seed_py_path = os.path.join(settings.BASE_DIR, 'pages', 'seed_data.py')
-
-        try:
-            with open(seed_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            for p in data.get('products', []):
-                if p.get('slug') == slug:
-                    for fn, path in seed_paths.items():
-                        p[fn] = path
-                    p['gallery'] = gallery_paths
-                    break
-            with open(seed_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-                f.write('\n')
-        except Exception:
-            pass
-
-        try:
-            with open(seed_py_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            idx = content.find(f'"slug": "{slug}"')
-            if idx >= 0:
-                for fn, path in seed_paths.items():
-                    pattern = re.compile(f'"{fn}":\\s*"([^"]*)"')
-                    match = pattern.search(content[idx:])
-                    if match:
-                        m_start = match.start() + idx
-                        val_start = content.find('"', m_start) + 1
-                        val_end = content.find('"', val_start)
-                        content = content[:val_start] + path + content[val_end:]
-                gal_match = re.search(r'"gallery":\s*\[[^\]]*\]', content[idx:])
-                if gal_match:
-                    g_start = gal_match.start() + idx
-                    g_end = gal_match.end()
-                    content = content[:g_start] + json.dumps(gallery_paths) + content[g_end:]
-                with open(seed_py_path, 'w', encoding='utf-8') as f:
-                    f.write(content)
-        except Exception:
-            pass
 
         try:
             subprocess.run(

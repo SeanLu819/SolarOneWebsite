@@ -8,7 +8,7 @@
 {% block og_description %}{{ series_subtitle|default:''|truncatechars:160 }}{% endblock %}
 
 {% block content %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -151,7 +151,7 @@
   </div>
 </section>
 
-<style>
+<style nonce="{{ request.csp_nonce }}">
   /* === Sub-series detail layout (inherits detail-grid from product_detail) === */
   .detail-grid {
     display: grid;
@@ -398,7 +398,7 @@
   }
 </style>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   (function () {
     const carousel = document.getElementById('psCarousel');
     if (!carousel) return;

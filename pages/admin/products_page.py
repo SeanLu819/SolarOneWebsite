@@ -15,7 +15,6 @@ Three responsibilities:
 
 Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 """
-import json
 import os
 import shutil
 import subprocess
@@ -113,43 +112,6 @@ class ProductsPageCardAdmin(CacheClearMixin, admin.ModelAdmin):
                         os.remove(os.path.join(static_dir, entry))
                     except Exception:
                         pass
-        except Exception:
-            pass
-
-        # Persist to seed_data.json (use cleaned, flat relative paths)
-        seed_path = os.path.join(settings.BASE_DIR, 'seed_data.json')
-        try:
-            with open(seed_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            ppc_entries = data.setdefault('productspagecards', [])
-            existing_by_slug = {}
-            for i, e in enumerate(ppc_entries):
-                s = (e.get('slug') or '').strip() or \
-                    (e.get('link_url') or '').strip('/').split('/')[-1]
-                if s:
-                    existing_by_slug[s] = i
-            for card in cards:
-                s = (card.slug or '').strip()
-                if not s:
-                    continue
-                cleaned = card_paths.get(card.pk, '')
-                entry = {
-                    'is_active': bool(card.is_active),
-                    'order': card.order,
-                    'title': card.title or '',
-                    'subtitle': card.subtitle or '',
-                    'slug': s,
-                    'link_url': card.link_url or '',
-                    'image': cleaned,
-                }
-                if s in existing_by_slug:
-                    ppc_entries[existing_by_slug[s]] = entry
-                else:
-                    ppc_entries.append(entry)
-                    existing_by_slug[s] = len(ppc_entries) - 1
-            with open(seed_path, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-                f.write('\n')
         except Exception:
             pass
 

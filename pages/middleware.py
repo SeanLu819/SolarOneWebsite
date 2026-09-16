@@ -1,4 +1,5 @@
 import hashlib
+import secrets
 import user_agents
 from django.conf import settings
 from django.utils import timezone
@@ -93,22 +94,50 @@ class VisitorTrackingMiddleware:
 
 
 class ContentSecurityPolicyMiddleware:
-    """Emit a baseline Content-Security-Policy response header (v1.5.9, E1).
+    """Emit a per-request Content-Security-Policy header (v1.5.9, E1; nonce v1.6.2).
 
-    The policy is read from ``settings.CONTENT_SECURITY_POLICY`` so it can be
-    tightened (nonces / hashes) in a later iteration without code changes. It
-    intentionally allows ``'unsafe-inline'`` for now because the templates still
-    ship inline ``<script>``/``<style>`` blocks and inline event handlers;
-    removing that is a separate, larger follow-up. The header is only set when
-    absent, so an upstream middleware / view can still override it.
+    A cryptographic nonce is generated for every request and injected into both
+    the CSP header (``script-src 'nonce-<n>'``) and the templates via
+    ``request.csp_nonce`` (exposed through the ``request`` context processor as
+    ``{{ request.csp_nonce }}``). Inline ``<script>``/``<style>`` blocks carry the
+    matching nonce attribute; inline event-handler attributes (onclick=, onerror=)
+    cannot be nonced and were refactored to addEventListener in base.html, which
+    lets us drop ``'unsafe-inline'`` from script-src and close the main XSS vector.
+    style-src keeps ``'unsafe-inline'`` because of ubiquitous inline ``style=``
+    attributes.
+
+    The policy template is read from ``settings.CONTENT_SECURITY_POLICY`` and the
+    literal ``__NONCE__`` placeholder is replaced with the request nonce. The
+    header is only set when absent, so an upstream middleware / view can override.
+
+    Django's admin relies on inline scripts / event handlers (``'unsafe-inline'``)
+    and is exempted with a permissive policy so the strict nonce CSP does not
+    break the admin UI.
     """
+
+    # Permissive policy for Django admin, which cannot use our per-request nonce.
+    _ADMIN_POLICY = (
+        "default-src 'self'; "
+        "img-src 'self' data:; "
+        "style-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "font-src 'self'; "
+        "connect-src 'self'; "
+        "frame-ancestors 'self'"
+    )
 
     def __init__(self, get_response):
         self.get_response = get_response
         self._policy = getattr(settings, 'CONTENT_SECURITY_POLICY', '')
 
     def __call__(self, request):
+        nonce = secrets.token_urlsafe(16)
+        request.csp_nonce = nonce
         response = self.get_response(request)
-        if self._policy and 'Content-Security-Policy' not in response:
-            response['Content-Security-Policy'] = self._policy
+        if 'Content-Security-Policy' in response:
+            return response
+        if request.path.startswith('/admin/'):
+            response['Content-Security-Policy'] = self._ADMIN_POLICY
+        elif self._policy:
+            response['Content-Security-Policy'] = self._policy.replace('__NONCE__', nonce)
         return response

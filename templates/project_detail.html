@@ -10,7 +10,7 @@
 
 {% block content %}
 {% if project %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -179,7 +179,7 @@
   </div>
 </section>
 
-<style>
+<style nonce="{{ request.csp_nonce }}">
   /* Full-width image section */
   .detail-image-full {
     width: 100%;
@@ -461,7 +461,7 @@
   }
 </style>
 
-<script>
+<script nonce="{{ request.csp_nonce }}">
   (function () {
     const carousel = document.getElementById('psCarousel');
     if (!carousel) return;
@@ -527,7 +527,7 @@
 </script>
 
 {% if project %}
-<script type="application/ld+json">
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",

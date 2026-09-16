@@ -160,8 +160,8 @@ CONTENT_SECURITY_POLICY = (
     "default-src 'self'; "
     "img-src 'self' data:; "
     "style-src 'self' 'unsafe-inline'; "
-    "script-src 'self' 'unsafe-inline'; "
-    "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; "
+    "script-src 'self' 'nonce-__NONCE__'; "
+    "font-src 'self'; "
     "connect-src 'self'; "
     "frame-ancestors 'none'; "
     "base-uri 'self'"
@@ -368,9 +368,14 @@ CACHES = {
 # Email is optional: if SMTP env vars are not set, contact notifications
 # silently no-op (the DB record is still saved). Set these in Vercel/local
 # env to enable admin email alerts on new contact submissions.
+# On Vercel, if a notify recipient is configured we force the real SMTP backend
+# (never locmem) so a delivery failure is LOUD (exception -> honest error to the
+# visitor) instead of silently swallowed by the in-memory backend (which would
+# lose the lead without anyone noticing). pages.W001 also guards this at check time.
 EMAIL_BACKEND = os.environ.get(
     'EMAIL_BACKEND',
-    'django.core.mail.backends.smtp.EmailBackend' if os.environ.get('EMAIL_HOST_USER')
+    'django.core.mail.backends.smtp.EmailBackend'
+    if (os.environ.get('EMAIL_HOST_USER') or os.environ.get('CONTACT_NOTIFY_EMAIL'))
     else 'django.core.mail.backends.locmem.EmailBackend',
 )
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')

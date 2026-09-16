@@ -3,7 +3,7 @@ from django.utils.translation import get_language
 from django.templatetags.static import static
 from .common import get_common_context
 from .i18n import _get_products_sidebar, _resolve_product_sidebar
-from .data_loaders import _get_products_from_db, _get_products_from_json, _get_product_detail_from_db, _get_product_detail_from_json
+from .data_loaders import get_products, get_product_detail
 
 
 def _resolve_ppc_image(card):
@@ -93,9 +93,7 @@ def products(request):
     context['active_series_label'] = active_series_label
 
     # ---- Build a product lookup map (slug -> enriched product) ----
-    raw_products = _get_products_from_db(lang, active_category, active_series)
-    if not raw_products:
-        raw_products = _get_products_from_json(lang, active_category, active_series)
+    raw_products = get_products(lang, active_category, active_series)
     product_by_slug = {}
     for p in raw_products:
         s = getattr(p, 'slug', '')
@@ -205,9 +203,7 @@ def product_detail(request, slug):
     product_categories = _get_products_sidebar(lang)
     context['product_categories'] = product_categories
 
-    product = _get_product_detail_from_db(slug, lang)
-    if product is None:
-        product = _get_product_detail_from_json(slug, lang)
+    product = get_product_detail(slug, lang)
 
     active_series, active_subseries, parent_slug = _resolve_product_sidebar(slug, lang)
     context['active_series'] = active_series
