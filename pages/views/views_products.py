@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import get_language
 from django.templatetags.static import static
@@ -72,6 +73,9 @@ def _dict_ppc_image(card_data):
 def products(request):
     context = get_common_context()
     lang = get_language()
+    # Read at call time (not as a module constant) so @override_settings works
+    # in tests — same pattern as data_loaders.
+    is_prod = getattr(settings, 'IS_VERCEL', False)
 
     product_categories = _get_products_sidebar(lang)
     context['product_categories'] = product_categories
@@ -98,14 +102,15 @@ def products(request):
 
     # Collect card slugs upfront so the fallback can use them
     all_card_slugs = []
-    try:
-        from pages.cards import ProductsPageCard
-        all_card_slugs = list(
-            ProductsPageCard.objects.filter(is_active=True)
-            .values_list('slug', flat=True)
-        )
-    except Exception:
-        pass
+    if not is_prod:
+        try:
+            from pages.cards import ProductsPageCard
+            all_card_slugs = list(
+                ProductsPageCard.objects.filter(is_active=True)
+                .values_list('slug', flat=True)
+            )
+        except Exception:
+            pass
 
     # ---- Products page card order/visibility is now driven by ProductsPageCard ----
     # ProductsPageCard is the SOURCE OF TRUTH for:
@@ -120,12 +125,21 @@ def products(request):
     card_order_count = 0
 
     if not active_category and not active_series:
+        # On Vercel the DB is an empty /tmp SQLite, so this query would raise on
+        # every request and be swallowed by the `except`, leaving `cards = None`
+        # and letting the seed fallback below take over. Skip the doomed
+        # round-trip instead: verified byte-identical output, and it honours the
+        # "production never touches the DB" contract from v1.6.0.
+        # NOTE: only the query is skipped — the seed fallback must still run,
+        # otherwise final_products stays empty and the page exposes all
+        # products instead of the curated subset.
         cards = None
-        try:
-            from pages.cards import ProductsPageCard as PPC
-            cards = list(PPC.objects.filter(is_active=True).order_by('order', 'pk'))
-        except Exception:
-            cards = None
+        if not is_prod:
+            try:
+                from pages.cards import ProductsPageCard as PPC
+                cards = list(PPC.objects.filter(is_active=True).order_by('order', 'pk'))
+            except Exception:
+                cards = None
 
         if cards:
             cards_ok = True

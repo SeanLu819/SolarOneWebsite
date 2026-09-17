@@ -364,12 +364,6 @@
 
   /* Responsive */
   /* F7: 侧栏折叠收敛到 767；detail-grid 折单列提前到 1024（F8，P1-6） */
-  @media (max-width: 767px) {
-    /* N-25: minmax(0, 1fr)，理由同 product_detail.html */
-    .sidebar-layout {
-      grid-template-columns: minmax(0, 1fr) !important;
-    }
-  }
   @media (max-width: 1024px) {
     .detail-grid {
       grid-template-columns: 1fr;

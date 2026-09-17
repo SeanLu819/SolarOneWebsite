@@ -842,12 +842,9 @@
   /* Responsive */
   /* F7：侧栏折叠断点从 900 收敛到 767（与 base.css 一致）；平板档侧栏恢复正常两列。 */
   @media (max-width: 767px) {
-    /* N-25: 必须是 minmax(0, 1fr)（同 base.css N-21/N-25）。
-       写 `1fr` 等价于 minmax(auto, 1fr)，会被 .detail-ordering-table(900px)
-       顶到 921px 整页宽 → 手机端只能看到约 42% 的页面。 */
-    .sidebar-layout {
-      grid-template-columns: minmax(0, 1fr) !important;
-    }
+    /* .sidebar-layout 的 minmax(0, 1fr) 现由 base.css 同断点规则统一
+       提供（N-21/N-25：本页 .detail-ordering-table 的 900px 曾把整页
+       顶到 921px）。 */
     .series-hero { height: 160px; }
     .series-hero-content { top: 20px; inset-inline-start: 20px; }
 

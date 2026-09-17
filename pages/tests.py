@@ -740,6 +740,10 @@ class ResponsiveBlowoutAndHeroTests(TestCase):
     manage.py check / test 全绿，只有真实渲染才看得见。产品详情页因此在
     390px 视口被撑到 921px，手机端只能看到约 42% 的页面。
     这里同时断言「根本解存在」与「反杀写法不存在」。
+
+    2026-09-17（Ponytail B6）：模板中 `.sidebar-layout` 的 4 份重复副本已合并
+    进 base.css，断言语义随之从「模板里含该声明」改为「base.css 在 767px 断点
+    提供该声明」+「模板不得再声明」——后者反而更强（新增了禁止重复声明的守卫）。
     """
 
     @classmethod
@@ -766,10 +770,40 @@ class ResponsiveBlowoutAndHeroTests(TestCase):
                 f"触发 grid blowout（应改为 minmax(0, 1fr) !important）")
 
     def test_sidebar_uses_minmax_zero(self):
-        for name in ('product_detail.html', 'product_series.html',
-                     'project_detail.html', 'news.html'):
-            self.assertIn('grid-template-columns: minmax(0, 1fr) !important',
-                          self.templates[name])
+        """N-25 root fix must exist in base.css — its single source of truth.
+
+        Each sidebar template used to carry its own copy of
+        `.sidebar-layout { grid-template-columns: minmax(0, 1fr) !important }`.
+        Those copies were consolidated into base.css (Ponytail B6), so asserting
+        them in the templates would now forbid the consolidation while proving
+        less. What matters is that the declaration exists *inside the mobile
+        breakpoint* — a declaration parked at the wrong breakpoint is just as
+        broken as a missing one.
+        """
+        blocks = re.findall(r'@media\s*\(max-width:\s*767px\)\s*\{(.*?)\n  \}',
+                            self.css, re.S)
+        self.assertTrue(blocks, 'base.css 缺少 max-width:767px 断点块')
+        self.assertTrue(
+            any('.sidebar-layout' in b and
+                'grid-template-columns: minmax(0, 1fr) !important' in b
+                for b in blocks),
+            'base.css 的 767px 断点块里没有 .sidebar-layout 的 minmax(0,1fr) '
+            '修复（N-25）')
+
+    def test_sidebar_templates_do_not_redeclare_grid_template(self):
+        """No template may re-declare .sidebar-layout's columns.
+
+        A template-level declaration loads after base.css, so re-adding one
+        would silently defeat N-21/N-25 again — the exact failure mode this
+        suite exists to catch. Allowing zero re-declarations also keeps
+        `.sidebar-layout`'s mobile columns in one place.
+        """
+        for name, src in self.templates.items():
+            for m in re.finditer(r'\.sidebar-layout\s*\{([^}]*)\}', src):
+                self.assertNotIn(
+                    'grid-template-columns', m.group(1),
+                    f'{name} 重新声明了 .sidebar-layout 的 grid-template-columns，'
+                    f'会覆盖 base.css 的 N-25 修复（应只保留 base.css 一处）')
 
     def test_energy_table_wraps_on_mobile(self):
         # th 的 nowrap 是 energy 表被撑到 899px 的原因：
@@ -1660,6 +1694,44 @@ class StatelessProductionTests(TestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertIn('SeedNewsTitleXYZ', resp.content.decode('utf-8'))
+
+    # ---- P1: /products/ must not touch the DB in production, and must still
+    #      render the curated card subset instead of every product ----
+    @override_settings(IS_VERCEL=True)
+    def test_products_page_prod_no_db_and_shows_curated_subset(self):
+        import pages.cards as cards_mod
+
+        with mock.patch.object(cards_mod.ProductsPageCard, 'objects') as ppc_mock:
+            resp = self.client.get(reverse('products'))
+            self.assertFalse(
+                ppc_mock.filter.called,
+                'products view must NOT query ProductsPageCard on Vercel (P1)',
+            )
+
+        self.assertEqual(resp.status_code, 200)
+        rendered = [
+            t.strip() for t in re.findall(
+                r'<h3[^>]*class="[^"]*product-card-title[^"]*"[^>]*>\s*([^<]+?)\s*</h3>',
+                resp.content.decode('utf-8'))
+        ]
+
+        from pages.views.utils import _load_seed
+        seed = _load_seed()
+        active_cards = [c for c in seed.get('productspagecards', [])
+                        if c.get('is_active', True)]
+        active_cards.sort(key=lambda c: c.get('order', 0) or 0)
+        expected = [c['title'] for c in active_cards if c.get('title')]
+
+        self.assertEqual(
+            rendered, expected,
+            'production must render the curated cards in seed order',
+        )
+        # The `all_card_slugs` safety net is DB-backed, so on Vercel the seed
+        # fallback is the only thing preventing every product from being shown.
+        self.assertLess(
+            len(rendered), len(seed.get('products', [])),
+            'production must show the curated subset, never every product',
+        )
 
 
 
