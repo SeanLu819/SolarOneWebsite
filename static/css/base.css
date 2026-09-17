@@ -332,7 +332,20 @@
   [dir="rtl"] .link-arrow { display: inline-block; transform: scaleX(-1); }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* N-29: clip root-level horizontal overflow. The closed .mobile-panel is
+       position:fixed at translateX(100%) (just off the right edge); its box and
+       box-shadow extend past the viewport. body's overflow-x:hidden cannot clip
+       a fixed element (its containing block is the viewport), so only a root
+       clip stops the mobile "zoom-out / hamburger off-screen" overflow.
+       clip (vs hidden) does not create a scroll container, so position:sticky
+       (e.g. .sidebar-nav) still works. hidden is the fallback for old engines. */
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
   body {
     font-family: var(--ff-body);
     font-size: var(--fs-base);
@@ -482,12 +495,16 @@
     box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
     z-index: 105;
     transform: translateX(100%);
-    transition: transform 0.35s ease;
+    /* N-29: hide the closed drawer (and its box-shadow) so it can't bleed a
+       dark strip onto the viewport's far-right edge. visibility (not display)
+       preserves the slide-out animation via the delayed transition below. */
+    visibility: hidden;
+    transition: transform 0.35s ease, visibility 0s linear 0.35s;
     display: flex;
     flex-direction: column;
     padding: 76px 22px calc(32px + env(safe-area-inset-bottom, 0px));
   }
-  .mobile-panel.open { transform: translateX(0); }
+  .mobile-panel.open { transform: translateX(0); visibility: visible; transition: transform 0.35s ease, visibility 0s; }
   .mobile-panel-close {
     position: absolute;
     top: 24px; right: 24px;
@@ -527,6 +544,15 @@
     transition: opacity 0.35s ease;
   }
   .mobile-panel-overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* N-29: the drawer is mobile-only (the hamburger that opens it is hidden at
+     >=768px). Keep it out of the desktop render entirely so its off-screen
+     box-shadow can never bleed a dark strip onto the right edge on PC. The
+     visibility rule above handles the same bleed on mobile. */
+  @media (min-width: 768px) {
+    .mobile-panel,
+    .mobile-panel-overlay { display: none; }
+  }
 
   /* Utilities parked inside the mobile panel (theme + language).
      Below 768px these are the ONLY place to reach them, since the
@@ -586,6 +612,10 @@
   .panel-actions .lang-switch-menu {
     top: auto;
     bottom: calc(100% + 8px);
+    /* N-29: the popup is min-width:160px but the panel content area is ~116px;
+       pin it to the button width so it never spills outside the drawer. */
+    min-width: 0;
+    width: 100%;
   }
   /* N-22: RTL — mirror the drawer. It must slide in from the LEFT, matching
      the reading direction, otherwise Arabic/Hebrew users get a drawer that
@@ -601,7 +631,10 @@
   }
   [dir="rtl"] .mobile-panel:not(.open) { transform: translateX(-100%); }
   [dir="rtl"] .mobile-panel-close { right: auto; left: 22px; }
-  [dir="rtl"] .panel-actions { flex-direction: row-reverse; }
+  /* N-29: keep the theme/language buttons stacked vertically in the narrow
+     RTL drawer (same as LTR). row-reverse forced them side-by-side, overflowing
+     the 160px panel and pushing the language button outside the drawer. */
+  [dir="rtl"] .panel-actions { flex-direction: column; }
 
   /* ============ HERO ============ */
   .hero {
