@@ -110,24 +110,25 @@
 | 项 | 状态 |
 |----|------|
 | A1 data_loaders 收口 | ✅ 已完成（2026-09-16，118 tests OK） |
-| A2 侧栏 label 反查 | ⬜ 待办 |
-| A3 图像 URL 解析 | ⬜ 待办 |
+| A2 侧栏 label 反查 | ✅ 已完成（2026-09-17 批次一，`7ca3b61`；233 例穷举等价） |
+| A3 图像 URL 解析 | ✅ 已完成（2026-09-17 批次一，`7ca3b61`；抽 `_passthrough_url` + `_first_static`） |
 | A4 删 5 处 seed 文本手术 | ✅ 已完成（2026-09-16，118 tests OK） |
-| A5 静态扫描模块 | ⬜ 待办 |
-| A6 封面解析模块 | ⬜ 待办 |
-| A7 translate 模块 | ⬜ 待办 |
-| A8 哈希剥离统一 | 🟡 进行中（2026-09-17，工程师实施中） |
-| A9 模板侧栏 include | ⬜ 待办 |
-| A10 breadcrumb include | ⬜ 待办 |
-| A11 轮播 JS/CSS 集中 | ⬜ 待办 |
-| B1/B2 死 if | ⬜ 待办 |
-| B3 DATABASES 合并 | ⬜ 待办 |
-| B4 IP 统一收口（→pages/ip.py） | 🟡 实施完成待 QA（2026-09-17，118 OK） |
-| B5 死代码 | ✅ 已完成（2026-09-17 step-2，118 tests OK，`1bc6863`） |
-| B6 模板内联样式 | ⬜ 待办 |
-| B7 错误页 include | ⬜ 待办 |
-| B8 base theme/lang | ⬜ 待办 |
-| B9 admin 预览 | ⬜ 待办 |
+| A5 静态扫描模块 | ✅ 已完成（2026-09-17 批次一，`pages/static_scan.py`；两径 510 路径集合逐字一致） |
+| A6 封面解析模块 | ❌ **不合并**（2026-09-17 论证：两者契约不同，22 个种子项目中 9 个结果不同。已改写 docstring 互相交叉引用，防止后续误合并） |
+| A7 translate 模块 | ✅ 已完成（2026-09-17 批次一，`pages.utils.translate`） |
+| A8 哈希剥离统一 | ✅ 已完成（2026-09-17 step-2，`1bc6863`） |
+| A9 模板侧栏 include | ❌ **不提取**（2026-09-17 论证：三份侧栏语义不同，见 §9.3。零变化 include 需 ≥8 个参数，比重复更难读） |
+| A10 breadcrumb include | ✅ 已完成（2026-09-17 批次二，`8db122a`；顺修 §4-1 的 URL 不一致 Bug） |
+| A11 轮播 JS 集中 | ✅ 已完成（2026-09-17 批次二，`8db122a`；含 `nonce`，删死代码 `restartAuto` 与永不触发的兜底） |
+| A11 轮播 CSS 集中 | ❌ **不合并**（2026-09-17 论证：三份存在实质差异，见 §9.3。合并会改变两个页面的观感） |
+| B1/B2 死 if | ✅ 已完成（2026-09-17 批次一，`7ca3b61`；塌缩 `_project_image_url` 残留的两处同值分支） |
+| B3 DATABASES 合并 | ✅ 已完成（2026-09-17 批次一，`7ca3b61`；合入 `_LOCAL_SQLITE`） |
+| B4 IP 统一收口（→pages/ip.py） | ✅ 已完成（2026-09-17 step-2，`1bc6863`） |
+| B5 死代码 | ✅ 已完成（2026-09-17 step-2 + 批次一续清 `import re`） |
+| B6 模板内联样式 | 🟡 **部分完成**（2026-09-17 批次三：`position:sticky;top:100px` 6 份收口 `base.css`，并删 4 处重复的移动端规则。其余内联样式与 `base.css` 类**不等价**，属"外观分歧"而非重复，见 §9.3） |
+| B7 错误页 include | ✅ 已完成（2026-09-17 批次二，`8db122a`） |
+| B8 base theme/lang | ✅ 已完成（2026-09-17 批次二，`8db122a`） |
+| B9 admin 预览 | ✅ 已完成（2026-09-17 批次一，`7ca3b61`；`admin_image_preview`） |
 | C1/C2 保留 | — |
 
 ---
@@ -152,3 +153,53 @@
 - **重要偏差**：审计原始行号基于 pre-A8；grep 复核发现 `_static_url`/`_project_image_url` 实为活跃函数（共约 12 处调用），故 B1/B2 定为"塌缩死分支"而非"删函数"，避免误伤 `enrich`/`data_loaders`。
 - **验证**：`manage.py test pages --keepdb` 通过 **118 tests OK**，`System check identified no issues (0 silenced)`。
 - **状态**：已 commit/push —— step-2 @ `1bc6863`（main，`6936038..1bc6863`）；Vercel 从 main 自动部署。
+
+---
+
+## 9. 实施记录（A2/A3/A5/A7/B3/B9 → A10/A11-JS/B7/B8/A6 → B6，2026-09-17 批次一/二/三）
+
+### 9.1 批次一 —— 抽公共模块（commit `7ca3b61`）
+
+- **A2**：`i18n._resolve_active_labels(sidebar, active_key, active_sub_key)` 收口 3 处逐字相同的 label 反查循环（`views_products.py`、`views_projects.py` ×2），−33 行。
+- **A3**：`views/utils.py` 新增 `_passthrough_url()`（统一绝对 URL / `/static/` / `/media/` 透传守卫）与 `_first_static()`（统一"候选列表 → 第一个存在的静态文件"循环），4 处手写候选循环 + 3 处根路径守卫全部委托。
+- **A5**：新增 `pages/static_scan.py`（`static_dirs()` / `build_file_set()`），`views.utils._build_static_file_set` 与 `seed_sync._build_static_set` 共用；**纯计算不缓存**，各自的缓存与失效语义保持不变。
+- **A7**：`pages/utils.translate(getter, translations, field, lang)` 收口 `models.Product.t` / `Project.t` 与 `views.utils._DictProduct.t` / `_DictProject.t` 四份逐字相同实现。
+- **B3**：`settings.py` 的 `except ImportError` / `else` 两块逐字相同的 SQLite 配置合并为 `_LOCAL_SQLITE` 常量。
+- **B9**：`admin_image_preview(field, size, placeholder)` 收口 `ProductAdmin` 与 `ProductsPageCardAdmin` 的 60×45 缩略图；两处标记串逐字一致（含 `(no image)` 占位差异，用 `placeholder` 参数保留）。
+- **顺带收尾 B1/B2**：`_project_image_url` 中 A8 轮漏改的两处 `if _find_static(x): return static(x)` / `return static(x)` 同值分支塌缩。
+- **顺带收尾 B5**：删 `views/utils.py` 与 `seed_sync.py` 中 A8 后已成死引用的 `import re`、`views_products.py` 未使用的 `settings` 导入、`seed_sync.py` 两处冗余局部 `import os`。
+- **验证**：118 tests OK；A2/A3 **233 例穷举等价**；A5 两个实现 510 条路径集合逐字一致；B9 标记串逐字一致；12 页渲染冒烟 200 / 无空 `img src` / 标签正确；`python -m pages.seed_sync --json`（build.sh 走的 CLI 路径）正常。
+- **⚠️ 验证救回一次真回归**：抽取 `_static_url` 时，`_static_url('')` 一度从 `''` 变成 `'/static/'`（空值未提前返回）。等价性验证脚本捕获后修复 —— 这是"先写等价性断言再改"的价值所在。
+
+### 9.2 批次二 —— 模板去重（commit `8db122a`）
+
+- **A10**：5 处近重复面包屑 JSON-LD 收口为 `includes/breadcrumb_jsonld.html`（`section` / `leaf_name` / `leaf_url` 参数化）；**顺修 §4-1 的 Bug** —— 产品详情页原先混用 `request.scheme://request.get_host`，本地/预览下会向搜索引擎吐出 `http://testserver`，现全站统一 `canonical_origin`（实测已从 `http://testserver/` 变为 `https://www.solaronelighting.com/`）。
+- **A11（JS）**：三处轮播脚本收口为 `includes/carousel_js.html`，`nonce="{{ request.csp_nonce }}"` 随 `<script>` 标签一起进 include。顺删 `product_series.html` 中定义但**从未调用**的 `restartAuto()`，以及永不触发的 `|| 3000/4000` 兜底（三页均显式设置 `data-interval`）。
+- **B7**：`404.html` / `500.html` 收口为 `includes/error_page.html`（`code` / `title` / `message` / `accent` 参数化）；保留独立版式，按审计要求**不**改为继承 `base.html`。
+- **B8**：`base.html` 中抽屉与桌面导航各两份的主题/语言切换标记收口为 `includes/theme_toggle.html` + `includes/lang_switch.html`，以 `variant="panel"` 区分抽屉变体（`.panel-action` + label span）。
+- **验证**：118 tests OK；**80 组渲染矩阵**（10 路由 × 2 主题 × 2 视口 × 2 语言）与改前逐字节对比，差异仅三类且全部为预期 ——（a）面包屑 origin 修正，（b）`{% include %}` 引入的空白，（c）`{% now "U" %}` 渲染时间戳；全部标记计数相等（无内容丢失）；Playwright **32 例计算样式 0 处变化**（级联未受影响）；PNG 差异经两次对照运行分离，全部落在轮播/滑块页的已知抖动范围内。
+
+### 9.3 论证后**不实施**的项（重要：审计前提有误）
+
+审计假设这几项是"逐字重复"，实测它们是**语义分歧**。强行 DRY 需要"参数化重复"，比原状更难读，且会改变观感。
+
+- **A6 不合并**：`seed_sync._discover_project_cover` 与 `views/utils._find_project_cover_path` 是**两种契约** —— 前者"修复磁盘上已不存在的路径"（忽略记录名，取第一个可用图），后者"解析用于展示的封面"（优先尊重作者记录的文件）。实测在 **22 个种子项目中 9 个结果不同**。合并必然二选一地改变行为。原 docstring 写的 "mirroring _find_project_cover_path logic" 正是诱导后续错误合并的根源，已改写为明确的契约说明并互相交叉引用。
+- **A9 不提取**：三份产品侧栏至少有 5 处语义分歧 ——（1）父级高亮比较的是不同变量（`products.html` → `active_category`；`product_series.html` → `active_series`；`product_detail.html` **不做**父级高亮）；（2）`sidebar-nav-header` 在 `products.html` 用类，在 detail/series 用内联样式且**数值不同**（12px/0.15em/mb20 且无下边框 vs 类定义的 11px/0.14em/mb18 + `font-weight:600` + 下边框）；（3）`.sidebar-nav-group` 仅 detail/series 有 `margin-bottom:3px`，而该 class 在 `base.css` **根本没有定义**；（4）"View All" 链接同样是"类 vs 不等价内联"；（5）项目侧栏无孙级层。要做成零变化 include 需 ≥8 个参数 —— 典型的"参数化重复"反模式，故保留重复并在本记录留证。
+- **A11（CSS）不合并**：三份 `.ps-*` 规则块并非相同 —— `.ps-carousel-slide img` 在 `product_detail`/`product_series` 是 `max-width:760px; object-fit:contain`，在 `project_detail` 是 `object-fit:cover`（无 max-width）；`.ps-thumbnails` 的 `margin-top` 是 `12px` vs `8px`；`.ps-carousel` 的 `background:transparent; border-radius:0` 仅 `product_detail` 有。合并会改变两个页面的观感。
+- **B6 其余内联样式不动**：同理 —— 侧栏那几处内联样式与 `base.css` 的类**数值不等价**（见 A9 第 2/3/4 点），照审计"移动进 base.css"会改变页面外观。`about.html` 另有约 40 处内联样式（审计估"约 6 处"），量级不同，需先确认设计意图再动。
+
+### 9.4 批次三 —— B6 的可零变化子集（本次）
+
+只做**真重复**且**可证零变化**的部分：
+
+- 6 个模板（`products` / `product_detail` / `product_series` / `projects` / `project_detail` / `news`）的 `<aside class="sidebar-nav" style="position: sticky; top: 100px;">` 内联样式收口到 `base.css` 的 `.sidebar-nav` 规则。
+- **为什么零变化**：`base.css:1896` 的 `@media (max-width: 767px)` 块**本来就**用 `position: relative !important; top: auto !important` 覆盖 —— author `!important` 同样能压过普通内联声明，所以移动端在改动前后都是 `relative`；`>767px` 则由新的类规则给出与旧内联完全相同的 `sticky / 100px`。
+- **顺带删重复**：`news.html` / `product_detail.html` / `product_series.html` / `project_detail.html` 各自还内联了一份**与 base.css 逐字相同**的 `@media (max-width:767px) .sidebar-nav{...}` 规则（断点与声明都相同）→ 删除。因两份都是同断点的 `!important`，删除模板副本不改变级联。
+- **验证**：118 tests OK；Playwright **32 例计算样式 0 处变化**（改前 vs 改后两次独立对照，均 0）；逐页实测 `.sidebar-nav` 计算值 —— 桌面 6/6 为 `sticky / 100px`，移动 6/6 为 `relative / auto`，与改动前的等效预期一致。
+
+### 9.5 本批次的方法论要点（下次复用）
+
+1. **先写等价性断言，再改代码**：`_static_url('')` 的回归就是这样被拦下的。对"无害重构"同样适用。
+2. **DRY 审计的前提必须逐条验伪**：本轮 4 个待办项（A6/A9/A11-CSS/B6）经查全是"分歧"而非"重复"。判断标准是**改后是否零变化**，而不是"长得像不像"。
+3. **计算样式快照是级联改动的可靠仪器**：`getComputedStyle` 对固定选择器集合完全确定（同输入两次运行 0 差异），而 PNG 截图在轮播/滑块页天然抖动 —— 先跑两遍对照建立"抖动基线"，再分离真实变化。
+4. **顺手记录"不做什么、为什么"**：把论证写进文档，比让下一个人重新发现一遍便宜得多。

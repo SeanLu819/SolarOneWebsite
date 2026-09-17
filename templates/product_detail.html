@@ -21,7 +21,7 @@
       <!-- ===== LEFT SIDEBAR ===== -->
       <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
       <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
-      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+      <aside class="sidebar-nav">
         <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
         <nav class="sidebar-nav-list">
           {% for cat in product_categories %}
@@ -847,10 +847,6 @@
        顶到 921px 整页宽 → 手机端只能看到约 42% 的页面。 */
     .sidebar-layout {
       grid-template-columns: minmax(0, 1fr) !important;
-    }
-    .sidebar-nav {
-      position: relative !important;
-      top: auto !important;
     }
     .series-hero { height: 160px; }
     .series-hero-content { top: 20px; inset-inline-start: 20px; }

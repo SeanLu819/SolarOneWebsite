@@ -1610,6 +1610,15 @@
      - mono is reserved for micro-labels (header, view-all) only. */
 
   .sidebar-nav {
+    /* B6: hoisted from six identical inline `style="position: sticky; top:
+       100px;"` attributes on <aside class="sidebar-nav">. Rendering is
+       unchanged: at <=767px the `@media` block further down this file already
+       forces `position: relative !important` (author !important beat the
+       inline attribute too), and above that breakpoint sticky applies as
+       before. Four templates carried verbatim copies of that mobile rule;
+       they have been deleted now that the declaration lives here. */
+    position: sticky;
+    top: 100px;
     padding: 18px 14px;
     background: var(--bg-soft);
     border: 1px solid var(--line);

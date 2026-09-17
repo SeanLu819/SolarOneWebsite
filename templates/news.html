@@ -16,7 +16,7 @@
       <!-- ===== LEFT SIDEBAR ===== -->
       <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
       <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
-      <aside class="sidebar-nav" style="position: sticky; top: 100px;">
+      <aside class="sidebar-nav">
         <div class="sidebar-nav-header">{% trans "News" %}</div>
         <nav class="sidebar-nav-list">
           <a href="{% url 'news' %}" class="sidebar-nav-child active">{% trans "All News" %}</a>
@@ -124,10 +124,6 @@
   @media (max-width: 767px) {
     .sidebar-layout {
       grid-template-columns: minmax(0, 1fr) !important;
-    }
-    .sidebar-nav {
-      position: relative !important;
-      top: auto !important;
     }
   }
 </style>
