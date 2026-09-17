@@ -1994,4 +1994,126 @@ class I18nCatalogGuardTests(SimpleTestCase):
             f'{offenders}')
 
 
+class DataDrivenTranslationTests(SimpleTestCase):
+    """第二条翻译路径：`pages/views/i18n.py` 的 `_SIDEBAR_I18N` 硬编码字典。
+
+    本站有两条互不相干的翻译机制：
+      ① gettext 目录（locale/*.mo）—— 由 I18nCatalogGuardTests 守卫；
+      ② `_SIDEBAR_I18N` 字典 + `_t(label, lang)` —— 侧栏分类/系列/场馆类型/规格
+         标签与 SiteConfig 文案走这条。`_t()` 在字典里查不到时**静默回退英文
+         原文**（`entry.get(lang, label)`），既不报错也不写日志。
+
+    2026-09-17 首次为路径 ② 建守卫时扫出 6 处**现存**漏译，且已运行时确认
+    （/de/、/fr/、/ar/ 的 /projects/ 页面上，同一页里 'Fußballplatz' 已本地化，
+    而下面这些仍是英文）：
+      * `Karting Track` / `Fencing` / `Aquatics Centre` / `City Expressway` /
+        `Airports` —— `_get_projects_sidebar` 一直在请求，字典里却没有条目
+        （注意字典里存的是 `Airports and Ports`，与请求的 `Airports` 键名对不上）；
+      * `Featured Projects` —— seed_data.json 的 `siteconfig.projects_title` 经
+        `common.py` 的 `_t(config.projects_title, lang)` 下发，字典里没有条目。
+    六条均已补录，本守卫防止同类问题再发生。
+
+    为什么不复用 I18nCatalogGuardTests 的 templatize 提取：路径 ② 里的标签多以
+    **变量**形式下发（`product_detail.html:176` 的 `{% trans item.label %}`、
+    `enrich.py` 的 `_t(card_label, lang)`、`common.py` 的
+    `_t(config.hero_title, lang)`），而 templatize() 会把非字面量参数整段 mask 掉
+    —— 静态扫描一律看不见。所以本守卫改为直接扫「谁会被传给 _t()」这个全集：
+      a. 各模块中 `_t('字面量', lang)` 的首参；
+      b. `_PRODUCT_CARD_LABELS` / `_PRODUCT_CAT_TO_SIDEBAR_LABEL` 的取值
+         （它们经 enrich.py 以变量形式喂给 `_t`）；
+      c. `_t(config.<字段>, lang)` 的字段在 seed_data.json['siteconfig'] 里的英文取值。
+    再要求每条都在 `_SIDEBAR_I18N` 有条目，且 fr/es/de/ru/ar 五语齐备且非空。
+    """
+
+    ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    # 边界说明：SiteConfig 里**未经** common.py 传给 _t() 的字段不在覆盖范围内
+    # （联系邮箱、电话、社交链接等本就无需翻译）。若将来 common.py 新增
+    # `_t(config.x, lang)`，字段会自动进入 (c) 而被覆盖。
+
+    @staticmethod
+    def _t_call_first_args(*, attribute_on=None):
+        """扫 pages/**.py 里所有 _t(...) 调用，返回 (字符串字面量集合, 属性名集合)。"""
+        literals, attributes = set(), set()
+        for path in sorted(Path(settings.BASE_DIR, 'pages').rglob('*.py')):
+            if path.name.startswith('test'):
+                continue
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call) or not node.args:
+                    continue
+                func = node.func
+                name = func.id if isinstance(func, ast.Name) else getattr(func, 'attr', None)
+                if name != '_t':
+                    continue
+                arg = node.args[0]
+                if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                    literals.add(arg.value)
+                elif isinstance(arg, ast.Attribute) and isinstance(arg.value, ast.Name):
+                    if attribute_on is None or arg.value.id == attribute_on:
+                        attributes.add(arg.attr)
+        return literals, attributes
+
+    def _required_labels(self):
+        from pages.views.i18n import (
+            _PRODUCT_CARD_LABELS, _PRODUCT_CAT_TO_SIDEBAR_LABEL)
+
+        literals, _ = self._t_call_first_args()
+        labels = set(literals)
+        labels |= set(_PRODUCT_CARD_LABELS.values())
+        labels |= set(_PRODUCT_CAT_TO_SIDEBAR_LABEL.values())
+
+        # (c) SiteConfig 字段的英文取值：取自数据源 seed_data.json，与运行时一致。
+        _, config_fields = self._t_call_first_args(attribute_on='config')
+        seed = json.loads(
+            Path(settings.BASE_DIR, 'seed_data.json').read_text(encoding='utf-8'))
+        siteconfig = seed['siteconfig']
+        for field in sorted(config_fields):
+            value = siteconfig.get(field)
+            if isinstance(value, str) and value.strip():
+                labels.add(value)
+
+        return {label for label in labels if label.strip()}
+
+    # --- 反空洞自检 ---------------------------------------------------------
+    def test_extractor_actually_extracts(self):
+        """提取器返回空集合时下面的契约会假绿，先把这条钉死。"""
+        literals, config_fields = self._t_call_first_args(attribute_on='config')
+        self.assertGreater(
+            len(literals), 20,
+            f'只扫到 {len(literals)} 个字面量 _t() 调用，提取器可能已失效')
+        self.assertIn('Outdoor Sports', literals)
+        self.assertGreaterEqual(
+            len(config_fields), 5,
+            f'_t(config.<字段>) 只扫到 {sorted(config_fields)}，提取器可能已失效')
+        labels = self._required_labels()
+        self.assertGreater(len(labels), 25, f'待译标签只有 {len(labels)} 条，可疑')
+
+    # --- 契约 ---------------------------------------------------------------
+    def test_every_required_label_has_all_five_languages(self):
+        from pages.views.i18n import _SIDEBAR_I18N
+        offenders = {}
+        for label in sorted(self._required_labels()):
+            entry = _SIDEBAR_I18N.get(label)
+            if entry is None:
+                offenders[label] = '字典里没有条目（_t 会静默回退英文）'
+                continue
+            missing = [lang for lang in self.ALL_LANGS if not entry.get(lang, '').strip()]
+            if missing:
+                offenders[label] = f'缺语言 {missing}'
+        self.assertEqual(
+            offenders, {},
+            '这些经 _t() 下发的标签没有完整五语翻译，会在页面上显示英文：'
+            f'{offenders}')
+
+    def test_dictionary_values_are_non_empty(self):
+        from pages.views.i18n import _SIDEBAR_I18N
+        offenders = {
+            label: [lang for lang, text in entry.items() if not str(text).strip()]
+            for label, entry in _SIDEBAR_I18N.items()
+            if any(not str(text).strip() for text in entry.values())
+        }
+        self.assertEqual(offenders, {}, f'_SIDEBAR_I18N 存在空译文：{offenders}')
+
+
 
