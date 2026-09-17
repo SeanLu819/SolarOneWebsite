@@ -2037,14 +2037,32 @@ class DataDrivenTranslationTests(SimpleTestCase):
         真实产品驱动 `_enrich_product`（= 生产无状态路径）。**这一条是必需的**：
         实测过「把 `card_label` 的数据源换成第三张 dict」这个突变，只靠调用点
         清单会漏（调用点数量没变），只有运行时 spy 抓得到。
-      * `test_non_literal_t_call_sites_are_inventoried` —— `common.py` 是
-        `from .i18n import _t`（独立引用，patch 模块全局抓不到，且它取的是
-        `config.<字段>`，已由静态规则 (c) 覆盖）。故用「非字面量调用点清单」
-        兜底：新增一个变量型 `_t()` 调用点就让清单对不上。
-    三层合起来，机制 ② 的覆盖是闭合的。
+      * `test_siteconfig_labels_actually_routed_through_t_are_covered` —— 同上，但
+        针对 `common.py` 的 6 处 `_t(config.<字段>, lang)`，patch
+        `pages.views.common._t` 并真跑 `get_common_context()`。
+      * `test_config_fields_passed_to_t_are_pinned` —— **字段集必须逐字固定**。
+        独立验证者实测：把 `_t(config.hero_title, lang)` 改成
+        `_t(_HERO_COPY['title'], lang)` 时，静态规则 (c) 是按 `config.<字段>`
+        这个 **name** 认人的，换掉后该字段**从待译集合里悄悄消失** —— 是
+        "覆盖变少"，不是"变红"；调用点清单数量 6→6 也不变。所以必须把字段集
+        钉死：少一个、多一个、换成别的来源，都要显式改这张表。
+      * `test_non_literal_t_call_sites_are_inventoried` —— 非字面量调用点数量清单，
+        兜底 `common.py` / `enrich.py` 这类「独立引用」模块。
+    四层合起来，机制 ② 的覆盖是闭合的。
     """
 
     ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    # `_t(config.<字段>, lang)` 里被翻译的 SiteConfig 字段集，逐字固定。
+    # 少一个、多一个、或改成非 config 来源，本条测试都会红 —— 因为那意味着
+    # 静态规则 (c) 的覆盖范围**悄悄变了**（历史上这正好是"原地换数据源"的漏洞）。
+    KNOWN_CONFIG_FIELDS = {
+        'pages/views/common.py': (
+            'hero_subtitle', 'hero_title',
+            'products_subtitle', 'products_title',
+            'projects_subtitle', 'projects_title',
+        ),
+    }
 
     # 非字面量 `_t()` 调用点的已知清单（相对 BASE_DIR 的路径 → 调用点数量）。
     # 这些调用点因 `from .i18n import _t` 拿着独立引用，运行时 spy 抓不到，所以
@@ -2226,6 +2244,68 @@ class DataDrivenTranslationTests(SimpleTestCase):
         self.assertEqual(
             offenders, {},
             f'这些产品卡标签真实流经 _t() 但没有完整五语翻译：{offenders}')
+
+    def test_siteconfig_labels_actually_routed_through_t_are_covered(self):
+        """SiteConfig 文案：patch `pages.views.common._t`，真跑 `get_common_context()`。
+
+        `common.py` 同样是 `from .i18n import _t`（独立引用），必须 patch 它自己的
+        模块全局。用 `override_settings(IS_VERCEL=True)` 走**生产无状态分支**
+        （`_build_siteconfig_from_seed()`），这样既不碰 DB 也不依赖测试库状态。
+        """
+        import pages.views.common as common_mod
+        from django.core.cache import cache
+
+        cache.delete('site_config')
+        real_t = common_mod._t
+        seen = []
+
+        def spy(label, lang='en'):
+            seen.append(label)
+            return real_t(label, lang)
+
+        with override_settings(IS_VERCEL=True):
+            with mock.patch.object(common_mod, '_t', spy):
+                common_mod.get_common_context()
+
+        seen = [s for s in seen if isinstance(s, str) and s.strip()]
+        self.assertGreater(len(seen), 0, 'spy 没抓到任何标签，patch 目标可能已失效')
+        offenders = self._offending_labels(seen)
+        self.assertEqual(
+            offenders, {},
+            f'这些 SiteConfig 文案真实流经 _t() 但没有完整五语翻译：{offenders}')
+
+    def test_config_fields_passed_to_t_are_pinned(self):
+        """`_t(config.<字段>, lang)` 的字段集必须与 KNOWN_CONFIG_FIELDS 逐字一致。
+
+        这是「原地换数据源」漏洞的正解：静态规则 (c) 按 `config` 这个 name 认字段，
+        改成 `_t(third_dict['title'], lang)` 后该字段**静默从待译集合消失**（覆盖
+        变少而非变红），调用点清单数量又不变。把字段集钉死后，任何增减或换源都
+        必须显式改表 —— 想改就得先想清楚英文回退的后果。
+        """
+        base = Path(settings.BASE_DIR)
+        fields = {}
+        for path in sorted((base / 'pages').rglob('*.py')):
+            if path.name.startswith('test'):
+                continue
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            found = []
+            for node in ast.walk(tree):
+                if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                        and node.func.id == '_t' and node.args):
+                    continue
+                arg0 = node.args[0]
+                if (isinstance(arg0, ast.Attribute)
+                        and isinstance(arg0.value, ast.Name)
+                        and arg0.value.id == 'config'):
+                    found.append(arg0.attr)
+            if found:
+                rel = str(path.relative_to(base)).replace('\\', '/')
+                fields[rel] = tuple(sorted(found))
+        self.assertEqual(
+            fields, self.KNOWN_CONFIG_FIELDS,
+            '被 _t() 翻译的 SiteConfig 字段集变了。这通常意味着静态规则 (c) 的'
+            '覆盖范围悄悄改变了 —— 若某个字段不再经 _t() 下发，它在 fr/es/de/ru/ar '
+            '就会静默回退英文。确认无误后同步更新 KNOWN_CONFIG_FIELDS。')
 
     def test_non_literal_t_call_sites_are_inventoried(self):
         """非字面量 `_t()` 调用点必须与 KNOWN_DYNAMIC_SITES 一致。
