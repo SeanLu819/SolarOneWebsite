@@ -1,0 +1,23 @@
+{% load i18n %}
+{% comment %}
+Theme (light/dark) toggle button — shared by the desktop nav and the mobile
+side panel. base.html's script binds to EVERY `.theme-toggle` and EVERY
+`.theme-icon-sun` / `.theme-icon-moon`, so both instances work off one handler.
+
+variant="panel"  mobile drawer: adds `.panel-action` (drawer stacking), uses the
+                 translated aria-label, and renders the visible text label.
+(default)        desktop nav: untranslated aria-label + a `title` tooltip, and
+                 no visible label (icon-only).
+{% endcomment %}
+{% if variant == 'panel' %}
+<button class="theme-toggle panel-action" type="button" aria-label="{% trans 'Toggle light/dark theme' %}">
+  <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  <span class="panel-action-label">{% trans "Theme" %}</span>
+</button>
+{% else %}
+<button class="theme-toggle" type="button" aria-label="Toggle theme" title="{% trans 'Toggle light/dark theme' %}">
+  <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+</button>
+{% endif %}

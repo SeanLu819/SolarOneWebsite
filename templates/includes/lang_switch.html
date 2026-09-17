@@ -1,0 +1,44 @@
+{% load i18n %}
+{% comment %}
+Language switcher — shared by the desktop nav and the mobile side panel.
+base.html's script binds to EVERY `.lang-switch`, so both instances work off one
+handler (open/close, outside-click, cookie + redirect).
+
+variant="panel"  mobile drawer: adds `.panel-action`, uses the translated
+                 aria-label.
+(default)        desktop nav: untranslated aria-label.
+
+The option list is driven by LANGUAGES, so a locale added in settings appears in
+both switchers automatically.
+{% endcomment %}
+{% if variant == 'panel' %}
+<div class="lang-switch panel-action">
+  <button class="lang-switch-btn" type="button" aria-label="{% trans 'Change language' %}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span class="lang-switch-current">{{ LANGUAGE_CODE|upper }}</span>
+  </button>
+  <div class="lang-switch-menu">
+    {% get_current_language as LANG_CODE %}
+    {% for lang_code, lang_name in LANGUAGES %}
+    <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
+      {{ lang_name }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="lang-switch">
+  <button class="lang-switch-btn" type="button" aria-label="Change language">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span class="lang-switch-current">{{ LANGUAGE_CODE|upper }}</span>
+  </button>
+  <div class="lang-switch-menu">
+    {% get_current_language as LANG_CODE %}
+    {% for lang_code, lang_name in LANGUAGES %}
+    <a href="#" class="lang-switch-option{% if lang_code == LANG_CODE %} active{% endif %}" data-code="{{ lang_code }}">
+      {{ lang_name }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,36 @@
+{% load i18n %}
+{% comment %}
+BreadcrumbList JSON-LD — the single source for the five pages that emit one
+(products, product_detail, product_series, projects, project_detail).
+
+Params
+  section    'products' | 'projects' — resolves the 2nd crumb (translated name
+             + listing URL) so no call site builds a URL itself.
+  leaf_name  optional 3rd crumb name. Callers pass the model value already
+             piped through |escapejs wherever the original did, so the emitted
+             bytes are unchanged.
+  leaf_url   optional 3rd crumb path, appended to canonical_origin.
+
+Every URL is built from `canonical_origin`. The blocks this replaces mixed
+`canonical_origin` with `request.scheme://request.get_host`, so one page emitted
+two different origins depending on which block you read — and a preview deploy
+could leak its own hostname into structured data (audit §4 #1).
+{% endcomment %}
+{% if section == 'projects' %}
+{% trans "Projects" as section_name %}
+{% url 'projects' as section_url %}
+{% else %}
+{% trans "Products" as section_name %}
+{% url 'products' as section_url %}
+{% endif %}
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ canonical_origin }}/"},
+    {"@type": "ListItem", "position": 2, "name": "{{ section_name }}", "item": "{{ canonical_origin }}{{ section_url }}"}{% if leaf_name %},
+    {"@type": "ListItem", "position": 3, "name": "{{ leaf_name }}", "item": "{{ canonical_origin }}{{ leaf_url }}"}{% endif %}
+  ]
+}
+</script>

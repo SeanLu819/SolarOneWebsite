@@ -1,0 +1,44 @@
+{% comment %}
+Standalone 404 / 500 page body — the single source for both error pages, which
+were near-identical copies differing only in the code, two strings and the h1
+accent colour.
+
+Params
+  code     '404' | '500'      — big number in the h1
+  title    'Page Not Found'   — <title> suffix AND the h2 (they were the same
+             string on both pages)
+  message  body sentence
+  accent   h1 colour          — #3b82f6 (404, blue) / #ef4444 (500, red)
+
+These pages deliberately do NOT extend base.html: they must render with zero
+database access and zero static/template dependencies, so the styles are inline.
+NOTE (open item): that also means they carry no navigation and no language
+switch, and their copy is English-only in all six locales. Adding i18n here
+would change what users see, so it is tracked separately rather than folded into
+this de-duplication.
+{% endcomment %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} — SolarOne</title>
+<style nonce="{{ request.csp_nonce }}">
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f14; color: #e8edf2; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .container { text-align: center; padding: 40px 20px; }
+  h1 { font-size: 6rem; font-weight: 200; color: {{ accent }}; line-height: 1; margin-bottom: 16px; }
+  h2 { font-size: 1.5rem; font-weight: 400; color: #94a3b8; margin-bottom: 24px; }
+  p { color: #64748b; margin-bottom: 32px; font-size: 1rem; line-height: 1.6; }
+  a { display: inline-block; padding: 12px 32px; background: #3b82f6; color: #fff; text-decoration: none; border-radius: 8px; font-size: 0.95rem; transition: background 0.2s; }
+  a:hover { background: #2563eb; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>{{ code }}</h1>
+  <h2>{{ title }}</h2>
+  <p>{{ message }}</p>
+  <a href="/">Back to Home</a>
+</div>
+</body>
+</html>

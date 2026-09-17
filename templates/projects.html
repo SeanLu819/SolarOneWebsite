@@ -8,16 +8,7 @@
 {% block og_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities.{% endblock %}
 
 {% block content %}
-<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ canonical_origin }}/"},
-    {"@type": "ListItem", "position": 2, "name": "{% trans 'Projects' %}", "item": "{{ canonical_origin }}{% url 'projects' %}"}
-  ]
-}
-</script>
+{% include "includes/breadcrumb_jsonld.html" with section="projects" %}
 
 <!-- Projects page with sidebar -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">

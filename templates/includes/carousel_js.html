@@ -1,0 +1,88 @@
+{% comment %}
+Gallery carousel controller — the single source for the product detail,
+product series and project detail pages.
+
+Behaviour is driven by DATA, not by a per-page copy of this script:
+  * the element is found by id (`psCarousel`),
+  * the autoplay period comes from its `data-interval` attribute,
+  * thumbnails are found relative to the carousel's parent.
+So all three pages share this file verbatim.
+
+Two divergences in the copies this replaces were dead code and are dropped here:
+  * `product_series.html` defined a `restartAuto()` that was never called;
+  * the `|| 3000` / `|| 4000` fallback could never fire, because every page sets
+    `data-interval` explicitly (3000 / 3000 / 4000 respectively).
+
+NOTE: `product_series.html` is currently NOT rendered by any view — the
+`product_series` URL calls the `product_detail` view, which renders
+`product_detail.html`. The file is kept (and kept in sync with this include) as
+a legacy template, and several tests/E2E checks read it as source text. See the
+audit's A9 notes before removing it.
+
+The `nonce` attribute must stay on the <script> tag itself for CSP.
+{% endcomment %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    const carousel = document.getElementById('psCarousel');
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll('.ps-carousel-slide');
+    const thumbs = carousel.parentElement.querySelectorAll('.ps-thumb');
+    const prevBtn = carousel.querySelector('.ps-prev');
+    const nextBtn = carousel.querySelector('.ps-next');
+    const interval = parseInt(carousel.dataset.interval, 10) || 3000;
+
+    if (slides.length === 0) return;
+    let current = 0;
+    let timer = null;
+    let resumeTimer = null;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === current));
+    }
+
+    function next() { show(current + 1); }
+    function prev() { show(current - 1); }
+
+    function startAuto() {
+      stopAuto();
+      if (slides.length > 1) {
+        timer = setInterval(next, interval);
+      }
+    }
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    function handleUserSwitch(fn) {
+      return function () {
+        stopAuto();
+        fn();
+        // Resume auto-play after user inactivity
+        if (resumeTimer) clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(startAuto, 5000);
+      };
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', handleUserSwitch(prev));
+    if (nextBtn) nextBtn.addEventListener('click', handleUserSwitch(next));
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', handleUserSwitch(() => {
+        show(parseInt(thumb.dataset.index, 10));
+      }));
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') { handleUserSwitch(prev)(); }
+      else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
+    });
+
+    // Start auto-play on page load
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      startAuto();
+    }
+  })();
+</script>

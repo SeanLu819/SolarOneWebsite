@@ -355,6 +355,10 @@ def _find_project_gallery_files(slug: str):
 def _find_project_cover_path(slug: str, db_path: str = ''):
     """Find the cover image static path for a project slug.
 
+    A6 note — this is the *display* resolver and deliberately differs from
+    ``pages.seed_sync._discover_project_cover``, which is a *repair* helper for
+    broken paths. See that function's docstring before attempting to merge them.
+
     Priority order (highest to lowest):
       1. Exact match on DB-specified filename (clean_name) in slug directory.
       2. Prefix heuristic (cover/main/01/1/hero).

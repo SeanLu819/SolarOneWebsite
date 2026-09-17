@@ -10,17 +10,7 @@
 
 {% block content %}
 {% if project %}
-<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ canonical_origin }}/"},
-    {"@type": "ListItem", "position": 2, "name": "{% trans 'Projects' %}", "item": "{{ canonical_origin }}{% url 'projects' %}"},
-    {"@type": "ListItem", "position": 3, "name": "{{ project.title_t|escapejs }}", "item": "{{ canonical_origin }}{{ request.path }}"}
-  ]
-}
-</script>
+{% include "includes/breadcrumb_jsonld.html" with section="projects" leaf_name=project.title_t|escapejs leaf_url=request.path %}
 {% endif %}
 
 <!-- Project detail page with sidebar and carousel -->
@@ -461,70 +451,7 @@
   }
 </style>
 
-<script nonce="{{ request.csp_nonce }}">
-  (function () {
-    const carousel = document.getElementById('psCarousel');
-    if (!carousel) return;
-
-    const slides = carousel.querySelectorAll('.ps-carousel-slide');
-    const thumbs = carousel.parentElement.querySelectorAll('.ps-thumb');
-    const prevBtn = carousel.querySelector('.ps-prev');
-    const nextBtn = carousel.querySelector('.ps-next');
-    const interval = parseInt(carousel.dataset.interval, 10) || 4000;
-
-    if (slides.length === 0) return;
-    let current = 0;
-    let timer = null;
-    let resumeTimer = null;
-
-    function show(index) {
-      current = (index + slides.length) % slides.length;
-      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
-      thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === current));
-    }
-
-    function next() { show(current + 1); }
-    function prev() { show(current - 1); }
-
-    function startAuto() {
-      stopAuto();
-      if (slides.length > 1) {
-        timer = setInterval(next, interval);
-      }
-    }
-    function stopAuto() {
-      if (timer) { clearInterval(timer); timer = null; }
-    }
-
-    function handleUserSwitch(fn) {
-      return function () {
-        stopAuto();
-        fn();
-        if (resumeTimer) clearTimeout(resumeTimer);
-        resumeTimer = setTimeout(startAuto, 5000);
-      };
-    }
-
-    if (prevBtn) prevBtn.addEventListener('click', handleUserSwitch(prev));
-    if (nextBtn) nextBtn.addEventListener('click', handleUserSwitch(next));
-    thumbs.forEach((thumb) => {
-      thumb.addEventListener('click', handleUserSwitch(() => {
-        show(parseInt(thumb.dataset.index, 10));
-      }));
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') { handleUserSwitch(prev)(); }
-      else if (e.key === 'ArrowRight') { handleUserSwitch(next)(); }
-    });
-
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!prefersReducedMotion) {
-      startAuto();
-    }
-  })();
-</script>
+{% include "includes/carousel_js.html" %}
 
 {% if project %}
 <script nonce="{{ request.csp_nonce }}" type="application/ld+json">

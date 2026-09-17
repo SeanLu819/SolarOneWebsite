@@ -475,13 +475,28 @@ def sync_seed_from_db():
 
 
 def _discover_project_cover(slug, seed_image='', base_dir=None):
-    """Find the best cover image for a project, mirroring _find_project_cover_path logic.
+    """Find a REPLACEMENT cover for a project whose recorded path is broken.
+
+    A6 note — do NOT merge this with ``pages.views.utils._find_project_cover_path``.
+    The two are deliberately different contracts and (verified) disagree on 9 of
+    the 22 seeded projects:
+
+    * ``views.utils._find_project_cover_path`` resolves the cover to **display**,
+      so it honours the author's recorded file first (exact hash-cleaned match,
+      then a cover/main/01/1/hero prefix heuristic, then first available).
+    * this function **repairs** a path that no longer exists on disk, so it
+      ignores the recorded name and simply takes the first available image.
+
+    ``sync_seed_from_json`` calls it only when the recorded path is missing, so a
+    well-maintained static tree never invokes it. Merging the two would either
+    make the display path ignore the author's choice, or make the repair path
+    retry a file known to be broken — both are content changes, not refactors.
 
     Priority:
     1. Per-slug directory (first image, excluding old/new comparison shots)
     2. images/processed/ fallback for known legacy placeholders
     3. Gallery directory match by slug token
-    4. Flat projects/ directory
+    4. The original ``seed_image``, unchanged (last resort)
     """
     def _list_dir(rel_dir):
         rel_dir = rel_dir.replace('\\', '/')
