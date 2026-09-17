@@ -203,3 +203,26 @@
 2. **DRY 审计的前提必须逐条验伪**：本轮 4 个待办项（A6/A9/A11-CSS/B6）经查全是"分歧"而非"重复"。判断标准是**改后是否零变化**，而不是"长得像不像"。
 3. **计算样式快照是级联改动的可靠仪器**：`getComputedStyle` 对固定选择器集合完全确定（同输入两次运行 0 差异），而 PNG 截图在轮播/滑块页天然抖动 —— 先跑两遍对照建立"抖动基线"，再分离真实变化。
 4. **顺手记录"不做什么、为什么"**：把论证写进文档，比让下一个人重新发现一遍便宜得多。
+
+### 9.6 三个"遗留待办"经实测**证伪**（2026-09-17，勿再处理）
+
+这三条是审计收尾时我列进 P2 清单的，核查后**全部不成立**，记录在此以免后人重复劳动：
+
+- **`settings.py` 的 Vercel `/tmp` SQLite 分支不是死代码**（原判断错误）：`IS_RUNTIME = IS_VERCEL and '/tmp/' in DATABASE_URL`，而 `api/index.py` 在 `VERCEL=1` 且未设 `DATABASE_URL` 时会写入 `sqlite:////tmp/db.sqlite3`；`views_contact.py:117` 正用 `IS_RUNTIME` 决定「已存但未发信 + 临时库」时**不能对用户谎报成功**（见 2026-09-13 事故）。删掉该分支会让联系表单在降级场景从「诚实报错」退化为「谎报成功」—— 是行为回归，不是精简。
+- **`checks.py` 的措辞不矛盾**：它建议「设 `CONTACT_NOTIFY_EMAIL` + SMTP 凭据，或把 `DATABASE_URL` 指向持久库（Neon/Supabase）」。内容层的无状态化（v1.6.0 起全走 `seed_data.json`）与**联系表单需要持久落库**是两件独立的事，并不冲突。
+- **`templates/product_series.html` 是确认的孤儿**（原判正确，但需用户决策）：`views_products.py:237` 的 `product_series()` 直接 `return product_detail(request, slug)`，故 `product_series.html` 永远不会被渲染；`templates/includes/carousel_js.html:16-17` 亦已记录此事。**注意**：本项目此前还对这个死模板做过 A10/A11/B6 去重（纯浪费）。**待用户决定「删除文件」还是「恢复独立路由」**——后者会改变用户可见布局，不可擅自实施。
+
+---
+
+## 10. 附带发现（非 Ponytail 项）：i18n —— 两套翻译机制，其中一套长期无守卫
+
+核查 §9 遗留项时顺带发现的、与代码精简无关但影响面更大的问题，单独记此备查（详细过程见 `.workbuddy/memory/2026-09-17.md`）。**2026-09-17 已修复并建守卫（N-36/N-37）。**
+
+- 本站有**两套互不相干的翻译机制**：
+  1. **gettext 目录** `locale/<lang>/LC_MESSAGES/django.{po,mo}`（`.mo` 才是运行时查表对象）—— 服务模板 `{% trans %}` 与 Python `_()`；
+  2. **`pages/views/i18n.py` 的 `_SIDEBAR_I18N` 硬编码字典** + `_t(label, lang)` —— 服务侧栏分类/系列/场馆类型/规格标签与 SiteConfig 文案；**查不到就 `entry.get(lang, label)` 静默回退英文**，既不报错也不记日志。
+  此前**只有机制 1 有守卫，机制 2 完全没有**。
+- **机制 1 实测缺口**：`locale/` 最后同步为 **2026-08-08**（`c88154a`），此后五周无人再跑 makemessages。模板侧 201 个可译串中 **31 个在 `.mo` 中无条目**，Python 侧 **4 条**同样缺失（正是联系表单给访客的全部提示）→ 在 fr/es/de/ru/ar 静默回退英文。重灾区为 **Cookie 同意条**（`base.html`，2026-08-15 由 `7765865` 引入、从未翻译）、`about.html` 的 cookie/隐私政策章节、移动端抽屉标签、产品规格表头。→ 新增 `I18nCatalogGuardTests`（4 例），35 条存量欠账冻结在 `KNOWN_UNTRANSLATED`，**只许缩小**。
+- **机制 2 实测缺口**：**6 处现存漏译** —— 侧栏 `Karting Track` / `Fencing` / `Aquatics Centre` / `City Expressway` / `Airports`（`_get_projects_sidebar` 一直在请求，字典里却没有条目；字典里存的是 `Airports and Ports`，**键名对不上**），以及项目页标题 `Featured Projects`（`seed_data.json` 的 `siteconfig.projects_title` 经 `common.py` 的 `_t(config.projects_title, lang)` 下发）。已在 `/de/`、`/fr/`、`/ar/` 的 `/projects/` 运行时实测确认（同页 `Fußballplatz` 已本地化，而这些仍是英文）。六条均已补录五语翻译 → 新增 `DataDrivenTranslationTests`（3 例）。
+- ⚠️ **`templatize()` 的边界（守卫设计的关键教训）**：它会把 `{% trans 变量 %}` **整段 mask**，因此静态扫描对 `product_detail.html:176` 的 `{% trans item.label %}` 是**结构性盲区**（独立验证者把静态 trans 改成动态后，机制 1 的守卫仍然全绿）。故机制 2 的守卫改为扫「**谁会被传给 `_t()`**」的全集：`_t('字面量')` 首参 + `_PRODUCT_CARD_LABELS` / `_PRODUCT_CAT_TO_SIDEBAR_LABEL` 的取值（经 `enrich.py` 以变量传入）+ `_t(config.<字段>)` 对应 `seed_data.json['siteconfig']` 的英文取值。**残余盲区**：若 `_t()` 首参是变量、且其来源不在上述两个映射字典中，静态仍看不见。
+- **验证**：全量 **128 tests OK**；两批共 **14 项变异测试**（基线绿 + 12 变异全红）证明两条守卫均非空洞。另顺手修掉 `product_detail.html` 的 `{% trans "L\" × W\" × H\"" %}` —— 它运行时渲染正确，但 `templatize` 会切出垃圾 msgid `L\`，下一跑 makemessages 就会污染 `.po`。
