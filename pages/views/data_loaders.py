@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.conf import settings
 from pages.models import Product, Project, NewsArticle
-from .utils import _load_seed, _DictProduct, _DictProject
+from .utils import _load_seed, _DictProduct, _DictProject, _static_url
 from .enrich import (
     _enrich_product, _enrich_project,
     _get_cached_products, _set_cached_products,

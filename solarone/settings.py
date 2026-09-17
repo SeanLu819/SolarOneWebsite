@@ -310,7 +310,13 @@ else:
 # irrelevant on Vercel but we set it False for clarity.
 WHITENOISE_USE_FINDERS = not IS_VERCEL
 WHITENOISE_MANIFEST_STRICT = False
-WHITENOISE_MAX_AGE = 31536000  # 1 year cache for versioned static files
+# N-30: a 1-year max-age is only safe for content-HASHED filenames, which exist
+# solely on Vercel (BundledManifestStaticFilesStorage -> css/base.<hash>.css).
+# Locally the URL is un-versioned (/static/css/base.css), so a 1-year max-age
+# made the dev browser pin the OLD stylesheet for a year after every edit —
+# the "I changed the CSS but my phone still shows the old layout" trap.
+# 0 => "max-age=0, public" => the browser revalidates on every request.
+WHITENOISE_MAX_AGE = 31536000 if IS_VERCEL else 0
 # Do NOT send Access-Control-Allow-Origin:* for static assets (#7) —
 # no legitimate third-party site needs to fetch this site's static files.
 WHITENOISE_ALLOW_ALL_ORIGINS = False

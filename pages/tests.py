@@ -1644,18 +1644,22 @@ class StatelessProductionTests(TestCase):
 
         seed = {'news': [{
             'slug': 'x',
-            'title': 'T',
+            'title': 'SeedNewsTitleXYZ',
             'summary': 's',
             'content': 'c',
             'image': 'images/news/x.webp',
             'published_at': '2026-01-01T00:00:00',
             'is_published': True,
         }]}
-        with mock.patch('pages.views.views_other._load_seed', return_value=seed):
+        # Patch the module news() actually reads from (get_news -> data_loaders._load_seed),
+        # not views_other (which only sitemap_xml uses). A unique title proves the
+        # seeded article is really rendered (and exercises _normalize_news_article ->
+        # _static_url, catching the missing import that crashed on the first real news).
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
             resp = self.client.get(reverse('news'))
 
         self.assertEqual(resp.status_code, 200)
-        self.assertIn('T', resp.content.decode('utf-8'))
+        self.assertIn('SeedNewsTitleXYZ', resp.content.decode('utf-8'))
 
 
 
