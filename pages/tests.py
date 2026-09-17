@@ -1,3 +1,5 @@
+import ast
+import gettext
 import json
 import re
 import sys
@@ -1794,6 +1796,202 @@ class StatelessProductionTests(TestCase):
             [q['sql'] for q in ctx.captured_queries], [],
             'production /products/ must not query the DB at all',
         )
+
+
+class I18nCatalogGuardTests(SimpleTestCase):
+    """可译字符串必须存在于编译后的 gettext 目录里，否则静默回退成英文。
+
+    背景（2026-09-17 核查）：`locale/` 最后一次同步是 2026-08-08（c88154a），
+    此后五周模板持续增长却无人再跑 makemessages。核查时模板侧共 201 个可译
+    字符串，其中 **31 个在 locale/<lang>/LC_MESSAGES/django.mo 里没有条目**，
+    另有 4 条 Python 字符串同样缺失 —— 它们在 fr/es/de/ru/ar 全部回退为英文。
+    受损最重的是合规相关的地方：
+      * Cookie 同意条（base.html，2026-08-15 由 7765865 引入，从未翻译）——
+        一个 GDPR「知情同意」界面，在五个本地化站点上以英文呈现；
+      * about.html 的 cookie / 隐私政策章节；
+      * 移动端抽屉标签（Main menu / Theme / Change language）与产品规格表头；
+      * 联系表单给访客的 4 条提示（成功 / 限流 / 降级 / 保存失败）。
+
+    提取方式刻意复用 Django 自己的机制，避免与 makemessages 漂移：
+      * 模板 → django.utils.translation.template.templatize()。它内部走
+        template.Lexer 分词 + 官方 inline_re/block_re，正是 makemessages 投喂
+        xgettext 的那份产物；自己写正则会在转义引号（`"L\\" × W\\""`）等
+        边角上与官方行为分叉。
+      * Python → ast。ast 会自动折叠隐式拼接的相邻字面量（`_('a' 'b')` 视为
+        'ab'），而正则既漏掉这个折叠，又会把 `__import__('sys')` 误判成
+        `_('sys')`。
+
+    比对目标是 .mo 而非 .po —— .mo 才是运行时真正查表的东西，因此
+    「.po 已补但忘了 compilemessages」同样会被这条守卫抓住。
+
+    KNOWN_UNTRANSLATED 是冻结的存量欠账清单：**只许缩小**。翻译落地后请立即
+    删除对应条目（test_allowlist_entries_are_still_untranslated 会盯着这件事）；
+    任何不在清单里、又不在目录里的字符串都会让测试变红。
+    """
+
+    # 存量欠账（截至 2026-09-17）。新增条目 = 又漏了一次翻译同步，不要这么做。
+    KNOWN_UNTRANSLATED = frozenset({
+        'Accept All',
+        'Analytics cookies:',
+        'Application',
+        'Change language',
+        'Cookie Usage',
+        'Data We Collect',
+        'Dimming (option)',
+        'Essential cookies:',
+        'Filter / Categories',
+        'Filter by Application',
+        'Finish (option)',
+        'Help us understand how visitors interact with our website',
+        'Input Voltage',
+        'LED Driver Location',
+        'Last updated:',
+        'Main menu',
+        'Marketing cookies:',
+        'Reject',
+        'Required for basic site functionality',
+        'Sorry, we could not save your message. Please try again.',
+        'Swipe to view all columns',
+        'Theme',
+        'Too many messages submitted recently. Please wait a few minutes '
+        'before trying again.',
+        'Types of cookies we use:',
+        'Under GDPR (EU) and similar regulations, you have the right to '
+        'access, correct, or delete your personal data. Contact us at',
+        'Used to deliver relevant advertisements',
+        'View image %(forloop.counter)s',
+        'We collect minimal data necessary for website functionality and '
+        'analytics, including: device type, browser type, pages visited, and '
+        'referring source. We do not sell your personal data to third parties.',
+        'We could not deliver your message right now. Please try again later '
+        'or email us directly using the address on this site.',
+        "We use cookies to enhance your browsing experience and analyze site "
+        "traffic. By clicking 'Accept', you consent to our use of cookies.",
+        'We use cookies to enhance your browsing experience and analyze site '
+        'traffic. Cookies are small text files stored on your device that help '
+        'us understand how you use our website.',
+        'You can accept or reject non-essential cookies at any time. Essential '
+        'cookies cannot be disabled as they are necessary for the website to '
+        'function.',
+        'Your Rights',
+        'Your message has been sent successfully!',
+        'for any privacy-related requests.',
+    })
+
+    # en 是源语言：msgid 本身就是英文，查不到自然回退英文，不构成缺陷。
+    NON_SOURCE_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    # templatize 的产物形如 gettext(u'...') 或 pgettext(u'ctx', u'...')
+    _CALL_RE = re.compile(
+        r"(?:gettext|pgettext)\(u((?:'(?:[^'\\]|\\.)*')|(?:\"(?:[^\"\\]|\\.)*\"))"
+        r"(?:\s*,\s*u((?:'(?:[^'\\]|\\.)*')|(?:\"(?:[^\"\\]|\\.)*\")))?\)"
+    )
+    _PY_FUNCS = frozenset(
+        {'_', 'gettext', 'gettext_lazy', 'ugettext', 'ugettext_lazy'})
+
+    @staticmethod
+    def _catalog(lang):
+        path = Path(settings.BASE_DIR, 'locale', lang, 'LC_MESSAGES', 'django.mo')
+        with path.open('rb') as fh:
+            return gettext.GNUTranslations(fh)._catalog
+
+    @staticmethod
+    def _catalog_has(catalog, msgid):
+        # templatize 会把 `%` 翻倍（免得 xgettext 把字面 % 当格式符），
+        # 所以两种写法都算命中。
+        return msgid in catalog or msgid.replace('%%', '%') in catalog
+
+    @classmethod
+    def _template_strings(cls):
+        from django.utils.translation.template import templatize
+        found = set()
+        for path in sorted(Path(settings.BASE_DIR, 'templates').rglob('*.html')):
+            rendered = templatize(path.read_text(encoding='utf-8'), origin=str(path))
+            for match in cls._CALL_RE.finditer(rendered):
+                literal = match.group(2) if match.group(2) is not None else match.group(1)
+                found.add(ast.literal_eval(literal))
+        return found
+
+    @classmethod
+    def _python_strings(cls):
+        found = set()
+        for path in sorted(Path(settings.BASE_DIR, 'pages').rglob('*.py')):
+            if path.name.startswith('test'):
+                continue
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.Call) or not node.args:
+                    continue
+                func = node.func
+                name = func.id if isinstance(func, ast.Name) else getattr(func, 'attr', None)
+                if name not in cls._PY_FUNCS:
+                    continue
+                arg = node.args[0]
+                if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                    found.add(arg.value)
+        return found
+
+    def _offenders(self, strings):
+        """返回 {lang: [未翻译字符串]}，已排除已知欠账。"""
+        offenders = {}
+        for lang in self.NON_SOURCE_LANGS:
+            catalog = self._catalog(lang)
+            missing = sorted(
+                s for s in strings
+                if not self._catalog_has(catalog, s)
+                and s not in self.KNOWN_UNTRANSLATED
+            )
+            if missing:
+                offenders[lang] = missing
+        return offenders
+
+    # --- 反空洞自检：守卫本身必须真的在工作 --------------------------------
+    def test_extractor_actually_extracts(self):
+        """防止守卫退化成恒真（提取器返回空集合时，下文两个契约会假绿）。"""
+        template_strings = self._template_strings()
+        self.assertGreater(
+            len(template_strings), 150,
+            f'模板提取器只抓到 {len(template_strings)} 个字符串，守卫已失效')
+        self.assertIn('Products', template_strings)
+
+        from django.utils.translation.template import templatize
+        # 单引号包裹 + 内含双引号：官方 inline_re 能正确切出 msgid。
+        # （反例：写成 {% trans "L\" × W\" × H\"" %} 时 templatize 会切出 'L\\'，
+        #  在 .po 里留下一个永不命中的垃圾 msgid —— v1.6.2 已修正模板写法。）
+        match = self._CALL_RE.search(templatize("""{% trans 'L" × W" × H"' %}"""))
+        self.assertIsNotNone(match, '官方提取路径抓不到单引号包裹的 trans')
+        self.assertEqual(ast.literal_eval(match.group(1)), 'L" × W" × H"')
+
+        self.assertGreater(
+            len(self._python_strings()), 3,
+            'Python 提取器只抓到极少数字符串，守卫可能已失效')
+
+    def test_allowlist_only_shrinks(self):
+        """清单只许缩小：某条目已翻译却还留在 KNOWN_UNTRANSLATED 就失败了。"""
+        stale = set()
+        for lang in self.NON_SOURCE_LANGS:
+            catalog = self._catalog(lang)
+            for msgid in self.KNOWN_UNTRANSLATED:
+                if self._catalog_has(catalog, msgid):
+                    stale.add(msgid)
+        self.assertEqual(
+            stale, set(),
+            f'这些条目已经有翻译了，请从 KNOWN_UNTRANSLATED 删除：{sorted(stale)}')
+
+    # --- 契约 ---------------------------------------------------------------
+    def test_all_template_strings_are_translated(self):
+        offenders = self._offenders(self._template_strings())
+        self.assertEqual(
+            offenders, {},
+            '新增的模板可译字符串缺少 gettext 条目（会静默显示英文）：'
+            f'{offenders}')
+
+    def test_all_python_strings_are_translated(self):
+        offenders = self._offenders(self._python_strings())
+        self.assertEqual(
+            offenders, {},
+            '新增的 Python 可译字符串缺少 gettext 条目（会静默显示英文）：'
+            f'{offenders}')
 
 
 
