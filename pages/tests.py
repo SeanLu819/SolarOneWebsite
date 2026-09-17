@@ -751,9 +751,14 @@ class ResponsiveBlowoutAndHeroTests(TestCase):
         super().setUpClass()
         cls.css = Path(settings.BASE_DIR, 'static/css/base.css').read_text(
             encoding='utf-8')
+        # rglob, not glob: after the DRY consolidation most markup lives in
+        # templates/includes/, and a non-recursive scan cannot see overrides
+        # placed there (found by independent QA as a blind spot).
+        root = Path(settings.BASE_DIR, 'templates')
         cls.templates = {
-            p.name: p.read_text(encoding='utf-8')
-            for p in Path(settings.BASE_DIR, 'templates').glob('*.html')
+            str(p.relative_to(root)).replace('\\', '/'): p.read_text(
+                encoding='utf-8')
+            for p in root.rglob('*.html')
         }
 
     def test_grid_items_have_min_width_zero(self):
@@ -762,12 +767,34 @@ class ResponsiveBlowoutAndHeroTests(TestCase):
         self.assertIn('.sidebar-layout > *', self.css)
         self.assertIn('min-width: 0;', self.css)
 
+    # `1fr` and `minmax(auto, 1fr)` are the same thing — the N-21 anti-pattern.
+    # Whitespace-tolerant, and deliberately not anchored to a selector, so it
+    # cannot be walked around by rewriting the selector list.
+    _BARE_TRACK_RE = re.compile(
+        r'grid-template-columns\s*:\s*'
+        r'(?:1fr|minmax\(\s*auto\s*,\s*1fr\s*\))\s*!important')
+
+    # Innermost CSS rules only: neither group can contain a brace, so an
+    # enclosing @media block is stepped over and `.a, .b { … }` is captured as
+    # one (selector, body) pair — which is what makes the comma/compound case
+    # detectable at all.
+    _CSS_RULE_RE = re.compile(r'([^{}]*?)\{([^{}]*)\}', re.S)
+
     def test_no_bare_1fr_sidebar_override(self):
+        """Templates must not reintroduce the `1fr !important` anti-pattern.
+
+        `1fr` desugars to `minmax(auto, 1fr)`, whose min track is the content's
+        min-content width — the engine behind the N-25 grid blowout. Matched
+        structurally so that `minmax(auto, 1fr)` and any selector shape are
+        both caught (independent QA showed a literal-substring check missed
+        `.sidebar-layout, .decoy { grid-template-columns: minmax(auto, 1fr) !important }`).
+        """
         for name, src in self.templates.items():
-            self.assertNotIn(
-                'grid-template-columns: 1fr !important', src,
-                f"{name} 仍在使用 `1fr !important`，会反杀 N-21/N-25 并重新"
-                f"触发 grid blowout（应改为 minmax(0, 1fr) !important）")
+            hit = self._BARE_TRACK_RE.search(src)
+            self.assertIsNone(
+                hit,
+                f'{name} 使用了 `{hit.group(0) if hit else ""}`：`1fr` 等价于 '
+                f'minmax(auto, 1fr)，会反杀 N-21/N-25 并重新触发 grid blowout')
 
     def test_sidebar_uses_minmax_zero(self):
         """N-25 root fix must exist in base.css — its single source of truth.
@@ -791,19 +818,27 @@ class ResponsiveBlowoutAndHeroTests(TestCase):
             '修复（N-25）')
 
     def test_sidebar_templates_do_not_redeclare_grid_template(self):
-        """No template may re-declare .sidebar-layout's columns.
+        """No template may declare grid-template-columns for .sidebar-layout.
 
-        A template-level declaration loads after base.css, so re-adding one
-        would silently defeat N-21/N-25 again — the exact failure mode this
-        suite exists to catch. Allowing zero re-declarations also keeps
-        `.sidebar-layout`'s mobile columns in one place.
+        A template-level declaration loads *after* base.css, so re-adding one
+        silently defeats N-21/N-25 again — the exact failure mode this suite
+        exists to catch.
+
+        Deliberately structural rather than a substring / anchored-regex check:
+        independent QA demonstrated that `.sidebar-layout, .decoy { … }` (comma
+        selector) and an override inside `templates/includes/` both slipped past
+        the first version of this guard while it reported green.
         """
+        offenders = []
         for name, src in self.templates.items():
-            for m in re.finditer(r'\.sidebar-layout\s*\{([^}]*)\}', src):
-                self.assertNotIn(
-                    'grid-template-columns', m.group(1),
-                    f'{name} 重新声明了 .sidebar-layout 的 grid-template-columns，'
-                    f'会覆盖 base.css 的 N-25 修复（应只保留 base.css 一处）')
+            for selector, body in self._CSS_RULE_RE.findall(src):
+                if '.sidebar-layout' in selector and 'grid-template-columns' in body:
+                    offenders.append(
+                        (name, ' '.join(selector.split())))
+        self.assertEqual(
+            offenders, [],
+            '模板重新声明了 .sidebar-layout 的 grid-template-columns，会覆盖 '
+            f'base.css 的 N-25 修复（应只保留 base.css 一处）：{offenders}')
 
     def test_energy_table_wraps_on_mobile(self):
         # th 的 nowrap 是 energy 表被撑到 899px 的原因：
@@ -1731,6 +1766,33 @@ class StatelessProductionTests(TestCase):
         self.assertLess(
             len(rendered), len(seed.get('products', [])),
             'production must show the curated subset, never every product',
+        )
+
+    @override_settings(IS_VERCEL=True)
+    def test_products_page_prod_issues_zero_queries(self):
+        """The real contract: on Vercel /products/ touches the DB zero times.
+
+        The test above only proves ProductsPageCard is never queried; this one
+        pins the whole "production is stateless" promise (v1.6.0) for the page.
+
+        VisitorTrackingMiddleware is registered only when `not IS_VERCEL`
+        (settings.py:182-184) and `override_settings` cannot re-evaluate
+        MIDDLEWARE, so it is stripped here to model the production stack —
+        otherwise the assertion would trip over 4 analytics queries that never
+        exist on Vercel.
+        """
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+
+        mw = [m for m in settings.MIDDLEWARE if 'VisitorTracking' not in m]
+        with self.settings(MIDDLEWARE=mw):
+            with CaptureQueriesContext(connection) as ctx:
+                resp = self.client.get(reverse('products'))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(
+            [q['sql'] for q in ctx.captured_queries], [],
+            'production /products/ must not query the DB at all',
         )
 
 
