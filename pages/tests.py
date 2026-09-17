@@ -2023,9 +2023,37 @@ class DataDrivenTranslationTests(SimpleTestCase):
          （它们经 enrich.py 以变量形式喂给 `_t`）；
       c. `_t(config.<字段>, lang)` 的字段在 seed_data.json['siteconfig'] 里的英文取值。
     再要求每条都在 `_SIDEBAR_I18N` 有条目，且 fr/es/de/ru/ar 五语齐备且非空。
+
+    静态提取有个固有弱点：**首参既非字面量、又不来自上面两个映射字典时看不见**
+    （例如新引入第三张 dict 后 `_t(other_dict['label'], lang)`）。独立验证者用
+    `_t(_QA_EXTRA['label'], lang)` 实测确认过这个洞。因此再加两层把口子堵死：
+      * `test_labels_actually_routed_through_t_are_covered` —— **运行时**抽查：用
+        spy 替换 `i18n._t` 后真实执行 `_get_products_sidebar` /
+        `_get_projects_sidebar`，记录**所有实际流经 `_t()` 的标签**再校验。这条
+        路径不依赖静态分析，所以未来换成任何数据来源都会被抓住。
+      * `test_card_labels_actually_routed_through_t_are_covered` —— 同上，但针对
+        `enrich.py` 的产品卡 `card_label`。它对 `_t` 拿的是**独立引用**，patch
+        `i18n` 模块拦不到，必须 patch `pages.views.enrich._t`；用 seed_data 的
+        真实产品驱动 `_enrich_product`（= 生产无状态路径）。**这一条是必需的**：
+        实测过「把 `card_label` 的数据源换成第三张 dict」这个突变，只靠调用点
+        清单会漏（调用点数量没变），只有运行时 spy 抓得到。
+      * `test_non_literal_t_call_sites_are_inventoried` —— `common.py` 是
+        `from .i18n import _t`（独立引用，patch 模块全局抓不到，且它取的是
+        `config.<字段>`，已由静态规则 (c) 覆盖）。故用「非字面量调用点清单」
+        兜底：新增一个变量型 `_t()` 调用点就让清单对不上。
+    三层合起来，机制 ② 的覆盖是闭合的。
     """
 
     ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    # 非字面量 `_t()` 调用点的已知清单（相对 BASE_DIR 的路径 → 调用点数量）。
+    # 这些调用点因 `from .i18n import _t` 拿着独立引用，运行时 spy 抓不到，所以
+    # 用数量清单兜底：新增一个变量型调用点就必须同步登记，否则测试变红。
+    # 主体（26 处字面量 + 侧栏构建函数）由运行时 spy 覆盖，不进这张表。
+    KNOWN_DYNAMIC_SITES = {
+        'pages/views/common.py': 6,   # _t(config.hero_title / …_subtitle 等 6 个字段)
+        'pages/views/enrich.py': 1,   # _t(card_label) —— 取自两个映射字典
+    }
 
     # 边界说明：SiteConfig 里**未经** common.py 传给 _t() 的字段不在覆盖范围内
     # （联系邮箱、电话、社交链接等本就无需翻译）。若将来 common.py 新增
@@ -2114,6 +2142,117 @@ class DataDrivenTranslationTests(SimpleTestCase):
             if any(not str(text).strip() for text in entry.values())
         }
         self.assertEqual(offenders, {}, f'_SIDEBAR_I18N 存在空译文：{offenders}')
+
+    # --- 运行时抽查：不依赖静态分析，闭合「变量来源不明」的洞 -----------------
+    def _offending_labels(self, labels):
+        """返回 {label: 原因} —— 缺条目或缺语言的标签。"""
+        from pages.views.i18n import _SIDEBAR_I18N
+        offenders = {}
+        for label in sorted(set(labels)):
+            entry = _SIDEBAR_I18N.get(label)
+            if entry is None:
+                offenders[label] = '字典里没有条目（_t 会静默回退英文）'
+                continue
+            missing = [lang for lang in self.ALL_LANGS if not entry.get(lang, '').strip()]
+            if missing:
+                offenders[label] = f'缺语言 {missing}'
+        return offenders
+
+    def _labels_routed_through_t(self):
+        """真实执行侧栏构建函数，记录所有实际流经 `_t()` 的标签。
+
+        构建函数引用的是 `i18n` 的模块级 `_t`，故 patch 模块全局即可拦到它们。
+        """
+        import pages.views.i18n as i18n_mod
+        real_t = i18n_mod._t
+        seen = []
+
+        def spy(label, lang='en'):
+            seen.append(label)
+            return real_t(label, lang)
+
+        with mock.patch.object(i18n_mod, '_t', spy):
+            i18n_mod._get_products_sidebar('en')
+            i18n_mod._get_projects_sidebar('en')
+
+        return [s for s in seen if isinstance(s, str) and s.strip()]
+
+    def test_labels_actually_routed_through_t_are_covered(self):
+        """不管标签从哪来，只要真的流经 `_t()`，就必须有完整五语条目。
+
+        这条是静态提取的兜底：改用第三张 dict、f-string、或任何新数据源喂给
+        `_t()`，都会在这里被抓住（静态清单看不见，运行时不看不见）。
+        """
+        labels = self._labels_routed_through_t()
+        self.assertGreater(
+            len(labels), 15,
+            f'侧栏构建函数只流经 {len(labels)} 个标签，spy 可能已失效')
+        offenders = self._offending_labels(labels)
+        self.assertEqual(
+            offenders, {},
+            f'这些侧栏标签真实流经 _t() 但没有完整五语翻译：{offenders}')
+
+    def test_card_labels_actually_routed_through_t_are_covered(self):
+        """产品卡分类标签：跑一遍生产无状态路径，记录流经 `_t()` 的标签。
+
+        `enrich.py` 是 `from .i18n import _t`（拿的是**独立引用**），所以 patch
+        `i18n` 模块全局**拦不到**它，必须 patch `pages.views.enrich._t`。
+        用 seed_data 的真实产品驱动 `_enrich_product`（生产 IS_VERCEL 下走的
+        就是这条路径），于是 `card_label` 的数据源无论以后换成什么，只要真的
+        流经 `_t()` 就会在这里现形 —— 这正是调用点清单（数量不变即通过）堵不住
+        的那个洞。
+        """
+        from pages.views import enrich as enrich_mod
+        from pages.views.utils import _DictProduct, _load_seed
+
+        seed = _load_seed()
+        products = seed.get('products', [])
+        self.assertGreater(len(products), 0, 'seed_data 里没有产品，这条测试无意义')
+
+        real_t = enrich_mod._t
+        seen = []
+
+        def spy(label, lang='en'):
+            seen.append(label)
+            return real_t(label, lang)
+
+        with mock.patch.object(enrich_mod, '_t', spy):
+            for item in products:
+                enrich_mod._enrich_product(_DictProduct(item), 'en')
+
+        seen = [s for s in seen if isinstance(s, str) and s.strip()]
+        self.assertGreater(len(seen), 0, 'spy 没抓到任何标签，patch 目标可能已失效')
+        offenders = self._offending_labels(seen)
+        self.assertEqual(
+            offenders, {},
+            f'这些产品卡标签真实流经 _t() 但没有完整五语翻译：{offenders}')
+
+    def test_non_literal_t_call_sites_are_inventoried(self):
+        """非字面量 `_t()` 调用点必须与 KNOWN_DYNAMIC_SITES 一致。
+
+        运行时 spy 只覆盖侧栏构建函数；`common.py` / `enrich.py` 拿着 `_t` 的
+        独立引用，patch 不到。所以用调用点数量清单堵口：新加一个变量型
+        `_t()` 调用点（例如 `_t(third_dict['label'], lang)`）会让本条变红，逼
+        作者改用已覆盖的映射源，或显式登记进清单并说明取值来源。
+        """
+        base = Path(settings.BASE_DIR)
+        counts = {}
+        for path in sorted((base / 'pages').rglob('*.py')):
+            if path.name.startswith('test'):
+                continue
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            for node in ast.walk(tree):
+                if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                        and node.func.id == '_t' and node.args
+                        and not isinstance(node.args[0], ast.Constant)):
+                    rel = str(path.relative_to(base)).replace('\\', '/')
+                    counts[rel] = counts.get(rel, 0) + 1
+        self.assertEqual(
+            counts, self.KNOWN_DYNAMIC_SITES,
+            '非字面量 _t() 调用点的清单对不上。新增的调用点要么改用 '
+            '_PRODUCT_CARD_LABELS / _PRODUCT_CAT_TO_SIDEBAR_LABEL / '
+            '_t(config.<字段>) 这三种已覆盖的来源，要么登记进 '
+            'KNOWN_DYNAMIC_SITES 并说明取值来源。')
 
 
 
