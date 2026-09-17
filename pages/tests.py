@@ -2,6 +2,7 @@ import ast
 import gettext
 import json
 import re
+import shutil
 import sys
 import tempfile
 import types
@@ -11,10 +12,17 @@ import unittest
 from unittest import mock
 
 from django.conf import settings
-from django.test import SimpleTestCase, TestCase, override_settings
+from django.contrib import admin as dj_admin
+from django.contrib.admin.sites import AdminSite
+from django.test import SimpleTestCase, TestCase, RequestFactory, override_settings
 from django.urls import reverse
 
 from pages.admin import ProjectAdmin
+from pages.admin.mixins import CacheClearMixin
+from pages.admin.news import NewsArticleAdmin
+from pages.admin.product import ProductAdmin
+from pages.admin.products_page import ProductsPageCardAdmin
+from pages.admin.siteconfig import SiteConfigAdmin
 from pages.views import _product_image_url, _get_project_detail_from_json, _enrich_project
 from django.utils.translation import activate
 
@@ -2333,6 +2341,153 @@ class DataDrivenTranslationTests(SimpleTestCase):
             '_PRODUCT_CARD_LABELS / _PRODUCT_CAT_TO_SIDEBAR_LABEL / '
             '_t(config.<字段>) 这三种已覆盖的来源，要么登记进 '
             'KNOWN_DYNAMIC_SITES 并说明取值来源。')
+
+
+class AdminSeedSyncTests(TestCase):
+    """后台「保存」→ ``seed_data.json`` 导出链路（N-42）。
+
+    生产（Vercel）的内容源是仓库里提交的 ``seed_data.json``，不是 DB。后台
+    保存若不同时把 DB 导出成 seed JSON，本次改动就永远到不了线上 —— 而且旧实现
+    只写 ``logger.error``，失败是静默的，可以藏好几周。这组测试锁死四件事：
+
+    1. 链路真的存在（mixins 里的 ``sync_seed_data`` 就是 ``sync_seed_from_db``）；
+    2. 5 个内容 admin 的 MRO 真的会走到 mixin（``super()`` 链顺序错了就静默不导出）；
+    3. 端到端真的落盘（改 SiteConfig → seed JSON 出现新值）；
+    4. 两条异常分支会对管理员发 warning 而不是默默失败，成功时则不发。
+
+    落盘隔离：``seed_sync`` 用 ``settings.BASE_DIR`` 定位输出目录，所以测试把
+    BASE_DIR 指到临时目录 —— 真正的 ``seed_data.json``（生产内容源）一次都不碰。
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.mkdtemp(prefix='seedsync_')
+        (Path(self._tmp) / 'pages').mkdir(parents=True, exist_ok=True)
+
+    def tearDown(self):
+        shutil.rmtree(self._tmp, ignore_errors=True)
+
+    def test_alias_identity(self):
+        """mixins 调用的 ``sync_seed_data`` 必须就是 ``sync_seed_from_db``。
+
+        两者一旦分叉（有人把别名重绑到别的函数），后台保存导出的就不再是生产
+        真正读取的那份数据 —— 而且没有任何报错。
+        """
+        from pages import seed_sync
+        self.assertIs(seed_sync.sync_seed_data, seed_sync.sync_seed_from_db)
+
+    def test_all_content_admins_have_mixin_before_modeladmin(self):
+        """5 个内容 admin 的 MRO 里 CacheClearMixin 必须排在 ModelAdmin 之前。
+
+        排在后面时 ``super().save_model()`` 会直接进 ModelAdmin，mixin 的导出
+        永远不执行 —— 表现是「保存成功但线上没变」，最难查的一类。
+        """
+        for cls in (ProductAdmin, ProjectAdmin, NewsArticleAdmin,
+                    SiteConfigAdmin, ProductsPageCardAdmin):
+            mro = cls.__mro__
+            self.assertIn(CacheClearMixin, mro, cls.__name__)
+            self.assertLess(
+                mro.index(CacheClearMixin), mro.index(dj_admin.ModelAdmin),
+                f'{cls.__name__}: CacheClearMixin 必须排在 ModelAdmin 之前，'
+                '否则 save_model 的 super() 链不会经过 mixin。')
+
+    def test_siteconfig_save_writes_seed_json(self):
+        """端到端：走 SiteConfigAdmin.save_model → seed JSON 应出现新值。"""
+        from pages.models import SiteConfig
+        probe = 'QA-PROBE-META-TITLE-1234'
+        with self.settings(BASE_DIR=self._tmp):
+            cfg = SiteConfig.objects.first() or SiteConfig()
+            cfg.meta_title = probe
+            cfg.save()
+            SiteConfigAdmin(SiteConfig, AdminSite()).save_model(None, cfg, None, False)
+
+            out = Path(self._tmp) / 'seed_data.json'
+            self.assertTrue(out.exists(), '保存后没有生成 seed_data.json')
+            data = json.loads(out.read_text(encoding='utf-8'))
+            self.assertEqual(
+                data['siteconfig'].get('meta_title'), probe,
+                'seed_data.json 未包含新值 → 后台保存没有触发导出，改动到不了线上。')
+
+    def test_product_admin_save_path_invokes_sync(self):
+        """ProductAdmin 自己重写了 save_model，必须仍通过 super() 链触发导出。"""
+        from pages.models import Product
+        admin_obj = ProductAdmin(Product, AdminSite())
+        obj = mock.MagicMock()
+        with mock.patch.object(ProductAdmin, '_sync_product_images'), \
+                mock.patch('pages.seed_sync.sync_seed_data') as m:
+            admin_obj.save_model(None, obj, None, False)
+            obj.save.assert_called_once()
+            self.assertTrue(m.called, 'ProductAdmin.save_model 未触发 sync_seed_data')
+
+    def test_project_admin_save_model_forwards_request(self):
+        """ProjectAdmin 自己重写了 save_model，且**直接**调用 ``_sync_seed_files()``。
+
+        直接调用的那一处很容易漏掉 ``request`` —— 漏了以后，导出失败或生产环境的
+        告警对项目编辑**永远不显示**（默认参数 ``request=None`` → 静默），而其它
+        admin 都有告警 —— 最容易被当成「偶发」忽略的一类不一致。
+        """
+        from pages.models import Project
+        req = RequestFactory().get('/admin/')
+        obj = mock.MagicMock()
+        obj.pdf_file = None
+        admin_obj = ProjectAdmin(Project, AdminSite())
+        with mock.patch.object(ProjectAdmin, '_sync_project_images'), \
+                mock.patch.object(ProjectAdmin, '_sync_seed_files') as m:
+            admin_obj.save_model(req, obj, None, False)
+        self.assertTrue(m.called, 'ProjectAdmin.save_model 未触发 _sync_seed_files')
+        for call in m.call_args_list:
+            self.assertTrue(
+                call[0] and call[0][0] is req,
+                f'_sync_seed_files 调用点漏传 request（告警会静默失效）: {call}')
+
+    def test_delete_model_triggers_sync_with_request(self):
+        """后台删除内容也要导出 —— 删掉的产品/项目必须从 seed 里消失。"""
+        from pages.models import SiteConfig
+        req = RequestFactory().get('/admin/')
+        obj = mock.MagicMock()
+        with mock.patch('pages.seed_sync.sync_seed_data') as m:
+            SiteConfigAdmin(SiteConfig, AdminSite()).delete_model(req, obj)
+        obj.delete.assert_called_once()
+        self.assertTrue(m.called, 'CacheClearMixin.delete_model 未触发 sync_seed_data')
+
+    def test_save_formset_triggers_sync_with_request(self):
+        """内联表单集保存也必须导出（ProjectAdmin 重写了 save_formset）。"""
+        from pages.models import Project
+        req = RequestFactory().get('/admin/')
+        formset = mock.MagicMock()
+        with mock.patch('pages.seed_sync.sync_seed_data') as m:
+            ProjectAdmin(Project, AdminSite()).save_formset(req, None, formset, False)
+        formset.save.assert_called_once()
+        self.assertTrue(m.called, 'CacheClearMixin.save_formset 未触发 sync_seed_data')
+
+    def test_production_save_warns_and_skips_export(self):
+        """IS_VERCEL 下保存不能假装已上线：要提示，且不碰只读 FS。"""
+        req = RequestFactory().get('/admin/')
+        with override_settings(IS_VERCEL=True), \
+                mock.patch('pages.admin.mixins.messages') as m_msg, \
+                mock.patch('pages.seed_sync.sync_seed_data') as m_sync:
+            CacheClearMixin()._sync_seed_files(req)
+        self.assertTrue(m_msg.warning.called, '生产环境保存必须提示「不会自动上线」')
+        self.assertFalse(m_sync.called, '生产环境不应尝试写 seed 文件')
+
+    def test_export_failure_surfaces_as_admin_warning(self):
+        """导出失败必须发声 —— 静默失败等于「保存了但没上线」。"""
+        req = RequestFactory().get('/admin/')
+        with mock.patch('pages.seed_sync.sync_seed_data', return_value=False) as m_sync, \
+                mock.patch('pages.admin.mixins.logger') as m_log, \
+                mock.patch('pages.admin.mixins.messages') as m_msg:
+            CacheClearMixin()._sync_seed_files(req)
+        self.assertTrue(m_sync.called)
+        self.assertTrue(m_log.error.called, '导出失败至少要留下服务端日志')
+        self.assertTrue(m_msg.warning.called, 'sync 返回 False 时必须发 warning')
+        self.assertIn('导出失败', m_msg.warning.call_args[0][1])
+
+    def test_successful_export_does_not_warn(self):
+        """成功时不能刷 warning，否则管理员会习惯性忽略真警告。"""
+        req = RequestFactory().get('/admin/')
+        with mock.patch('pages.seed_sync.sync_seed_data', return_value=True), \
+                mock.patch('pages.admin.mixins.messages') as m_msg:
+            CacheClearMixin()._sync_seed_files(req)
+        self.assertFalse(m_msg.warning.called, '导出成功不应产生 warning')
 
 
 

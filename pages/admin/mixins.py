@@ -11,6 +11,8 @@ Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 """
 import logging
 
+from django.conf import settings
+from django.contrib import messages
 from django.core.cache import cache
 from django.utils.html import mark_safe
 
@@ -48,25 +50,52 @@ class CacheClearMixin:
         except Exception:
             pass
 
-    def _sync_seed_files(self):
-        """Sync database data to seed_data.py and seed_data.json for Vercel deployment."""
+    def _sync_seed_files(self, request=None):
+        """Export the DB to ``seed_data.json`` + ``seed_data.py``.
+
+        Production (Vercel) serves content from the committed seed JSON, not from
+        the database, so this export is what makes an admin edit *able* to reach
+        the live site.
+
+        Why it warns instead of staying silent (2026-09-17): the export used to
+        report failures only via ``logger.error``. A failure here means the edit
+        never reaches production — invisible breakage that can hide for weeks.
+        Failures (and the production-only no-op) now surface as an admin warning.
+        """
+        if getattr(settings, 'IS_VERCEL', False):
+            # Production FS is read-only and its DB is an ephemeral /tmp SQLite,
+            # so an export here can never persist. Say so instead of implying
+            # that the save went live.
+            if request is not None:
+                messages.warning(
+                    request,
+                    '生产环境的内容以 seed_data.json 为准：此处的修改不会自动上线。'
+                    '请在本地编辑后提交推送，由 Vercel 重新构建发布。'
+                )
+            return
         try:
             from pages.seed_sync import sync_seed_data
-            sync_seed_data()
+            if sync_seed_data() is False:
+                raise RuntimeError('sync_seed_data() returned False (see seed_sync log)')
         except Exception as e:
             logger.error(f'Failed to sync seed files: {e}', exc_info=True)
+            if request is not None:
+                messages.warning(
+                    request,
+                    f'⚠️ seed_data.json 导出失败，本次修改不会上线：{e}'
+                )
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         self._clear_cache()
-        self._sync_seed_files()
+        self._sync_seed_files(request)
 
     def delete_model(self, request, obj):
         super().delete_model(request, obj)
         self._clear_cache()
-        self._sync_seed_files()
+        self._sync_seed_files(request)
 
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
         self._clear_cache()
-        self._sync_seed_files()
+        self._sync_seed_files(request)

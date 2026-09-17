@@ -235,3 +235,17 @@
     - **「调用点数量清单」挡不住「原地换数据源」**（数量不变）；而**按 name 认人的静态规则在换源时会静默减少覆盖**，所以关键调用点还必须把**字段集/取值集钉死**。守卫要防的不只是"新增漏译"，还有"覆盖悄悄变少"。
 - **验证**：全量 **133 tests OK**；四批共 **22 项变异测试**（基线绿 + 全部断言型红），每条守卫都至少有一个「只有它能抓住」的突变作为非空洞证据。另顺手修掉 `product_detail.html` 的 `{% trans "L\" × W\" × H\"" %}` —— 它运行时渲染正确，但 `templatize` 会切出垃圾 msgid `L\`，下一跑 makemessages 就会污染 `.po`。
 - **L2 浏览器套件**：批次末跑 `scripts/e2e/run_checks.py` → **ALL CHECKS PASSED**（含 RTL 断言、LCP/首屏图、320/360/1280/1440 响应式、inert/焦点陷阱）。本批次含真实渲染改动（+6 条 i18n 译条、`product_detail.html` 引号修复），故必须跑。
+
+## 11. 实施记录（N-42）：后台保存 → seed 导出链路 —— 一次「存在性误判」与加固（2026-09-17）
+
+用户提出的问题：「后台 admin 的 save 按钮里有没有导出 seed 的代码？若没有请加上，这样点保存就能直接上线。」
+**查证结论：早就有了。** 而我此前（N-41）写在 `docs/i18n_待译清单.md` 的「`sync_seed_from_db()` 全仓库没有任何调用点、docstring 说的 hook 并不存在」是**误判** —— 已更正文档与生成脚本。
+
+- **真实链路**：`CacheClearMixin._sync_seed_files()`（`pages/admin/mixins.py`）→ `from pages.seed_sync import sync_seed_data` → 而 `pages/seed_sync.py:637` 有一行向后兼容别名 `sync_seed_data = sync_seed_from_db`。该 mixin 已挂进 5 个内容 admin（Product / Project / NewsArticle / SiteConfig / ProductsPageCard）的 `save_model` / `delete_model` / `save_formset`，且各 admin 的基类列表里 `CacheClearMixin` 都排在 `ModelAdmin` **之前**，`super()` 链因此能走到它。所以 docstring 里的 "called from Django admin hooks" 是**真的**。
+- **本次加固三处**（`pages/admin/mixins.py`）：① 原实现失败只 `logger.error` → 现在同时 `messages.warning(request, '⚠️ seed_data.json 导出失败，本次修改不会上线：…')`；② `sync_seed_data()` 返回 `False`（`seed_sync` 的失败约定）原先被忽略 → 现在显式抛错走同一条告警路径；③ `IS_VERCEL` 环境直接早退并告警「生产以 seed_data.json 为准，此处的修改不会自动上线」（生产 FS 只读 + DB 是 `/tmp` 临时库，导出根本无法持久化 —— 原先只是静默返回）。另把 `save_formset` 也补上 `request` 透传。
+- **新增守卫 `AdminSeedSyncTests`（7 例，L1 133 → 140 tests OK）**：别名恒等（`sync_seed_data is sync_seed_from_db`）、5 个 admin 的 MRO 顺序（mixin 必须在 `ModelAdmin` 之前）、端到端落盘（改 `SiteConfig` → 导出 JSON 出现新值）、生产告警且不写盘、失败告警、成功不告警。
+- **三条可复用结论**（已写进 `MEMORY.md`）：
+  1. ⚠️ **`grep <函数名>` 0 命中 ≠ 没有调用点**。仓库里存在 `sync_seed_data = sync_seed_from_db` 这类**别名**时，只搜定义名会得出「无调用点」的错误结论。审计调用点要把**所有别名**一起搜（或直接 ast 找所有 `Name` 引用）。**别把「grep 不到」当成「不存在」。**
+  2. ⚠️ **落盘类测试不要「备份仓库文件 + 事后还原」，要「重定向输出目录」**。`seed_sync` 用 `settings.BASE_DIR` 定位输出，因此 `with self.settings(BASE_DIR=tmpdir)`（并预建 `tmpdir/pages/`）即可完全隔离；测试进程被 kill 也不会污染仓库里的**生产内容真源** `seed_data.json`（备份/还原方案在这种情况下会把真源留成 0 产品）。实证方式：跑测试前后 `md5sum seed_data.json pages/seed_data.py` 两次比对一致。
+  3. ⚠️ **静默失败的加固必须落在「用户可见面」，并且要补反向断言**。只在 `logger.error` 里报「导出失败」＝管理员以为已上线，可以藏好几周；改成 admin `messages.warning` 才是真修复。但**同时必须断言「成功时不发警告」**，否则满屏警告会被习惯性忽略，等于又回到静默。
+

@@ -146,7 +146,9 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         # paths are final (replaces the hand-written pdf_url patch that used to
         # live in _update_seed_pdf_url). _sync_seed_files reads the latest DB
         # values so the committed seed stays correct for Vercel.
-        self._sync_seed_files()
+        # ``request`` must be forwarded so a failed export surfaces as an admin
+        # warning instead of a silent logger.error (see CacheClearMixin).
+        self._sync_seed_files(request)
 
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
