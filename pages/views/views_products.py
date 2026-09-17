@@ -15,7 +15,7 @@ def _resolve_ppc_image(card):
       2. raw (with hash) static path
       3. media URL (only if static asset missing, e.g. right after upload)
     """
-    from .utils import _clean_hashed_name, _find_static
+    from .utils import _find_static, strip_hash_suffix
     from django.conf import settings
     import os
 
@@ -25,7 +25,7 @@ def _resolve_ppc_image(card):
         return ''
     db_name = str(db_name).replace('\\', '/')
     base = os.path.basename(db_name)
-    clean = _clean_hashed_name(base)
+    clean = strip_hash_suffix(base)
 
     candidates = [
         f'images/products_page/{clean}',
@@ -45,7 +45,7 @@ def _resolve_ppc_image(card):
 
 def _dict_ppc_image(card_data):
     """Resolve image URL for a seed-dict ProductsPageCard entry."""
-    from .utils import _find_static, _clean_hashed_name
+    from .utils import _find_static, strip_hash_suffix
     import os
 
     raw = card_data.get('image', '') or ''
@@ -55,7 +55,7 @@ def _dict_ppc_image(card_data):
         return raw
     raw = str(raw).replace('\\', '/')
     base = os.path.basename(raw)
-    clean = _clean_hashed_name(base)
+    clean = strip_hash_suffix(base)
     candidates = [
         f'images/products_page/{clean}',
         f'images/products_page/{base}',

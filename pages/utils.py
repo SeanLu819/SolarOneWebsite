@@ -1,13 +1,14 @@
-"""Shared static-path helpers (v1.5.9, D3).
+"""Shared static-path helpers — single source of truth for hash-suffix stripping.
 
-A single canonical implementation of the Django-upload hash-suffix stripper,
-previously duplicated in three places
-(``pages.views.utils._clean_hashed_name``,
- ``pages.models._clean_hashed_filename``,
- ``pages.seed_sync._strip_hash_suffix``).
-
-Keeping it here (pure stdlib, no Django imports) avoids circular-import risk
-and lets those modules delegate to one source of truth.
+``strip_hash_suffix`` is the ONE canonical implementation (pure stdlib, no Django
+imports) of the Django-upload hash-suffix stripper. ``pages.models._clean_hashed_filename``
+is a retained convenience wrapper that additionally applies ``os.path.basename`` so
+callers re-add the slug directory themselves. The two pure pass-through wrappers
+(``pages.views.utils._clean_hashed_name`` and ``pages.seed_sync._strip_hash_suffix``)
+were removed in A8 — their call sites now use ``strip_hash_suffix`` directly. The
+inline ``re``-based ``_dest_name`` helpers in ``pages.models`` / ``pages.admin.project``
+were also removed in A8 and routed to ``_clean_hashed_filename``. Keeping the logic
+here avoids circular-import risk.
 """
 import os
 import re

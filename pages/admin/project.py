@@ -15,7 +15,6 @@ Responsibilities:
 Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 """
 import os
-import re
 import shutil
 
 from django import forms
@@ -24,7 +23,7 @@ from django.contrib import admin
 
 from .mixins import CacheClearMixin
 from .widgets import TranslationsWidget
-from pages.models import Project, ProjectImage
+from pages.models import Project, ProjectImage, _clean_hashed_filename
 
 
 class ProjectImageInline(admin.TabularInline):
@@ -82,15 +81,6 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         os.makedirs(static_dir, exist_ok=True)
         media_root = settings.MEDIA_ROOT
 
-        def _dest_name(src_path):
-            """Strip Django's 7-char hash suffix so repeated uploads produce stable filenames."""
-            base = os.path.basename(src_path)
-            stem, ext = os.path.splitext(base)
-            m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
-            if m:
-                return f'{stem[:m.start()]}{ext}'
-            return base
-
         # Collect destination filenames for stale-file pruning
         current_dest_names = set()
 
@@ -98,7 +88,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         if obj.image:
             src_cover = os.path.join(media_root, str(obj.image))
             if os.path.exists(src_cover):
-                dst_name = _dest_name(src_cover)
+                dst_name = _clean_hashed_filename(src_cover)
                 current_dest_names.add(dst_name)
                 dst_cover = os.path.join(static_dir, dst_name)
                 shutil.copy2(src_cover, dst_cover)
@@ -109,7 +99,7 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             src = os.path.join(media_root, str(img.image))
             if not os.path.exists(src):
                 continue
-            dst_name = _dest_name(src)
+            dst_name = _clean_hashed_filename(src)
             current_dest_names.add(dst_name)
             dst = os.path.join(static_dir, dst_name)
             shutil.copy2(src, dst)

@@ -3,7 +3,6 @@ from django.db.models import JSONField
 from django.core.validators import RegexValidator
 import os
 import shutil
-import re
 from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -572,23 +571,6 @@ def _sync_project_media_to_static(project):
     static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'projects', slug)
     os.makedirs(static_dir, exist_ok=True)
 
-    def _dest_name(src_path):
-        """Stable destination filename: strip Django hash suffix so repeated
-        uploads of the same file don't produce divergent static paths.
-
-        Django's default storage appends a 7-char alphanumeric hash when a
-        file with the same name already exists (e.g. photo_abcX123.jpg).
-        We strip that suffix to keep static filenames predictable.
-        """
-        import re
-        base = os.path.basename(src_path)
-        stem, ext = os.path.splitext(base)
-        # Django hash suffix: underscore + exactly 7 alphanumeric chars at end
-        m = re.search(r'_([a-zA-Z0-9]{7})$', stem)
-        if m:
-            return f'{stem[:m.start()]}{ext}'
-        return base
-
     # ---- Collect current destination filenames from DB ----
     current_dest_names = set()
 
@@ -603,7 +585,7 @@ def _sync_project_media_to_static(project):
     if getattr(project, 'image', None) and project.image.name:
         src_cover = os.path.join(media_root, str(project.image.name))
         if os.path.exists(src_cover):
-            dst_name = _dest_name(src_cover)
+            dst_name = _clean_hashed_filename(src_cover)
             current_dest_names.add(dst_name)
             dst_cover = os.path.join(static_dir, dst_name)
             try:
@@ -624,7 +606,7 @@ def _sync_project_media_to_static(project):
         src = os.path.join(media_root, str(fname))
         if not os.path.exists(src):
             continue
-        dst_name = _dest_name(src)
+        dst_name = _clean_hashed_filename(src)
         current_dest_names.add(dst_name)
         dst = os.path.join(static_dir, dst_name)
         try:

@@ -72,7 +72,7 @@
 
 - **B1/B2. 无意义 if/else**：`views/utils.py:190-204 _static_url` 与 `:425-448 _project_image_url` 两个分支都 `return static(rel)`，`_find_static` 检查是死代码 → 直接 `static(...)`。
 - **B3. DATABASES 重复块**：`settings.py:213-239` 的 except/else 两块 SQLite 配置逐字相同 → 合并为共享常量。
-- **B4. IP 解析手造且重复**：`middleware.py:87-93` 与 `views_contact.py:12-16` 各自手写 `x_forwarded_for.split(',')[0]`，回退语义不一致 → 统一用 `django.utils.http.get_client_ip`（3.2+ 已处理 XFF 与可信代理）。
+- **B4. IP 解析手造且重复**：`middleware.py:87-93` 与 `views_contact.py:12-16` 各自手写 `x_forwarded_for.split(',')[0]`，回退语义不一致 → 统一收口到单一真源。⚠️ 实测 **Django 6.0.7 无 `django.utils.http.get_client_ip`**（audit 误判该内置符号存在，'3.2+ 已处理 XFF' 说法不成立），故改为新建 `pages/ip.py::get_client_ip` 作为唯一真源收口点，两处调用点统一路由，行为逐字一致；未来若 Django 补回该 helper，只需改 `pages/ip.py` 一处 import，调用点零改动。
 - **B5. 死代码**：`models.py:778 _update_seed_project`（docstring 自认 legacy，全仓无调用）、`seed_sync.py:20 import copy`（未用）、`views/utils.py:5 SimpleNamespace`（未用）→ 删。
 - **B6. 模板内联样式 6 份**（`padding:100px 0 80px`、`position:sticky;top:100px`、`sidebar-nav-header` 等）→ 在 `base.css` 引入 `.page-top / .sidebar-nav` 类替代。
 - **B7. 404/500 互相复制**（`404.html:1-26` vs `500.html:1-26`）→ 抽 `includes/error_page.html(code/title/message)`；附带两者都不 `extends base.html`，多语环境缺导航/语言切换。
@@ -116,13 +116,13 @@
 | A5 静态扫描模块 | ⬜ 待办 |
 | A6 封面解析模块 | ⬜ 待办 |
 | A7 translate 模块 | ⬜ 待办 |
-| A8 哈希剥离统一 | ⬜ 待办 |
+| A8 哈希剥离统一 | 🟡 进行中（2026-09-17，工程师实施中） |
 | A9 模板侧栏 include | ⬜ 待办 |
 | A10 breadcrumb include | ⬜ 待办 |
 | A11 轮播 JS/CSS 集中 | ⬜ 待办 |
 | B1/B2 死 if | ⬜ 待办 |
 | B3 DATABASES 合并 | ⬜ 待办 |
-| B4 IP 用内置 | ⬜ 待办 |
+| B4 IP 统一收口（→pages/ip.py） | 🟡 实施完成待 QA（2026-09-17，118 OK） |
 | B5 死代码 | ⬜ 待办 |
 | B6 模板内联样式 | ⬜ 待办 |
 | B7 错误页 include | ⬜ 待办 |
@@ -139,4 +139,4 @@
 - **A4 删除**：`models.py:_rewrite_seed_project` + 4 处调用、`admin/product.py:_sync_product_images` 内 seed 改写块、`admin/project.py:_update_seed_pdf_url` + `_sync_project_images` 内 seed 改写块（保留 `re.search(r'_([a-zA-Z0-9]{7})$')` 用于文件名哈希剥离，非 seed 手术）、`admin/products_page.py:_sync_ppc_image` 内 seed 写回块。seed 内容统一交给 `sync_seed_from_db()` 重生成。
 - **D1（QA 独立验证发现）**：`views_products.py:206-208` 残留内联 `_get_product_detail_from_db/_from_json`，但这两个函数本文件未 import，是潜在 `NameError`（测试套件未覆盖该视图故未暴露）。已收口为 `product = get_product_detail(slug, lang)`。
 - **验证**：`manage.py test pages --keepdb` → **Ran 118 tests ... OK**；`System check identified no issues (0 silenced)`。第 21–46 行 traceback 为故意触发的失败路径单测（`cache down` / `SMTP down` 验证 fail-closed），属预期内。
-- **状态**：代码已闭环、本地回归全绿；改动**尚未 commit/push**（沙箱无凭证，需用户本机执行）。
+- **状态**：已 commit/push —— **v1.6.2 @ `6936038`（main，`ef32e34..6936038`）**；Vercel 将自动部署（main 自 2026-09-15 起为 Production Branch）。本地回归 118 tests OK。

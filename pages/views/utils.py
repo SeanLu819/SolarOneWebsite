@@ -178,15 +178,6 @@ def _normalize_static_rel(path):
     return f'images/{path}'
 
 
-def _clean_hashed_name(name: str) -> str:
-    """Strip Django-upload hashed suffix like _yPJsGNE or _jlmQVlR from filename.
-
-    Thin wrapper over the single canonical implementation in ``pages.utils``
-    (see D3 / v1.5.9) so the three near-duplicate strippers stay in one place.
-    """
-    return strip_hash_suffix(name)
-
-
 def _static_url(path):
     """Return static URL for a non-empty path. Accepts a wide variety of
     legacy or canonical paths and normalizes them to a Django static URL.
@@ -216,7 +207,7 @@ def _dict_product_image_url(path, slug):
     path = str(path).replace('\\', '/')
     filename = Path(path).name
     stem = Path(filename).stem
-    clean_filename = _clean_hashed_name(filename)
+    clean_filename = strip_hash_suffix(filename)
     clean_stem = Path(clean_filename).stem if clean_filename else ''
 
     candidates = []
@@ -266,7 +257,7 @@ def _product_image_url(product, field_name):
     field_name_value = str(field.name).replace('\\', '/')
     filename = Path(field_name_value).name
     stem = Path(filename).stem
-    clean_filename = _clean_hashed_name(filename)
+    clean_filename = strip_hash_suffix(filename)
     clean_stem = Path(clean_filename).stem if clean_filename else ''
 
     is_banner_like = any(kw in clean_filename.lower() for kw in ('bar', 'banner', 'barnner'))
@@ -368,7 +359,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
       5. Gallery directory fallback (exact filename match only).
     """
     name = Path(db_path).name if db_path else ''
-    clean_name = _clean_hashed_name(name) if name else ''
+    clean_name = strip_hash_suffix(name) if name else ''
     slug_dir = f'images/projects/{slug}'
     slug_files = _list_static_dir(slug_dir)
     exclude = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
@@ -382,7 +373,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
                     continue
                 if fl in exclude:
                     continue
-                if _clean_hashed_name(f).lower() == clean_lower:
+                if strip_hash_suffix(f).lower() == clean_lower:
                     return f'{slug_dir}/{f}'
         for prefix in priority_prefixes:
             for f in sorted(slug_files):
@@ -414,7 +405,7 @@ def _find_project_cover_path(slug: str, db_path: str = ''):
         # file with the same (hash-cleaned) name exists in gallery/" case.
         clean_lower = clean_name.lower()
         for f in gal_files:
-            if _clean_hashed_name(f).lower() == clean_lower:
+            if strip_hash_suffix(f).lower() == clean_lower:
                 return f'{gallery_dir}/{f}'
     if db_path and db_path.startswith('images/'):
         if _find_static(db_path):
@@ -463,7 +454,7 @@ def _project_gallery_urls(project):
                 fname = getattr(img.image, 'name', '')
                 if not fname:
                     continue
-                clean = _clean_hashed_name(Path(fname).name)
+                clean = strip_hash_suffix(Path(fname).name)
                 found = False
                 for u in urls:
                     if clean and clean in u:

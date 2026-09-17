@@ -4,16 +4,15 @@ from django.contrib import messages
 from django.core.cache import cache
 from django.conf import settings
 from django.utils.translation import gettext as _
+from pages.ip import get_client_ip
 from .common import get_common_context
 
 logger = logging.getLogger(__name__)
 
 
 def _get_client_ip(request):
-    xff = request.META.get('HTTP_X_FORWARDED_FOR')
-    if xff:
-        return xff.split(',')[0].strip()
-    return request.META.get('REMOTE_ADDR', '') or '0.0.0.0'
+    ip, _ = get_client_ip(request)
+    return ip or '0.0.0.0'
 
 
 def _is_rate_limited(request):

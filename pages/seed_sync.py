@@ -24,15 +24,6 @@ from django.db import models
 from pages.utils import strip_hash_suffix
 
 
-def _strip_hash_suffix(filename):
-    """Strip Django upload hash suffix like _abcX123 from a filename.
-
-    Thin wrapper over the canonical implementation in ``pages.utils``
-    (see D3 / v1.5.9) so the three near-duplicate strippers live in one place.
-    """
-    return strip_hash_suffix(filename)
-
-
 def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
     """Resolve a DB upload path to the canonical static path.
 
@@ -48,7 +39,7 @@ def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
         return ''
     db_path = str(db_path).replace('\\', '/')
     raw_filename = os.path.basename(db_path)
-    clean_filename = _strip_hash_suffix(raw_filename)
+    clean_filename = strip_hash_suffix(raw_filename)
 
     is_banner_like = any(kw in clean_filename.lower() for kw in ('bar', 'banner', 'barnner'))
 
