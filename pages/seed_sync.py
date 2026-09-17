@@ -17,7 +17,6 @@ canonical paths like 'images/products/fl1m/fl1m-01.webp'.
 import json
 import os
 import re
-import copy
 import sys
 
 from django.db import models

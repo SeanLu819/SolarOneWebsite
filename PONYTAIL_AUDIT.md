@@ -123,7 +123,7 @@
 | B1/B2 死 if | ⬜ 待办 |
 | B3 DATABASES 合并 | ⬜ 待办 |
 | B4 IP 统一收口（→pages/ip.py） | 🟡 实施完成待 QA（2026-09-17，118 OK） |
-| B5 死代码 | ⬜ 待办 |
+| B5 死代码 | ✅ 已完成（2026-09-17 step-2，118 tests OK，`1bc6863`） |
 | B6 模板内联样式 | ⬜ 待办 |
 | B7 错误页 include | ⬜ 待办 |
 | B8 base theme/lang | ⬜ 待办 |
@@ -140,3 +140,15 @@
 - **D1（QA 独立验证发现）**：`views_products.py:206-208` 残留内联 `_get_product_detail_from_db/_from_json`，但这两个函数本文件未 import，是潜在 `NameError`（测试套件未覆盖该视图故未暴露）。已收口为 `product = get_product_detail(slug, lang)`。
 - **验证**：`manage.py test pages --keepdb` → **Ran 118 tests ... OK**；`System check identified no issues (0 silenced)`。第 21–46 行 traceback 为故意触发的失败路径单测（`cache down` / `SMTP down` 验证 fail-closed），属预期内。
 - **状态**：已 commit/push —— **v1.6.2 @ `6936038`（main，`ef32e34..6936038`）**；Vercel 将自动部署（main 自 2026-09-15 起为 Production Branch）。本地回归 118 tests OK。
+
+---
+
+## 8. 实施记录（A8+B4+B1/B2/B5，2026-09-17 step-2）
+
+- **A8 哈希剥离统一**：唯一真源 `pages.utils.strip_hash_suffix`；删除 `views/utils._clean_hashed_name` 透传别名、`views_products.py`/`seed_sync.py`/`models.py` 内联正则与透传实现，移除无用 `import re`（`models.py`、`admin/project.py`）。保留 `models._clean_hashed_filename`（仅 basename 薄包）。
+- **B4 IP 统一收口**：新建 `pages/ip.py::get_client_ip`（取 XFF 首跳否则 REMOTE_ADDR）作唯一真源；`middleware.py`/`views_contact.py` 改调用（middleware 用导入别名避免与实例方法 `self.get_client_ip` 递归）。Django 6.0.7 无内置 `get_client_ip`，故自建。
+- **B1/B2 死 if 塌缩**：`_static_url`（utils.py:181）与 `_project_image_url`（utils.py:416）内部的 `if _find_static(x): return static(x); return static(x)` 两分支同值，塌缩为 `return static(x)`。**函数保留**（仍被 `enrich.py`/`data_loaders.py`/同文件调用），仅删死判断，不是删函数。
+- **B5 死代码删除**：`models._update_seed_project`（全仓无调用，含误导注释"retained for external callers"）、`seed_sync.py import copy`（未用）、`views/utils.py from types import SimpleNamespace`（未用）。
+- **重要偏差**：审计原始行号基于 pre-A8；grep 复核发现 `_static_url`/`_project_image_url` 实为活跃函数（共约 12 处调用），故 B1/B2 定为"塌缩死分支"而非"删函数"，避免误伤 `enrich`/`data_loaders`。
+- **验证**：`manage.py test pages --keepdb` 通过 **118 tests OK**，`System check identified no issues (0 silenced)`。
+- **状态**：已 commit/push —— step-2 @ `1bc6863`（main，`6936038..1bc6863`）；Vercel 从 main 自动部署。

@@ -190,8 +190,6 @@ def _static_url(path):
     if isinstance(path, str) and path.startswith(('/static/', '/media/')):
         return path
     rel = _normalize_static_rel(path)
-    if _find_static(rel):
-        return static(rel)
     return static(rel)
 
 

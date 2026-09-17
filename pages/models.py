@@ -693,11 +693,6 @@ def sync_project_image_on_delete(sender, instance, **kwargs):
     _invalidate_views_cache()
 
 
-# Legacy helper retained for external callers.
-def _update_seed_project(project):
-    _sync_project_media_to_static(project)
-
-
 def _clean_hashed_filename(fname):
     """Strip Django upload hash suffix (7 alphanumeric chars after underscore).
 
