@@ -24,9 +24,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path as url_path
-from django.utils.html import mark_safe
-
-from .mixins import CacheClearMixin
+from .mixins import CacheClearMixin, admin_image_preview
 from pages.models import ProductsPageCard, SiteConfig, _clean_hashed_filename
 
 
@@ -145,12 +143,8 @@ class ProductsPageCardAdmin(CacheClearMixin, admin.ModelAdmin):
     resync_card_images_to_static.short_description = 'Re-sync card images (media → static, strip hashes)'
 
     def image_preview(self, obj):
-        if obj.image and getattr(obj.image, 'name', ''):
-            return mark_safe(
-                f'<img src="{obj.image.url}" style="width:60px;height:45px;object-fit:contain;'
-                f'border:1px solid #ddd;border-radius:4px;background:#f9f9f9;" />'
-            )
-        return '(no image)'
+        src = obj.image.url if (obj.image and getattr(obj.image, 'name', '')) else ''
+        return admin_image_preview(src)
     image_preview.short_description = 'Image'
 
 

@@ -12,8 +12,28 @@ Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 import logging
 
 from django.core.cache import cache
+from django.utils.html import mark_safe
 
 logger = logging.getLogger(__name__)
+
+
+def admin_image_preview(src, size=(60, 45), placeholder='(no image)'):
+    """Return an inline ``<img>`` thumbnail (or the placeholder) for admin list views.
+
+    B9 single source: ``ProductAdmin.image_preview`` and
+    ``ProductsPageCardAdmin.image_preview`` hardcoded byte-identical 60x45
+    ``object-fit:contain`` thumbnail markup. ``src`` must be a ready-to-use URL
+    (callers resolve static vs media differently); a falsy ``src`` yields
+    ``placeholder`` unchanged.
+    """
+    if not src:
+        return placeholder
+    width, height = size
+    return mark_safe(
+        f'<img src="{src}" style="width:{width}px;height:{height}px;'
+        f'object-fit:contain;border:1px solid #ddd;border-radius:4px;'
+        f'background:#f9f9f9;" />'
+    )
 
 
 class CacheClearMixin:

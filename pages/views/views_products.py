@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.utils.translation import get_language
 from django.templatetags.static import static
 from .common import get_common_context
-from .i18n import _get_products_sidebar, _resolve_product_sidebar
+from .i18n import (
+    _get_products_sidebar,
+    _resolve_active_labels,
+    _resolve_product_sidebar,
+)
 from .data_loaders import get_products, get_product_detail
 
 
@@ -15,8 +19,7 @@ def _resolve_ppc_image(card):
       2. raw (with hash) static path
       3. media URL (only if static asset missing, e.g. right after upload)
     """
-    from .utils import _find_static, strip_hash_suffix
-    from django.conf import settings
+    from .utils import _first_static, strip_hash_suffix
     import os
 
     field = getattr(card, 'image', None)
@@ -27,14 +30,14 @@ def _resolve_ppc_image(card):
     base = os.path.basename(db_name)
     clean = strip_hash_suffix(base)
 
-    candidates = [
+    # A3: candidate loop收口到 utils._first_static
+    hit = _first_static([
         f'images/products_page/{clean}',
         f'images/products_page/{base}',
         f'images/{db_name}',
-    ]
-    for c in candidates:
-        if _find_static(c):
-            return static(c)
+    ])
+    if hit:
+        return hit
 
     try:
         url = field.url
@@ -45,25 +48,24 @@ def _resolve_ppc_image(card):
 
 def _dict_ppc_image(card_data):
     """Resolve image URL for a seed-dict ProductsPageCard entry."""
-    from .utils import _find_static, strip_hash_suffix
+    from .utils import _first_static, _passthrough_url, strip_hash_suffix
     import os
 
     raw = card_data.get('image', '') or ''
-    if not raw:
-        return ''
-    if raw.startswith(('http://', 'https://', '/static/', '/media/')):
-        return raw
+    passthrough = _passthrough_url(raw)
+    if passthrough:
+        return passthrough
     raw = str(raw).replace('\\', '/')
     base = os.path.basename(raw)
     clean = strip_hash_suffix(base)
-    candidates = [
+    # A3: candidate loop收口到 utils._first_static
+    hit = _first_static([
         f'images/products_page/{clean}',
         f'images/products_page/{base}',
         raw if raw.startswith('images/') else f'images/{raw}',
-    ]
-    for c in candidates:
-        if _find_static(c):
-            return static(c)
+    ])
+    if hit:
+        return hit
     return static(raw) if raw else ''
 
 
@@ -79,16 +81,10 @@ def products(request):
     context['active_category'] = active_category
     context['active_series'] = active_series
 
-    active_category_label = ''
-    active_series_label = ''
-    for cat in product_categories:
-        if cat['key'] == active_category:
-            active_category_label = cat['label']
-            for s in cat['series']:
-                if s['key'] == active_series:
-                    active_series_label = s['label']
-                    break
-            break
+    # A2: label lookup收口到 i18n._resolve_active_labels
+    active_category_label, active_series_label = _resolve_active_labels(
+        product_categories, active_category, active_series,
+    )
     context['active_category_label'] = active_category_label
     context['active_series_label'] = active_series_label
 

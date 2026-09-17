@@ -1,12 +1,11 @@
 import os
-import re
 import json
 import logging
-from types import SimpleNamespace
 from pathlib import Path
 from django.conf import settings
 from django.templatetags.static import static
-from pages.utils import strip_hash_suffix
+from pages.static_scan import build_file_set
+from pages.utils import strip_hash_suffix, translate
 
 logger = logging.getLogger(__name__)
 
@@ -93,30 +92,10 @@ def _build_static_file_set():
     if _static_file_set is not None:
         return _static_file_set
 
-    # Names-only build-time index first: on Vercel neither STATIC_ROOT nor
-    # STATICFILES_DIRS exists inside the function bundle.
-    file_set = set(_index_file_set())
-    dirs_to_scan = []
-
-    static_root = str(settings.STATIC_ROOT)
-    if os.path.isdir(static_root):
-        dirs_to_scan.append(static_root)
-
-    # Always scan STATICFILES_DIRS (contains git-committed files) so that
-    # _find_static works even when collectstatic has not been run (e.g. Vercel).
-    # Deduplication against STATIC_ROOT avoids double-counting.
-    for d in getattr(settings, 'STATICFILES_DIRS', []):
-        d = str(d)
-        if os.path.isdir(d) and d not in dirs_to_scan:
-            dirs_to_scan.append(d)
-
-    for base_dir in dirs_to_scan:
-        for root, _, files in os.walk(base_dir):
-            for f in files:
-                full = os.path.join(root, f)
-                rel = os.path.relpath(full, base_dir)
-                rel = rel.replace('\\', '/')
-                file_set.add(rel)
+    # A5: directory discovery + walk live in pages.static_scan (shared with
+    # pages.seed_sync). Names-only build-time index first: on Vercel neither
+    # STATIC_ROOT nor STATICFILES_DIRS exists inside the function bundle.
+    file_set = build_file_set(extra=_index_file_set())
 
     _static_file_set = file_set
     logger.info(f'Built static file cache: {len(file_set)} files')
@@ -127,6 +106,43 @@ def _find_static(rel_path):
     """O(1) lookup in cached static file set. No filesystem I/O after first call."""
     rel_path = rel_path.replace('\\', '/')
     return rel_path in _build_static_file_set()
+
+
+def _passthrough_url(path):
+    """Return ``path`` when it must NOT be re-resolved against static/.
+
+    A3 single source: ``_static_url`` and ``_dict_product_image_url`` carried
+    the same two guards — an already-absolute URL, or a rooted
+    ``/static/``/``/media/`` path, must be returned verbatim. Returns ``''``
+    for falsy input so callers can write
+    ``url = _passthrough_url(p); if url: return url``.
+    """
+    if not path:
+        return ''
+    if isinstance(path, str) and path.startswith(
+        ('http://', 'https://', '/static/', '/media/')
+    ):
+        return path
+    return ''
+
+
+def _first_static(candidates):
+    """Return ``static(c)`` for the first candidate that exists, else ``''``.
+
+    A3 single source for the "ordered candidate list -> first hit -> static()"
+    loop that ``_dict_product_image_url``, ``_product_image_url``,
+    ``views_products._resolve_ppc_image`` and ``views_products._dict_ppc_image``
+    each hand-rolled. Blank and duplicate candidates are skipped; the caller's
+    ordering stays authoritative, so behaviour is unchanged.
+    """
+    seen = set()
+    for candidate in candidates:
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        if _find_static(candidate):
+            return static(candidate)
+    return ''
 
 
 def _list_static_dir(rel_dir):
@@ -185,10 +201,9 @@ def _static_url(path):
     blank src attributes — useful while assets are being added)."""
     if not path:
         return ''
-    if isinstance(path, str) and path.startswith(('http://', 'https://')):
-        return path
-    if isinstance(path, str) and path.startswith(('/static/', '/media/')):
-        return path
+    passthrough = _passthrough_url(path)
+    if passthrough:
+        return passthrough
     rel = _normalize_static_rel(path)
     return static(rel)
 
@@ -197,10 +212,9 @@ def _dict_product_image_url(path, slug):
     """Return static URL for a _DictProduct image field, trying multiple path combinations."""
     if not path:
         return ''
-    if isinstance(path, str) and path.startswith(('http://', 'https://')):
-        return path
-    if isinstance(path, str) and path.startswith(('/static/', '/media/')):
-        return path
+    passthrough = _passthrough_url(path)
+    if passthrough:
+        return passthrough
 
     path = str(path).replace('\\', '/')
     filename = Path(path).name
@@ -224,13 +238,9 @@ def _dict_product_image_url(path, slug):
     if slug and stem:
         candidates.append(f'images/products/{slug}/{stem}.webp')
 
-    seen = set()
-    for candidate in candidates:
-        if not candidate or candidate in seen:
-            continue
-        seen.add(candidate)
-        if _find_static(candidate):
-            return static(candidate)
+    hit = _first_static(candidates)
+    if hit:
+        return hit
 
     rel = _normalize_static_rel(path)
     return static(rel)
@@ -286,13 +296,9 @@ def _product_image_url(product, field_name):
     if stem and field_name_value.startswith('products/'):
         candidates.append(f'images/{field_name_value.rsplit(".", 1)[0]}.webp')
 
-    seen = set()
-    for candidate in candidates:
-        if not candidate or candidate in seen:
-            continue
-        seen.add(candidate)
-        if _find_static(candidate):
-            return static(candidate)
+    hit = _first_static(candidates)
+    if hit:
+        return hit
 
     media_url = getattr(field, 'url', '')
     if media_url:
@@ -416,13 +422,11 @@ def _project_image_url(field, project_slug: str = ''):
     if not field or not getattr(field, 'name', None):
         return ''
     db_path = str(field.name)
+    # B1/B2: both arms of the former `if _find_static(...)` / bare-`return`
+    # pairs returned the same `static(...)` URL — collapsed to one statement.
     if db_path.startswith('images/'):
-        if _find_static(db_path):
-            return static(db_path)
         return static(db_path)
     cover = _find_project_cover_path(project_slug, db_path)
-    if cover and _find_static(cover):
-        return static(cover)
     if cover:
         return static(cover)
     media_full = os.path.join(settings.MEDIA_ROOT, db_path)
@@ -504,11 +508,7 @@ class _DictProduct:
         self.cert_image = item.get('cert_image', '')
 
     def t(self, field_name, lang='en'):
-        if lang == 'en' or not self.translations:
-            return getattr(self, field_name, '')
-        lang_data = self.translations.get(lang, {})
-        val = lang_data.get(field_name, '')
-        return val if val else getattr(self, field_name, '')
+        return translate(self, field_name, lang)
 
 
 class _DictProject:
@@ -527,8 +527,4 @@ class _DictProject:
         self.pdf_url = item.get('pdf_url', '')
 
     def t(self, field_name, lang='en'):
-        if lang == 'en' or not self.translations:
-            return getattr(self, field_name, '')
-        lang_data = self.translations.get(lang, {})
-        val = lang_data.get(field_name, '')
-        return val if val else getattr(self, field_name, '')
+        return translate(self, field_name, lang)

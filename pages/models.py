@@ -7,7 +7,7 @@ from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
-from pages.utils import strip_hash_suffix
+from pages.utils import strip_hash_suffix, translate
 
 
 # --- CSS input validators (#11) -------------------------------------------
@@ -177,11 +177,7 @@ class Product(models.Model):
 
     def t(self, field_name, lang='en'):
         """Get translated value for a field, falling back to the default English value."""
-        if lang == 'en' or not self.translations:
-            return getattr(self, field_name, '')
-        lang_data = self.translations.get(lang, {})
-        val = lang_data.get(field_name, '')
-        return val if val else getattr(self, field_name, '')
+        return translate(self, field_name, lang)
 
 
 class NewsArticle(models.Model):
@@ -290,11 +286,7 @@ class Project(models.Model):
 
     def t(self, field_name, lang='en'):
         """Get translated value for a field, falling back to the default English value."""
-        if lang == 'en' or not self.translations:
-            return getattr(self, field_name, '')
-        lang_data = self.translations.get(lang, {})
-        val = lang_data.get(field_name, '')
-        return val if val else getattr(self, field_name, '')
+        return translate(self, field_name, lang)
 
 
 class ProjectImage(models.Model):

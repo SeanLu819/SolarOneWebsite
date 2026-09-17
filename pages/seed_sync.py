@@ -16,7 +16,6 @@ canonical paths like 'images/products/fl1m/fl1m-01.webp'.
 """
 import json
 import os
-import re
 import sys
 
 from django.db import models
@@ -84,7 +83,6 @@ def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
 
 def _list_static_dir(rel_dir):
     """List files in a static directory (cached)."""
-    import os
     results = []
     try:
         from django.conf import settings
@@ -125,38 +123,13 @@ def _static_file_exists(rel_path, base_dir=None):
 def _build_static_set(base_dir=None):
     """Build a set of all static file paths.
 
-    Works with or without Django:
-    - With Django: uses STATIC_ROOT + STATICFILES_DIRS
-    - Without Django: looks for ./static/ and ./staticfiles/ relative to base_dir
+    A5: directory discovery + walk are shared with the request-time resolver via
+    ``pages.static_scan``. That module already handles the "no Django configured"
+    case by scanning ``static``/``staticfiles``/``public/static`` under
+    ``base_dir`` (default cwd), which is what the CLI mode here needs.
     """
-    file_set = set()
-    dirs = []
-
-    try:
-        from django.conf import settings
-        static_root = str(getattr(settings, 'STATIC_ROOT', ''))
-        if static_root and os.path.isdir(static_root):
-            dirs.append(static_root)
-        for d in getattr(settings, 'STATICFILES_DIRS', []):
-            d = str(d)
-            if os.path.isdir(d) and d not in dirs:
-                dirs.append(d)
-    except Exception:
-        # No Django — scan standard directories relative to base_dir
-        if base_dir is None:
-            base_dir = os.getcwd()
-        for subdir in ['static', 'staticfiles', 'public/static']:
-            d = os.path.join(base_dir, subdir)
-            if os.path.isdir(d) and d not in dirs:
-                dirs.append(d)
-
-    for base in dirs:
-        for root, _, files in os.walk(base):
-            for f in files:
-                full = os.path.join(root, f)
-                rel = os.path.relpath(full, base).replace('\\', '/')
-                file_set.add(rel)
-    return file_set
+    from pages.static_scan import build_file_set
+    return build_file_set(base_dir=base_dir)
 
 
 def _product_gallery_paths(product):
@@ -510,8 +483,6 @@ def _discover_project_cover(slug, seed_image='', base_dir=None):
     3. Gallery directory match by slug token
     4. Flat projects/ directory
     """
-    import os
-
     def _list_dir(rel_dir):
         rel_dir = rel_dir.replace('\\', '/')
         full_dir = None

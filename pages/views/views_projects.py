@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.utils.translation import get_language
 from .common import get_common_context
-from .i18n import _get_projects_sidebar, _resolve_project_sidebar
+from .i18n import (
+    _get_projects_sidebar,
+    _resolve_active_labels,
+    _resolve_project_sidebar,
+)
 from .data_loaders import get_projects, get_project_detail
 
 
@@ -18,16 +22,10 @@ def projects(request):
     context['active_venue_type'] = active_venue_type
     context['active_sport_type'] = active_sport_type
 
-    active_venue_type_label = ''
-    active_sport_type_label = ''
-    for vt in venue_types:
-        if vt['key'] == active_venue_type:
-            active_venue_type_label = vt['label']
-            for s in vt['sports']:
-                if s['key'] == active_sport_type:
-                    active_sport_type_label = s['label']
-                    break
-            break
+    # A2: label lookup收口到 i18n._resolve_active_labels
+    active_venue_type_label, active_sport_type_label = _resolve_active_labels(
+        venue_types, active_venue_type, active_sport_type, child_key='sports',
+    )
     context['active_venue_type_label'] = active_venue_type_label
     context['active_sport_type_label'] = active_sport_type_label
 
@@ -62,16 +60,10 @@ def project_detail(request, slug):
         context['active_venue_type'] = active_venue_type
         context['active_sport_type'] = active_sport_type
 
-        active_venue_type_label = ''
-        active_sport_type_label = ''
-        for vt in venue_types:
-            if vt['key'] == active_venue_type:
-                active_venue_type_label = vt['label']
-                for s in vt['sports']:
-                    if s['key'] == active_sport_type:
-                        active_sport_type_label = s['label']
-                        break
-                break
+        # A2: label lookup收口到 i18n._resolve_active_labels
+        active_venue_type_label, active_sport_type_label = _resolve_active_labels(
+            venue_types, active_venue_type, active_sport_type, child_key='sports',
+        )
         context['active_venue_type_label'] = active_venue_type_label
         context['active_sport_type_label'] = active_sport_type_label
     else:

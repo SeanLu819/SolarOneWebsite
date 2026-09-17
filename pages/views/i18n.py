@@ -103,6 +103,32 @@ def _product_category_filter(active_category):
     return _SIDEBAR_CAT_TO_PRODUCT_CAT.get(active_category, [active_category])
 
 
+def _resolve_active_labels(sidebar, active_key, active_sub_key, child_key='series'):
+    """Return ``(group_label, child_label)`` for the active sidebar keys.
+
+    A2 single source: ``views_products.products``, ``views_projects.projects``
+    and ``views_projects.project_detail`` each carried a byte-identical nested
+    loop that looked up the display label of the active top-level sidebar key
+    and, within it, the label of the active child key. Products nest their
+    children under ``series``; projects under ``sports`` — hence ``child_key``.
+
+    Returns ``('', '')`` when nothing matches, which is exactly what the
+    inlined loops produced for an unfiltered page (the '' active key matches
+    no sidebar entry).
+    """
+    label = ''
+    sub_label = ''
+    for group in sidebar:
+        if group['key'] == active_key:
+            label = group['label']
+            for child in group.get(child_key, []):
+                if child['key'] == active_sub_key:
+                    sub_label = child['label']
+                    break
+            break
+    return label, sub_label
+
+
 def _get_projects_sidebar(lang='en'):
     return [
         {

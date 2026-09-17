@@ -22,7 +22,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.utils.html import mark_safe
 
-from .mixins import CacheClearMixin
+from .mixins import CacheClearMixin, admin_image_preview
 from .widgets import (
     EnergyDataWidget,
     OrderingInfoWidget,
@@ -71,14 +71,13 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
 
     def image_preview(self, obj):
         field = getattr(obj, 'image', None)
+        src = ''
         if field and getattr(field, 'name', ''):
             from pages.seed_sync import _resolve_static_path
             path = _resolve_static_path(field.name, obj.slug, 'products', field_name='image')
-            return mark_safe(
-                f'<img src="/static/{path}" style="width:60px;height:45px;object-fit:contain;'
-                f'border:1px solid #ddd;border-radius:4px;background:#f9f9f9;" />'
-            )
-        return mark_safe('<span style="color:#999;">(no image)</span>')
+            src = f'/static/{path}'
+        return admin_image_preview(src, placeholder=mark_safe(
+            '<span style="color:#999;">(no image)</span>'))
     image_preview.short_description = 'Card Image'
 
     def is_active(self, obj):

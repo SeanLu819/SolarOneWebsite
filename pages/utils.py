@@ -35,3 +35,20 @@ def strip_hash_suffix(name):
     if match:
         stem = stem[:match.start()]
     return f'{stem}{ext}'
+
+
+def translate(obj, field, lang='en'):
+    """Return ``obj``'s ``field`` translated into ``lang``, else the default value.
+
+    A7 single source: ``Product.t`` / ``Project.t`` (pages.models) and the seed
+    shims ``_DictProduct.t`` / ``_DictProject.t`` (pages.views.utils) all carried
+    a byte-identical body. ``obj`` must expose ``.translations`` (a
+    ``{lang: {field: value}}`` map) and ``field`` as an attribute; missing/empty
+    translations fall back to the attribute value, so behaviour is unchanged.
+    Pure stdlib (no Django import) — safe to import from models and views alike.
+    """
+    translations = getattr(obj, 'translations', None)
+    if lang == 'en' or not translations:
+        return getattr(obj, field, '')
+    val = (translations.get(lang) or {}).get(field, '')
+    return val if val else getattr(obj, field, '')

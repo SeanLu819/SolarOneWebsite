@@ -210,6 +210,15 @@ WSGI_APPLICATION = 'solarone.wsgi.application'
 # On Vercel: index.py sets DATABASE_URL=sqlite:////tmp/db.sqlite3 before settings loads.
 # IS_RUNTIME now checks for /tmp/ in DATABASE_URL (set by index.py).
 # We use direct SQLite config on Vercel to avoid dj_database_url parsing issues.
+# B3: the two local fallback branches below (no DATABASE_URL / dj_database_url
+# not installed) were byte-identical — hoist to one shared default.
+_LOCAL_SQLITE = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 if IS_VERCEL:
     DATABASES = {
         'default': {
@@ -224,19 +233,9 @@ else:
             import dj_database_url
             DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
         except ImportError:
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': BASE_DIR / 'db.sqlite3',
-                }
-            }
+            DATABASES = _LOCAL_SQLITE
     else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
+        DATABASES = _LOCAL_SQLITE
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
