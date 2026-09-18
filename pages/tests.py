@@ -2067,6 +2067,7 @@ class DataDrivenTranslationTests(SimpleTestCase):
     KNOWN_CONFIG_FIELDS = {
         'pages/views/common.py': (
             'hero_subtitle', 'hero_title',
+            'meta_description', 'meta_title',
             'products_subtitle', 'products_title',
             'projects_subtitle', 'projects_title',
         ),
@@ -2077,7 +2078,7 @@ class DataDrivenTranslationTests(SimpleTestCase):
     # 用数量清单兜底：新增一个变量型调用点就必须同步登记，否则测试变红。
     # 主体（26 处字面量 + 侧栏构建函数）由运行时 spy 覆盖，不进这张表。
     KNOWN_DYNAMIC_SITES = {
-        'pages/views/common.py': 6,   # _t(config.hero_title / …_subtitle 等 6 个字段)
+        'pages/views/common.py': 8,   # _t(config.hero_title / …_subtitle / meta_title / meta_description 等 8 个字段)
         'pages/views/enrich.py': 1,   # _t(card_label) —— 取自两个映射字典
     }
 
@@ -2341,6 +2342,59 @@ class DataDrivenTranslationTests(SimpleTestCase):
             '_PRODUCT_CARD_LABELS / _PRODUCT_CAT_TO_SIDEBAR_LABEL / '
             '_t(config.<字段>) 这三种已覆盖的来源，要么登记进 '
             'KNOWN_DYNAMIC_SITES 并说明取值来源。')
+
+
+class N43P0SeoTranslationTests(TestCase):
+    """P0 SEO 翻译链路（N-43）：14 条 SEO 文案上线五语。
+
+    两条通道都覆盖：
+      * 6 个模板的 <title> / <meta name="description"> 经 `{% blocktrans %}` 进
+        gettext 目录（locale/<lang>/LC_MESSAGES/django.{po,mo}）；
+      * 全局 meta_title / meta_description 经 `common.py` 的 `_t()` 走
+        `_SIDEBAR_I18N`（由 pages/views/i18n_overrides.json 在导入时合并，
+        脚本导入，不改源码字典）。
+
+    本组测试证明：① 导入器确实把译文写进了 .mo / overrides；② /de/ 首页真的
+    渲染出德文 <title> 与 meta description，且不再回退英文。
+    """
+
+    META_TITLE_EN = 'SolarOne — Precision LED Lighting Systems'
+    HOME_TITLE_EN = 'SolarOne — Professional LED Sports Lighting Solutions Since 2007'
+    HOME_DESC_PREFIX_DE = 'SolarOne entwickelt und fertigt professionelle LED-Sport-'
+
+    def test_siteconfig_meta_routed_via_overrides(self):
+        from pages.views.i18n import _t
+        self.assertEqual(
+            _t(self.META_TITLE_EN, 'de'),
+            'SolarOne — Präzise LED-Beleuchtungssysteme')
+        # 'en' has no entry in the dict by design -> returns the English label.
+        self.assertEqual(_t(self.META_TITLE_EN, 'en'), self.META_TITLE_EN)
+
+    def test_template_title_in_compiled_catalog(self):
+        import polib
+        for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+            mo_path = Path(settings.BASE_DIR, 'locale', lang,
+                           'LC_MESSAGES', 'django.mo')
+            mo = polib.mofile(str(mo_path))
+            entry = mo.find(self.HOME_TITLE_EN)
+            self.assertIsNotNone(
+                entry, f'{lang}: home title msgid missing from compiled .mo')
+            self.assertTrue(
+                entry.msgstr.strip(),
+                f'{lang}: home title msgstr is empty in compiled .mo')
+
+    def test_home_renders_german_seo(self):
+        from django.core.cache import cache
+        cache.delete('site_config')
+        resp = self.client.get('/de/')
+        self.assertEqual(resp.status_code, 200)
+        content = resp.content.decode('utf-8')
+        self.assertIn(
+            'SolarOne — Professionelle LED-Sportbeleuchtungslösungen seit 2007',
+            content)
+        self.assertIn(self.HOME_DESC_PREFIX_DE, content)
+        # The English source must NOT leak into the German page head.
+        self.assertNotIn(self.HOME_TITLE_EN, content)
 
 
 class AdminSeedSyncTests(TestCase):

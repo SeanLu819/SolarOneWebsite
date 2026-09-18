@@ -1,3 +1,6 @@
+import json
+import os
+
 # Product card display labels (per slug, matching sidebar category names)
 _PRODUCT_CARD_LABELS = {
     'm-series': 'Area and Site',
@@ -296,3 +299,33 @@ def _resolve_project_sidebar(sport_type, lang='en', db_venue_type=''):
                         break
                 break
     return active_venue_type, canonical_sport
+
+
+# --- N-43: CSV-imported sidebar / SiteConfig translations -------------------
+# The i18n CSV importer (scripts/import_i18n_csv.py) writes
+# pages/views/i18n_overrides.json instead of patching this module's source dict,
+# so bulk glossary imports stay idempotent and reviewable in git. Entries here
+# take precedence over the hardcoded _SIDEBAR_I18N defaults above. Loaded once
+# at import (cheap: small JSON, same directory as this module).
+_OVERRIDES_PATH = os.path.join(os.path.dirname(__file__), 'i18n_overrides.json')
+
+
+def _load_sidebar_overrides():
+    if not os.path.exists(_OVERRIDES_PATH):
+        return
+    try:
+        with open(_OVERRIDES_PATH, encoding='utf-8') as _fh:
+            _data = json.load(_fh)
+    except (OSError, ValueError):
+        return
+    if not isinstance(_data, dict):
+        return
+    for _label, _langs in _data.items():
+        if not isinstance(_langs, dict):
+            continue
+        _existing = _SIDEBAR_I18N.setdefault(_label, {})
+        # 'en' is the lookup key itself (never a translation); skip it.
+        _existing.update({_k: _v for _k, _v in _langs.items() if _k != 'en' and _v})
+
+
+_load_sidebar_overrides()

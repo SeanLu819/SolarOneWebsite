@@ -80,5 +80,11 @@ def get_common_context():
     config.products_subtitle = _t(config.products_subtitle, lang)
     config.projects_title = _t(config.projects_title, lang)
     config.projects_subtitle = _t(config.projects_subtitle, lang)
+    # N-43 (P0 SEO): meta_title / meta_description are the global default for every
+    # page's <title> and meta description (base.html). They were previously English-only
+    # in all five languages — now routed through _t() so the CSV importer can localize them
+    # via _SIDEBAR_I18N (same channel as the six fields above).
+    config.meta_title = _t(config.meta_title, lang)
+    config.meta_description = _t(config.meta_description, lang)
 
     return {'config': config}

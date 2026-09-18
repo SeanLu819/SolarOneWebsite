@@ -2,10 +2,8 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}LED Lighting Projects — SolarOne Projects Worldwide{% endblock %}
-{% block meta_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities worldwide.{% endblock %}
-{% block og_title %}LED Lighting Projects — SolarOne{% endblock %}
-{% block og_description %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities.{% endblock %}
+{% block title %}{% blocktrans %}LED Lighting Projects — SolarOne Projects Worldwide{% endblocktrans %}{% endblock %}
+{% block meta_description %}{% blocktrans %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities worldwide.{% endblocktrans %}{% endblock %}
 
 {% block content %}
 {% include "includes/breadcrumb_jsonld.html" with section="projects" %}
