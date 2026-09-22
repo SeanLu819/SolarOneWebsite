@@ -1042,3 +1042,12 @@ msgstr ""
 
 msgid "Back to Home"
 msgstr "Retour à l'accueil"
+
+msgid "ordering information"
+msgstr "informations de commande"
+
+msgid "Old HID lighting"
+msgstr "ancien éclairage HID"
+
+msgid "New LED lighting"
+msgstr "nouvel éclairage LED"

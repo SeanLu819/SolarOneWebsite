@@ -263,7 +263,7 @@
           {% endif %}
           {% if product.ordering_image_url %}
           <div class="detail-ordering-image">
-            <img src="{{ product.ordering_image_url }}" alt="Ordering Information" loading="lazy" decoding="async">
+            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
           </div>
           {% endif %}
           {% if product.ordering_cols %}

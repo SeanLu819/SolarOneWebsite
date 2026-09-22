@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from xml.sax.saxutils import escape as _xml_escape
 from django.shortcuts import render
 from django.http import JsonResponse, Http404
 from django.urls import reverse
@@ -7,7 +8,7 @@ from django.utils.translation import get_language, override
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from .common import get_common_context
-from .data_loaders import get_news
+from .data_loaders import get_news, get_product_detail, get_project_detail
 from .utils import _load_seed
 
 
@@ -43,6 +44,14 @@ def sitemap_xml(request):
 
     Paths are reversed with the language forced to 'en' so they stay
     language-neutral even when requested via a prefixed URL (/fr/sitemap.xml).
+
+    Product/project <url> entries additionally carry the Google *image sitemap*
+    extension (``<image:image>``): the source filenames carry no keywords, so
+    the descriptive text lives in ``<image:title>``/``<image:caption>`` built
+    from the enriched detail objects. Because the whole block runs under
+    ``override('en')`` the images are emitted once, in English — the sitemap is
+    a single language-neutral file, so there is deliberately no per-language
+    image entry.
     """
     data = _load_seed()
     products = data.get('products', [])
@@ -52,12 +61,80 @@ def sitemap_xml(request):
     origin = settings.CANONICAL_ORIGIN
     langs = [code for code, _ in settings.LANGUAGES]
 
+    # Google truncates image captions well before this; 200 chars keeps the
+    # descriptive text meaningful without bloating a 42-URL sitemap.
+    _CAPTION_MAX = 200
+
     def _loc(path, code):
         return f'{origin}{path}' if code == 'en' else f'{origin}/{code}{path}'
 
-    def _entry(path, priority, lastmod=''):
+    def _abs_url(url):
+        """Prefix a relative /static|/media path with the canonical origin.
+
+        ``image_url``/``src`` come back relative (e.g. ``/static/images/...``);
+        a fully-qualified URL (CDN/absolute) is left untouched.
+        """
+        if not url:
+            return ''
+        if url.startswith('http://') or url.startswith('https://'):
+            return url
+        return f'{origin}{url}'
+
+    def _image_entries(images):
+        """Render one ``<image:image>`` line per unique, non-empty image.
+
+        ``images`` is an iterable of ``(url, title, caption)`` tuples. The
+        title/caption are the *only* descriptive text we have — the source
+        filenames carry no keywords — so they are XML-escaped (captions are
+        long prose containing ``&``, quotes and non-ASCII) and the caption is
+        truncated. Duplicates are dropped because the same file legitimately
+        appears both as the cover ``image_url`` and inside ``gallery``.
+        """
+        seen = set()
+        lines = []
+        for url, title, caption in images:
+            if not url or url in seen:
+                continue
+            seen.add(url)
+            parts = [f'<image:loc>{_xml_escape(_abs_url(url))}</image:loc>']
+            if title:
+                parts.append(f'<image:title>{_xml_escape(title)}</image:title>')
+            if caption:
+                parts.append(
+                    '<image:caption>'
+                    f'{_xml_escape(caption[:_CAPTION_MAX])}'
+                    '</image:caption>'
+                )
+            lines.append('<image:image>' + ''.join(parts) + '</image:image>')
+        return lines
+
+    def _detail_images(detail, title_attr, caption_attrs):
+        """Build ``(url, title, caption)`` tuples from an enriched detail obj.
+
+        Returns ``[]`` when the detail could not be resolved (``None``) so the
+        caller still emits the plain ``<url>`` entry. ``image_url`` may be ''
+        and is filtered by ``_image_entries``.
+        """
+        if detail is None:
+            return []
+        raw = [getattr(detail, 'image_url', '')]
+        raw += [
+            g.get('src', '')
+            for g in (getattr(detail, 'gallery', None) or [])
+        ]
+        title = getattr(detail, title_attr, '') or ''
+        caption = ''
+        for attr in caption_attrs:
+            caption = getattr(detail, attr, '') or ''
+            if caption:
+                break
+        return [(url, title, caption) for url in raw]
+
+    def _entry(path, priority, lastmod='', images=None):
         en_loc = _loc(path, 'en')
         parts = [f'<loc>{en_loc}</loc>']
+        if images:
+            parts.extend(_image_entries(images))
         if lastmod:
             parts.append(f'<lastmod>{lastmod}</lastmod>')
         for code in langs:
@@ -98,17 +175,30 @@ def sitemap_xml(request):
         for p in products:
             slug = p.get('slug', '')
             if slug:
-                urls.append(_entry(reverse('product_detail', args=[slug]), '0.7', _lastmod))
+                images = _detail_images(
+                    get_product_detail(slug, 'en'),
+                    'name_t',
+                    ('description_t',),
+                )
+                urls.append(_entry(
+                    reverse('product_detail', args=[slug]), '0.7', _lastmod, images))
 
         for proj in projects:
             slug = proj.get('slug', '')
             if slug:
-                urls.append(_entry(reverse('project_detail', args=[slug]), '0.7', _lastmod))
+                images = _detail_images(
+                    get_project_detail(slug, 'en'),
+                    'title_t',
+                    ('location_t', 'description_t'),
+                )
+                urls.append(_entry(
+                    reverse('project_detail', args=[slug]), '0.7', _lastmod, images))
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
-        '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        '        xmlns:xhtml="http://www.w3.org/1999/xhtml"\n'
+        '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
     )
     xml += '\n'.join(urls)
     xml += '\n</urlset>'

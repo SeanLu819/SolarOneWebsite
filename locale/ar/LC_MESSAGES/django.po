@@ -980,3 +980,12 @@ msgstr "حدث خطأ من جانبنا. يرجى المحاولة مرة أخر
 
 msgid "Back to Home"
 msgstr "العودة إلى الرئيسية"
+
+msgid "ordering information"
+msgstr "معلومات الطلب"
+
+msgid "Old HID lighting"
+msgstr "إضاءة HID القديمة"
+
+msgid "New LED lighting"
+msgstr "إضاءة LED الجديدة"

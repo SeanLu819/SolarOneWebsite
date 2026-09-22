@@ -97,6 +97,21 @@ def _build_specs(obj):
     return specs
 
 
+def _gallery_alt(base, qualifier, i):
+    """Descriptive gallery alt text for image ``i`` (0-based).
+
+    The seed product names ("M Series", "RT410 Series") contain no
+    category/type words, so the bare ``"<name> — view N"`` carried almost no
+    text for SEO. ``qualifier`` is the product category display or the project
+    location — real text we already hold — and is folded in when present. When
+    it is empty we fall back to the original string so no alt is ever
+    ``" — view N"``.
+    """
+    if qualifier:
+        return f'{base} — {qualifier} — view {i + 1}'
+    return f'{base} — view {i + 1}'
+
+
 def _enrich_product(product, lang):
     """Add template-friendly attributes to a Product or _DictProduct."""
     product.name_t = product.t('name', lang)
@@ -133,7 +148,8 @@ def _enrich_product(product, lang):
                     SimpleNamespace(slug=getattr(product, 'slug', ''), image=img.image),
                     'image'
                 ),
-                'alt': img.alt_text or f"{product.name_t} — view {i + 1}",
+                'alt': img.alt_text or _gallery_alt(
+                    product.name_t, getattr(product, 'category_display', ''), i),
             }
             for i, img in enumerate(product.images.all())
         ]
@@ -152,7 +168,8 @@ def _enrich_product(product, lang):
                 cert_url = static(cert_default)
         product.cert_image_url = cert_url
         product.gallery = [
-            {'src': _dict_product_image_url(p, slug), 'alt': f"{product.name_t} — view {i + 1}"}
+            {'src': _dict_product_image_url(p, slug),
+             'alt': _gallery_alt(product.name_t, getattr(product, 'category_display', ''), i)}
             for i, p in enumerate(product.gallery_paths)
         ]
         if not product.parent_slug:
@@ -200,14 +217,16 @@ def _enrich_project(project, lang):
             project.gallery = [
                 {
                     'src': _project_image_url(img.image, slug),
-                    'alt': img.alt_text or f"{project.title_t} — view {i + 1}",
+                    'alt': img.alt_text or _gallery_alt(
+                        project.title_t, getattr(project, 'location_t', ''), i),
                 }
                 for i, img in enumerate(db_images)
             ]
         else:
             static_gal_urls = _project_gallery_urls(project)
             project.gallery = [
-                {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
+                {'src': src,
+                 'alt': _gallery_alt(project.title_t, getattr(project, 'location_t', ''), i)}
                 for i, src in enumerate(static_gal_urls)
             ]
     else:
@@ -236,6 +255,7 @@ def _enrich_project(project, lang):
             static_gal_urls = _project_gallery_urls(slug) if slug else []
             gal_urls = static_gal_urls
         project.gallery = [
-            {'src': src, 'alt': f"{project.title_t} — view {i + 1}"}
+            {'src': src,
+             'alt': _gallery_alt(project.title_t, getattr(project, 'location_t', ''), i)}
             for i, src in enumerate(gal_urls)
         ]

@@ -1039,3 +1039,12 @@ msgstr "Se produjo un error de nuestro lado. Vuelva a intentarlo más tarde."
 
 msgid "Back to Home"
 msgstr "Volver al inicio"
+
+msgid "ordering information"
+msgstr "información de pedido"
+
+msgid "Old HID lighting"
+msgstr "iluminación HID antigua"
+
+msgid "New LED lighting"
+msgstr "nueva iluminación LED"

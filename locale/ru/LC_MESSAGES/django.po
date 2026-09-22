@@ -1038,3 +1038,12 @@ msgstr ""
 
 msgid "Back to Home"
 msgstr "Вернуться на главную"
+
+msgid "ordering information"
+msgstr "информация для заказа"
+
+msgid "Old HID lighting"
+msgstr "старое освещение HID"
+
+msgid "New LED lighting"
+msgstr "новое светодиодное освещение"

@@ -2544,4 +2544,144 @@ class AdminSeedSyncTests(TestCase):
         self.assertFalse(m_msg.warning.called, '导出成功不应产生 warning')
 
 
+class ImageSitemapAndAltTests(TestCase):
+    """Image SEO（零改名）：image sitemap 扩展 + 描述性 alt 文本。
+
+    背景：审计结论——图片**文件名**是很弱的 SEO 信号。两个高价值、零改名的
+    改进是（1）此前完全缺失的 image sitemap 扩展，和（2）把画廊 alt 从几乎
+    无文本的 ``"<name> — view N"`` 换成带分类/地点的描述。本类只验证这两项
+    的**意图（行为）**，不断言实现细节。
+    """
+
+    ORIGIN = 'https://www.solaronelighting.com'
+    IMAGE_NS = 'http://www.google.com/schemas/sitemap-image/1.1'
+
+    def _sitemap(self):
+        resp = self.client.get('/sitemap.xml')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode('utf-8')
+
+    # -- 1. image sitemap 扩展 -------------------------------------------
+    def test_image_namespace_is_declared(self):
+        self.assertIn(f'xmlns:image="{self.IMAGE_NS}"', self._sitemap())
+
+    def test_many_absolute_image_locs(self):
+        locs = re.findall(r'<image:loc>(.*?)</image:loc>', self._sitemap())
+        self.assertGreater(
+            len(locs), 20, f'image:loc 仅 {len(locs)} 条，产品+项目应远超 20')
+        for loc in locs:
+            self.assertTrue(
+                loc.startswith(self.ORIGIN),
+                f'image:loc 必须是绝对 URL（前缀 {self.ORIGIN}）: {loc}')
+            self.assertNotIn(
+                '/media/', loc,
+                f'seed 驱动的 sitemap 不应出现 /media/ 路径: {loc}')
+
+    def test_known_product_image_loc_resolves_to_a_real_file(self):
+        from django.contrib.staticfiles import finders
+        locs = re.findall(r'<image:loc>(.*?)</image:loc>', self._sitemap())
+        target = next(
+            (loc for loc in locs
+             if loc.endswith('/static/images/products/m-series/rt200-m.webp')),
+            None,
+        )
+        self.assertIsNotNone(target, 'm-series 主图未出现在 image:loc 中')
+        rel = _strip_static_hash(target[len(self.ORIGIN):])
+        self.assertTrue(rel.startswith('/static/'), rel)
+        resolved = finders.find(rel[len('/static/'):])
+        self.assertIsNotNone(resolved, f'image:loc 指向不存在的静态文件: {rel}')
+        self.assertTrue(Path(resolved).is_file())
+
+    def test_every_sitemap_image_loc_resolves_to_a_real_file(self):
+        """每个对外广告的 <image:loc> 都必须在磁盘上真实存在。
+
+        ``_static_url`` / ``_dict_product_image_url``（pages/views/utils.py）
+        的**既定契约**是「即使文件缺失也返回一个 URL」——这是有意为之，因此
+        sitemap 有可能把一个 404 的图片地址投喂给 Google。
+
+        守卫选择在**渲染产物**上检查（而非直接查两个 helper），这样不仅能拦住
+        一次改了 seed 却指向缺失资源的编辑，也能拦住未来任何 URL 解析回归。
+        这里**不**给生产代码加运行时存在性过滤：基于 ``_find_static`` 的过滤在
+        Vercel 的 ``BundledManifestStaticFilesStorage`` 下要先剥 manifest 哈希，
+        一旦失手会静默清空整个图片列表——比它要修的潜在风险更糟。
+        """
+        from pages.views.utils import _find_static, strip_hash_suffix
+        locs = re.findall(r'<image:loc>(.*?)</image:loc>', self._sitemap())
+        # 反空洞：提取不到任何 loc 时断言方式已失效，必须失败而非假绿。
+        self.assertTrue(
+            locs, '未从 sitemap 提取到任何 <image:loc>，该测试形同虚设')
+
+        checked = 0
+        skipped = 0
+        missing = []
+        for loc in locs:
+            rel = loc[len(self.ORIGIN):] if loc.startswith(self.ORIGIN) else loc
+            if rel.startswith('/static/'):
+                rel = rel[len('/static/'):]
+            if not rel.startswith('images/'):
+                # /media/ 或 CDN 绝对 URL —— 不在 static/ 下，单独计数跳过。
+                skipped += 1
+                continue
+            # strip_hash_suffix 作用于「文件名」（生产 Manifest 存储会加
+            # _<hash> 后缀），故只对 basename 处理后拼回目录。
+            directory, _, basename = rel.rpartition('/')
+            clean = strip_hash_suffix(basename)
+            rel_clean = f'{directory}/{clean}' if directory else clean
+            checked += 1
+            if not _find_static(rel_clean):
+                missing.append(loc)
+
+        self.assertGreater(
+            checked, 0, '没有任何 /static/images/ 下的 loc 被检查到')
+        self.assertEqual(
+            missing, [],
+            f'{len(missing)} 个 <image:loc> 指向磁盘上不存在的文件'
+            f'（前 10 条）: {missing[:10]}'
+            f'（已检查 {checked} 条，跳过 {skipped} 条非 /static/images/ 条目）')
+
+    def test_image_title_and_caption_carry_real_text(self):
+        content = self._sitemap()
+        self.assertIn('<image:title>', content)
+        self.assertIn('<image:caption>', content)
+        # 描述文本来自详情对象（文件名本身没有关键词）——标题应含产品名。
+        self.assertIn('<image:title>M Series</image:title>', content)
+
+    # -- 2. 画廊 alt 增强（变更 2 的回归守卫）-----------------------------
+    def test_product_gallery_alt_carries_category(self):
+        from pages.views.data_loaders import get_product_detail
+        product = get_product_detail('m-series', 'en')
+        self.assertIsNotNone(product)
+        self.assertTrue(product.gallery)
+        alt = product.gallery[0]['alt']
+        self.assertIn(product.name_t, alt)
+        self.assertIn(product.category_display, alt,
+                      f'画廊 alt 未带分类文本: {alt!r}')
+        self.assertNotEqual(alt, f'{product.name_t} — view 1')
+
+    def test_project_gallery_alt_carries_location(self):
+        from pages.views.data_loaders import get_project_detail
+        from pages.views.utils import _load_seed
+        seed_proj = next(
+            (p for p in _load_seed().get('projects', [])
+             if p.get('slug') and p.get('location')),
+            None,
+        )
+        self.assertIsNotNone(seed_proj, 'seed 中找不到带 location 的项目')
+        project = get_project_detail(seed_proj['slug'], 'en')
+        self.assertIsNotNone(project)
+        self.assertTrue(project.gallery)
+        # 英文下 location_t 即 seed 源值 —— 用 seed 值断言，不硬编码。
+        self.assertEqual(project.location_t, seed_proj['location'])
+        alt = project.gallery[0]['alt']
+        self.assertIn(project.location_t, alt,
+                      f'项目画廊 alt 未带地点文本: {alt!r}')
+        self.assertNotEqual(alt, f'{project.title_t} — view 1')
+
+    # -- 3. 硬编码英文 alt 已本地化 ---------------------------------------
+    def test_ordering_image_alt_is_translated(self):
+        content = self.client.get('/fr/products/m-series/').content.decode('utf-8')
+        self.assertIn('informations de commande', content)
+
+
+
 
