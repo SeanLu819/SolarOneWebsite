@@ -72,7 +72,7 @@
       "name": "RT410 Series",
       "slug": "rt410-series",
       "category": "AREA_SITE",
-      "description": "Professional LED floodlights designed for sports fields, arenas, and large-area illumination. Flicker-free drivers with broadcast-grade performance.",
+      "description": "Professional LED floodlights for sports fields, arenas, and large-area lighting. Replaces 400–1,000 W HID with flicker-free, broadcast-grade output.",
       "power": "260W",
       "efficacy": "125lm/W",
       "output": "",
@@ -91,27 +91,27 @@
         "fr": {
           "name": "Série RT410",
           "category": "Projecteur",
-          "description": "Projecteurs LED professionnels conçus pour les terrains de sport, les arènes et les grandes surfaces d’éclairage. Drivers sans scintillement avec performance de qualité broadcast."
+          "description": "Projecteurs LED professionnels pour terrains de sport, arènes et grandes surfaces d’éclairage. Remplacent les sources HID de 400 à 1 000 W avec un rendement sans scintillement de qualité broadcast."
         },
         "es": {
           "name": "Serie RT410",
           "category": "Proyector",
-          "description": "Proyectores LED profesionales diseñados para campos deportivos, arenas e iluminación de grandes áreas. Drivers sin parpadeo con rendimiento de calidad broadcast."
+          "description": "Proyectores LED profesionales para campos deportivos, arenas e iluminación de grandes superficies. Sustituyen a las lámparas HID de 400 a 1.000 W con un rendimiento sin parpadeo de calidad broadcast."
         },
         "de": {
           "name": "RT410-Serie",
           "category": "Flutlicht",
-          "description": "Professionelle LED-Flutlichter für Sportfelder, Arenen und Großflächenbeleuchtung. Flackerfreie Treiber mit Broadcast-Qualität."
+          "description": "Professionelle LED-Flutlichter für Sportplätze, Arenen und Großflächenbeleuchtung. Ersetzen HID-Lampen mit 400–1.000 W bei flackerfreier Leistung in Broadcast-Qualität."
         },
         "ru": {
           "name": "Серия RT410",
           "category": "Прожекторы",
-          "description": "Профессиональные LED-прожекторы для спортивных площадок, арен и больших площадей освещения. Драйверы без мерцания с трансляционным качеством."
+          "description": "Профессиональные светодиодные прожекторы для спортивных площадок, арен и освещения больших площадей. Заменяют лампы HID мощностью 400–1000 Вт, обеспечивая работу без мерцания трансляционного качества."
         },
         "ar": {
           "name": "سلسلة RT410",
           "category": "مشاريع إضاءة",
-          "description": "أضواء LED احترافية مصممة للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. محركات بدون وميض بأداء بث مباشر."
+          "description": "أضواء LED احترافية للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. تستبدل مصابيح HID بقدرة 400–1000 واط بأداء بدون وميض بجودة البث."
         }
       },
       "gallery": [
