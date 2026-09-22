@@ -55,9 +55,11 @@ def sitemap_xml(request):
     def _loc(path, code):
         return f'{origin}{path}' if code == 'en' else f'{origin}/{code}{path}'
 
-    def _entry(path, priority):
+    def _entry(path, priority, lastmod=''):
         en_loc = _loc(path, 'en')
         parts = [f'<loc>{en_loc}</loc>']
+        if lastmod:
+            parts.append(f'<lastmod>{lastmod}</lastmod>')
         for code in langs:
             parts.append(
                 f'<xhtml:link rel="alternate" hreflang="{code}" href="{_loc(path, code)}"/>'
@@ -70,6 +72,17 @@ def sitemap_xml(request):
 
     urls = []
 
+    # <lastmod> (SEO P2): products/projects carry no updated_at in the seed
+    # snapshot, so a per-URL timestamp is unavailable. Use the seed snapshot's
+    # own mtime — stable across requests within a deploy (Google distrusts a
+    # lastmod that changes on every fetch) and honest as "content published".
+    try:
+        _lastmod = datetime.fromtimestamp(os.path.getmtime(
+            os.path.join(str(settings.BASE_DIR), 'seed_data.json')
+        )).date().isoformat()
+    except Exception:
+        _lastmod = ''
+
     with override('en'):
         static_pages = [
             ('home', '0.9'),
@@ -80,24 +93,17 @@ def sitemap_xml(request):
             ('contact', '0.7'),
         ]
         for name, priority in static_pages:
-            urls.append(_entry(reverse(name), priority))
+            urls.append(_entry(reverse(name), priority, _lastmod))
 
         for p in products:
             slug = p.get('slug', '')
             if slug:
-                urls.append(_entry(reverse('product_detail', args=[slug]), '0.7'))
-
-        seen_series = set()
-        for p in products:
-            parent_slug = p.get('parent_slug', '')
-            if parent_slug and parent_slug not in seen_series:
-                seen_series.add(parent_slug)
-                urls.append(_entry(reverse('product_series', args=[parent_slug]), '0.7'))
+                urls.append(_entry(reverse('product_detail', args=[slug]), '0.7', _lastmod))
 
         for proj in projects:
             slug = proj.get('slug', '')
             if slug:
-                urls.append(_entry(reverse('project_detail', args=[slug]), '0.7'))
+                urls.append(_entry(reverse('project_detail', args=[slug]), '0.7', _lastmod))
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'

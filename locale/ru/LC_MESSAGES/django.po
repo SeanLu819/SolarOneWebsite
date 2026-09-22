@@ -1022,3 +1022,19 @@ msgstr ""
 "Изучите портфолио из более чем 500 проектов светодиодного освещения SolarOne"
 " в более чем 50 странах. Спортивные объекты, аэропорты, морские порты и "
 "промышленные предприятия по всему миру."
+
+msgid "Page Not Found"
+msgstr "Страница не найдена"
+
+msgid "The page you are looking for does not exist or has been moved."
+msgstr "Запрашиваемая страница не существует или была перемещена."
+
+msgid "Server Error"
+msgstr "Ошибка сервера"
+
+msgid "Something went wrong on our end. Please try again later."
+msgstr ""
+"На нашей стороне произошла ошибка. Пожалуйста, повторите попытку позже."
+
+msgid "Back to Home"
+msgstr "Вернуться на главную"

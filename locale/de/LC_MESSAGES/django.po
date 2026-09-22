@@ -1022,3 +1022,20 @@ msgstr ""
 "Durchstöbern Sie das Portfolio von über 500 LED-Beleuchtungsprojekten von "
 "SolarOne in mehr als 50 Ländern. Sportstätten, Flughäfen, Seehäfen und "
 "Industrieanlagen weltweit."
+
+msgid "Page Not Found"
+msgstr "Seite nicht gefunden"
+
+msgid "The page you are looking for does not exist or has been moved."
+msgstr "Die gesuchte Seite existiert nicht oder wurde verschoben."
+
+msgid "Server Error"
+msgstr "Serverfehler"
+
+msgid "Something went wrong on our end. Please try again later."
+msgstr ""
+"Auf unserer Seite ist ein Fehler aufgetreten. Bitte versuchen Sie es später "
+"erneut."
+
+msgid "Back to Home"
+msgstr "Zurück zur Startseite"

@@ -1,6 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /media/
+
+# NOTE (SEO P3.3): /media/ is intentionally left crawlable. Product/project pages
+# fall back to /media/... URLs when no committed /static/ copy exists, and a
+# Disallow here would make those referenced images unindexable in Google Images.
+# media/ contains only public product / products_page / project assets — no
+# private uploads — so there is nothing to hide.
 
 Sitemap: {{ canonical_origin }}/sitemap.xml

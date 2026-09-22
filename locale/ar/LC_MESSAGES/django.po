@@ -965,3 +965,18 @@ msgid ""
 msgstr ""
 "تصفّح محفظة SolarOne التي تضم أكثر من 500 مشروع إضاءة LED في أكثر من 50 "
 "دولة. منشآت رياضية ومطارات وموانئ ومنشآت صناعية حول العالم."
+
+msgid "Page Not Found"
+msgstr "الصفحة غير موجودة"
+
+msgid "The page you are looking for does not exist or has been moved."
+msgstr "الصفحة التي تبحث عنها غير موجودة أو تم نقلها."
+
+msgid "Server Error"
+msgstr "خطأ في الخادم"
+
+msgid "Something went wrong on our end. Please try again later."
+msgstr "حدث خطأ من جانبنا. يرجى المحاولة مرة أخرى لاحقًا."
+
+msgid "Back to Home"
+msgstr "العودة إلى الرئيسية"

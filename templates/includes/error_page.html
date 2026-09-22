@@ -1,27 +1,21 @@
 {% comment %}
-Standalone 404 / 500 page body — the single source for both error pages, which
-were near-identical copies differing only in the code, two strings and the h1
-accent colour.
+Standalone 404 / 500 page body — the single source for both error pages.
 
 Params
-  code     '404' | '500'      — big number in the h1
-  title    'Page Not Found'   — <title> suffix AND the h2 (they were the same
-             string on both pages)
-  message  body sentence
-  accent   h1 colour          — #3b82f6 (404, blue) / #ef4444 (500, red)
+  code     '404' | '500'   — big number in the h1; also selects the localized copy
+  accent   h1 colour       — #3b82f6 (404, blue) / #ef4444 (500, red)
 
 These pages deliberately do NOT extend base.html: they must render with zero
-database access and zero static/template dependencies, so the styles are inline.
-NOTE (open item): that also means they carry no navigation and no language
-switch, and their copy is English-only in all six locales. Adding i18n here
-would change what users see, so it is tracked separately rather than folded into
-this de-duplication.
-{% endcomment %}<!DOCTYPE html>
-<html lang="en">
+database access and zero static dependencies, so the styles are inline. Copy is
+localized with {% trans %} (gettext catalog lookup only — no DB), and the document
+gets a correct lang / RTL direction from {% get_current_language %}, which works even
+when Django's 500 handler renders this without a request context.
+{% endcomment %}{% load i18n %}{% get_current_language as CUR_LANG %}{% get_current_language_bidi as CUR_BIDI %}<!DOCTYPE html>
+<html lang="{{ CUR_LANG }}"{% if CUR_BIDI %} dir="rtl"{% endif %}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{ title }} — SolarOne</title>
+<title>{% if code == '404' %}{% trans "Page Not Found" %}{% else %}{% trans "Server Error" %}{% endif %} — SolarOne</title>
 <style nonce="{{ request.csp_nonce }}">
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0b0f14; color: #e8edf2; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
@@ -36,9 +30,14 @@ this de-duplication.
 <body>
 <div class="container">
   <h1>{{ code }}</h1>
-  <h2>{{ title }}</h2>
-  <p>{{ message }}</p>
-  <a href="/">Back to Home</a>
+  {% if code == '404' %}
+  <h2>{% trans "Page Not Found" %}</h2>
+  <p>{% trans "The page you are looking for does not exist or has been moved." %}</p>
+  {% else %}
+  <h2>{% trans "Server Error" %}</h2>
+  <p>{% trans "Something went wrong on our end. Please try again later." %}</p>
+  {% endif %}
+  <a href="/">{% trans "Back to Home" %}</a>
 </div>
 </body>
 </html>

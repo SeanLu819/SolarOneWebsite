@@ -7,6 +7,14 @@
       "excludeFiles": "{static,staticfiles,media,docs,screenshots}/**"
     }
   },
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "solaronelighting.com" }],
+      "destination": "https://www.solaronelighting.com/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index.py" }
   ]

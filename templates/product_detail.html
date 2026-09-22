@@ -7,6 +7,8 @@
 {% block meta_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
 {% block og_title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
 {% block og_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block og_type %}<meta property="og:type" content="product">{% endblock %}
+{% block og_image %}{% if product and product.banner_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ product.banner_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block content %}
 {% if product %}
@@ -38,7 +40,7 @@
               </div>
               <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
                 {% for grandchild in sub.subseries %}
-                <a href="{% url 'product_series' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
+                <a href="{% url 'product_detail' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
                 {% endfor %}
               </div>
               {% else %}
@@ -301,8 +303,8 @@
             <p class="detail-request-sample-desc">{% trans "Experience the quality and performance of our" %} {{ product.name_t }} {% trans "firsthand. Contact our team today for a free sample and technical consultation." %}</p>
           </div>
           <div class="detail-request-sample-buttons">
-            <a href="{% url 'products' %}" class="detail-btn detail-btn-primary">{% trans "Explore All Products" %}</a>
             <a href="{% url 'contact' %}?product={{ product.slug }}&product_name={{ product.name_t|urlencode }}&ref=sample" class="detail-btn detail-btn-outline">{% trans "Request a Sample" %}</a>
+            <a href="{% url 'products' %}" class="detail-btn detail-btn-primary">{% trans "Explore All Products" %}</a>
           </div>
         </div>
 
@@ -930,8 +932,11 @@
   "@type": "Product",
   "name": "{{ product.name_t|escapejs }}",
   "description": "{{ product.description_t|default:''|escapejs }}",
-  "image": "{{ product.banner_image_url|default:'' }}",
-  "url": "{{ request.build_absolute_uri }}"{% if product.power %},
+  "image": "{{ canonical_origin }}{{ product.banner_image_url|default:'' }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "brand": {"@type": "Brand", "name": "SolarOne"},
+  "sku": "{{ product.model_number|default:product.slug|escapejs }}",
+  "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.power %},
   "additionalProperty": [
     {"@type": "PropertyValue", "name": "Power", "value": "{{ product.power|escapejs }}"},
     {% if product.efficacy %}{"@type": "PropertyValue", "name": "Efficacy", "value": "{{ product.efficacy|escapejs }}"},{% endif %}
