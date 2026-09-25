@@ -5,14 +5,21 @@ Visual Review — 本地可视化评审脚本（解决"改完只能靠部署才�
 
 做什么：
   1. 自动拉起 Django dev server（随机端口）
-  2. 用 Playwright 驱动本机 Edge，按 手机 / 平板 / 桌面 三档视口渲染指定页面
+  2. 用 Playwright 驱动本机 Edge，按 手机 / 平板 / 桌面 三档视口 × 深/浅双主题渲染指定页面
   3. 扫描"横向溢出"元素（元素级 scrollWidth > clientWidth，排除合法滚动容器）
-  4. 生成一份自包含 HTML 报告：三档截图并排 + 溢出元素清单 + 关键测量值
+  4. 校验 HTTP 状态与主题是否真的生效（避免静默产出一份"全是 404 / 全是深色"的假报告）
+  5. 生成一份自包含 HTML 报告：每个主题三档截图并排 + 溢出元素清单 + 关键测量值
+
+页面覆盖（P3-2）：默认路径覆盖**每一种页面模板** —— 首页 / 产品列表 / 产品详情
+（product_detail.html）/ 系列首页（product_overview.html）/ 项目列表 / 项目详情
+（project_detail.html）/ 新闻 / 关于 / 联系；且**每个页面都跑深色 + 浅色两套主题**。
 
 用法：
     python scripts/e2e/visual_review.py
     python scripts/e2e/visual_review.py --paths /products/rt400hb/ /products/
     python scripts/e2e/visual_review.py --widths 390 768 --no-fullpage
+    python scripts/e2e/visual_review.py --themes light                # 只跑浅色
+    python scripts/e2e/visual_review.py --themes dark --widths 390 --no-fullpage   # 最快冒烟
 
 产物：
     .workbuddy/preview/review_<时间戳>/index.html   ← 浏览器直接打开
@@ -33,11 +40,19 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+
+# P3-2：默认路径覆盖每一种页面模板（每条都实测 200，见 pages/tests.py 的
+# P3VisualReviewCoverageTests 守卫）。顺序 = 报告里的顺序。
 DEFAULT_PATHS = [
-    "/",
-    "/products/",
-    "/products/rt400hb/",
-    "/projects/",
+    "/",                                    # home
+    "/products/",                           # 产品列表
+    "/products/rt400hb/",                   # product_detail.html
+    "/products/rgb-rgbw/",                  # product_overview.html（另一套产品模板）
+    "/projects/",                           # 项目列表
+    "/projects/chunan-velodrome/",          # project_detail.html
+    "/news/",                               # 新闻列表
+    "/about/",                              # 关于
+    "/contact/",                            # 联系
 ]
 
 # 视口定义：(标签, 宽, 高, 是否模拟移动端)
@@ -46,6 +61,19 @@ VIEWPORTS = [
     ("tablet", 768, 1024, False),
     ("desktop", 1280, 800, False),
 ]
+
+# 主题轴（P3-2）：dark 是 base.html 的默认主题，light 由用户切换。
+THEMES = ("dark", "light")
+
+# 主题必须在文档开始前就位，否则首帧会先闪深色再切浅色。
+# base.html 的 <head> 内联脚本读 localStorage['theme']（'dark' | 'light'）后设置
+# <html data-theme>，所以预置这个键就等于"用户上次选了浅色"。
+# 为什么不用点按钮：移动端 .theme-toggle 在抽屉里不可见，点法只在桌面档成立。
+THEME_STORAGE_KEY = "theme"
+THEME_INIT_JS = "try{localStorage.setItem('%s','%s')}catch(e){}"
+
+# 报告里显示的主题名（键必须与 THEMES 一致）
+THEME_LABELS = {"dark": "深色 Dark", "light": "浅色 Light"}
 
 
 # --------------------------------------------------------------------------
@@ -146,6 +174,9 @@ SCAN_JS = r"""
     targetVW: VW,
     pageOverflow: document.documentElement.scrollWidth - VW,
     overflow: uniq,
+    // 主题证据（P3-2）：证明浅色档真的渲染成了浅色，而不是两张一样的深色图。
+    theme: document.documentElement.getAttribute('data-theme'),
+    bodyBg: document.body ? getComputedStyle(document.body).backgroundColor : '',
   };
 }
 """
@@ -155,41 +186,52 @@ def _slug(s: str) -> str:
     return re.sub(r"[^a-zA-Z0-9]+", "_", s).strip("_") or "root"
 
 
-def run(playwright, base: str, paths, widths, fullpage: bool, outdir: Path):
+def run(playwright, base: str, paths, widths, fullpage: bool, outdir: Path,
+        themes=THEMES):
     browser = playwright.chromium.launch(channel="msedge")
     results = []
 
     for p in paths:
         url = base + p
         entry = {"path": p, "url": url, "shots": {}, "data": {}}
-        for label, w, h, mobile in VIEWPORTS:
-            if widths and w not in widths:
-                continue
-            ctx = browser.new_context(
-                viewport={"width": w, "height": h},
-                device_scale_factor=2 if mobile else 1,
-                is_mobile=mobile,
-                has_touch=mobile,
-            )
-            page = ctx.new_page()
-            try:
-                # domcontentloaded 比 load 快得多：只等 HTML 解析 + 同步脚本，
-                # 不等所有图片/iframe/web 字体。配合 wait_for_timeout 给静态资源
-                # 留时间渲染，足够拿到真实 layout。
-                page.goto(url, wait_until="domcontentloaded", timeout=25000)
-                page.wait_for_timeout(1200)  # 等轮播/字体/懒加载稳定
-                probe = page.evaluate(
-                    SCAN_JS.replace("__TARGET_VW__", str(w))
+        for theme in themes:
+            entry["shots"][theme] = {}
+            entry["data"][theme] = {}
+        for theme in themes:
+            for label, w, h, mobile in VIEWPORTS:
+                if widths and w not in widths:
+                    continue
+                ctx = browser.new_context(
+                    viewport={"width": w, "height": h},
+                    device_scale_factor=2 if mobile else 1,
+                    is_mobile=mobile,
+                    has_touch=mobile,
                 )
-                shot = outdir / "shots" / f"{_slug(p)}__{label}.png"
-                shot.parent.mkdir(parents=True, exist_ok=True)
-                page.screenshot(path=str(shot), full_page=fullpage)
-                entry["shots"][label] = shot.relative_to(outdir).as_posix()
-                entry["data"][label] = probe
-            except Exception as e:  # noqa: BLE001
-                entry["data"][label] = {"error": str(e)[:300]}
-            finally:
-                ctx.close()
+                # P3-2：主题必须在首个字节解析前就位（见 THEME_INIT_JS 注释）
+                ctx.add_init_script(THEME_INIT_JS % (THEME_STORAGE_KEY, theme))
+                page = ctx.new_page()
+                try:
+                    # domcontentloaded 比 load 快得多：只等 HTML 解析 + 同步脚本，
+                    # 不等所有图片/iframe/web 字体。配合 wait_for_timeout 给静态资源
+                    # 留时间渲染，足够拿到真实 layout。
+                    resp = page.goto(url, wait_until="domcontentloaded", timeout=25000)
+                    page.wait_for_timeout(1200)  # 等轮播/字体/懒加载稳定
+                    probe = page.evaluate(
+                        SCAN_JS.replace("__TARGET_VW__", str(w))
+                    )
+                    probe["themeRequested"] = theme
+                    probe["httpStatus"] = resp.status if resp is not None else None
+                    shot = outdir / "shots" / f"{_slug(p)}__{theme}__{label}.png"
+                    shot.parent.mkdir(parents=True, exist_ok=True)
+                    page.screenshot(path=str(shot), full_page=fullpage)
+                    entry["shots"][theme][label] = shot.relative_to(outdir).as_posix()
+                    entry["data"][theme][label] = probe
+                except Exception as e:  # noqa: BLE001
+                    entry["data"][theme][label] = {
+                        "error": str(e)[:300], "themeRequested": theme,
+                    }
+                finally:
+                    ctx.close()
         results.append(entry)
     browser.close()
     return results
@@ -214,6 +256,14 @@ padding:20px;margin-bottom:22px}
 .badge{font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
 .b-ok{background:rgba(61,220,151,.15);color:var(--ok)}
 .b-bad{background:rgba(255,107,107,.15);color:var(--bad)}
+.th{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 10px;
+padding-top:14px;border-top:1px dashed var(--line)}
+.th-name{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+padding:2px 10px;border-radius:20px;background:rgba(91,156,255,.14);color:var(--accent)}
+.th-swatch{display:inline-block;width:13px;height:13px;border-radius:3px;
+border:1px solid var(--line);vertical-align:middle}
+.th-evi{color:var(--mute);font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+.th-evi b{color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .vp{background:#0b0e14;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .vp-head{display:flex;justify-content:space-between;align-items:center;
@@ -237,6 +287,97 @@ padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:22px;font-size:13px;co
 """
 
 
+def _shot_grid(r, theme, order) -> str:
+    """三档截图并排。shots 是 theme → label 两级键（P3-2 起）。"""
+    shots = r["shots"].get(theme) or {}
+    out = ["<div class='grid'>"]
+    for lbl in order:
+        if lbl not in shots:
+            continue
+        w = h = ""
+        for L, W, H, _ in VIEWPORTS:
+            if L == lbl:
+                w, h = W, H
+        dims = {"mobile": "iPhone 12", "tablet": "iPad", "desktop": "Desktop"}[lbl]
+        out.append(
+            f"<div class='vp'><div class='vp-head'>"
+            f"<span class='vp-name'>{dims}</span>"
+            f"<span class='vp-dim'>{w}×{h}</span></div>"
+            f"<a href='{shots[lbl]}' target='_blank'>"
+            f"<img src='{shots[lbl]}' loading='lazy'></a></div>"
+        )
+    out.append("</div>")
+    return "".join(out)
+
+
+def _overflow_table(block, order) -> str:
+    """单个主题的横向溢出元素表。"""
+    rows = []
+    for lbl in order:
+        d = block.get(lbl)
+        if not d:
+            continue
+        if "error" in d:
+            rows.append(f"<tr><td colspan='5'><div class='err'>"
+                        f"[{lbl}] {d['error']}</div></td></tr>")
+            continue
+        for it in d.get("overflow", []):
+            rows.append(
+                f"<tr><td>{lbl}</td>"
+                f"<td class='sel'>{it['sel']}</td>"
+                f"<td class='num'>{it['scrollWidth']}</td>"
+                f"<td class='num'>{it['clientWidth']}</td>"
+                f"<td class='num' style='color:var(--bad)'>+{it['over']}</td></tr>"
+            )
+    if not rows:
+        return ("<div class='ov'><div class='ov-title'>"
+                "横向溢出元素：无 ✔</div></div>")
+    return ("<div class='ov'><div class='ov-title'>横向溢出元素（超出量降序）</div>"
+            "<table><thead><tr><th>视口</th><th>元素</th>"
+            "<th style='text-align:right'>内容宽</th>"
+            "<th style='text-align:right'>可见宽</th>"
+            "<th style='text-align:right'>超出</th></tr></thead>"
+            f"<tbody>{''.join(rows)}</tbody></table></div>")
+
+
+def _measure_html(block, order) -> str:
+    """单个主题的关键测量值（只列本次真的跑过的视口）。"""
+    kv = []
+    for lbl in order:
+        d = block.get(lbl)
+        if not d or "error" in d:
+            continue
+        kv.append(f"<span>{lbl}: docScroll=<b>{d.get('docScrollWidth')}</b> "
+                  f"innerWidth=<b>{d.get('innerWidth')}</b> "
+                  f"基准=<b>{d.get('targetVW')}</b></span>")
+    return f"<div class='kv'>{''.join(kv)}</div>" if kv else ""
+
+
+def _theme_html(r, theme, order) -> str:
+    """一个页面的单个主题区块：主题生效证据 + 三档截图 + 溢出表 + 测量值。"""
+    block = r["data"].get(theme) or {}
+    ok = [block[lbl] for lbl in order if lbl in block and "error" not in block[lbl]]
+    parts = []
+    if not ok:
+        parts.append(f"<div class='th'><span class='th-name'>{THEME_LABELS[theme]}</span>"
+                     "<span class='err'>该主题所有视口都失败，见下表</span></div>")
+    else:
+        sample = ok[0]
+        warn = "" if sample.get("theme") == theme else " ✘ 主题未生效（截图可能仍是默认主题）"
+        parts.append(
+            f"<div class='th'><span class='th-name'>{THEME_LABELS[theme]}</span>"
+            f"<span class='th-swatch' style='background:{sample.get('bodyBg')}'></span>"
+            f"<span class='th-evi'>data-theme=<b>{sample.get('theme')}</b>{warn}"
+            f" &nbsp; body-bg=<b>{sample.get('bodyBg')}</b>"
+            f" &nbsp; HTTP=<b>{sample.get('httpStatus')}</b>"
+            f" &nbsp; 视口数=<b>{len(ok)}/{len(order)}</b></span></div>"
+        )
+    parts.append(_shot_grid(r, theme, order))
+    parts.append(_overflow_table(block, order))
+    parts.append(_measure_html(block, order))
+    return "".join(parts)
+
+
 def render(results, outdir: Path, generated: str) -> Path:
     order = [v[0] for v in VIEWPORTS]
     parts = [
@@ -245,84 +386,35 @@ def render(results, outdir: Path, generated: str) -> Path:
         f"<title>响应式可视化评审 {generated}</title><style>{CSS}</style></head><body>",
         "<h1>响应式可视化评审报告</h1>",
         f"<div class='sub'>生成时间 {generated} &nbsp;·&nbsp; "
-        "三档视口（390 手机 / 768 平板 / 1280 桌面）真实渲染截图 + 横向溢出扫描</div>",
-        "<div class='note'><b>怎么读这份报告：</b>每个页面三张截图并排，"
-        "手机档应能看到完整内容、不应出现需要左右拖动才能看全的区块。"
+        "每个页面 × 深/浅主题 × 三档视口（390 手机 / 768 平板 / 1280 桌面）"
+        "真实渲染截图 + 横向溢出扫描</div>",
+        "<div class='note'><b>怎么读这份报告：</b>每个页面下按主题分成两块"
+        "（深色 / 浅色），每块三张截图并排，手机档应能看到完整内容、"
+        "不应出现需要左右拖动才能看全的区块。每块标题右侧的 "
+        "<code>data-theme</code> / <code>body-bg</code> / <code>HTTP</code> "
+        "是「这一块确实是这个主题、这个页面确实是 200」的证据 —— "
+        "若深浅两块的 <code>body-bg</code> 完全相同，说明主题没切过去，截图不可信。"
         "下方表格列出 <b>横向溢出元素</b>（元素内容宽度 &gt; 可见宽度，"
         "且自身不是合法的横向滚动容器）——这些就是手机上「只能看到一小部分」的元凶。"
         "已排除 <code>overflow-x:auto/scroll</code> 的表格容器（那是刻意允许横向滚动的）。</div>",
     ]
 
     for r in results:
-        worst = 0
-        for lbl in order:
-            d = r["data"].get(lbl) or {}
-            worst = max(worst, int(d.get("pageOverflow") or 0))
-        cls = "b-ok" if worst <= 1 else "b-bad"
-        txt = "无页面级溢出" if worst <= 1 else f"页面级溢出 {worst}px"
+        themes = list(r["data"])
+        worst_all = 0
+        for t in themes:
+            for lbl in order:
+                d = r["data"][t].get(lbl) or {}
+                worst_all = max(worst_all, int(d.get("pageOverflow") or 0))
+        cls = "b-ok" if worst_all <= 1 else "b-bad"
+        txt = "无页面级溢出" if worst_all <= 1 else f"页面级溢出 {worst_all}px"
         parts.append(f"<div class='page'><div class='page-head'>"
                      f"<span class='path'>{r['path']}</span>"
                      f"<span class='badge {cls}'>{txt}</span></div>")
 
-        # 截图
-        parts.append("<div class='grid'>")
-        for lbl in order:
-            if lbl not in r["shots"]:
-                continue
-            w = h = ""
-            for L, W, H, _ in VIEWPORTS:
-                if L == lbl:
-                    w, h = W, H
-            dims = {"mobile": "iPhone 12", "tablet": "iPad", "desktop": "Desktop"}[lbl]
-            parts.append(
-                f"<div class='vp'><div class='vp-head'>"
-                f"<span class='vp-name'>{dims}</span>"
-                f"<span class='vp-dim'>{w}×{h}</span></div>"
-                f"<a href='{r['shots'][lbl]}' target='_blank'>"
-                f"<img src='{r['shots'][lbl]}' loading='lazy'></a></div>"
-            )
-        parts.append("</div>")
-
-        # 溢出表
-        rows = []
-        for lbl in order:
-            d = r["data"].get(lbl)
-            if not d:
-                continue
-            if "error" in d:
-                rows.append(f"<tr><td colspan='5'><div class='err'>"
-                            f"[{lbl}] {d['error']}</div></td></tr>")
-                continue
-            for it in d.get("overflow", []):
-                rows.append(
-                    f"<tr><td>{lbl}</td>"
-                    f"<td class='sel'>{it['sel']}</td>"
-                    f"<td class='num'>{it['scrollWidth']}</td>"
-                    f"<td class='num'>{it['clientWidth']}</td>"
-                    f"<td class='num' style='color:var(--bad)'>+{it['over']}</td></tr>"
-                )
-        if rows:
-            parts.append("<div class='ov'><div class='ov-title'>横向溢出元素（超出量降序）</div>"
-                         "<table><thead><tr><th>视口</th><th>元素</th>"
-                         "<th style='text-align:right'>内容宽</th>"
-                         "<th style='text-align:right'>可见宽</th>"
-                         "<th style='text-align:right'>超出</th></tr></thead>"
-                         f"<tbody>{''.join(rows)}</tbody></table></div>")
-        else:
-            parts.append("<div class='ov'><div class='ov-title'>"
-                         "横向溢出元素：无 ✔</div></div>")
-
-        # 测量值
-        kv = []
-        for lbl in order:
-            d = r["data"].get(lbl) or {}
-            if "error" in d:
-                continue
-            kv.append(f"<span>{lbl}: docScroll=<b>{d.get('docScrollWidth')}</b> "
-                      f"innerWidth=<b>{d.get('innerWidth')}</b> "
-                      f"基准=<b>{d.get('targetVW')}</b></span>")
-        if kv:
-            parts.append(f"<div class='kv'>{''.join(kv)}</div>")
+        # 每个主题一块：截图并排 + 溢出表 + 测量值（深/浅各一份）
+        for theme in themes:
+            parts.append(_theme_html(r, theme, order))
 
         parts.append("</div>")
 
@@ -334,9 +426,12 @@ def render(results, outdir: Path, generated: str) -> Path:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--paths", nargs="*", default=DEFAULT_PATHS)
+    ap.add_argument("--paths", nargs="*", default=DEFAULT_PATHS,
+                    help="要评审的路径（默认覆盖每一种页面模板）")
     ap.add_argument("--widths", nargs="*", type=int, default=None,
                     help="只跑指定宽度，如 --widths 390 768")
+    ap.add_argument("--themes", nargs="*", default=list(THEMES), choices=list(THEMES),
+                    help="只跑指定主题，如 --themes light（默认深色+浅色）")
     ap.add_argument("--no-fullpage", action="store_true",
                     help="只截首屏（默认整页长截图）")
     ap.add_argument("--out", default=str(ROOT / ".workbuddy" / "preview"))
@@ -354,7 +449,7 @@ def main():
         from playwright.sync_api import sync_playwright
         with sync_playwright() as pw:
             results = run(pw, base, args.paths, set(args.widths or []),
-                          not args.no_fullpage, outdir)
+                          not args.no_fullpage, outdir, tuple(args.themes))
     finally:
         srv.terminate()
         try:
@@ -364,19 +459,40 @@ def main():
 
     report = render(results, outdir, dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     print(f"[report] {report}")
-    # 打印摘要
+
+    # 摘要 + 问题汇总。评审脚本最容易骗人的方式就是"静默失败"：
+    # 404 也照样截图、主题没生效就是两张一模一样的图。所以这里把
+    # HTTP 状态 / 实际 data-theme / 页面背景色都打出来，并对任何异常返回非零码。
+    problems = []
     for r in results:
-        for lbl in ("mobile", "tablet", "desktop"):
-            d = r["data"].get(lbl) or {}
-            if not d:
-                continue
-            if "error" in d:
-                print(f"  {r['path']:28s} [{lbl:7s}] ERROR {d['error'][:160]}")
-            else:
-                print(f"  {r['path']:28s} [{lbl:7s}] "
+        for theme, block in r["data"].items():
+            for lbl, d in block.items():
+                where = f"{r['path']} [{theme}/{lbl}]"
+                if not d or "error" in d:
+                    print(f"  {where:46s} ERROR {(d or {}).get('error', 'no data')[:140]}")
+                    problems.append(f"{where} 渲染失败")
+                    continue
+                print(f"  {where:46s} HTTP={d.get('httpStatus')} "
+                      f"theme={d.get('theme')} bg={d.get('bodyBg')} "
                       f"docScroll={d.get('docScrollWidth')} 基准={d.get('targetVW')} "
                       f"溢出={d.get('pageOverflow')} 元素数={len(d.get('overflow', []))}")
+                if d.get("httpStatus") != 200:
+                    problems.append(f"{where} HTTP {d.get('httpStatus')}")
+                if d.get("theme") != theme:
+                    problems.append(f"{where} 主题未生效 data-theme={d.get('theme')}")
+
+    if problems:
+        print(f"\n[FAIL] {len(problems)} 个问题：")
+        for p in problems[:40]:
+            print(f"  - {p}")
+        print("[tips] 页面非 200 → 检查 URL 与视图；主题未生效 → "
+              "确认 base.html 仍从 localStorage['theme'] 读取主题")
+        return 1
+    print(f"\n[OK] {len(results)} 个页面 × {len(args.themes)} 个主题 = "
+          f"{sum(len(b) for r in results for b in r['data'].values())} 张截图，"
+          "全部 HTTP 200 且主题已生效")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

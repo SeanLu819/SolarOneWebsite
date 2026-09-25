@@ -7,7 +7,7 @@
       "category": "AREA_SITE",
       "description": "Truly modular design — scalable from a single 1M (80W) module up to 16M (1280W) or beyond. Flexible combination configurations to precisely match any project requirement.",
       "power": "80~1280W+",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "",
       "beam_angle": "",
       "protection": "",
@@ -19,6 +19,7 @@
       "cert_image": "",
       "order": 1,
       "is_active": true,
+      "page_layout": "overview",
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -60,7 +61,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         }
       ],
       "energy_data": [],
@@ -72,9 +73,9 @@
       "name": "RT410 Series",
       "slug": "rt410-series",
       "category": "AREA_SITE",
-      "description": "Professional LED floodlights for sports fields, arenas, and large-area lighting. Replaces 400–1,000 W HID with flicker-free, broadcast-grade output.",
+      "description": "Olympic-grade, HDTV-ready sports lighting. Cost-effective for pro to semi-pro venues. Replaces 400-1000W HID at 20-50ft, maintenance-free with superior comfort and max output.",
       "power": "260W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "",
       "beam_angle": "18~100°",
       "protection": "",
@@ -86,6 +87,7 @@
       "cert_image": "",
       "order": 2,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -127,7 +129,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -222,6 +224,84 @@
       ]
     },
     {
+      "pk": 24,
+      "name": "RGB / RGBW",
+      "slug": "rgb-rgbw",
+      "category": "AREA_SITE",
+      "description": "Any Color from anywhere, anytime, at your convenience! FL9M-RGBW-600W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/rgb-rgbw/rgbw-9m-w.webp",
+      "banner_image": "images/products/rgb-rgbw/rgbw-bar-01.webp",
+      "dimension_image": "",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "cert_image": "",
+      "order": 3,
+      "is_active": true,
+      "page_layout": "overview",
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/rgb-rgbw/rgbw-9m-r.webp",
+        "images/products/rgb-rgbw/rgbw-9m-g.webp",
+        "images/products/rgb-rgbw/rgbw-9m-b.webp",
+        "images/products/rgb-rgbw/rgbw-9m-w.webp"
+      ],
+      "specs": [],
+      "energy_data": [],
+      "model_number": "",
+      "ordering_info": []
+    },
+    {
+      "pk": 25,
+      "name": "Accessory",
+      "slug": "accessory",
+      "category": "ACCESSORY",
+      "description": "Glare Shield for RT410",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/accessory/rt410-glare-shield-01.webp",
+      "banner_image": "images/products/accessory/glare-shield-rt410-bar-03.webp",
+      "dimension_image": "",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "cert_image": "",
+      "order": 4,
+      "is_active": true,
+      "page_layout": "overview",
+      "parent_slug": "",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/accessory/rt410-glare-shield-01.webp",
+        "images/products/accessory/rt410-glare-shield-02.webp",
+        "images/products/accessory/rt410-glare-shield-03.webp",
+        "images/products/accessory/rt410-glare-shield-04.webp"
+      ],
+      "specs": [],
+      "energy_data": [],
+      "model_number": "",
+      "ordering_info": []
+    },
+    {
       "pk": 5,
       "name": "FL1M",
       "slug": "fl1m",
@@ -240,6 +320,7 @@
       "cert_image": "",
       "order": 11,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -261,7 +342,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -362,7 +443,7 @@
       "category": "AREA_SITE",
       "description": "FL4M modular floodlight configuration — part of the M Series family.",
       "power": "320W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
@@ -374,6 +455,7 @@
       "cert_image": "",
       "order": 12,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {
@@ -405,7 +487,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -514,7 +596,7 @@
       "category": "AREA_SITE",
       "description": "FL6M modular floodlight configuration — part of the M Series family.",
       "power": "480W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
@@ -526,6 +608,7 @@
       "cert_image": "",
       "order": 13,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -547,7 +630,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -648,7 +731,7 @@
       "category": "AREA_SITE",
       "description": "FL9M modular floodlight configuration — part of the M Series family.",
       "power": "630W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
@@ -660,6 +743,7 @@
       "cert_image": "",
       "order": 14,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -681,7 +765,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -782,7 +866,7 @@
       "category": "AREA_SITE",
       "description": "FL12M modular floodlight configuration — part of the M Series family.",
       "power": "1000W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
@@ -794,6 +878,7 @@
       "cert_image": "",
       "order": 15,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -815,7 +900,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -916,7 +1001,7 @@
       "category": "AREA_SITE",
       "description": "FL16M modular floodlight configuration — part of the M Series family.",
       "power": "1280W",
-      "efficacy": "125lm/W",
+      "efficacy": "130lm/W",
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
@@ -928,6 +1013,7 @@
       "cert_image": "",
       "order": 16,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {},
@@ -949,7 +1035,7 @@
         },
         {
           "label": "Efficacy",
-          "value": "125lm/W"
+          "value": "130lm/W"
         },
         {
           "label": "Output",
@@ -1059,10 +1145,11 @@
       "dimension_image": "images/products/fl9m-rgbw/fl9m-3d-view.webp",
       "beam_angle_image": "images/products/fl9m-rgbw/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/fl9m-rgbw/cert-3.webp",
+      "cert_image": "images/products/fl9m-rgbw/rgbw-interface-0-10v-dali-dmx-certification-ip66-ik08.webp",
       "order": 17,
       "is_active": true,
-      "parent_slug": "m-series",
+      "page_layout": "detail",
+      "parent_slug": "rgb-rgbw",
       "translations": {
         "fr": {},
         "es": {},
@@ -1171,7 +1258,8 @@
       "cert_image": "",
       "order": 19,
       "is_active": true,
-      "parent_slug": "",
+      "page_layout": "detail",
+      "parent_slug": "accessory",
       "translations": {
         "fr": {},
         "es": {},
@@ -1209,6 +1297,7 @@
       "cert_image": "",
       "order": 21,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -1247,7 +1336,7 @@
       "energy_data": [
         {
           "label": "Series Name",
-          "value": "VSP-XXXXW-9M-YP (AC Enclosure))"
+          "value": "VSP-XXXXW-9M-YP"
         },
         {
           "label": "System Wattage",
@@ -1330,6 +1419,7 @@
       "cert_image": "",
       "order": 22,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {
@@ -1368,7 +1458,7 @@
       "energy_data": [
         {
           "label": "Series Name",
-          "value": "VSP-XXXXW-12M-YP (LED Driver Enclosure)"
+          "value": "VSP-XXXXW-12M-YP"
         },
         {
           "label": "System Wattage",
@@ -1448,9 +1538,10 @@
       "dimension_image": "images/products/rt590fl-s/tr590-3d-view.webp",
       "beam_angle_image": "images/products/rt590fl-s/beamangle-3050120.webp",
       "ordering_image": "",
-      "cert_image": "images/products/rt590fl-s/cert-3.webp",
+      "cert_image": "images/products/rt590fl-s/rt590fl-s-flood-light-certifications.webp",
       "order": 31,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1567,6 +1658,7 @@
       "cert_image": "",
       "order": 32,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1679,6 +1771,7 @@
       "cert_image": "",
       "order": 42,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1787,6 +1880,7 @@
       "cert_image": "",
       "order": 43,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -1899,6 +1993,7 @@
       "cert_image": "",
       "order": 44,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2011,6 +2106,7 @@
       "cert_image": "",
       "order": 45,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2105,6 +2201,102 @@
       ]
     },
     {
+      "pk": 26,
+      "name": "RT410-RGBW",
+      "slug": "rt410-rgbw",
+      "category": "AREA_SITE",
+      "description": "RT410-RGBW",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/rt410-rgbw/rgbw-rt410-red.webp",
+      "banner_image": "images/products/rt410-rgbw/rgbw-rt410-banner-01.webp",
+      "dimension_image": "images/products/rt410-rgbw/rt410-3d-view.webp",
+      "beam_angle_image": "images/products/rt410-rgbw/beamangle183050100.webp",
+      "ordering_image": "",
+      "cert_image": "images/products/rt410-rgbw/rgbw-interface-0-10v-dali-dmx-certification-ip66-ik08.webp",
+      "order": 50,
+      "is_active": true,
+      "page_layout": "detail",
+      "parent_slug": "rgb-rgbw",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/rt410-rgbw/rgbw-rt410-red.webp",
+        "images/products/rt410-rgbw/rgbw-rt410-green.webp",
+        "images/products/rt410-rgbw/rgbw-rt410-blue.webp",
+        "images/products/rt410-rgbw/rgbw-rt410-white.webp"
+      ],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Series Name",
+          "value": "FL1M-80W"
+        },
+        {
+          "label": "Lumen Output",
+          "value": ">10,400lm"
+        },
+        {
+          "label": "System Wattage",
+          "value": "80W"
+        },
+        {
+          "label": "CRI",
+          "value": "70-95"
+        },
+        {
+          "label": "Input Voltage (High Voltage)",
+          "value": "347-480VAC"
+        },
+        {
+          "label": "Input Voltage (Low Voltage)",
+          "value": "110-277VAC"
+        },
+        {
+          "label": "L70 Hours",
+          "value": ">100,000 at 25°C"
+        },
+        {
+          "label": "Operating Temperature Range",
+          "value": "-40°C to 55°C"
+        },
+        {
+          "label": "Surge (Common Mode / Differential Mode)",
+          "value": "10kV"
+        },
+        {
+          "label": "IP Rating",
+          "value": "IP66"
+        },
+        {
+          "label": "Effective Projected Area (EPA) at 90°",
+          "value": "0.26 (sq. ft.)"
+        },
+        {
+          "label": "Approximate Weight",
+          "value": "2.3 kgs( 5.2 lbs)"
+        },
+        {
+          "label": "Material",
+          "value": "Aluminum / Glass"
+        },
+        {
+          "label": "LED Driver",
+          "value": "Inventronics Or Equal"
+        }
+      ],
+      "model_number": "FL1M-80W",
+      "ordering_info": []
+    },
+    {
       "pk": 14,
       "name": "RT600SL-T",
       "slug": "rt600sl-t",
@@ -2123,6 +2315,7 @@
       "cert_image": "",
       "order": 51,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2234,6 +2427,7 @@
       "cert_image": "",
       "order": 52,
       "is_active": true,
+      "page_layout": "detail",
       "parent_slug": "",
       "translations": {
         "fr": {},
@@ -2335,7 +2529,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "FOOTBALL_FIELD",
       "description": "【Customer Profile】\r\nBohemia Manor High School, a public institution situated in Cecil County, MD.\r\n\r\n【Scope of Work】\r\nThe \"Bo Manor\" field suffered from an outdated, under-lit, and high-maintenance lighting system. Additionally, project parameters required seamless integration with the pre-existing pole structures.\r\n\r\n【The Solution】\r\nWe conducted a comprehensive photometric design to ensure all technical requirements were met. The final retrofit replaced 40 existing 1500W metal halide units with 48 of our FL9M 630W LED performance sports lights, delivering superior illumination and efficiency",
-      "results": "<strong>30fc</strong> average illuminance, <strong>uniformity 1.37:1</strong> — exceeding the project requirements.",
+      "results": "30fc average illuminance, uniformity 1.37:1 — exceeding the project requirements.",
       "image": "images/projects/football-field-led-retrofit/bmhs-football-field-02.webp",
       "order": 1,
       "translations": {
@@ -2414,7 +2608,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "BASEBALL_FIELD",
       "description": "【Customer Profile】\r\nCarroll County Sports Complex is a premier community athletic facility dedicated exclusively to baseball. The complex serves as a vital training and competition hub for surrounding elementary and middle schools, as well as local youth leagues and regional tournaments.\r\n\r\n【Scope of Work】\r\nThe five baseball fields were previously equipped with outdated, high-maintenance lighting fixtures that suffered from uneven illumination and frequent bulb replacements. The facility management sought a modernized lighting upgrade that would deliver superior, glare-free visibility for fast-moving baseballs, while significantly reducing energy consumption and long-term maintenance costs for the school district.\r\n\r\n【The Solution】\r\nA total of 150 FL9M-630W Performance Series LED sports lights featuring remote-mount drivers were installed to ensure optimal thermal management and extended lifespan. Additionally, an advanced networked control system was integrated to enable seamless remote on/off operation and real-time power monitoring, streamlining facility management and maximizing operational efficiency.",
-      "results": "<strong>50/30fc</strong> average illuminance, <strong>uniformity 2.0:1 / 2.5:1</strong> — meeting the project specifications.",
+      "results": "50/30fc average illuminance, uniformity 2.0:1 / 2.5:1 — meeting the project specifications.",
       "image": "images/projects/baseball-field-led-retrofit/ccsc-baseball-720p-01.webp",
       "order": 5,
       "translations": {
@@ -2466,7 +2660,7 @@
       "venue_type": "OUTDOOR",
       "sport_type": "TENNIS_COURTS",
       "description": "【Customer Profile】\r\nMorgan State University is Maryland’s premier public urban research university, renowned for its academic excellence and impactful community engagement.\r\n\r\n【Scope of Work】\r\nThe university sought to upgrade its athletic and campus lighting to enhance nighttime safety and support student-athletes. The project required a high-performance solution that met NCAA standards while aligning with the institution's sustainability goals.\r\n\r\n【The Solution】\r\nA customized LED lighting system was deployed across key venues, featuring precision photometric aiming for uniform, glare-free illumination. An integrated smart control platform was installed to enable remote scheduling and real-time energy monitoring, streamlining facility management and reducing operational costs.",
-      "results": "<strong>over 80fc</strong> average illuminance, <strong>uniformity 1.67:1</strong>",
+      "results": "over 80fc average illuminance, uniformity 1.67:1",
       "image": "images/projects/morgan-state-university-tennis-courts/msu-tennis-01.webp",
       "order": 7,
       "translations": {
@@ -2560,7 +2754,7 @@
       "venue_type": "INDOOR",
       "sport_type": "MULTI_SPORT",
       "description": "【Customer Profile】\r\nLocated in Roanne, France, Halle André Vacheresse is a premier indoor arena serving as the home of Chorale Roanne Basket and a host venue for the Tennis Fed Cup.\r\n\r\n【Scope of Work】\r\nThe project entailed a one-for-one upgrade of legacy 1500W metal halide fixtures. To accommodate diverse events like basketball and tennis, the gymnasium required a versatile lighting system. Premium LED lighting was chosen to dramatically elevate the athlete experience, providing high-lumen, glare-free illumination essential for tracking fast-moving action and executing precise shots.\r\n\r\n【The Solution】\r\nThrough rigorous photometric modeling, we optimized glare control and established exact aiming coordinates for every fixture. The SolarOne Vision Smart FL9M-720W lights were effortlessly integrated via our one-for-one retrofit plan. Our LED solution outperforms legacy metal halides by delivering exceptional uniformity in the air and on the court, achieving an outstanding average uniformity of 82%.",
-      "results": "<strong>&gt;2000 lux</strong> — meeting HD broadcast standards.",
+      "results": "over 2000 lux — meeting HD broadcast standards.",
       "image": "images/projects/multi-sport-arena-hd-broadcast/basketball.webp",
       "order": 10,
       "translations": {
@@ -2854,7 +3048,7 @@
       "sport_type": "KARTING",
       "description": "Red 1 Karting Beijing is a well-known indoor and outdoor comprehensive karting operator in Beijing, featuring China's first CIK-FIA certified international professional karting track.",
       "results": "",
-      "image": "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
+      "image": "images/projects/red-1-karting-beijing/red1-karting-01.webp",
       "order": 29,
       "translations": {
         "fr": {},
@@ -3105,9 +3299,9 @@
     "meta_title": "SolarOne — Precision LED Lighting Systems",
     "meta_description": "Professional LED sports lighting, high bay, and modular luminaire solutions. Engineered in Beijing since 2007, trusted in 50+ countries worldwide.",
     "og_image": "",
-    "font_family_body": "'Inter', 'Helvetica Neue', Arial, sans-serif",
-    "font_family_heading": "'Inter', 'Helvetica Neue', Arial, sans-serif",
-    "font_size_base": "16px",
+    "font_family_body": "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', Roboto, sans-serif",
+    "font_family_heading": "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', Roboto, sans-serif",
+    "font_size_base": "17px",
     "font_size_nav": "17px",
     "font_size_hero_title": "3.5rem",
     "font_size_hero_subtitle": "1.15rem",

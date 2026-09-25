@@ -20,6 +20,8 @@ import sys
 from django import forms
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
+from django.db.models import Case, IntegerField, Value, When
 from django.utils.html import mark_safe
 
 from .mixins import CacheClearMixin, admin_image_preview
@@ -50,17 +52,84 @@ class ProductAdminForm(forms.ModelForm):
         }
 
 
+def _sidebar_rank_map():
+    """slug -> (rank, breadcrumb labels) mirroring the PUBLIC products sidebar.
+
+    The single source of truth is ``pages.views.i18n._get_products_sidebar('en')``,
+    so the admin changelist shows the same category → series → subseries grouping,
+    order and parent/child relationships the front-end sidebar renders. Cached at
+    module level (sidebar data is static); a sidebar failure must never break the
+    admin, so any exception yields an empty map (everything falls back to plain
+    ``order``-based ordering).
+    """
+    global _SIDEBAR_RANK_MAP_CACHE
+    if _SIDEBAR_RANK_MAP_CACHE is not None:
+        return _SIDEBAR_RANK_MAP_CACHE
+    result = {}
+    try:
+        from pages.views.i18n import _get_products_sidebar
+        sidebar = _get_products_sidebar('en')
+        rank = 0
+        for cat in sidebar:
+            for s in cat.get('series', []):
+                result[s['slug']] = (rank, [cat.get('label', ''), s.get('label', '')])
+                rank += 1
+                for sub in s.get('subseries', []):
+                    result[sub['slug']] = (
+                        rank, [cat.get('label', ''), s.get('label', ''), sub.get('label', '')])
+                    rank += 1
+    except Exception:
+        result = {}
+    _SIDEBAR_RANK_MAP_CACHE = result
+    return result
+
+
+_SIDEBAR_RANK_MAP_CACHE = None
+
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
     fields = ('image', 'alt_text', 'order')
 
 
+
+class SidebarOrderedChangeList(ChangeList):
+    """ChangeList that sorts rows in public-sidebar traversal order.
+
+    The ordering must live here — NOT in ``ProductAdmin.get_ordering()`` —
+    because that method is also consumed by related-field list filters
+    (``RelatedFieldListFilter.field_choices`` → ``field.get_choices(ordering=...)``)
+    whose own queryset has no ``_sidebar_rank`` annotation (FieldError).
+
+    This override hooks ``ChangeList.get_ordering(request, queryset)`` — the
+    Django ≥4 hook that runs inside ``ChangeList.get_queryset`` *after* the
+    annotated ``root_queryset`` (from ``ProductAdmin.get_queryset``) has been
+    filtered, so ``_sidebar_rank`` always exists here.
+
+    Explicit column sorting (``?o=...``) still wins over the sidebar default.
+    """
+
+    def get_ordering(self, request, queryset):
+        ordering = super().get_ordering(request, queryset)
+        # Explicit column sort (?o=...) → respect the user's choice.
+        if self.params.get('o'):
+            return ordering
+        # Sidebar order only when the annotation actually exists on THIS
+        # queryset (it always does here — root_queryset comes annotated from
+        # ProductAdmin.get_queryset — but stay defensive).
+        if '_sidebar_rank' in getattr(queryset.query, 'annotations', {}):
+            ordering = ['_sidebar_rank'] + [
+                f for f in ordering if f not in ('_sidebar_rank', 'pk', '-pk')
+            ] + ['pk']
+        return ordering
+
 @admin.register(Product)
 class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     form = ProductAdminForm
-    list_display = ('image_preview', 'name', 'category', 'parent', 'order', 'is_active')
-    list_filter = ('category', 'parent')
+    list_display = ('image_preview', 'name', 'sidebar_tree', 'category', 'parent',
+                    'page_layout', 'order', 'is_active')
+    list_filter = ('category', 'parent', 'page_layout')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ['order']
     search_fields = ['name', 'category', 'description']
@@ -86,39 +155,90 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             return mark_safe('<span style="color:#28a745;font-weight:bold;">PAGE</span>')
         return mark_safe('<span style="color:#999;">detail</span>')
     is_active.short_description = 'Products Page'
+
+    def sidebar_tree(self, obj):
+        """Breadcrumb mirroring the public sidebar: Category ▸ Series ▸ Model."""
+        entry = _sidebar_rank_map().get(obj.slug)
+        if not entry:
+            return mark_safe('<span style="color:#999;">— outside sidebar</span>')
+        _, crumbs = entry
+        parts = []
+        for i, crumb in enumerate(crumbs):
+            if i == 0:
+                parts.append(f'<span style="color:#666;">{crumb}</span>')
+            elif i == len(crumbs) - 1:
+                parts.append(f'<strong>{crumb}</strong>')
+            else:
+                parts.append(crumb)
+        return mark_safe(' ▸ '.join(parts))
+    sidebar_tree.short_description = 'Sidebar Position'
+
+    def get_queryset(self, request):
+        """Annotate the sidebar traversal rank (see SidebarOrderedChangeList).
+
+        NOTE: no ordering is applied here. Django's ``ModelAdmin.get_queryset``
+        and the related-field list filters both call ``get_ordering()`` inside
+        their own querysets — an annotation-based ordering there raises
+        FieldError (``_sidebar_rank`` only exists on the changelist queryset).
+        The actual ordering lives in ``SidebarOrderedChangeList.order_queryset``.
+        """
+        qs = super().get_queryset(request)
+        rank_map = _sidebar_rank_map()
+        if not rank_map:
+            return qs
+        fallback_rank = max(rank for rank, _ in rank_map.values()) + 1
+        whens = [When(slug=slug, then=Value(rank)) for slug, (rank, _) in rank_map.items()]
+        return qs.annotate(_sidebar_rank=Case(*whens, default=Value(fallback_rank),
+                                              output_field=IntegerField()))
+
+    def get_changelist(self, request, **kwargs):
+        return SidebarOrderedChangeList
+
     fieldsets = (
         (None, {
-            'fields': (('name', 'slug'), 'category', 'parent', 'order')
+            'fields': (('name', 'slug'), 'category', 'parent', 'page_layout', 'order'),
+            'description': 'Page template：系列首页 = 只展示 banner / 主图轮播 / 文字说明'
+                           '（无光束角、尺寸图、参数表），用做大系列落地页；'
+                           '产品详细页 = 展示全部技术参数。默认「产品详细页」。'
+                           '选择「系列首页」后，仅详细页使用的表单区块（尺寸/光束角图、Energy 表等）会自动隐藏，数据保留不会删除。'
         }),
         ('Content', {
             # Put translations on its own row so it can span full width
             'fields': ('description', 'translations')
         }),
         ('Images', {
-            'fields': ('image', 'banner_image', 'dimension_image', 'beam_angle_image', 'ordering_image', 'cert_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。尺寸图请使用"Dimension image"字段，配光曲线请使用"Beam angle image"字段，不要在轮播图中重复上传。Ordering image 为订购信息示意图。Cert image 为产品认证标识图，留空则使用通用默认认证图。'
+            # ordering_image / cert_image are ALSO used by the overview template
+            # (free-form copy slot + certification badges), so they live here.
+            'fields': ('image', 'banner_image', 'ordering_image', 'cert_image'),
+            'description': '上传图片时请参考字段下方的尺寸提示。Ordering image 为订购信息示意图（两种模板都显示）。Cert image 为产品认证标识图，留空则使用通用默认认证图。'
+        }),
+        ('Detail-page images (仅在「产品详细页」显示)', {
+            'classes': ('detail-only',),
+            'fields': ('dimension_image', 'beam_angle_image'),
+            'description': '尺寸图请使用"Dimension image"字段，配光曲线请使用"Beam angle image"字段，不要在轮播图中重复上传。这两个图只在产品详细页（product_detail）渲染，系列首页不显示。'
         }),
         ('Specs (flexible — up to 6, 4 columns × 3 rows)', {
             'fields': ('specs',),
             'description': '每个参数包含 label（名称）和 value（数值）。最多 6 组，每行 2 组（4 列），共 3 行，与前台显示一致。'
         }),
-        ('Energy & Performance Data (17 standard parameters)', {
+        ('Energy & Performance Data (17 standard parameters — 仅「产品详细页」)', {
+            'classes': ('detail-only',),
             'fields': ('energy_data',),
-            'description': '详情页 ENERGY AND PERFORMANCE DATA 表格的 17 个标准参数。填写 value（值）即可，留空的行不会显示。'
+            'description': '详情页 ENERGY AND PERFORMANCE DATA 表格的 17 个标准参数。填写 value（值）即可，留空的行不会显示。选为「系列首页」时本区块自动隐藏，数据保留、不会删除。'
         }),
-        ('Ordering Information (订购信息表格)', {
+        ('Ordering Information (订购信息 — 两种模板)', {
             'fields': ('model_number', 'ordering_info'),
-            'description': 'Model Number 为该产品的型号标识（如 FL1M-80W-30K-S）。下方表格共 9 列，每列可输入多行（换行分隔），大量数据可在产品间复用，只需修改对应列的值即可。留空则整列不显示。'
+            'description': 'Model Number 为该产品的型号标识（如 FL1M-80W-30K-S），也用于页面的 JSON-LD。下方表格共 9 列，每列可输入多行（换行分隔）。产品详细页按 9 列表格渲染；系列首页则把每列内容平铺为文字行，与 Ordering image 一起构成图文区块。留空则整列不显示。'
         }),
-        ('Legacy specs (read-only, will be migrated to Specs above)', {
+        ('Legacy specs (read-only — 仅「产品详细页」)', {
             'fields': (('power', 'efficacy'), ('output', 'beam_angle', 'protection')),
-            'classes': ('collapse',),
+            'classes': ('collapse', 'detail-only'),
         }),
     )
 
     class Media:
         css = {'all': ('admin/css/admin_overrides.css',)}
-        js = ('admin/js/auto_translate.js',)
+        js = ('admin/js/auto_translate.js', 'admin/js/page_layout_toggle.js')
 
     def _sync_product_images(self, obj):
         slug = obj.slug

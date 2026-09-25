@@ -9,15 +9,14 @@ Behaviour is driven by DATA, not by a per-page copy of this script:
 So all three pages share this file verbatim.
 
 Two divergences in the copies this replaces were dead code and are dropped here:
-  * `product_series.html` defined a `restartAuto()` that was never called;
+  * the old product series page defined a `restartAuto()` that was never called;
   * the `|| 3000` / `|| 4000` fallback could never fire, because every page sets
     `data-interval` explicitly (3000 / 3000 / 4000 respectively).
 
-NOTE: `product_series.html` is currently NOT rendered by any view — the
-`product_series` URL calls the `product_detail` view, which renders
-`product_detail.html`. The file is kept (and kept in sync with this include) as
-a legacy template, and several tests/E2E checks read it as source text. See the
-audit's A9 notes before removing it.
+NOTE: the legacy `/products/series/<slug>/` URL now 301-redirects to
+`/products/<slug>/` — the `product_series` view delegates to `product_detail`,
+which renders `product_detail.html`. The old `product_series.html` template has
+been deleted; do not reintroduce a per-page copy of this script.
 
 The `nonce` attribute must stay on the <script> tag itself for CSP.
 {% endcomment %}

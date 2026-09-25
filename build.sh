@@ -54,14 +54,18 @@ echo "=== [build.sh] Regenerating seed_data.py from seed_data.json ==="
 python -m pages.seed_sync --json 2>&1
 
 # 2. Run Django collectstatic -> outputs to ./staticfiles per STATIC_ROOT
+#    FAIL CLOSED (P3-1): collectstatic 产出 staticfiles.json（原名 → 哈希名），
+#    生产用 BundledManifestStaticFilesStorage，运行期只认这份映射。它缺失时
+#    {% static %} 只能退回未哈希 URL，而 public/static/ 里只有哈希文件名
+#    → 全站资源 404。所以这里**不能**沿用旧的「WARNING 后继续」语义。
 echo "=== [build.sh] Running collectstatic ==="
-python manage.py collectstatic --noinput 2>&1
-COLLECTSTATIC_EXIT=$?
-echo "  collectstatic exit code: $COLLECTSTATIC_EXIT"
-
-if [ $COLLECTSTATIC_EXIT -ne 0 ]; then
-    echo "  WARNING: collectstatic failed with exit code $COLLECTSTATIC_EXIT"
+if ! python manage.py collectstatic --noinput 2>&1; then
+    echo "  ERROR: collectstatic failed — aborting the build."
+    echo "         Without staticfiles.json the hashed public/static/ assets"
+    echo "         would be unreachable from every page (HTTP 404)."
+    exit 1
 fi
+echo "  ✓ collectstatic OK"
 
 # 2.3. Protected migrate — only when a REAL external DB is configured.
 # In the stateless seed mode DATABASE_URL is empty or points at /tmp/ (Vercel
@@ -101,7 +105,14 @@ echo "=== [build.sh] collectstatic done ==="
 # travel as bundled Python source — see pages/storage.py.
 # git-ignored, rebuilt on every deploy.
 echo "=== [build.sh] Generating static index (pages/static_index_data.py) ==="
-python -m pages.static_index --root staticfiles --out pages/static_index_data.py 2>&1
+# --require-manifest = 严格模式（fail closed）：staticfiles.json 缺失或没有 paths
+# 时以退出码 2 结束 → 构建立即失败。CI 走的是 `--root static` 的宽松模式，不受影响。
+if ! python -m pages.static_index --root staticfiles --out pages/static_index_data.py --require-manifest 2>&1; then
+    echo "  ERROR: static index generation failed — aborting the build."
+    echo "         Runtime image/CSS resolution and hashed static URLs depend on it."
+    exit 1
+fi
+echo "  ✓ pages/static_index_data.py generated"
 
 # 3. Mirror staticfiles/* into public/static/*  (Vercel CDN auto-deploys public/)
 echo "=== [build.sh] Creating public/ directory for Vercel CDN ==="

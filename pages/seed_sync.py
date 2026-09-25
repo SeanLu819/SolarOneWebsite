@@ -198,6 +198,7 @@ def _product_to_dict(product):
         'cert_image': resolved_images['cert_image'],
         'order': product.order,
         'is_active': product.is_active,
+        'page_layout': product.page_layout,
         'parent_slug': product.parent.slug if product.parent else '',
         'translations': product.translations if isinstance(product.translations, dict) else {},
         'gallery': gallery,

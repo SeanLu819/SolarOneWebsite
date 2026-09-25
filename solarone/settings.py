@@ -71,6 +71,7 @@ if not SECRET_KEY:
 # On Vercel, DEBUG is force-disabled regardless of env var.
 DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'False').lower() == 'true'
 
+
 # Fixed origin for canonical/SEO URLs (#17): canonical link, hreflang,
 # og:url, JSON-LD, sitemap.xml and robots.txt must NOT depend on the
 # request Host — otherwise any *.vercel.app preview URL (or a spoofed
@@ -79,6 +80,13 @@ DEBUG = not IS_VERCEL and os.environ.get('DEBUG', 'False').lower() == 'true'
 CANONICAL_ORIGIN = os.environ.get(
     'CANONICAL_ORIGIN', 'https://www.solaronelighting.com'
 ).rstrip('/')
+
+# ============ WEB ANALYTICS (M2 / SEO P1c) ============
+# GA4 Measurement ID (e.g. 'G-XXXXXXXXXX'). Empty = analytics disabled (no
+# third-party request is made). Set via env (Vercel: GA4_MEASUREMENT_ID).
+GA4_MEASUREMENT_ID = os.environ.get('GA4_MEASUREMENT_ID', '')
+# Google Search Console verification meta tag content (from GSC). Empty = omit.
+GSC_VERIFICATION_CODE = os.environ.get('GSC_VERIFICATION_CODE', '')
 
 # #4 (v1.6.1): tighten ALLOWED_HOSTS — drop the bare `.vercel.app` wildcard that
 # let ANY *.vercel.app host (incl. attacker-controlled) be accepted, an SEO/canonical
@@ -158,11 +166,11 @@ if IS_VERCEL:
 # SecurityMiddleware below.
 CONTENT_SECURITY_POLICY = (
     "default-src 'self'; "
-    "img-src 'self' data:; "
+    "img-src 'self' data: https://www.google-analytics.com https://*.google-analytics.com; "
     "style-src 'self' 'unsafe-inline'; "
-    "script-src 'self' 'nonce-__NONCE__'; "
+    "script-src 'self' 'nonce-__NONCE__' https://www.googletagmanager.com; "
     "font-src 'self'; "
-    "connect-src 'self'; "
+    "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com; "
     "frame-ancestors 'none'; "
     "base-uri 'self'"
 )
@@ -309,6 +317,15 @@ else:
 # irrelevant on Vercel but we set it False for clarity.
 WHITENOISE_USE_FINDERS = not IS_VERCEL
 WHITENOISE_MANIFEST_STRICT = False
+# Local dev only: WhiteNoise without autorefresh serves the file snapshot
+# taken AT PROCESS START (its `self.files` dict). Admin image uploads write
+# into static/ (and collectstatic into staticfiles/) while the server keeps
+# running -> those new files 404 until a restart: the admin changelist icon
+# goes missing and freshly uploaded product images break on the frontend.
+# autorefresh=True re-resolves via finders/directory scan per request.
+# Vercel stays False: files are collected once at build time, the wrapper
+# process only lives for the request anyway.
+WHITENOISE_AUTOREFRESH = not IS_VERCEL
 # N-30: a 1-year max-age is only safe for content-HASHED filenames, which exist
 # solely on Vercel (BundledManifestStaticFilesStorage -> css/base.<hash>.css).
 # Locally the URL is un-versioned (/static/css/base.css), so a 1-year max-age
@@ -405,4 +422,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.6.2'
+APP_VERSION = '1.6.3'

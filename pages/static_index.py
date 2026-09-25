@@ -22,7 +22,18 @@ Python 源码才能 100% 保证它在运行时可用。
 
 用法（build.sh）::
 
-    python -m pages.static_index --root staticfiles --out pages/static_index_data.py
+    python -m pages.static_index --root staticfiles --out pages/static_index_data.py \
+        --require-manifest
+
+`--require-manifest` 是**生产构建专用**的严格模式（P3-1）：`staticfiles/` 或
+`staticfiles.json` 缺失、或清单里没有任何 paths 时，生成器打印 ERROR 并以退出码 2
+结束，构建随之失败（fail closed）。理由见上文：没有 `HASHED_FILES` 时运行期
+`{% static %}` 只能退回未哈希 URL，而 `public/static/` 里只有哈希文件名
+→ 每个资源 404。宁可在构建期失败，也不要把这种包发上线。
+
+CI 与本地手工生成**不加**该开关（默认宽松模式）：`.github/workflows/ci.yml` 是拿
+源码 `static/` 生成索引的，那里本来就没有 collectstatic 产物，缺清单属正常 → 只
+打印 WARNING 并照常写出「只有目录索引」的模块。
 
 本地开发无需运行：utils 的磁盘扫描路径保持原样，索引仅作并集补充；
 存储层优先读模块、退回磁盘清单，磁盘也没有时退回未哈希 URL。
@@ -116,6 +127,7 @@ def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     root = DEFAULT_ROOT
     out = DEFAULT_OUT
+    require_manifest = False
     i = 0
     while i < len(argv):
         if argv[i] == '--root' and i + 1 < len(argv):
@@ -124,16 +136,29 @@ def main(argv=None):
         elif argv[i] == '--out' and i + 1 < len(argv):
             out = argv[i + 1]
             i += 2
+        elif argv[i] == '--require-manifest':
+            require_manifest = True
+            i += 1
         else:
             i += 1
 
     if not os.path.isdir(root):
-        # 不抛错：collectstatic 失败已在上游报错，这里给出明显告警即可，
-        # 避免新增一条会让整个部署挂掉的失败路径。
+        if require_manifest:
+            print('[static_index] ERROR: %s/ not found — refusing to write an index '
+                  'without hash names' % root, file=sys.stderr)
+            return 2
         print('[static_index] WARNING: %s/ not found — writing empty index' % root)
         index = {'dirs': {}, 'hashed': {}}
     else:
         index = build_index(root)
+        if not index.get('hashed'):
+            if require_manifest:
+                print('[static_index] ERROR: %s/%s is missing or has no paths — refusing '
+                      'to write an index without hash names' % (root, MANIFEST_NAME),
+                      file=sys.stderr)
+                return 2
+            print('[static_index] WARNING: %s/%s not usable — writing names-only index'
+                  % (root, MANIFEST_NAME))
 
     total = sum(len(v) for v in index['dirs'].values())
     out_dir = os.path.dirname(out)

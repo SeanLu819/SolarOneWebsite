@@ -70,6 +70,7 @@ _SIDEBAR_I18N = {
     # Products — series
     'M Series':         {'fr': 'Série M', 'es': 'Serie M', 'de': 'M-Serie', 'ar': 'سلسلة M', 'ru': 'Серия M'},
     'RT410 Series':     {'fr': 'Série RT410', 'es': 'Serie RT410', 'de': 'RT410-Serie', 'ar': 'سلسلة RT410', 'ru': 'Серия RT410'},
+    'RGB / RGBW':       {'fr': 'RGB / RGBW', 'es': 'RGB / RGBW', 'de': 'RGB / RGBW', 'ar': 'RGB / RGBW', 'ru': 'RGB / RGBW'},
     'HB Series':        {'fr': 'Série HB', 'es': 'Serie HB', 'de': 'HB-Serie', 'ar': 'سلسلة HB', 'ru': 'Серия HB'},
     'RT750 Series':     {'fr': 'Série RT750', 'es': 'Serie RT750', 'de': 'RT750-Serie', 'ar': 'سلسلة RT750', 'ru': 'Серия RT750'},
     'RT1060 Series':    {'fr': 'Série RT1060', 'es': 'Serie RT1060', 'de': 'RT1060-Serie', 'ar': 'سلسلة RT1060', 'ru': 'Серия RT1060'},
@@ -202,13 +203,32 @@ def _get_products_sidebar(lang='en'):
                         {'key': 'FL4M',  'slug': 'fl4m',  'label': 'FL4M'},
                         {'key': 'FL6M',  'slug': 'fl6m',  'label': 'FL6M'},
                         {'key': 'FL9M',      'slug': 'fl9m',      'label': 'FL9M'},
-                        {'key': 'FL9M_RGBW', 'slug': 'fl9m-rgbw',  'label': 'FL9M-RGBW'},
                         {'key': 'FL12M',     'slug': 'fl12m',     'label': 'FL12M'},
                         {'key': 'FL16M', 'slug': 'fl16m', 'label': 'FL16M'},
                     ],
                 },
                 {'key': 'RT410_SERIES', 'slug': 'rt410-series', 'label': 'RT410FL-S'},
-                {'key': 'ACCESSORY', 'slug': 'glare-shield-for-rt410', 'label': _t('Accessory', lang)},
+                {
+                    # Series home (Product.page_layout='overview') with its model
+                    # page underneath — same two-level shape as M_SERIES.
+                    'key': 'RGB_RGBW',
+                    'slug': 'rgb-rgbw',
+                    'label': _t('RGB / RGBW', lang),
+                    'subseries': [
+                        {'key': 'FL9M_RGBW', 'slug': 'fl9m-rgbw', 'label': 'FL9M-RGBW'},
+                        # RT410-RGBW（后台新建，parent=rgb-rgbw）——必须在侧栏里，
+                        # 否则前端无入口、admin Sidebar Position 显示 "outside sidebar"。
+                        {'key': 'RT410_RGBW', 'slug': 'rt410-rgbw', 'label': 'RT410-RGBW'},
+                    ],
+                },
+                {
+                    'key': 'ACCESSORY',
+                    'slug': 'accessory',
+                    'label': _t('Accessory', lang),
+                    'subseries': [
+                        {'key': 'RT410_GS', 'slug': 'glare-shield-for-rt410', 'label': 'RT410 GS'},
+                    ],
+                },
             ],
         },
         {

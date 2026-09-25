@@ -6,11 +6,18 @@
     --ink-soft:     #D9D9E3;
     --ink-mute:     #8A8A95;
     --ink-subtle:   #5A5A65;
-    --accent:       #0077ED;
-    --accent-hover: #0090FF;
-    --accent-soft:  rgba(0, 119, 237, 0.10);
-    --accent-glow:  rgba(0, 119, 237, 0.22);
-    --accent-deep:  #005BB5;
+    /* P0 单一色源: --accent-brand 是唯一原始色（admin SiteConfig.accent_color
+       注入，默认 #0088FF；base.html 只允许注入这一个变量）。--accent 及全部派生
+       token 一律由它推导 —— 任何层禁止再写死蓝色字面量，否则 admin 换色后
+       按钮 hover / 渐变 / 阴影不同步。字面量是老浏览器 fallback；color-mix
+       派生统一放在下方 @supports 块（自定义属性不做语法校验，直接写
+       color-mix 会让老浏览器把该字面量代入消费属性 → 整条声明失效）。 */
+    --accent-brand: #0088FF;
+    --accent:       var(--accent-brand, #0088FF);
+    --accent-hover: #269DFF;
+    --accent-soft:  rgba(0, 136, 255, 0.10);
+    --accent-glow:  rgba(0, 136, 255, 0.22);
+    --accent-deep:  #0066BF;
     --success:      #22C55E;
     --info:         #38BDF8;
     --warning:      #F59E0B;
@@ -25,17 +32,12 @@
        解决方案：iOS 优先用 PingFang SC 接管（苹方是设计为中英文字宽统一的多
        语言字体），安卓优先用 Noto Sans CJK / 思源黑体；中间塞 -apple-system
        和 BlinkMacSystemFont 让 iOS 显式认 SF Pro。 */
-    --ff-display: 'Space Grotesk',
-                  -apple-system, BlinkMacSystemFont, system-ui,
-                  "PingFang SC", "Hiragino Sans GB",
-                  "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC",
-                  sans-serif;
-    --ff-body:    'Inter',
-                  -apple-system, BlinkMacSystemFont, system-ui,
-                  "PingFang SC", "Hiragino Sans GB",
-                  "Microsoft YaHei", "Source Han Sans CN", "Noto Sans CJK SC",
-                  Roboto,
-                  sans-serif;
+    --ff-display: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+                  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+                  "Source Han Sans CN", "Noto Sans CJK SC", Roboto, sans-serif;
+    --ff-body:    'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+                  "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+                  "Source Han Sans CN", "Noto Sans CJK SC", Roboto, sans-serif;
     --ff-mono:    'IBM Plex Mono', ui-monospace, "SF Mono", Menlo, monospace;
 
     /* Font-size variables. Default values mirror the original hardcoded
@@ -64,6 +66,7 @@
     --sp-4: 48px;
     --sp-5: 96px;
     --sp-6: 160px;
+    --radius-control: 8px;
   }
 
   /* ============ LIGHT THEME ============ */
@@ -75,16 +78,42 @@
     --ink-soft:     #374151;
     --ink-mute:     #6B7280;
     --ink-subtle:   #9CA3AF;
-    --accent:       #0062C4;
-    --accent-hover: #0077ED;
-    --accent-soft:  rgba(0, 98, 196, 0.08);
-    --accent-glow:  rgba(0, 98, 196, 0.12);
-    --accent-deep:  #004A99;
+    /* P0: light 主题 accent 必须从 brand 压暗派生。修复历史 bug —— admin 注入块
+       曾直接写 `:root{--accent:…}`，与本块 specificity 相同且源序更靠后，会把
+       这里的 light 覆盖冲掉 → 浅色模式也用深色主题亮蓝（对比度不足）。
+       admin 现只注入 --accent-brand，本覆盖永不再被冲掉。hover/deep 无需在此
+       声明：@supports 块里的派生引用 var(--accent)，在 html 元素上自动解析为
+       本值。 */
+    --accent:       #006AC7;
+    --accent-soft:  rgba(0, 106, 199, 0.08);
+    --accent-glow:  rgba(0, 106, 199, 0.12);
     --success:      #16A34A;
     --info:         #0284C7;
     --warning:      #D97706;
     --line:         rgba(0, 0, 0, 0.07);
     --line-strong:  rgba(0, 0, 0, 0.12);
+  }
+
+  /* ============ P0: ACENT DERIVATION (color-mix, gated) ============ */
+  /* 派生 token 的 color-mix 版本必须包在 @supports 内：自定义属性不做语法
+     校验，不支持 color-mix 的浏览器会原样代入 `background: color-mix(…)`
+     → 解析失败 → IACVT → 属性变 unset（比上面的字面 fallback 更糟）。
+     上面 :root/[data-theme=light] 的字面量即老浏览器最终值（对默认品牌色
+     精确；admin 自定义色时老浏览器派生色不跟随 —— 可接受降级）。
+     普通声明里的 color-mix（渐变/阴影双声明的第二行）会在老浏览器解析期
+     被整条丢弃、自然回落第一行，无需包裹。 */
+  @supports (color: color-mix(in srgb, red 50%, blue)) {
+    :root {
+      --accent-hover: color-mix(in srgb, var(--accent), #fff 15%);
+      --accent-soft:  color-mix(in srgb, var(--accent), transparent 90%);
+      --accent-glow:  color-mix(in srgb, var(--accent), transparent 78%);
+      --accent-deep:  color-mix(in srgb, var(--accent), #000 25%);
+    }
+    [data-theme="light"] {
+      --accent:       color-mix(in srgb, var(--accent-brand, #0088FF), #000 22%);
+      --accent-soft:  color-mix(in srgb, var(--accent), transparent 92%);
+      --accent-glow:  color-mix(in srgb, var(--accent), transparent 88%);
+    }
   }
 
   /* Light theme nav */
@@ -154,7 +183,7 @@
   /* Theme toggle button */
   .theme-toggle {
     display: flex; align-items: center; justify-content: center;
-    width: 36px; height: 36px; border-radius: 8px;
+    width: 36px; height: 36px; border-radius: var(--radius-control);
     border: 1px solid var(--line-strong);
     background: transparent; cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
@@ -178,7 +207,7 @@
     gap: 6px;
     padding: 6px 10px;
     border: 1px solid var(--line-strong);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     background: transparent;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
@@ -196,7 +225,7 @@
     right: 0;
     background: var(--bg-raised);
     border: 1px solid var(--line-strong);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     min-width: 160px;
     z-index: 100;
     overflow: hidden;
@@ -600,7 +629,7 @@
     padding: 0 14px;
     gap: 8px;
     justify-content: flex-start;
-    border-radius: 8px;
+    border-radius: var(--radius-control);
   }
   .panel-action-label {
     font-family: var(--ff-mono);
@@ -837,6 +866,9 @@
   .hero-title .line { display: block; }
   .hero-title .line.accent {
     background: linear-gradient(90deg, var(--accent) 0%, #4D9BFF 100%);
+    /* P0: 终点改为从 accent 派生（默认 #0088FF+30%白 ≈ 原 #4D9BFF，视觉无感）；
+       字面行保老浏览器，color-mix 行跟 admin 换色。 */
+    background: linear-gradient(90deg, var(--accent) 0%, color-mix(in srgb, var(--accent), #fff 30%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -896,9 +928,12 @@
     transition: all 0.2s;
   }
   .btn-primary:hover {
-    background: #0088FF;
+    /* P0: 旧值写死 #0088FF，恰好与 admin 默认 accent 同色 → hover 无色差。
+       改为派生 token，admin 换色后 hover 永远跟随且保持可见色差。 */
+    background: var(--accent-hover);
     transform: translateY(-1px);
-    box-shadow: 0 16px 32px -16px rgba(0, 119, 237, 0.5);
+    box-shadow: 0 16px 32px -16px rgba(0, 136, 255, 0.5);
+    box-shadow: 0 16px 32px -16px color-mix(in srgb, var(--accent), transparent 50%);
   }
   .btn-primary::after {
     content: '\2192';
@@ -948,11 +983,15 @@
     font-weight: 700;
     letter-spacing: -0.07em;
     line-height: 0.92;
-    background: linear-gradient(135deg, #0077ED 0%, #4D9BFF 50%, #00D4FF 100%);
+    /* P0: 起点 #0077ED → var(--accent)（默认 #0088FF，视觉无感），中/终点从
+       accent 派生；字面行保老浏览器。 */
+    background: linear-gradient(135deg, var(--accent) 0%, #4D9BFF 50%, #00D4FF 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent), #fff 30%) 50%, color-mix(in srgb, var(--accent), #00D4FF 55%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 16px rgba(0, 119, 237, 0.45));
+    filter: drop-shadow(0 0 16px rgba(0, 136, 255, 0.45));
+    filter: drop-shadow(0 0 16px color-mix(in srgb, var(--accent), transparent 55%));
   }
   .hero-stat-num .unit {
     font-size: 0.4em;
@@ -960,6 +999,7 @@
     margin-left: 2px;
     letter-spacing: -0.03em;
     background: linear-gradient(135deg, #4D9BFF 0%, #00D4FF 100%);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--accent), #fff 30%) 0%, color-mix(in srgb, var(--accent), #00D4FF 55%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1457,6 +1497,33 @@
 
   /* Contact form */
   .contact-form { display: flex; flex-direction: column; gap: 20px; }
+  .contact-form-field { display: flex; flex-direction: column; gap: 6px; }
+  .contact-form-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+  .contact-form-control {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-family: var(--ff-body);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .contact-form-control[readonly] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .contact-form-textarea { resize: vertical; min-height: 100px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group label {
     font-family: var(--ff-mono);
@@ -1471,7 +1538,7 @@
     padding: 14px 16px;
     background: var(--bg-soft);
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     color: var(--ink);
     font-family: var(--ff-body);
     font-size: 15px;
@@ -1500,7 +1567,7 @@
     align-self: flex-start;
   }
   .form-submit .btn-primary {
-    border-radius: 8px;
+    border-radius: var(--radius-control);
   }
   .form-whatsapp-row {
     display: flex;
@@ -1748,7 +1815,8 @@
     background: rgba(255, 255, 255, 0.06);
   }
   [data-theme="light"] .sidebar-nav-child.active {
-    background: rgba(0, 119, 237, 0.06);
+    background: rgba(0, 136, 255, 0.06);
+    background: color-mix(in srgb, var(--accent), transparent 94%);
   }
 
   /* Level 3 — subseries links */
@@ -1816,7 +1884,8 @@
     background: rgba(255, 255, 255, 0.06);
   }
   [data-theme="light"] .sidebar-nav-grandchild.active {
-    background: rgba(0, 119, 237, 0.06);
+    background: rgba(0, 136, 255, 0.06);
+    background: color-mix(in srgb, var(--accent), transparent 94%);
   }
   .sidebar-nav-grandchild.active::before {
     background: var(--accent);
@@ -2032,6 +2101,10 @@
     margin-bottom: 20px;
   }
 
+  .section-accent-label--compact {
+    margin-bottom: 12px;
+  }
+
   .about-story-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -2151,16 +2224,19 @@
   .about-service-card:hover {
     border-color: var(--accent);
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px -12px rgba(0, 119, 237, 0.15);
+    box-shadow: 0 12px 32px -12px rgba(0, 136, 255, 0.15);
+    box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--accent), transparent 85%);
   }
   .about-pillar:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px -20px rgba(0, 119, 237, 0.2);
+    box-shadow: 0 20px 40px -20px rgba(0, 136, 255, 0.2);
+    box-shadow: 0 20px 40px -20px color-mix(in srgb, var(--accent), transparent 80%);
   }
   .about-optic-card:hover {
     border-color: var(--accent-glow);
     transform: translateY(-2px);
-    box-shadow: 0 16px 36px -16px rgba(0, 119, 237, 0.15);
+    box-shadow: 0 16px 36px -16px rgba(0, 136, 255, 0.15);
+    box-shadow: 0 16px 36px -16px color-mix(in srgb, var(--accent), transparent 85%);
   }
 
   .about-simple-steps {

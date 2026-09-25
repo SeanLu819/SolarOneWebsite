@@ -79,7 +79,7 @@
         </div>
         {% endif %}
 
-        <div class="detail-grid{% if active_series == 'RT410_SERIES' or active_series == 'M_SERIES' %} detail-grid-bottom-align{% endif %}">
+        <div class="detail-grid{% if active_series == 'RT410_SERIES' %} detail-grid-bottom-align{% endif %}">
           <!-- Left: Image / Carousel -->
           <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
             {% if gallery %}
@@ -144,15 +144,10 @@
           </div>
         </div>
 
-        {% if product.slug != 'm-series' and product.category != 'ACCESSORY' %}
         <div class="detail-dimension">
-          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
           {% if product.beam_angle_image_url %}
+          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
           <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}" loading="lazy">
-          {% else %}
-          <div class="detail-dimension-placeholder">
-            <span class="detail-placeholder">{% trans "Beam Angle" %}</span>
-          </div>
           {% endif %}
 
           <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
@@ -164,98 +159,26 @@
           </div>
           {% endif %}
         </div>
-        {% endif %}
 
-        {% if product.slug != 'm-series' and product.category != 'ACCESSORY' %}
+        {% if product.energy_data %}
         <div class="detail-energy-data">
           <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
           <div class="detail-energy-table-wrap">
             <table class="detail-energy-table">
               <tbody>
-                {% if product.energy_data %}
-                  {% for item in product.energy_data %}
-                  <tr>
-                    <th>{% trans item.label %}</th>
-                    <td>{{ item.value }}</td>
-                  </tr>
-                  {% endfor %}
-                {% else %}
-                  <tr>
-                    <th>{% trans "Series Name" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Lumen Output" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "System Wattage" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "CRI" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Color Temperature (Kevin)" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Input Voltage (High Voltage)" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Input Voltage (Low Voltage)" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "L70 Hours" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Operating Temperature Range" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Surge (Common Mode / Differential Mode)" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "IP Rating" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Effective Projected Area (EPA) at 90°" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans 'L" × W" × H"' %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Approximate Weight" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "Material" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "LED Brand" %}</th>
-                    <td>—</td>
-                  </tr>
-                  <tr>
-                    <th>{% trans "LED Driver" %}</th>
-                    <td>—</td>
-                  </tr>
-                {% endif %}
+                {% for item in product.energy_data %}
+                <tr>
+                  <th>{% trans item.label %}</th>
+                  <td>{{ item.value }}</td>
+                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
         </div>
         {% endif %}
 
-        {% if product.category != 'ACCESSORY' %}
+        {% if product.model_number or product.ordering_image_url or product.ordering_cols %}
         <div class="detail-ordering">
           <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
           {% if product.model_number %}

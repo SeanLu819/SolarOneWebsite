@@ -28,6 +28,7 @@ PAGES = ["/", "/products/", "/projects/", "/news/", "/about/", "/contact/"]
 # 补 375(iPhone SE/8) 与 360(安卓常见宽) 强化 §15.3 F7 全断点无横向溢出
 SIZES = [(320, 568), (360, 800), (375, 667), (390, 844), (768, 1024), (820, 1180), (1024, 768), (1440, 900)]
 SIDEBAR_PAGES = ("/products/", "/projects/", "/news/")
+SECURITY_PAGES = PAGES
 
 failures = []
 
@@ -36,6 +37,67 @@ def check(cond, label):
     print(f"  [{'OK ' if cond else 'FAIL'}] {label}")
     if not cond:
         failures.append(label)
+
+
+def run_security_checks(browser):
+    """P3-3: prove the public page load is clean under the current CSP.
+
+    This is intentionally a diagnostic gate, not a policy migration: inline
+    styles still require ``style-src 'unsafe-inline'`` and are not changed here.
+    """
+    print("\n=== P3-3 CSP / browser error gate ===")
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    pg = ctx.new_page()
+    console_errors = []
+    page_errors = []
+    failed_requests = []
+    bad_responses = []
+    csp_headers = {}
+
+    pg.on("console", lambda msg: console_errors.append(msg.text)
+          if msg.type == "error" else None)
+    pg.on("pageerror", lambda exc: page_errors.append(str(exc)))
+    pg.on("requestfailed", lambda request: failed_requests.append(
+        f"{request.method} {request.url}: {request.failure}"))
+    pg.on("response", lambda response: bad_responses.append(
+        f"{response.status} {response.url}") if response.status >= 400 else None)
+
+    for url in SECURITY_PAGES:
+        csp_headers[url] = None
+        try:
+            response = pg.goto(BASE_URL + url, wait_until="domcontentloaded",
+                               timeout=15000)
+            csp_headers[url] = response.headers.get("content-security-policy", "")
+            pg.wait_for_timeout(250)
+            csp = csp_headers[url]
+            check(bool(csp), f"{url} CSP response header present")
+            check("script-src 'self' 'nonce-" in csp,
+                  f"{url} CSP script-src has per-request nonce")
+            check("'unsafe-inline'" in csp.split("style-src", 1)[-1].split(";", 1)[0]
+                  if "style-src" in csp else False,
+                  f"{url} CSP style-src remains explicitly documented")
+            nonce_match = __import__("re").search(r"'nonce-([^']+)'", csp or "")
+            dom_nonce = pg.locator("script[nonce]").first.get_attribute("nonce") \
+                if pg.locator("script[nonce]").count() else None
+            check(bool(nonce_match) and bool(dom_nonce)
+                  and nonce_match.group(1) == dom_nonce,
+                  f"{url} DOM script nonce matches CSP")
+        except Exception as exc:
+            check(False, f"{url} security navigation completed ({exc})")
+
+    check(not console_errors, f"console errors absent ({len(console_errors)})")
+    check(not page_errors, f"page errors absent ({len(page_errors)})")
+    check(not failed_requests, f"failed requests absent ({len(failed_requests)})")
+    check(not bad_responses, f"HTTP 4xx/5xx responses absent ({len(bad_responses)})")
+    if console_errors:
+        print("  console errors:", console_errors[:5])
+    if page_errors:
+        print("  page errors:", page_errors[:5])
+    if failed_requests:
+        print("  failed requests:", failed_requests[:5])
+    if bad_responses:
+        print("  bad responses:", bad_responses[:5])
+    ctx.close()
 
 
 def wait_for_server(timeout=40):
@@ -171,6 +233,7 @@ def run_phase2_review(browser):
     base_html = (BASE_DIR / "templates/base.html").read_text(encoding="utf-8")
     products_html = (BASE_DIR / "templates/products.html").read_text(encoding="utf-8")
     pd_html = (BASE_DIR / "templates/product_detail.html").read_text(encoding="utf-8")
+    po_html = (BASE_DIR / "templates/product_overview.html").read_text(encoding="utf-8")
 
     print("\n=== §15.3 源码级防御断言（N-11/N-6/F10/F9/F8/N-16/F11）===")
     # N-11: 平板 hero 用 svh 跟随动态视口，100vh 作降级，二者成对
@@ -190,6 +253,20 @@ def run_phase2_review(browser):
     # F8: 详情页主区折单列从 900 提前到 1024（平板 901-1024 不拥挤）
     check("@media (max-width: 1024px)" in pd_html and "grid-template-columns: 1fr" in pd_html,
           "F8 详情页 `.detail-grid` ≤1024 折单列 (product_detail.html)")
+    # 两套产品模板（detail / overview）必须共用同一组断点，否则平板档会分叉
+    check("@media (max-width: 1024px)" in po_html and "grid-template-columns: 1fr" in po_html,
+          "F8 系列首页 `.detail-grid` ≤1024 折单列 (product_overview.html)")
+    check('.series-hero { height: 160px; }' in po_html,
+          "F8 系列首页 ≤767px hero 高度收口 (product_overview.html)")
+    check("[dir=\"rtl\"] .series-hero-content" in po_html,
+          "F13 系列首页 RTL 右对齐变体 (product_overview.html)")
+    # 系列首页刻意不含技术区块 —— 出现即说明有人把 detail 的内容又塞回来了
+    check(not any(dead in po_html for dead in
+                  ("detail-energy-table", "detail-ordering-table",
+                   "detail-dimension-img", "detail-request-sample", "scroll-hint")),
+          "系列首页不含参数表/尺寸图/CTA 占位 (product_overview.html)")
+    check("{% include \"includes/carousel_js.html\" %}" in po_html,
+          "系列首页复用共享轮播脚本，未内联第二份 (product_overview.html)")
     # N-16: 全局滑动提示样式 + 订购表实例已接（数据触发时自动显形）
     check(".scroll-hint {" in base_css,
           "N-16 `.scroll-hint` 全局样式存在 (base.css)")
@@ -317,8 +394,8 @@ def run_phase3_review(browser):
     base_css = (BASE_DIR / "static/css/base.css").read_text(encoding="utf-8")
     base_html = (BASE_DIR / "templates/base.html").read_text(encoding="utf-8")
     about_html = (BASE_DIR / "templates/about.html").read_text(encoding="utf-8")
-    ps_html = (BASE_DIR / "templates/product_series.html").read_text(encoding="utf-8")
     pd_html = (BASE_DIR / "templates/product_detail.html").read_text(encoding="utf-8")
+    po_html = (BASE_DIR / "templates/product_overview.html").read_text(encoding="utf-8")
 
     print("\n=== 阶段三 源码级防御断言（N-13/N-14/N-15/N-17/F13）===")
     # N-13 / F12：about.html 内联 <style> 块已删除，属性选择器 hack 消失；
@@ -349,12 +426,17 @@ def run_phase3_review(browser):
           "N-17 背景 inert / 焦点陷阱函数已接")
 
     # F13：series-hero 物理 left → inset-inline-start，并补 [dir=rtl] 变体
-    check("inset-inline-start: 32px" in ps_html and "inset-inline-start: 32px" in pd_html,
-          "F13 series-hero 物理 `left` → `inset-inline-start` (series/detail)")
-    check('[dir="rtl"] .series-hero-content' in ps_html and '[dir="rtl"] .series-hero-content' in pd_html,
+    check("inset-inline-start: 32px" in pd_html,
+          "F13 series-hero 物理 `left` → `inset-inline-start` (detail)")
+    check('[dir="rtl"] .series-hero-content' in pd_html,
           "F13 补 `[dir=rtl] .series-hero-content` 右对齐变体")
-    check('[dir="rtl"] .series-hero-overlay' in ps_html and '[dir="rtl"] .series-hero-overlay' in pd_html,
+    check('[dir="rtl"] .series-hero-overlay' in pd_html,
           "F13 补 `[dir=rtl] .series-hero-overlay` 镜像渐变")
+    # 两套产品模板的 hero 定位必须都是逻辑属性（否则 RTL 下其中一个会错位）
+    check("inset-inline-start: 32px" in po_html,
+          "F13 series-hero 逻辑属性 (product_overview.html)")
+    check('[dir="rtl"] .series-hero-overlay' in po_html,
+          "F13 `[dir=rtl] .series-hero-overlay` 镜像渐变 (product_overview.html)")
 
     # ---- 浏览器级渲染断言 ----
     print("\n=== 阶段三 浏览器级模拟断言 ===")
@@ -459,7 +541,9 @@ def run_phase4_review(browser):
         ("/", "img.hero-slide.active"),
         ("/products/", "img.products-banner-dark"),
         ("/products/rt410-series/", "img.series-hero-bg"),
-        ("/products/series/rt410-series/", "img.series-hero-bg"),
+        # 两套产品模板都要覆盖：rt410 走 detail、rgb-rgbw 走 overview。
+        # （旧的 /products/series/<slug>/ 已 301 到规范 URL，不再单列。）
+        ("/products/rgb-rgbw/", "img.series-hero-bg"),
     ]
     for path, sel in targets:
         pg.goto(BASE_URL + path, wait_until="domcontentloaded")

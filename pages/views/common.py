@@ -87,4 +87,8 @@ def get_common_context():
     config.meta_title = _t(config.meta_title, lang)
     config.meta_description = _t(config.meta_description, lang)
 
-    return {'config': config}
+    return {
+        'config': config,
+        'ga4_id': getattr(settings, 'GA4_MEASUREMENT_ID', ''),
+        'gsc_code': getattr(settings, 'GSC_VERIFICATION_CODE', ''),
+    }

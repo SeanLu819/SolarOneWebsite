@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.translation import get_language
 from django.templatetags.static import static
 from .common import get_common_context
@@ -206,7 +206,19 @@ def products(request):
 
 
 def product_detail(request, slug):
-    """Unified product detail page for both series and sub-series."""
+    """Unified product page for both series and sub-series.
+
+    Two public templates, picked by ``Product.page_layout`` (admin:
+    Product → Page template):
+
+      * ``detail``   → ``product_detail.html``  — full technical spec
+        (beam angle, dimensions, energy + ordering tables, sample CTA).
+      * ``overview`` → ``product_overview.html`` — series landing page
+        (banner, gallery carousel, copy, free-form image/copy slot).
+
+    ``is_variant`` / ``parent_slug`` are still published for callers that need
+    the parent series; the templates themselves read ``active_*`` only.
+    """
     context = get_common_context()
     lang = get_language()
 
@@ -226,14 +238,22 @@ def product_detail(request, slug):
         context['gallery'] = product.gallery
         context['is_variant'] = bool(product.parent_slug)
         context['parent_slug'] = parent_slug or product.parent_slug
-        context['show_certs'] = (
-            product.slug in ('m-series', 'rt410-series') or
-            product.parent_slug == 'm-series'
-        )
 
-    return render(request, 'product_detail.html', context)
+    # Unknown slug → product is None → 'detail' → product_detail.html renders
+    # its "Product Not Found" branch (the 404 UX is unchanged).
+    template = ('product_overview.html'
+                if getattr(product, 'page_layout', 'detail') == 'overview'
+                else 'product_detail.html')
+    return render(request, template, context)
 
 
 def product_series(request, slug):
-    """Legacy sub-series URL: now uses the same unified detail template."""
-    return product_detail(request, slug)
+    """Legacy /products/series/<slug>/ URL.
+
+    These URLs render the exact same product as /products/<slug>/ (the slug
+    resolves to the same product), so serving both is duplicate content.
+    301-redirect to the canonical product_detail URL to consolidate ranking
+    signals and crawl budget (SEO P1b). The active language prefix is preserved
+    because this view runs inside i18n_patterns.
+    """
+    return redirect('product_detail', slug, permanent=True)

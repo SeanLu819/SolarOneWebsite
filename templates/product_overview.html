@@ -1,0 +1,518 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load text_filters %}
+
+{% block title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
+{% block meta_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block og_title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
+{% block og_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block og_type %}<meta property="og:type" content="product">{% endblock %}
+{% block og_image %}{% if product and product.banner_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ product.banner_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+{% if product %}
+{% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=product.name_t|escapejs leaf_url=request.path %}
+{% endif %}
+
+<!-- Series overview page — banner + gallery carousel + copy + free-form
+     image/copy slot. Deliberately has NO technical blocks (beam angle,
+     dimensions, energy/performance table, ordering table, CTA): those live
+     in product_detail.html for leaf products. Which template a product uses
+     is ``Product.page_layout`` (admin: Page template). -->
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+    <div class="sidebar-layout">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
+      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
+      <aside class="sidebar-nav">
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for cat in product_categories %}
+          <div class="sidebar-nav-group" style="margin-bottom: 3px;">
+            <div class="sidebar-nav-parent">
+              {{ cat.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for sub in cat.series %}
+              {% if sub.subseries %}
+              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
+                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
+                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
+              </div>
+              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
+                {% for grandchild in sub.subseries %}
+                <a href="{% url 'product_detail' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
+                {% endfor %}
+              </div>
+              {% else %}
+              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
+                {{ sub.label }}
+              </a>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'products' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT — Full-width two-column ===== -->
+      <div class="detail-content">
+
+        {% if product %}
+        {% if banner_image %}
+        <div class="series-hero">
+          {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg" fetchpriority="high" decoding="async">
+          <div class="series-hero-overlay"></div>
+          <div class="series-hero-content">
+            <span class="series-hero-label">{{ banner_label }}</span>
+            <h1 class="section-title">{{ product.name_t }}</h1>
+          </div>
+        </div>
+        {% else %}
+        <div class="detail-hero">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;">{{ product.name_t }}</h1>
+        </div>
+        {% endif %}
+
+        <div class="detail-grid{% if active_series == 'M_SERIES' %} detail-grid-bottom-align{% endif %}">
+          <!-- Left: Image / Carousel -->
+          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
+            {% if gallery %}
+            <div class="ps-carousel" id="psCarousel" data-interval="3000">
+              <div class="ps-carousel-track">
+                {% for img in gallery %}
+                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
+                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
+                </div>
+                {% endfor %}
+              </div>
+
+              {% if gallery|length > 1 %}
+              <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              {% endif %}
+            </div>
+
+            <div class="ps-thumbnails">
+              {% for img in gallery %}
+              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
+              </button>
+              {% endfor %}
+            </div>
+
+            {% elif product.image_url %}
+            {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
+            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" fetchpriority="high" decoding="async">
+            {% else %}
+            <div class="detail-image-placeholder">
+              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Right: Text + Specs -->
+          <div class="detail-info">
+            <div class="detail-desc">{{ product.description_t|nl2para }}</div>
+
+            {% if product.specs %}
+            <div class="detail-specs">
+              {% for spec in product.specs %}
+              <div class="detail-spec">
+                <span class="detail-spec-value">{{ spec.value }}</span>
+                <span class="detail-spec-label">{{ spec.label }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Certification badges -->
+            {% if product.cert_image_url %}
+            <div class="detail-cert-image">
+              <img src="{{ product.cert_image_url }}" alt="{% trans 'Product Certifications' %}" loading="lazy">
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% comment %}
+        Free-form slot: overview pages have no ordering table. Renders whatever
+        image / copy the product carries (M Series puts its ordering sample
+        image here) and collapses entirely when both are empty.
+        {% endcomment %}
+        {% if product.ordering_image_url or product.ordering_cols %}
+        <div class="detail-ordering">
+          {% if product.ordering_image_url %}
+          <div class="detail-ordering-image">
+            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
+          </div>
+          {% endif %}
+          {% if product.ordering_cols %}
+          <div class="detail-overview-note">
+            {% for lines in product.ordering_cols %}{% for line in lines %}<p>{{ line }}</p>{% endfor %}{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <h1 class="section-title">{% trans "Product Not Found" %}</h1>
+        <p class="section-body"><a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Back to Products" %}</a></p>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style nonce="{{ request.csp_nonce }}">
+  /* Sidebar nav styles inherited from base.html */
+
+  /* === Detail page two-column layout === */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+    align-items: center;
+    margin-top: 40px;
+  }
+  .detail-grid-bottom-align {
+    align-items: end;
+  }
+  .detail-grid-bottom-align .detail-desc {
+    margin-bottom: 20px;
+  }
+  .detail-grid-bottom-align .detail-cert-image {
+    margin-top: 16px;
+  }
+  .detail-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+  .detail-image img {
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 12px;
+    background: var(--bg-soft);
+  }
+  .detail-image-placeholder {
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* === Series hero banner (series overview landing) === */
+  .series-hero {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: var(--bg-soft);
+    margin-bottom: 0;
+  }
+  .series-hero + .detail-grid {
+    margin-top: 24px;
+  }
+  .series-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .series-hero-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%);
+  }
+  .series-hero-content {
+    position: absolute;
+    top: 32px;
+    inset-inline-start: 32px; /* F13: RTL 自动映射到 right */
+    z-index: 2;
+  }
+  .series-hero-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    display: block;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  .series-hero-content .section-title {
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .detail-cert-image {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: transparent;
+  }
+  .detail-cert-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* Slot diagram dark-mode inversion: black background + white lines */
+  [data-theme="dark"] .detail-ordering-image img {
+    filter: invert(1);
+  }
+
+  /* === Free-form slot (image + copy, no table) === */
+  .detail-ordering {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .detail-ordering-image {
+    margin-bottom: 20px;
+  }
+  .detail-ordering-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  /* Copy lines carried by the slot (ordering_info columns flattened to lines) */
+  .detail-overview-note {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .detail-overview-note p {
+    margin: 0 0 8px;
+  }
+
+  .detail-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+  .detail-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 32px;
+  }
+  .detail-spec {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .detail-spec-value {
+    font-family: var(--ff-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .detail-spec-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-subtle);
+  }
+
+  /* === Carousel (M Series gallery) === */
+  .ps-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 760px;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ps-carousel-track {
+    position: absolute;
+    inset: 0;
+  }
+  .ps-carousel-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ps-carousel-slide.active {
+    opacity: 1;
+  }
+  .ps-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Arrow buttons */
+  .ps-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 2;
+  }
+  .ps-carousel-arrow:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .ps-prev { left: 12px; }
+  .ps-next { right: 12px; }
+  .ps-prev:hover { transform: translateY(-50%) scale(1.06); }
+  .ps-next:hover { transform: translateY(-50%) scale(1.06); }
+
+  /* Thumbnail strip */
+  .ps-thumbnails {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    max-width: 760px;
+    width: 100%;
+  }
+  .ps-thumb {
+    flex: 1;
+    height: 72px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-soft);
+    padding: 0;
+    transition: border-color 0.2s, opacity 0.2s;
+    opacity: 0.55;
+  }
+  .ps-thumb:hover {
+    opacity: 0.85;
+  }
+  .ps-thumb.active {
+    border-color: var(--accent);
+    opacity: 1;
+  }
+  .ps-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Responsive */
+  /* F7：侧栏折叠断点从 900 收敛到 767（与 base.css 一致）；平板档侧栏恢复正常两列。 */
+  @media (max-width: 767px) {
+    /* .sidebar-layout 的 minmax(0, 1fr) 现由 base.css 同断点规则统一
+       提供（N-21/N-25）。 */
+    .series-hero { height: 160px; }
+    .series-hero-content { top: 20px; inset-inline-start: 20px; }
+
+    /* F13: RTL 适配 */
+    [dir="rtl"] .series-hero-content { text-align: right; }
+    [dir="rtl"] .series-hero-overlay { background: linear-gradient(225deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 45%); }
+
+    /* F8 修正：detail-specs 移动端恢复 2 列（与桌面端一致，
+       4 项参数排 2x2、6 项排 2x3，最多 3 行；优于 1 列 6 行的纵向堆叠）。
+       字号与 gap 同步收敛，避免在 390px 视口下拥挤或换行。 */
+    .detail-specs {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 16px;
+    }
+    .detail-spec-value {
+      font-size: 1.1rem;
+    }
+    .detail-spec-label {
+      font-size: 0.7rem;
+    }
+
+  }
+
+  /* F8：主区折单列从 900 提前到 1024（P1-6: 平板 901-1024 双列过挤）。
+     断点与 product_detail.html 保持一致，避免两套产品模板分叉。 */
+  @media (max-width: 1024px) {
+    .detail-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .detail-image {
+      min-height: 240px;
+    }
+  }
+</style>
+
+{% include "includes/carousel_js.html" %}
+
+{% if product %}
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{ product.name_t|escapejs }}",
+  "description": "{{ product.description_t|default:''|escapejs }}",
+  "image": "{{ canonical_origin }}{{ product.banner_image_url|default:'' }}",
+  "url": "{{ request.build_absolute_uri }}",
+  "brand": {"@type": "Brand", "name": "SolarOne"},
+  "sku": "{{ product.model_number|default:product.slug|escapejs }}",
+  "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.power %},
+  "additionalProperty": [
+    {"@type": "PropertyValue", "name": "Power", "value": "{{ product.power|escapejs }}"},
+    {% if product.efficacy %}{"@type": "PropertyValue", "name": "Efficacy", "value": "{{ product.efficacy|escapejs }}"},{% endif %}
+    {% if product.output %}{"@type": "PropertyValue", "name": "Output", "value": "{{ product.output|escapejs }}"},{% endif %}
+    {% if product.beam_angle %}{"@type": "PropertyValue", "name": "Beam Angle", "value": "{{ product.beam_angle|escapejs }}"},{% endif %}
+    {% if product.protection %}{"@type": "PropertyValue", "name": "Protection", "value": "{{ product.protection|escapejs }}"},{% endif %}
+    {"@type": "PropertyValue", "name": "Category", "value": "{{ product.category_t|escapejs }}"}
+  ]{% endif %}
+}
+</script>
+{% endif %}
+
+{% endblock %}

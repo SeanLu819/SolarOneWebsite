@@ -73,6 +73,16 @@ class Product(models.Model):
         ('OTHER', 'Other'),
     ]
 
+    # Which public template renders this product's page:
+    #   detail   → product_detail.html   (full specs: beam angle, dimensions,
+    #                                     energy table, ordering table, CTA)
+    #   overview → product_overview.html (series landing: banner, gallery
+    #                                     carousel, copy, spec highlights only)
+    PAGE_LAYOUT_CHOICES = [
+        ('detail', 'Product detail page (full specs)'),
+        ('overview', 'Series overview page (landing)'),
+    ]
+
     name = models.CharField(max_length=200)
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     slug = models.SlugField(unique=True)
@@ -116,6 +126,15 @@ class Product(models.Model):
         default=True,
         verbose_name='Active',
         help_text='Only active products appear on the public website.'
+    )
+    page_layout = models.CharField(
+        max_length=16,
+        choices=PAGE_LAYOUT_CHOICES,
+        default='detail',
+        verbose_name='Page template',
+        help_text='系列首页：只展示 banner、主图轮播与文字说明（无光束角/尺寸/参数表），'
+                  '适合作为大系列的落地页（如 M Series、RGB / RGBW、Accessory）。'
+                  '产品详细页：展示全部技术参数（如 FL4M）。默认「产品详细页」。'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"name": "...", "description": "...", "category": "..."}, "es": {...}, ...}
@@ -405,7 +424,7 @@ class SiteConfig(models.Model):
     font_family_body = models.CharField(
         max_length=200,
         default=(
-            "'Inter', -apple-system, BlinkMacSystemFont, system-ui, "
+            "'Inter', system-ui, -apple-system, BlinkMacSystemFont, "
             "'PingFang SC', 'Hiragino Sans GB', "
             "'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', "
             "Roboto, sans-serif"
@@ -417,7 +436,7 @@ class SiteConfig(models.Model):
     font_family_heading = models.CharField(
         max_length=200,
         default=(
-            "'Inter', -apple-system, BlinkMacSystemFont, system-ui, "
+            "'Inter', system-ui, -apple-system, BlinkMacSystemFont, "
             "'PingFang SC', 'Hiragino Sans GB', "
             "'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', "
             "Roboto, sans-serif"
@@ -695,12 +714,25 @@ def _clean_hashed_filename(fname):
     return os.path.basename(strip_hash_suffix(fname))
 
 
-def _prune_stale_images(static_dir, current_names):
-    """Remove image files from static_dir that are not in current_names set."""
+def _prune_stale_images(static_dir, current_names, media_protected=None):
+    """Remove image files from static_dir that are not in current_names set.
+
+    ``media_protected`` is a set of (hash-stripped) basenames that still exist
+    somewhere under media/. A static file whose name is in that set is a valid
+    product image that the sync simply could not re-derive on this pass (e.g.
+    its DB-stored media path uses a different subdir than where the file landed,
+    or the upload hash no longer matches). We MUST NOT prune such files — doing
+    so turns a recoverable image into a 404 until something re-copies it. Only
+    files that are neither referenced by the product nor present in media at all
+    are truly stale and safe to remove.
+    """
+    media_protected = media_protected or set()
     try:
         for entry in os.listdir(static_dir):
             entry_lower = entry.lower()
             if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif', '.svg')):
+                continue
+            if entry in media_protected:
                 continue
             if entry not in current_names:
                 try:
@@ -709,6 +741,26 @@ def _prune_stale_images(static_dir, current_names):
                     pass
     except Exception:
         pass
+
+
+def _build_media_protected_set(media_root):
+    """Set of hash-stripped basenames for every image under media/products/**.
+
+    Used by the prune pass as a safety net so a valid static image is never
+    deleted just because the sync could not locate its exact media source."""
+    protected = set()
+    root = os.path.join(media_root, 'products')
+    if not os.path.isdir(root):
+        return protected
+    valid = ('.webp', '.png', '.jpg', '.jpeg', '.gif', '.svg')
+    try:
+        for dirpath, _dirs, files in os.walk(root):
+            for f in files:
+                if f.lower().endswith(valid):
+                    protected.add(_clean_hashed_filename(f))
+    except Exception:
+        pass
+    return protected
 
 
 @receiver(post_save, sender=Product)
@@ -729,11 +781,33 @@ def sync_product_on_save(sender, instance, **kwargs):
         fname = getattr(field, 'name', None)
         if not fname:
             return None
-        src = os.path.join(media_root, str(fname))
-        if not os.path.exists(src):
-            return None
+        # Always register the intended (hash-stripped) name as "current" so the
+        # prune pass below never deletes a file the product actually references.
+        # The media source may be momentarily unresolveable (hash/subdir
+        # mismatch, or a committed static asset with no media counterpart such
+        # as m-series/rt200-m.webp), but the existing static copy is still the
+        # correct file and must be preserved.
         clean_name = _clean_hashed_filename(fname)
         current_names.add(clean_name)
+        src = os.path.join(media_root, str(fname))
+        if not os.path.exists(src):
+            # Media files may have been hash-stripped by a build/export step
+            # (the DB still stores the original 'name_<hash>.ext' from the
+            # upload). Retry with the hash removed from the basename while
+            # preserving any subdir (products/banners/, products/dimensions/,
+            # products/beam_angles/, products/gallery/). Without this, the
+            # signal silently skips every image whose media copy was renamed,
+            # leaving static/images/products/<slug>/ incomplete (images 404
+            # both locally and on Vercel). See repair in scripts/_repair...py.
+            head, tail = os.path.split(str(fname))
+            stripped = _clean_hashed_filename(tail)
+            if stripped != tail:
+                src2 = os.path.join(media_root, head, stripped) if head \
+                    else os.path.join(media_root, stripped)
+                if os.path.exists(src2):
+                    src = src2
+        if not os.path.exists(src):
+            return None
         dst = os.path.join(static_dir, clean_name)
         try:
             shutil.copy2(src, dst)
@@ -754,11 +828,26 @@ def sync_product_on_save(sender, instance, **kwargs):
             fname = getattr(pimg.image, 'name', None)
             if not fname:
                 continue
-            src = os.path.join(media_root, str(fname))
-            if not os.path.exists(src):
-                continue
+            # Always register the intended name (see _copy_to): a gallery image
+            # the product references must survive the prune pass even if its
+            # media source can't be resolved on this pass.
             clean_name = _clean_hashed_filename(fname)
             current_names.add(clean_name)
+            src = os.path.join(media_root, str(fname))
+            if not os.path.exists(src):
+                # Mirror _copy_to: gallery media copies may have been renamed
+                # without the upload hash, so retry with the hash stripped.
+                # Without this the gallery files are never copied into static
+                # and the prune pass below deletes any prior copies.
+                head, tail = os.path.split(str(fname))
+                stripped = _clean_hashed_filename(tail)
+                if stripped != tail:
+                    src2 = os.path.join(media_root, head, stripped) if head \
+                        else os.path.join(media_root, stripped)
+                    if os.path.exists(src2):
+                        src = src2
+            if not os.path.exists(src):
+                continue
             dst = os.path.join(static_dir, clean_name)
             try:
                 shutil.copy2(src, dst)
@@ -767,8 +856,11 @@ def sync_product_on_save(sender, instance, **kwargs):
     except Exception:
         pass
 
-    # Remove stale files no longer referenced
-    _prune_stale_images(static_dir, current_names)
+    # Remove stale files no longer referenced. Pass the set of image basenames
+    # that still exist in media/ so we never prune a valid image that the sync
+    # simply failed to re-derive this pass (hash/subdir mismatch, etc.).
+    media_protected = _build_media_protected_set(media_root)
+    _prune_stale_images(static_dir, current_names, media_protected)
 
 
 @receiver(post_save, sender=ProductImage)
@@ -812,11 +904,14 @@ def _sync_ppc_media_to_static():
         fname = getattr(field, 'name', None)
         if not fname:
             continue
+        # Register the intended name before checking the source so a card image
+        # that is a committed static asset (no media counterpart) is protected
+        # from the prune pass below.
+        clean_name = _clean_hashed_filename(fname)
+        current_names.add(clean_name)
         src = os.path.join(media_root, str(fname))
         if not os.path.exists(src):
             continue
-        clean_name = _clean_hashed_filename(fname)
-        current_names.add(clean_name)
         dst = os.path.join(static_dir, clean_name)
         try:
             if not os.path.exists(dst) or \
@@ -826,7 +921,9 @@ def _sync_ppc_media_to_static():
         except Exception:
             pass
 
-    _prune_stale_images(static_dir, current_names)
+    # Safety net: never prune a card image that still has a source in media/.
+    media_protected = _build_media_protected_set(media_root)
+    _prune_stale_images(static_dir, current_names, media_protected)
 
 
 @receiver(post_save, sender=ProductsPageCard)

@@ -510,6 +510,8 @@ class _DictProduct:
         self.ordering_info = item.get('ordering_info', []) or []
         self.ordering_image = item.get('ordering_image', '')
         self.cert_image = item.get('cert_image', '')
+        # 'detail' | 'overview' — picks the public template (see Product.page_layout).
+        self.page_layout = item.get('page_layout', 'detail') or 'detail'
 
     def t(self, field_name, lang='en'):
         return translate(self, field_name, lang)

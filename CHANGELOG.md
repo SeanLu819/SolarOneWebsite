@@ -2,6 +2,117 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.6.3 - 2026-09-24
+
+### P0 前端风格一致性修复（设计审计 P0 三项）
+
+- **P0-1 未定义 token**：Cookie 横幅 `background: var(--surface)` 引用了从未定义的
+  变量 → 无效声明 → 背景 transparent 透底。改用双主题均已定义的 `var(--bg-raised)`。
+- **P0-2 accent 单一色源 + light 主题覆盖修复**：`--accent` 此前有 4 个分歧值
+  （base.css 暗 `#0077ED` / light `#0062C4` / admin 注入 `#0088FF` / critical CSS
+  `#0077ED`），且 admin 注入块以相同 specificity + 更靠后源序直接写
+  `:root{--accent:…}`，把 `[data-theme="light"]` 的压暗覆盖冲掉——浅色模式实际
+  渲染深色主题亮蓝（对小字号 mono 标签对比度不足）。重构为单一色源：admin 只注入
+  `--accent-brand`（默认 `#0088FF` = SiteConfig 默认值），`--accent` 及全部派生
+  （hover/soft/glow/deep/渐变/阴影）由 base.css 从 brand 推导；color-mix 派生包在
+  `@supports` 内（自定义属性不做语法校验，裸写 color-mix 会让不支持的浏览器把该
+  字面量代入消费属性 → 整条声明失效），字面量保留为老浏览器 fallback。附带修复
+  `.btn-primary:hover` 写死 `#0088FF`（恰与默认 accent 同色 → hover 无色差）。
+- **P0-3 字体栈对齐 + 字重补全**：critical CSS 的 `--ff-display` 仍指向从未真正
+  生效的 `'Space Grotesk'`（首帧与 base.css/admin 注入不一致，且 9 个 woff2 白
+  下载），统一为 canonical 栈 `'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+  'PingFang SC', …, Roboto, sans-serif`——critical CSS / base.css / seed_data.py /
+  seed_data.json / models.py 默认值五处对齐（seed 原缺 CJK 兜底，运行时中文回退
+  与 base.css 意图相悖）。`fonts.css` 原只自托管 Inter 400/600 与 Plex Mono 400，
+  而全站大量使用 `font-weight:500/700` 与 mono `500/600` → 字重回退/合成粗体跨
+  OS 不一致；新增 24 个 woff2（Inter 500/700、IBM Plex Mono 500/600，共 12 子集）
+  + 24 个 @font-face（合计 52 faces），全部通过 wOF2 magic 校验。生成脚本
+  `scripts/_add_font_weights.py`（幂等、可 --dry-run）。Space Grotesk 的
+  @font-face 保留（无渲染栈引用即零下载；admin 仍可手动选用）。
+- **Data migration `0026`**：已知旧字体栈（seed 的 Segoe UI 栈、0024 前后默认值）
+  升级到 canonical，仅匹配已知默认值才改写，保护管理员自定义。
+- **防回归**：新增 `P0StyleConsistencyTests`（surface token / accent 单源跨层一致 /
+  字体栈五处一致 / 字重文件存在且可解析 / btn hover 走 token）。
+  `scripts/_add_font_weights.py` 纳入仓库。
+
+### P1–P3 发布前优化与验证
+
+- **P1 Contact 表单公共化**：将 Contact 字段布局、标签、输入框与 textarea 的重复样式收敛到
+  `static/css/base.css` 的共享 class，保留原有间距、字号、边框和移动端 16px 输入规则；
+  未强行套用参数不同的通用 `.form-group`。详情页侧栏的页面级差异保持原样。
+- **P2 视觉 token 与眉标整理**：新增 `--radius-control`，统一公共交互控件圆角；Projects
+  与 News 使用共享 eyebrow/label 组件。Banner、详情页网格、轮播、RTL、页面 section
+  间距和 Contact 提交按钮等真实视觉差异保留，不做机械统一。
+- **P3-1 静态构建门禁**：`build.sh` 在生产路径对 collectstatic、manifest 和静态索引失败
+  采取 fail-closed；新增 `scripts/verify_static_build.py`，验证 manifest → hashed index →
+  `public/static/` 完整链路。
+- **P3-2 视觉评审覆盖**：`scripts/e2e/visual_review.py` 默认覆盖 8 个公开页面，并支持
+  Dark/Light 双主题、主题漂移检测、HTTP 状态检查与合法横向滚动排除。
+- **P3-3 浏览器安全门禁**：E2E 新增 CSP nonce、console error、pageerror、requestfailed
+  与 HTTP 4xx/5xx 响应检查；当前仍明确保留 `style-src 'unsafe-inline'`，待页面内联样式
+  渐进迁移后再收紧。
+- **认证图片迁移**：旧 `cert-3.webp` / `m-series-certs.webp` 已确认不再作为当前生产
+  seed 引用，删除并改用新的认证图片资源；静态构建门禁和图片引用测试作为发布前防线。
+- **局域网人工检查**：已使用项目既有 `scripts/dev_preview.py` 完成 Windows/移动端
+  多浏览器人工检查；脚本自动绑定局域网地址并注入当前进程 `ALLOWED_HOSTS`，无需修改
+  生产设置。
+- **发布验证**：`manage.py check`、迁移漂移检查、全量 Django 测试、静态构建门禁、
+  Playwright E2E 与 `git diff --check` 均通过；E2E 汇总为 `ALL CHECKS PASSED`。
+
+
+## v1.6.2 - 2026-09-22
+
+### Two product page templates (overview vs detail) + sidebar-mirrored admin changelist
+
+- **Two-template split.** Products now render either `templates/product_overview.html`
+  (series landing: banner + gallery carousel + copy + spec highlights, no beam-angle /
+  dimension / energy-table / request-a-sample blocks) or `templates/product_detail.html`
+  (full specs, unchanged). The choice is data-driven via a new `Product.page_layout`
+  field (`detail` / `overview`, default `detail`) selected in the admin — the old
+  hardcoded `product.slug != 'm-series'` conditionals in the detail template are gone.
+  Migration `0025_add_product_page_layout`.
+- **Sidebar hierarchy.** Two new series-home products (`rgb-rgbw`, `accessory`,
+  `page_layout=overview`) with their model pages (`fl9m-rgbw`, `glare-shield-for-rt410`)
+  nested underneath — the same shape as M Series. The public products sidebar
+  (`pages/views/i18n.py`) now nests `RGB / RGBW` and `Accessory`; the child label
+  `RT410 GS` replaces the long "Glare Shield for RT410". No URL changed.
+- **Seed double-channel sync.** `page_layout` is exported in
+  `pages/seed_sync.py::_product_to_dict` and present in both `pages/seed_data.py` and
+  `seed_data.json`, guarded by an `IS_VERCEL=True` split-identical test (a missed export
+  would silently turn every overview page back into a detail page in production).
+- **Admin changelist mirrors the public sidebar.** New `Sidebar Position` column shows
+  the breadcrumb `Category ▸ Series ▸ Model` (e.g. `Area and Site ▸ M Series ▸ FL4M`)
+  and rows are sorted in sidebar traversal order. The rank map's single source of
+  truth is `pages/views/i18n._get_products_sidebar('en')`, so sidebar edits flow into
+  the admin automatically; slugs not in the sidebar sort last and a sidebar build
+  failure can never break the admin. Implementation note (two Django internals that
+  cost one 500 each): `ModelAdmin.get_queryset` runs `get_ordering()` before any
+  annotation could exist, and `RelatedFieldListFilter.field_choices` borrows
+  `get_ordering()` for its *own* choices queryset — so `ProductAdmin.get_queryset`
+  only annotates `_sidebar_rank` via a slug-keyed SQL `CASE`, and the ordering is
+  injected in `SidebarOrderedChangeList.get_ordering(request, queryset)` (the hook
+  that runs after the annotation exists; explicit `?o=` column sorts win).
+  Filters/search/pagination intact.
+- **Guards.** `manage.py test pages` covers: A/B template split (local + stateless),
+  overview-template source contract (LCP hero, 1024px breakpoint, RTL logical
+  properties, shared carousel include, no dead table/CTA CSS), detail-template leaf-only
+  (no slug/category special cases), sidebar nesting, seed export, and the new
+  `ProductAdminSidebarTreeTests` (rank coverage/order/parent-child grouping, breadcrumb
+  labels, queryset CASE + fallback, empty-sidebar survival).
+- **Sidebar gap for `rt410-rgbw`** (admin-created model under the `rgb-rgbw` series
+  home): it was missing from `RGB_RGBW.subseries` in `pages/views/i18n.py`, so the
+  product had no frontend entry point and the admin `Sidebar Position` column showed
+  "— outside sidebar". Added `RT410_RGBW`; the seed-driven sidebar-nesting test now
+  fails closed if a seed `parent_slug` has no sidebar entry.
+- **Local static 404s after admin image uploads**: WhiteNoise without autorefresh
+  serves only the file snapshot taken at process start — anything written into
+  `static/` while `runserver` keeps running (admin uploads + its `collectstatic`)
+  404s: admin changelist icons missing, frontend product images broken. New
+  `WHITENOISE_AUTOREFRESH = not IS_VERCEL` (local re-resolves per request via
+  finders; Vercel unchanged, build-time collectstatic). Guard:
+  `WhiteNoiseLocalDevTests`.
+- **Version**: `VERSION` and `solarone/settings.py:APP_VERSION` → `1.6.2`.
+
 ## v1.6.1 - 2026-09-14
 
 ### Low-cost / independent hardening: ALLOWED_HOSTS lockdown, self-hosted fonts, edge rate limiting (#4 / #2 / #5)

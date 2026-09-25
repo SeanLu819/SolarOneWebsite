@@ -292,6 +292,31 @@ class CanonicalOriginTests(TestCase):
         self.assertEqual(resp.status_code, 400)
 
 
+class AnalyticsRenderingTests(TestCase):
+    """M2 (P1c) — GA4 snippet + GSC meta render only when configured."""
+
+    def _home(self):
+        return self.client.get('/').content.decode()
+
+    def test_no_analytics_when_unset(self):
+        content = self._home()
+        self.assertNotIn('googletagmanager.com/gtag/js', content)
+        self.assertNotIn('google-site-verification', content)
+
+    @override_settings(GA4_MEASUREMENT_ID='G-TEST12345')
+    def test_ga4_snippet_renders_with_id(self):
+        content = self._home()
+        self.assertIn('googletagmanager.com/gtag/js?id=G-TEST12345', content)
+        self.assertIn("gtag('config', 'G-TEST12345')", content)
+        # the inline config script must carry the CSP nonce
+        self.assertIn('nonce=', content)
+
+    @override_settings(GSC_VERIFICATION_CODE='abc123verify')
+    def test_gsc_verification_meta_renders(self):
+        content = self._home()
+        self.assertIn('name="google-site-verification" content="abc123verify"', content)
+
+
 class SitemapMultilingualTests(TestCase):
     """P1 — the sitemap must expose all 6 languages via xhtml:link alternates."""
 
@@ -322,6 +347,23 @@ class SitemapMultilingualTests(TestCase):
             )
 
 
+class ProductSeriesRedirectTests(TestCase):
+    """P1b — /products/series/<slug>/ must 301 to /products/<slug>/."""
+
+    def test_series_url_redirects_to_product_detail(self):
+        resp = self.client.get('/products/series/fl1m/')
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/products/fl1m/')
+
+    def test_series_url_redirect_preserves_language_prefix(self):
+        # A French request must keep the /fr/ prefix on the redirect target,
+        # because the view runs inside i18n_patterns. Django's redirect() returns
+        # a host-relative Location, so the prefix shows up as /fr/products/...
+        resp = self.client.get('/fr/products/series/fl1m/')
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/fr/products/fl1m/')
+
+
 class AboveTheFoldImageTests(SimpleTestCase):
     """P1 — first-screen (LCP) images must be eager and high priority.
 
@@ -340,12 +382,6 @@ class AboveTheFoldImageTests(SimpleTestCase):
     def test_product_detail_hero_is_lcp(self):
         tags = re.findall(r'<img[^>]*series-hero-bg[^>]*>',
                           self._read('product_detail.html'))
-        self.assertEqual(len(tags), 1)
-        self._assert_lcp(tags[0])
-
-    def test_product_series_hero_is_lcp(self):
-        tags = re.findall(r'<img[^>]*series-hero-bg[^>]*>',
-                          self._read('product_series.html'))
         self.assertEqual(len(tags), 1)
         self._assert_lcp(tags[0])
 
@@ -629,15 +665,17 @@ class ResponsivePhase1Tests(TestCase):
 
     # ---- N-1: 输入框 font-size >= 16px（iOS 聚焦自动放大且不回弹） ----
     def test_n1_form_inputs_16px(self):
-        # contact.html 表单控件用内联样式（非 .form-group 结构）——
-        # 内联 font-size:0.9rem(<16px) 会让 iOS 聚焦自动放大且不回弹。
-        # 断言渲染 DOM（L2 首跑发现纯 CSS 规则断言抓不到该问题，v1.1.6）。
-        # 仅限 <form id="contactForm"> 片段：页内联系信息文本（地址/电话等
-        # span/a）用 0.9rem 属正常展示排版，与 N-1 无关。
+        # Contact 控件已统一使用语义 class；16px 由 base.css 集中提供。
+        # 渲染 DOM 与样式源都必须保留该行为契约。
         html = self._get('/contact/')
         form = html.split('id="contactForm"', 1)[1].split('</form>', 1)[0]
         self.assertNotIn('font-size: 0.9rem', form)
-        self.assertIn('font-size: 16px', form)
+        self.assertIn('class="contact-form-control', form)
+        self.assertRegex(
+            self.css,
+            r'\.contact-form-control\s*\{[^}]*font-size:\s*16px',
+            'Contact 表单控件必须保持 iOS 防自动放大的 16px 字号',
+        )
         # 通用兜底：base.css 中 .form-group 的 16px 覆盖规则仍在
         self.assertRegex(
             self.css,
@@ -1163,12 +1201,9 @@ class ResponsivePhase2Tests(TestCase):
     def test_detail_grid_collapses_at_1024(self):
         pd = Path(settings.BASE_DIR,
                   'templates/product_detail.html').read_text(encoding='utf-8')
-        ps = Path(settings.BASE_DIR,
-                  'templates/product_series.html').read_text(encoding='utf-8')
-        for name, text in [('product_detail', pd), ('product_series', ps)]:
-            self.assertRegex(text,
-                r'@media \(max-width: 1024px\)\s*\{[^}]*detail-grid\s*\{[^}]*grid-template-columns:\s*1fr',
-                f'{name}.html: detail-grid 折单列必须提升到 1024px 断点')
+        self.assertRegex(pd,
+            r'@media \(max-width: 1024px\)\s*\{[^}]*detail-grid\s*\{[^}]*grid-template-columns:\s*1fr',
+            'product_detail.html: detail-grid 折单列必须提升到 1024px 断点')
 
     def test_detail_specs_two_columns_on_mobile(self):
         """F8 修正（2026-09-10 真机复核发现）：detail-specs 移动端恢复 2 列。
@@ -1376,6 +1411,22 @@ class StaticIndexFallbackTests(SimpleTestCase):
         url = _strip_static_hash(self.utils._product_image_url(product, 'image'))
         self.assertIn('/static/images/products/demo/demo-01.webp', url)
         self.assertNotIn('demo-bar-1.webp', url)
+
+
+class WhiteNoiseLocalDevTests(SimpleTestCase):
+    """本地 WhiteNoise 行为守卫。
+
+    回归背景（2026-09-23）：后台新建 RT410-RGBW 并上传图片后，admin 列表
+    图标与前端产品图全部 404 —— 非 autorefresh 的 WhiteNoise 只服务**进程
+    启动时**的文件快照（`self.files` dict），运行中新增的 static/ 文件必须
+    重启才能访问。
+    """
+
+    def test_autorefresh_on_locally_off_on_vercel(self):
+        self.assertEqual(
+            settings.WHITENOISE_AUTOREFRESH, not settings.IS_VERCEL,
+            '本地必须 autorefresh（后台上传的新图片立即可访问，不需重启）；'
+            'Vercel 必须关闭（构建期 collectstatic，进程无启动期概念）')
 
 
 class GeneratedStaticIndexCoverageTests(SimpleTestCase):
@@ -2683,5 +2734,975 @@ class ImageSitemapAndAltTests(TestCase):
         self.assertIn('informations de commande', content)
 
 
+class ProductPageLayoutSplitTests(TestCase):
+    """产品页两套模板，由 ``Product.page_layout`` 决定（后台 Page template）。
+
+    背景：`/products/<slug>/` 曾是"一个模板走天下"，M Series 靠模板里
+    `{% if product.slug != 'm-series' %}` 这类硬编码 slug 分支隐藏技术区块 ——
+    数据驱动页面上出现了业务特例。现在拆成两个模板：
+
+      * ``overview`` → `product_overview.html`：系列落地页（banner + 主图轮播 +
+        文字说明 + 自由图文位），**刻意不含**光束角/尺寸图/参数表/订购表/CTA；
+      * ``detail``   → `product_detail.html`：叶子型号页，全量技术参数。
+
+    守卫四件事：① 分流真的由字段驱动（不是 slug 白名单）；② overview 页确实
+    没有技术区块，但**保留** canonical/OG/JSON-LD；③ 无状态生产路径
+    （`IS_VERCEL` → seed JSON）与本地 DB 路径分流一致（seed 漏字段会让线上
+    静默回退成 detail）；④ overview 模板自身的 LCP / 断点 / RTL 契约。
+    """
+
+    OVERVIEW_BLOCKS_ABSENT = (
+        'class="detail-dimension"',
+        'class="detail-energy-data"',
+        'class="detail-ordering-table"',
+        'class="detail-request-sample"',
+        'class="scroll-hint"',
+    )
+
+    @classmethod
+    def _seed_products(cls):
+        from pages.views.utils import _load_seed
+        return _load_seed().get('products', [])
+
+    @classmethod
+    def _overview_slugs(cls):
+        return [p['slug'] for p in cls._seed_products()
+                if p.get('page_layout') == 'overview']
+
+    @classmethod
+    def _detail_slugs(cls):
+        return [p['slug'] for p in cls._seed_products()
+                if p.get('page_layout', 'detail') == 'detail']
+
+    def _template_name(self, path):
+        """返回该 URL 实际命中的产品模板名（必须恰好一个）。"""
+        resp = self.client.get(path)
+        self.assertEqual(resp.status_code, 200, path)
+        names = {t.name for t in resp.templates}
+        overview = 'product_overview.html' in names
+        detail = 'product_detail.html' in names
+        self.assertNotEqual(
+            overview, detail,
+            f'{path} 必须恰好命中一个产品模板，实际：{sorted(names)}')
+        return ('product_overview.html' if overview else 'product_detail.html'), resp
+
+    # -- ① 分流由字段驱动 ------------------------------------------------------
+    def test_overview_slugs_render_overview_template(self):
+        slugs = self._overview_slugs()
+        self.assertTrue(slugs, 'seed 里没有任何 page_layout=overview 的产品')
+        for slug in slugs:
+            name, _ = self._template_name(f'/products/{slug}/')
+            self.assertEqual(name, 'product_overview.html',
+                             f'{slug} 的 page_layout=overview，却渲染了 {name}')
+
+    def test_detail_slugs_render_detail_template(self):
+        slugs = self._detail_slugs()
+        self.assertTrue(slugs)
+        for slug in slugs:
+            name, _ = self._template_name(f'/products/{slug}/')
+            self.assertEqual(name, 'product_detail.html',
+                             f'{slug} 的 page_layout=detail，却渲染了 {name}')
+
+    def test_unknown_slug_keeps_not_found_page(self):
+        """未知 slug → product 为 None → 仍走 detail 模板的 Not Found 分支。"""
+        name, resp = self._template_name('/products/no-such-product-xyz/')
+        self.assertEqual(name, 'product_detail.html')
+        self.assertIn('Product Not Found', resp.content.decode('utf-8'))
+
+    # -- ② overview 页：无技术区块，但有 SEO head ------------------------------
+    def test_overview_pages_drop_technical_blocks(self):
+        for slug in self._overview_slugs():
+            html = self.client.get(f'/products/{slug}/').content.decode('utf-8')
+            body = re.sub(r'<style.*?</style>|<script.*?</script>', '', html,
+                          flags=re.S)
+            for needle in self.OVERVIEW_BLOCKS_ABSENT:
+                self.assertNotIn(
+                    needle, body,
+                    f'{slug}: 系列首页不应出现技术区块 {needle}')
+
+    def test_overview_pages_keep_seo_head(self):
+        for slug in self._overview_slugs():
+            html = self.client.get(f'/products/{slug}/').content.decode('utf-8')
+            for needle, label in (
+                ('rel="canonical"', 'canonical'),
+                ('property="og:image"', 'og:image'),
+                ('"@type": "Product"', 'Product JSON-LD'),
+                ('"@type": "BreadcrumbList"', 'BreadcrumbList JSON-LD'),
+                ('class="series-hero-bg"', 'hero banner'),
+            ):
+                self.assertIn(needle, html, f'{slug}: 缺少 {label}')
+            self.assertRegex(
+                html, r'class="series-hero-content">\s*<span',
+                f'{slug}: hero 区块结构变化（标签 + H1 应在 overlay 内）')
+
+    # -- ③ 双通道一致：seed 必须带 page_layout --------------------------------
+    @override_settings(IS_VERCEL=True)
+    def test_stateless_path_splits_identically(self):
+        """生产走 seed JSON；若导出漏了 page_layout，线上会静默全变 detail。"""
+        for slug in self._overview_slugs():
+            name, _ = self._template_name(f'/products/{slug}/')
+            self.assertEqual(
+                name, 'product_overview.html',
+                f'无状态路径下 {slug} 落到了 {name} —— '
+                'seed_data.json / pages/seed_data.py 里的 page_layout 丢了？')
+        name, _ = self._template_name(f'/products/{self._detail_slugs()[0]}/')
+        self.assertEqual(name, 'product_detail.html')
+
+    def test_seed_export_carries_page_layout(self):
+        """`_product_to_dict`（后台保存 → seed 导出）必须带上 page_layout。"""
+        from pages.seed_sync import _product_to_dict
+        from pages.models import Product
+        # 不入库：只验证导出字典的键集合（TestCase 的测试库是空的）。
+        probe = Product(slug='qa-layout-probe', name='QA probe',
+                        category='AREA_SITE', description='')
+        self.assertIn('page_layout', _product_to_dict(probe))
+
+    # -- ④ 后台字段 ------------------------------------------------------------
+    def test_admin_exposes_page_layout_field(self):
+        from pages.models import Product
+        field = Product._meta.get_field('page_layout')
+        self.assertEqual(
+            field.default, 'detail',
+            '默认必须是 detail（新建产品忘记选 = 全量详情页，不会静默变空壳）')
+        self.assertEqual({c[0] for c in field.choices}, {'detail', 'overview'})
+        flat = []
+        for _title, opts in ProductAdmin.fieldsets:
+            for entry in opts['fields']:
+                flat.extend(entry if isinstance(entry, (list, tuple)) else (entry,))
+        self.assertIn('page_layout', flat, '后台字段组里没有 Page template 选项')
+
+    # -- ⑤ 侧栏层级：系列首页在父级，型号页在子级 -------------------------------
+    def test_sidebar_nests_overview_homes_above_their_models(self):
+        from pages.views.i18n import (_get_products_sidebar,
+                                      _resolve_product_sidebar)
+        seed = {p['slug']: p for p in self._seed_products()}
+        overview_slugs = set(self._overview_slugs())
+
+        series = [s for cat in _get_products_sidebar('en') for s in cat['series']]
+        nested = {s['slug']: [x['slug'] for x in s.get('subseries', [])]
+                  for s in series if s.get('subseries')}
+        self.assertIn('m-series', nested,
+                      'M Series 变成了没有子级的扁平条目')
+
+        for parent_slug, kids in nested.items():
+            self.assertIn(parent_slug, seed,
+                          f'侧栏父级 {parent_slug} 在 seed 里没有对应产品（会 404）')
+            self.assertIn(parent_slug, overview_slugs,
+                          f'侧栏父级 {parent_slug} 应是系列首页'
+                          '（page_layout=overview）')
+            self.assertEqual(
+                set(kids),
+                {s for s, p in seed.items()
+                 if p.get('parent_slug') == parent_slug},
+                f'{parent_slug} 的侧栏子级与 seed 的 parent_slug 不一致')
+
+            for kid in kids:
+                series_key, sub_key, resolved_parent = \
+                    _resolve_product_sidebar(kid, 'en')
+                self.assertTrue(series_key, f'{kid} 未解析出父级系列 key')
+                self.assertTrue(sub_key, f'{kid} 未解析出子级层 key')
+                self.assertEqual(resolved_parent, parent_slug)
+
+            series_key, sub_key, resolved_parent = \
+                _resolve_product_sidebar(parent_slug, 'en')
+            self.assertTrue(series_key, f'{parent_slug} 未解析出父级 key')
+            self.assertEqual((sub_key, resolved_parent), ('', ''),
+                             f'{parent_slug} 是系列首页，不应高亮任何子项')
+
+    # -- ⑥ overview 模板自身的源码契约 -----------------------------------------
+    def _overview_src(self):
+        return (Path(settings.BASE_DIR) / 'templates' /
+                'product_overview.html').read_text(encoding='utf-8')
+
+    def test_overview_hero_is_lcp(self):
+        tags = re.findall(r'<img[^>]*series-hero-bg[^>]*>', self._overview_src())
+        self.assertEqual(len(tags), 1, 'overview hero 应恰好一个 LCP 图')
+        self.assertNotIn('loading="lazy"', tags[0])
+        self.assertIn('fetchpriority="high"', tags[0])
+        self.assertIn('decoding="async"', tags[0])
+
+    def test_overview_keeps_detail_template_breakpoints(self):
+        src = self._overview_src()
+        self.assertRegex(
+            src,
+            r'@media \(max-width: 1024px\)\s*\{[^}]*detail-grid\s*\{'
+            r'[^}]*grid-template-columns:\s*1fr',
+            'overview: detail-grid 折单列断点必须与 detail 模板一致（1024px）')
+        self.assertIn('.series-hero { height: 160px; }', src,
+                      'overview: ≤767px hero 高度收口丢失')
+        self.assertIn('[dir="rtl"] .series-hero-content', src,
+                      'overview: RTL 适配丢失')
+        self.assertIn('inset-inline-start: 32px', src,
+                      'overview: hero 文案定位未用逻辑属性（RTL 会错位）')
+
+    def test_overview_has_no_dead_table_or_cta_css(self):
+        src = self._overview_src()
+        for dead in ('detail-energy-table', 'detail-ordering-table',
+                     'detail-dimension-img', 'detail-beam-angle-img',
+                     'detail-request-sample', 'detail-btn', 'scroll-hint'):
+            self.assertNotIn(dead, src,
+                             f'overview: 残留了无效的 {dead} 样式/类名')
+
+    def test_overview_reuses_shared_carousel_script(self):
+        """轮播脚本必须复用 include，不得再内联一份（旧模板的教训）。"""
+        src = self._overview_src()
+        self.assertIn('{% include "includes/carousel_js.html" %}', src)
+        self.assertNotIn('psCarousel.render', src)
+
+
+class ProductAdminSidebarTreeTests(SimpleTestCase):
+    """后台 changelist 镜像前台侧栏：分类 ▸ 系列 ▸ 型号的顺序与父子关系。
+
+    `_sidebar_rank_map()` 以 `_get_products_sidebar('en')` 为唯一事实来源，
+    所以侧栏一旦调整，后台列表顺序与面包屑自动跟随 —— 不允许出现两份硬编码。
+    """
+
+    def setUp(self):
+        # 保险：清掉模块级缓存，确保测试每次从侧栏数据重建
+        from pages.admin import product as pa
+        pa._SIDEBAR_RANK_MAP_CACHE = None
+        self.pa = pa
+        self.rank_map = pa._sidebar_rank_map()
+
+    def test_rank_map_covers_every_sidebar_entry(self):
+        from pages.views.i18n import _get_products_sidebar
+        expected = []
+        for cat in _get_products_sidebar('en'):
+            for s in cat['series']:
+                expected.append(s['slug'])
+                expected.extend(x['slug'] for x in s.get('subseries', []))
+        self.assertEqual(sorted(self.rank_map), sorted(expected),
+                         'rank_map 与侧栏条目集不一致')
+
+    def test_ranks_follow_sidebar_traversal_order(self):
+        from pages.views.i18n import _get_products_sidebar
+        expected_order = []
+        for cat in _get_products_sidebar('en'):
+            for s in cat['series']:
+                expected_order.append(s['slug'])
+                expected_order.extend(x['slug'] for x in s.get('subseries', []))
+        actual_order = sorted(self.rank_map, key=lambda slug: self.rank_map[slug][0])
+        self.assertEqual(actual_order, expected_order)
+
+    def test_parent_child_grouping_flows_into_ranks(self):
+        """子型号的 rank 必须紧跟其系列首页（父子关系可见）。"""
+        get_rank = lambda slug: self.rank_map[slug][0]  # noqa: E731
+        self.assertLess(get_rank('m-series'), get_rank('fl1m'))
+        self.assertLess(get_rank('fl16m'), get_rank('rgb-rgbw'))
+        self.assertLess(get_rank('rgb-rgbw'), get_rank('fl9m-rgbw'))
+        self.assertLess(get_rank('fl9m-rgbw'), get_rank('accessory'))
+        self.assertLess(get_rank('accessory'), get_rank('glare-shield-for-rt410'))
+
+    def test_breadcrumb_labels(self):
+        self.assertEqual(self.rank_map['fl4m'][1],
+                         ['Area and Site', 'M Series', 'FL4M'])
+        self.assertEqual(self.rank_map['fl9m-rgbw'][1],
+                         ['Area and Site', 'RGB / RGBW', 'FL9M-RGBW'])
+        self.assertEqual(self.rank_map['glare-shield-for-rt410'][1],
+                         ['Area and Site', 'Accessory', 'RT410 GS'])
+        self.assertEqual(self.rank_map['rt590fl-s'][1],
+                         ['Flood Lighting', 'RT590FL-S'])
+
+    def test_sidebar_tree_column_renders_breadcrumb(self):
+        from types import SimpleNamespace
+        html = str(self.pa.ProductAdmin.sidebar_tree(
+            self.pa.ProductAdmin, SimpleNamespace(slug='fl4m')))
+        self.assertIn('M Series', html)
+        self.assertIn('FL4M', html)
+        self.assertIn(' ▸ ', html)
+
+    def test_sidebar_tree_falls_back_for_unknown_slug(self):
+        from types import SimpleNamespace
+        html = str(self.pa.ProductAdmin.sidebar_tree(
+            self.pa.ProductAdmin, SimpleNamespace(slug='not-in-sidebar')))
+        self.assertIn('outside sidebar', html)
+
+    def test_detail_only_fieldsets_tagged_for_layout_toggle(self):
+        """仅详细页渲染的区块必须带 detail-only 标记，供 page_layout JS 隐藏。"""
+        detail_only = [
+            name for name, opts in self.pa.ProductAdmin.fieldsets
+            if 'detail-only' in (opts or {}).get('classes', ())
+        ]
+        self.assertIn('Detail-page images (仅在「产品详细页」显示)', detail_only)
+        self.assertIn(
+            'Energy & Performance Data (17 standard parameters — 仅「产品详细页」)',
+            detail_only)
+        # overview 也用到的区块不得被标记
+        for name, opts in self.pa.ProductAdmin.fieldsets:
+            if name in ('Images', 'Ordering Information (订购信息 — 两种模板)'):
+                self.assertNotIn('detail-only', (opts or {}).get('classes', ()),
+                                 f'{name} 在系列首页也渲染，不能隐藏')
+
+    def test_page_layout_toggle_js_served(self):
+        """联动 JS 必须随 Product change form 下发。"""
+        self.assertIn('admin/js/page_layout_toggle.js',
+                      self.pa.ProductAdmin.Media.js)
+        from django.conf import settings
+        import os
+        self.assertTrue(os.path.exists(os.path.join(
+            settings.BASE_DIR, 'static', 'admin', 'js',
+            'page_layout_toggle.js')))
+
+    def test_get_queryset_annotates_sidebar_rank(self):
+        """get_queryset 只做 annotate；排序权在 SidebarOrderedChangeList。
+
+        历史事故：把 order_by('_sidebar_rank') 放进 get_queryset/get_ordering，
+        会被 Django 内部（ModelAdmin.get_queryset 链、RelatedFieldListFilter.
+        field_choices → field.get_choices(ordering=...)）应用到**没有该注解**
+        的其它 queryset 上，直接 FieldError → changelist 500。
+        """
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from django.contrib import admin as django_admin
+        from django.db.models import Case
+        from pages.models import Product
+        admin = self.pa.ProductAdmin(Product, django_admin.site)
+        rank_map = {
+            'bbb': (0, ['C', 'S1']),
+            'aaa': (1, ['C', 'S2']),
+        }
+        fallback = 2
+
+        class FakeQS(list):
+            def annotate(self, *a, **k):
+                self.annotate_kwargs = k
+                return self
+
+            def order_by(self, *fields):
+                self.order_fields = fields
+                return self
+
+        fake = FakeQS([SimpleNamespace(slug='aaa', pk=1),
+                       SimpleNamespace(slug='bbb', pk=2),
+                       SimpleNamespace(slug='zzz', pk=3)])
+        # 只 patch 掉 ModelAdmin 的基类实现；被测的 ProductAdmin.get_queryset 原样执行
+        with patch.object(django_admin.ModelAdmin, 'get_queryset',
+                          lambda self, request: fake), \
+             patch.object(self.pa, '_SIDEBAR_RANK_MAP_CACHE', rank_map):
+            admin.get_queryset(SimpleNamespace())
+        self.assertFalse(getattr(fake, 'order_fields', None),
+                         'get_queryset 不得自行 order_by（annotation 尚不可用）')
+        case = fake.annotate_kwargs['_sidebar_rank']
+        self.assertIsInstance(case, Case)
+        self.assertEqual(len(case.cases), len(rank_map),
+                         '每个侧栏 slug 都要有一个 When 分支')
+        # When 分支的顺序与 rank_map 一致（侧栏遍历顺序）
+        slugs = [w.condition.children[0][1] for w in case.cases]
+        self.assertEqual(slugs, list(rank_map.keys()))
+        self.assertEqual(case.default.value, fallback,
+                         '不在侧栏里的 slug 必须兜底排到最后')
+
+    def test_get_ordering_not_overridden(self):
+        """get_ordering 必须保持默认 —— 列表筛选器会把它借用到别的 queryset 上。"""
+        from django.contrib import admin as django_admin
+        from pages.models import Product
+        admin = self.pa.ProductAdmin(Product, django_admin.site)
+        self.assertEqual(admin.get_ordering(None), ('order', 'pk'))
+
+    def test_change_list_orders_by_sidebar_rank(self):
+        """ChangeList.get_ordering 在标注过的 queryset 上注入侧栏排序。"""
+        from django.contrib import admin as django_admin
+        from django.db.models import Value
+        from pages.models import Product
+        from pages.admin.product import SidebarOrderedChangeList
+
+        admin = self.pa.ProductAdmin(Product, django_admin.site)
+        cl = SidebarOrderedChangeList.__new__(SidebarOrderedChangeList)
+        cl.params = {}
+        cl.model_admin = admin
+
+        qs = Product.objects.none().annotate(_sidebar_rank=Value(0))
+        ordering = cl.get_ordering(None, qs)
+        self.assertEqual(ordering[0], '_sidebar_rank',
+                         '侧栏 rank 必须是第一排序键')
+        self.assertIn('pk', ordering, '必须以 pk 兜底保证确定性排序')
+
+    def test_change_list_respects_explicit_column_sort(self):
+        """用户点击列排序（?o=...）时，侧栏默认顺序让位。"""
+        from django.contrib import admin as django_admin
+        from django.db.models import Value
+        from pages.models import Product
+        from pages.admin.product import SidebarOrderedChangeList
+
+        admin = self.pa.ProductAdmin(Product, django_admin.site)
+        cl = SidebarOrderedChangeList.__new__(SidebarOrderedChangeList)
+        cl.params = {'o': '1'}
+        cl.model_admin = admin
+        cl.list_display = ()
+
+        qs = Product.objects.none().annotate(_sidebar_rank=Value(0))
+        ordering = cl.get_ordering(None, qs)
+        self.assertNotIn('_sidebar_rank', ordering)
+
+    def test_get_queryset_survives_empty_sidebar(self):
+        """侧栏构建失败 → admin 绝不能崩，退回默认排序。"""
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from django.contrib import admin as django_admin
+        from pages.models import Product
+        admin = self.pa.ProductAdmin(Product, django_admin.site)
+
+        class FakeQS(list):
+            def order_by(self, *fields):
+                self.order_fields = fields
+                return self
+
+        fake = FakeQS([SimpleNamespace(slug='x', pk=1)])
+        with patch.object(django_admin.ModelAdmin, 'get_queryset',
+                          lambda self, request: fake), \
+             patch.object(self.pa, '_SIDEBAR_RANK_MAP_CACHE', {}):
+            result = admin.get_queryset(SimpleNamespace())
+        self.assertIs(result, fake)
+        self.assertFalse(getattr(fake, 'order_fields', None),
+                         '侧栏为空时不得追加 _sidebar_rank 排序')
+
+
+class ProductDetailTemplateIsLeafOnlyTests(SimpleTestCase):
+    """detail 模板不再按 slug 特判：硬编码业务特例已随两模板拆分删除。
+
+    M Series 曾靠 `{% if product.slug != 'm-series' %}` / `category !=
+    'ACCESSORY'` 在**同一个**模板里隐藏技术区块。既然系列首页现在有独立
+    模板，detail 模板里任何 slug/单系列 key 判断都是死条件或新的特例，
+    必须挡住（防止特例悄悄长回来）。
+    """
+
+    def setUp(self):
+        self.src = (Path(settings.BASE_DIR) / 'templates' /
+                    'product_detail.html').read_text(encoding='utf-8')
+
+    def test_no_hardcoded_slug_conditional(self):
+        self.assertNotIn("product.slug !=", self.src,
+                         'detail 模板里又出现了按 slug 特判的隐藏逻辑')
+        self.assertNotIn("product.slug ==", self.src)
+
+    def test_no_category_conditional(self):
+        self.assertNotIn("product.category !=", self.src,
+                         'detail 模板里又出现了按 category 特判的隐藏逻辑')
+
+    def test_no_single_series_bottom_align_special_case(self):
+        """detail-grid-bottom-align 只应为 RT410 保留（M 已迁往 overview）。"""
+        hits = re.findall(r'active_series == \'([A-Z0-9_]+)\'',
+                          self.src)
+        self.assertEqual(sorted(set(hits)), ['RT410_SERIES'],
+                         f'detail 模板的单系列特判集合变化：{sorted(set(hits))}')
+
+    def test_bottom_align_class_still_defined(self):
+        self.assertIn('.detail-grid-bottom-align', self.src)
+
+
+class P1ContactFormConsistencyTests(SimpleTestCase):
+    """Contact form layout/control styles must use the shared semantic classes."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        base = Path(settings.BASE_DIR)
+        cls.template = (base / 'templates' / 'contact.html').read_text(encoding='utf-8')
+        cls.css = (base / 'static' / 'css' / 'base.css').read_text(encoding='utf-8')
+
+    def test_contact_form_uses_shared_layout_classes(self):
+        form = self.template.split('id="contactForm"', 1)[1].split('</form>', 1)[0]
+        self.assertIn('class="contact-form"', self.template)
+        self.assertNotIn('style="display: flex; flex-direction: column; gap: 20px;"', form)
+        self.assertEqual(form.count('class="contact-form-field"'), 5)
+        self.assertEqual(form.count('class="contact-form-label"'), 5)
+        self.assertEqual(form.count('class="contact-form-control'), 5)
+
+    def test_contact_form_class_values_preserve_existing_design(self):
+        for selector, required in (
+            ('.contact-form {', 'gap: 20px;'),
+            ('.contact-form-field {', 'gap: 6px;'),
+            ('.contact-form-control {', 'padding: 12px 16px;'),
+            ('.contact-form-textarea {', 'min-height: 100px;'),
+        ):
+            match = re.search(re.escape(selector) + r'[^}]*}', self.css)
+            self.assertIsNotNone(match, f'缺少 {selector} 规则')
+            self.assertIn(required, match.group(0))
+
+
+
+class P0StyleConsistencyTests(TestCase):
+    """v1.6.3 P0 前端风格一致性修复防回归（设计审计 P0 三项）。
+
+    1. P0-1: cookie 横幅曾引用未定义的 var(--surface) → 背景 transparent 透底。
+    2. P0-2: admin 曾直接注入 --accent（同 specificity + 后发 → 冲掉 light
+       压暗覆盖），且 --accent 有 4 个分歧字面值、btn hover 与 accent 同色；
+       现约定 admin 只注入 --accent-brand，其余一律由 base.css 推导。
+    3. P0-3: 字体栈五处一致（critical / base.css / seed py+json / models
+       默认）；渲染用到的字重必须有自托管 face 且文件真实存在。
+    按项目惯例全部读源码文件断言（部署产物由 collectstatic 生成）。
+    """
+
+    CANONICAL_FF = (
+        "'Inter', system-ui, -apple-system, BlinkMacSystemFont, "
+        "'PingFang SC', 'Hiragino Sans GB', "
+        "'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', "
+        "Roboto, sans-serif"
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        base = Path(settings.BASE_DIR)
+        cls.css = (base / 'static' / 'css' / 'base.css').read_text(
+            encoding='utf-8')
+        cls.base_html = (base / 'templates' / 'base.html').read_text(
+            encoding='utf-8')
+        cls.fonts_css = (base / 'static' / 'css' / 'fonts.css').read_text(
+            encoding='utf-8')
+        cls.seed = json.loads(
+            (base / 'seed_data.json').read_text(encoding='utf-8'))
+        cls.seed_py = (base / 'pages' / 'seed_data.py').read_text(
+            encoding='utf-8')
+
+    @staticmethod
+    def _norm_ff(value):
+        """归一化字体栈：剥引号与空白，只比 token 序列。
+
+        CSS 源是双引号多行、py/json 是单引号单行 —— 格式差异不是漂移。
+        """
+        return re.sub(r"[\s'\"]+", '', value)
+
+    # ---- P0-1 ----
+    def test_cookie_banner_uses_defined_surface_token(self):
+        self.assertNotIn('var(--surface)', self.base_html,
+                         '--surface 从未定义 → 背景 transparent 透底')
+        self.assertRegex(
+            self.base_html,
+            r'id="cookie-banner"[^>]*background:var\(--bg-raised\)',
+            'cookie 横幅背景必须用双主题均已定义的 --bg-raised')
+
+    # ---- P0-2 ----
+    def test_admin_injects_accent_brand_not_accent(self):
+        self.assertIn('--accent-brand: {{ config.accent_color }}',
+                      self.base_html, 'admin 必须只注入 --accent-brand')
+        self.assertNotRegex(
+            self.base_html,
+            r'--accent:\s*\{\{\s*config\.accent_color',
+            'admin 直接写 --accent 会冲掉 light 主题压暗覆盖（历史 bug）')
+
+    def test_accent_derivation_gated_and_from_brand(self):
+        self.assertIn('--accent-brand: #0088FF', self.css,
+                      'base.css 默认 brand 必须等于 SiteConfig 默认值')
+        self.assertIn('var(--accent-brand, #0088FF)', self.css,
+                      '--accent 必须由 --accent-brand 推导')
+        self.assertIn('@supports (color: color-mix', self.css,
+            'color-mix 派生必须包 @supports：自定义属性不做语法校验，'
+            '裸写会让老浏览器把字面量代入消费属性 → 整条声明失效')
+        self.assertRegex(
+            self.css,
+            r'\[data-theme="light"\]\s*\{[^}]*--accent:\s*'
+            r'color-mix\(in srgb, var\(--accent-brand',
+            'light 主题 accent 必须从 --accent-brand 压暗派生')
+
+    def test_accent_defaults_consistent_no_stale_literals(self):
+        self.assertEqual(self.seed['siteconfig']['accent_color'], '#0088FF')
+        self.assertIn('--accent-brand:#0088FF', self.base_html,
+                      'critical CSS 默认值必须与 seed/base.css 一致')
+        css_no_comment = re.sub(r'/\*.*?\*/', '', self.css, flags=re.DOTALL)
+        for stale in ('#0077ED', '#0062C4', '#0090FF', '#005BB5',
+                      '#004A99'):
+            self.assertNotIn(stale, css_no_comment,
+                             f'旧 accent 字面 {stale} 残留在 base.css')
+
+    def test_btn_hover_follows_accent_token(self):
+        m = re.search(r'\.btn-primary:hover\s*\{[^}]*\}', self.css)
+        self.assertIsNotNone(m, '.btn-primary:hover 规则缺失')
+        # 先剥注释：规则内的说明注释会提到旧字面量，只断言真实声明
+        block = re.sub(r'/\*.*?\*/', '', m.group(0), flags=re.DOTALL)
+        self.assertIn('var(--accent-hover)', block,
+            'hover 必须走派生 token（写死 #0088FF 与默认 accent 同色 → 无色差）')
+        self.assertNotIn('#0088FF', block)
+
+    # ---- P0-3 ----
+    def _extract_ff_stack(self, source, var):
+        m = re.search(rf'{var}:\s*([^;]+);', source)
+        self.assertIsNotNone(m, f'{var} 未找到')
+        return m.group(1)
+
+    def test_font_stack_aligned_across_all_sources(self):
+        canon = self._norm_ff(self.CANONICAL_FF)
+        for field in ('font_family_body', 'font_family_heading'):
+            self.assertEqual(
+                self._norm_ff(self.seed['siteconfig'][field]), canon,
+                f'seed_data.json {field} 与 canonical 不一致')
+            py_val = re.search(rf'"{field}":\s*"([^"]+)"', self.seed_py)
+            self.assertIsNotNone(py_val, f'seed_data.py 缺 {field}')
+            self.assertEqual(self._norm_ff(py_val.group(1)), canon,
+                             f'seed_data.py {field} 与 canonical 不一致')
+        crit = self.base_html.split('id="critical-css"', 1)[1]
+        for var in ('--ff-display', '--ff-body'):
+            self.assertEqual(
+                self._norm_ff(self._extract_ff_stack(crit, var)), canon,
+                f'critical CSS {var} 与 canonical 不一致')
+        root = re.search(r':root\s*\{(.*?)\n\s*\}', self.css, re.DOTALL)
+        self.assertIsNotNone(root, 'base.css :root 块缺失')
+        for var in ('--ff-display', '--ff-body'):
+            self.assertEqual(
+                self._norm_ff(self._extract_ff_stack(root.group(1), var)),
+                canon, f'base.css {var} 与 canonical 不一致')
+
+    def test_no_space_grotesk_in_render_path(self):
+        self.assertNotIn('Space Grotesk', self.base_html,
+                         'critical CSS 不得引用 Space Grotesk（首帧与 admin '
+                         '注入不一致且白下载 9 个 woff2）')
+        self.assertNotIn('Space Grotesk', self.css)
+
+    def test_cjk_fallback_present_in_base_css(self):
+        for token in ('PingFang SC', 'Noto Sans CJK', 'Microsoft YaHei',
+                      '-apple-system'):
+            self.assertIn(token, self.css)
+
+    def test_fonts_css_covers_rendered_weights(self):
+        for family, weight in (('Inter', '500'), ('Inter', '700'),
+                               ('IBM Plex Mono', '500'),
+                               ('IBM Plex Mono', '600')):
+            self.assertRegex(
+                self.fonts_css,
+                rf"font-family:\s*'{re.escape(family)}';\s*"
+                rf"font-style:\s*normal;\s*font-weight:\s*{weight};",
+                f'fonts.css 缺 {family} {weight} @font-face')
+
+    def test_every_fonts_css_file_exists_and_is_woff2(self):
+        fonts_dir = Path(settings.BASE_DIR) / 'static' / 'fonts'
+        urls = re.findall(r'url\(\.\./fonts/([^)]+)\)', self.fonts_css)
+        self.assertGreaterEqual(len(urls), 52,
+                                'fonts.css 声明的 face 数量异常下降')
+        for fname in urls:
+            fpath = fonts_dir / fname
+            self.assertTrue(fpath.exists(), f'声明了但文件不存在：{fname}')
+            self.assertEqual(fpath.read_bytes()[:4], b'wOF2',
+                             f'{fname} 不是合法 woff2')
+
+    def test_model_defaults_match_canonical(self):
+        from pages.models import SiteConfig
+        for field in ('font_family_body', 'font_family_heading'):
+            default = SiteConfig._meta.get_field(field).default
+            self.assertEqual(self._norm_ff(default),
+                             self._norm_ff(self.CANONICAL_FF),
+                             f'models.py {field} 默认值与 canonical 不一致')
+
+
+
+class P2RadiusTokenTests(SimpleTestCase):
+    """P2-1: shared control geometry uses one radius token."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.css = (Path(settings.BASE_DIR) / 'static' / 'css' / 'base.css').read_text(
+            encoding='utf-8')
+
+    def test_control_radius_token_is_defined_once(self):
+        self.assertEqual(self.css.count('--radius-control: 8px;'), 1)
+        self.assertIn('    --radius-control: 8px;', self.css)
+
+    def test_shared_controls_use_radius_token(self):
+        selectors = (
+            '.theme-toggle',
+            '.lang-switch-btn',
+            '.lang-switch-menu',
+            '.panel-actions .lang-switch-btn',
+            '.contact-form-control',
+            r'.form-group input,\s*\.form-group textarea',
+            '.form-submit .btn-primary',
+        )
+        for selector in selectors:
+            match = re.search(
+                rf'{selector}\s*\{{(?P<body>[^}}]*)\}}',
+                self.css,
+                flags=re.DOTALL,
+            )
+            self.assertIsNotNone(match, f'缺少公共控件规则：{selector}')
+            self.assertIn('border-radius: var(--radius-control);', match.group('body'))
+
+    def test_radius_token_is_not_used_for_page_specific_shapes(self):
+        for selector in ('.hero-slide', '.project-card', '.product-card',
+                         '.sidebar-nav-parent', '.contact-whatsapp'):
+            match = re.search(
+                rf'{re.escape(selector)}\s*\{{(?P<body>[^}}]*)\}}',
+                self.css,
+                flags=re.DOTALL,
+            )
+            if match:
+                self.assertNotIn(
+                    'border-radius: var(--radius-control);', match.group('body'),
+                    f'页面特有形状不应被控制类 token 接管：{selector}')
+
+    # P1-1 侧栏样式统一暂不纳入回归契约：详情页仍保留有意差异。
+
+
+class P2SectionLabelTests(SimpleTestCase):
+    """P2-4: shared section labels preserve their page-specific spacing."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        base = Path(settings.BASE_DIR)
+        cls.css = (base / 'static' / 'css' / 'base.css').read_text(encoding='utf-8')
+        cls.projects = (base / 'templates' / 'projects.html').read_text(encoding='utf-8')
+        cls.news = (base / 'templates' / 'news.html').read_text(encoding='utf-8')
+        cls.about = (base / 'templates' / 'about.html').read_text(encoding='utf-8')
+        cls.contact = (base / 'templates' / 'contact.html').read_text(encoding='utf-8')
+
+    def test_compact_modifier_preserves_twelve_pixel_spacing(self):
+        self.assertRegex(
+            self.css,
+            r'\.section-accent-label--compact\s*\{\s*margin-bottom:\s*12px;\s*\}',
+        )
+        for template in (self.projects, self.news):
+            self.assertIn(
+                'class="section-accent-label section-accent-label--compact"',
+                template,
+            )
+
+    def test_existing_label_variants_remain_unchanged(self):
+        self.assertIn('class="section-accent-label"', self.about)
+        self.assertIn('style="font-family: var(--ff-mono); font-size: 11px;', self.contact)
+        self.assertIn('margin-bottom: 16px;', self.contact)
+        self.assertNotIn('section-accent-label--compact', self.about)
+        self.assertNotIn('section-accent-label--compact', self.contact)
+
+
+# ---------------------------------------------------------------------------
+# P3-1：生产静态构建闸门（collectstatic → staticfiles.json → 索引 → public/）
+# ---------------------------------------------------------------------------
+# 生产用 BundledManifestStaticFilesStorage，`public/static/` 里只发布内容哈希
+# 文件名；`pages/static_index_data.HASHED_FILES` 是运行期唯一能拿到「原名 → 哈希名」
+# 的通道。若 collectstatic 失败（或清单里没有 paths）而构建继续，线上每个
+# {% static %} 都退回未哈希 URL → 全站资源 404。下面这组测试钉死三件事：
+#   ① pages/static_index.py 严格模式（--require-manifest，build.sh 用）必须 fail closed
+#   ② 默认宽松模式仍可用（CI 拿源码 static/ 生成索引，那里没有清单）
+#   ③ build.sh 两处失败路径都必须 exit 1，而不是告警后继续
+class P3StaticBuildGateTests(SimpleTestCase):
+    """P3-1: the production static build must fail closed, never ship hash-less."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        base = Path(settings.BASE_DIR)
+        cls.build_sh = (base / 'build.sh').read_text(encoding='utf-8')
+        cls.ci_yml = (base / '.github' / 'workflows' / 'ci.yml').read_text(
+            encoding='utf-8')
+        cls.verify_script = (base / 'scripts' / 'verify_static_build.py').read_text(
+            encoding='utf-8')
+
+    # ---- helpers ---------------------------------------------------------
+    @staticmethod
+    def _segment(source, start_marker, end_marker):
+        start = source.index(start_marker)
+        return source[start:source.index(end_marker, start)]
+
+    @staticmethod
+    def _run_main(argv):
+        """跑 pages.static_index.main()，吞掉它写到 stderr 的提示。"""
+        import contextlib
+        import io
+
+        from pages.static_index import main
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code = main(argv)
+        return code, err.getvalue()
+
+    @staticmethod
+    def _manifest(paths):
+        return json.dumps({'paths': paths, 'version': '1.1', 'hash': 'deadbeef'})
+
+    def _fake_root(self, tmp, manifest_body=None):
+        """建一个最小 collectstatic 产物目录，返回 (root, out)。"""
+        root = Path(tmp, 'staticfiles')
+        Path(root, 'css').mkdir(parents=True)
+        Path(root, 'css', 'base.css').write_text('body{}', encoding='utf-8')
+        if manifest_body is not None:
+            Path(root, 'staticfiles.json').write_text(manifest_body, encoding='utf-8')
+        return str(root), str(Path(tmp, 'pages', 'static_index_data.py'))
+
+    # ---- ① 严格模式（build.sh / verify 脚本走这条）------------------------
+    def test_strict_mode_fails_when_root_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = str(Path(tmp, 'pages', 'static_index_data.py'))
+            code, err = self._run_main(
+                ['--root', str(Path(tmp, 'nope')), '--out', out, '--require-manifest'])
+            self.assertEqual(code, 2, '缺 staticfiles/ 必须非零退出（fail closed）')
+            self.assertIn('ERROR', err)
+            self.assertFalse(Path(out).exists(), '失败时不得留下半成品索引')
+
+    def test_strict_mode_fails_when_manifest_missing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root, out = self._fake_root(tmp)
+            code, err = self._run_main(
+                ['--root', root, '--out', out, '--require-manifest'])
+            self.assertEqual(code, 2, '缺 staticfiles.json 必须非零退出')
+            self.assertIn('ERROR', err)
+            self.assertFalse(Path(out).exists())
+
+    def test_strict_mode_fails_when_manifest_has_no_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root, out = self._fake_root(tmp, self._manifest({}))
+            code, err = self._run_main(
+                ['--root', root, '--out', out, '--require-manifest'])
+            self.assertEqual(code, 2, '清单里没有 paths 等于没有哈希名')
+            self.assertIn('ERROR', err)
+            self.assertFalse(Path(out).exists())
+
+    def test_strict_mode_writes_index_when_manifest_is_usable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root, out = self._fake_root(
+                tmp, self._manifest({'css/base.css': 'css/base.280e03822c88.css'}))
+            code, err = self._run_main(
+                ['--root', root, '--out', out, '--require-manifest'])
+            self.assertEqual(code, 0, err)
+            namespace = {}
+            exec(compile(Path(out).read_text(encoding='utf-8'), out, 'exec'), namespace)
+            self.assertEqual(namespace['HASHED_FILES'],
+                             {'css/base.css': 'css/base.280e03822c88.css'})
+
+    # ---- ② 默认宽松模式：CI 从源码 static/ 生成索引必须仍然可用 -----------
+    def test_default_mode_still_generates_index_for_source_static(self):
+        """ci.yml `--root static` —— 源码目录本来就没有 collectstatic 产物。"""
+        with tempfile.TemporaryDirectory() as tmp:
+            out = str(Path(tmp, 'pages', 'static_index_data.py'))
+            code, _err = self._run_main(
+                ['--root', str(Path(settings.BASE_DIR, 'static')), '--out', out])
+            self.assertEqual(code, 0, 'CI 从 static/ 生成索引必须仍然成功（默认宽松）')
+            namespace = {}
+            exec(compile(Path(out).read_text(encoding='utf-8'), out, 'exec'), namespace)
+            self.assertEqual(namespace['HASHED_FILES'], {},
+                             '源码 static/ 没有清单 → 哈希映射为空，只有目录索引')
+            self.assertIn('css', namespace['STATIC_INDEX']['dirs'])
+
+    def test_default_mode_keeps_writing_index_without_manifest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root, out = self._fake_root(tmp)
+            code, _err = self._run_main(['--root', root, '--out', out])
+            self.assertEqual(code, 0, '未加开关时必须保持历史宽松行为')
+            self.assertTrue(Path(out).exists())
+
+    # ---- ③ build.sh 的失败语义 -------------------------------------------
+    def test_build_sh_collectstatic_failure_is_fatal(self):
+        segment = self._segment(self.build_sh, 'Running collectstatic',
+                               '[build.sh] collectstatic done')
+        self.assertIn('exit 1', segment,
+                      'collectstatic 失败必须中断构建（fail closed）')
+        self.assertNotIn('WARNING: collectstatic failed', self.build_sh,
+                         '旧的「只告警然后继续」语义必须彻底删除')
+
+    def test_build_sh_static_index_step_is_strict_and_fatal(self):
+        segment = self._segment(self.build_sh, 'Generating static index',
+                               'Creating public/ directory')
+        self.assertIn('--require-manifest', segment,
+                      'build.sh 必须以严格模式生成索引（缺清单＝构建失败）')
+        self.assertIn('exit 1', segment, '索引生成失败必须中断构建')
+
+    def test_ci_index_generation_stays_permissive(self):
+        """CI 不能加 --require-manifest：它从源码 static/ 生成，本来就没有清单。"""
+        self.assertIn('--root static --out pages/static_index_data.py', self.ci_yml)
+        self.assertNotIn('--require-manifest', self.ci_yml)
+
+    def test_verify_script_exercises_the_production_storage_path(self):
+        self.assertIn('--require-manifest', self.verify_script)
+        self.assertIn('"VERCEL"', self.verify_script,
+                      '冒烟脚本必须用 VERCEL=1 触发生产静态存储后端')
+
+
+# ---------------------------------------------------------------------------
+# P3-2：可视化评审工具的覆盖面（每种页面模板 × 深/浅双主题）
+# ---------------------------------------------------------------------------
+# visual_review.py 是「改完先看图」的唯一手段，它最危险的失效方式不是崩，
+# 而是**静默缩水**：少跑一个页面、少跑一套主题，报告照样生成得漂漂亮亮，
+# 看的人却以为已经全看过了。所以把三件事钉成断言：
+#   ① 默认路径覆盖 pages/urls.py 里每一个公开页面视图，且不指向 301 别名
+#   ② 主题注入与 templates/base.html 的 localStorage['theme'] 契约一致
+#   ③ 页面非 200 / 主题没生效必须非零退出，而不是安静地截一张没用的图
+class P3VisualReviewCoverageTests(SimpleTestCase):
+    """P3-2: the visual review tool must cover every page template + both themes."""
+
+    # robots.txt / sitemap.xml 不是给人看的 HTML；diagnostic 只在 DEBUG=True 存在
+    # （且限 STAFF）；product_series 是历史 URL 的 301 别名（规范 URL 是
+    # /products/<slug>/），评审默认路径不应落在它上面。
+    NON_PAGE_ROUTES = {'robots_txt', 'sitemap_xml', 'diagnostic', 'product_series'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        base = Path(settings.BASE_DIR)
+        script = base / 'scripts' / 'e2e' / 'visual_review.py'
+        cls.src = script.read_text(encoding='utf-8')
+        cls.base_html = (base / 'templates' / 'base.html').read_text(encoding='utf-8')
+        cls.seed = json.loads((base / 'seed_data.json').read_text(encoding='utf-8'))
+        cls.module = cls._load_module(script)
+
+    @staticmethod
+    def _load_module(path):
+        """按路径加载模块：visual_review.py 顶层只有常量，import 无副作用。"""
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location('visual_review_under_test', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    # ---- ① 页面模板覆盖 ---------------------------------------------------
+    def test_default_paths_cover_every_public_page_view(self):
+        """每条公开路由都必须有默认评审路径（新增页面忘了加 → 这条会红）。"""
+        from django.urls import resolve
+
+        from pages.urls import urlpatterns
+
+        covered = {resolve(p).url_name for p in self.module.DEFAULT_PATHS}
+        public = {getattr(p, 'name', None) for p in urlpatterns}
+        public = {n for n in public if n} - self.NON_PAGE_ROUTES
+        self.assertEqual(
+            public - covered, set(),
+            f'这些页面没有任何默认评审路径：{sorted(public - covered)}')
+        self.assertNotIn('product_series', covered,
+                         '默认路径不应落到 301 别名路由（规范 URL 是 /products/<slug>/）')
+
+    def test_default_paths_are_well_formed_and_unique(self):
+        paths = self.module.DEFAULT_PATHS
+        self.assertEqual(len(paths), len(set(paths)), '默认路径不能重复')
+        for path in paths:
+            self.assertTrue(path.startswith('/'), f'路径必须以 / 开头：{path}')
+            self.assertTrue(path.endswith('/'), f'路径必须以 / 结尾：{path}')
+
+    def test_project_detail_default_path_points_at_real_seed_content(self):
+        """详情页 slug 必须来自 seed_data.json，否则空库渲染出来是 404。"""
+        slugs = {project['slug'] for project in self.seed['projects']}
+        detail_paths = [p for p in self.module.DEFAULT_PATHS
+                        if re.fullmatch(r'/projects/[^/]+/', p)]
+        self.assertTrue(detail_paths, '默认路径必须包含一个项目详情页')
+        for path in detail_paths:
+            slug = path.strip('/').split('/')[1]
+            self.assertIn(slug, slugs,
+                          f'{path} 的 slug 不在 seed_data.json 里 → 评审会截到 404')
+
+    # ---- ② 主题轴 ---------------------------------------------------------
+    def test_both_themes_are_reviewed_and_labelled(self):
+        self.assertEqual(tuple(self.module.THEMES), ('dark', 'light'),
+                         '必须同时评审深色与浅色（dark 是 base.html 的默认主题）')
+        self.assertEqual(set(self.module.THEME_LABELS), set(self.module.THEMES),
+                         'THEMES 与 THEME_LABELS 必须一一对应，否则报告渲染 KeyError')
+
+    def test_theme_injection_matches_base_html_contract(self):
+        """主题靠 base.html 读 localStorage['theme']；评审脚本必须注入同一个键。"""
+        self.assertEqual(self.module.THEME_STORAGE_KEY, 'theme')
+        self.assertIn(f"localStorage.getItem('{self.module.THEME_STORAGE_KEY}')",
+                      self.base_html,
+                      'base.html 的主题初始化脚本改了 → 评审脚本的注入键要同步')
+        self.assertIn('data-theme', self.base_html)
+        self.assertIn('%s', self.module.THEME_INIT_JS,
+                      'THEME_INIT_JS 必须留出插值位给 storage key / 主题名')
+        self.assertIn('add_init_script', self.src,
+                      '主题必须在文档开始前注入（点按钮在移动端不可靠）')
+
+    # ---- ③ 失败必须响 -----------------------------------------------------
+    def test_non_200_and_theme_drift_are_fatal(self):
+        self.assertIn('if d.get("httpStatus") != 200:', self.src,
+                      '页面非 200 必须记为问题（否则 404 也照样出报告）')
+        self.assertIn('if d.get("theme") != theme:', self.src,
+                      '主题未生效必须记为问题（否则深浅两张图一模一样）')
+        self.assertIn('return 1', self.src, '有问题时必须非零退出')
+        self.assertIn('sys.exit(main())', self.src, '退出码必须真的传出去')
 
 
