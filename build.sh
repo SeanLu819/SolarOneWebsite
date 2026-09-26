@@ -16,6 +16,17 @@
 set -e
 set -o pipefail
 
+# Silence non-fatal build warnings:
+# - UV_LINK_MODE=copy: Vercel's build FS has no hardlink support, so `uv pip
+#   install` would warn "Failed to hardlink files; falling back to full copy".
+#   Copying directly suppresses it (no real perf impact at our scale).
+# - PIP_ROOT_USER_ACTION=ignore: Vercel installs as root; this quietens pip's
+#   "Running pip as the 'root' user" warning on any pip step that runs inside
+#   this script (Vercel's own native pip step is silenced via a project env
+#   var — see commit note).
+export UV_LINK_MODE=copy
+export PIP_ROOT_USER_ACTION=ignore
+
 echo "=== [build.sh] Starting ==="
 echo "  Working dir: $(pwd)"
 echo "  Python: $(which python)"
@@ -39,7 +50,7 @@ fi
 
 if [ $INSTALL_SUCCESS -ne 0 ]; then
     echo "  Falling back to pip..."
-    pip install --break-system-packages -r requirements.txt 2>&1 | tail -10
+    pip install --break-system-packages --root-user-action=ignore -r requirements.txt 2>&1 | tail -10
     INSTALL_SUCCESS=$?
 fi
 
