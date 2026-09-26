@@ -29,7 +29,11 @@ set +e
 INSTALL_SUCCESS=0
 if command -v uv &> /dev/null; then
     echo "  Using uv..."
-    uv pip install -r requirements.txt 2>&1 | tail -10
+    # Install into the system Python (Vercel Lambda runs on system Python, no
+    # venv). --system avoids "No virtual environment found"; --break-system-packages
+    # is required on PEP 668 externally-managed runtimes and is a harmless no-op
+    # elsewhere. The pip fallback below stays as a safety net.
+    uv pip install --system --break-system-packages -r requirements.txt 2>&1 | tail -10
     INSTALL_SUCCESS=$?
 fi
 
