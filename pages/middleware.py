@@ -1,4 +1,5 @@
 import hashlib
+import os
 import secrets
 import user_agents
 from django.conf import settings
@@ -23,7 +24,13 @@ class VisitorTrackingMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        
+
+        # Preview/test mode: skip DB write entirely (set by scripts/dev_preview.py
+        # and the test suite). Lets the site serve read-only when the dev box can't
+        # commit to sqlite — without touching real analytics in production.
+        if os.environ.get('DJANGO_DISABLE_VISITOR_TRACKING'):
+            return response
+
         # Skip admin, static, media requests
         if request.path.startswith('/admin/') or request.path.startswith('/static/') or request.path.startswith('/media/'):
             return response

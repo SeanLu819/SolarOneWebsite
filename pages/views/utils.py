@@ -231,12 +231,16 @@ def _dict_product_image_url(path, slug):
         candidates.append(f'images/products/{slug}/{clean_stem}.webp')
     if path.startswith('images/'):
         candidates.append(path)
-    if path.startswith('products/'):
-        candidates.append(f'images/{path}')
     if slug and filename:
         candidates.append(f'images/products/{slug}/{filename}')
     if slug and stem:
         candidates.append(f'images/products/{slug}/{stem}.webp')
+    # Legacy normalized path LAST: the curated layout is per-slug dirs, and
+    # legacy segments (e.g. products/gallery/x.webp) may only exist as stale
+    # copies in STATIC_ROOT (which the dev server does not serve) — preferring
+    # them first produced 404ing URLs even when the slug-dir file exists.
+    if path.startswith('products/'):
+        candidates.append(f'images/{path}')
 
     hit = _first_static(candidates)
     if hit:
@@ -285,14 +289,17 @@ def _product_image_url(product, field_name):
         candidates.append(f'images/products/{clean_filename}')
     if slug and clean_stem and clean_stem != stem:
         candidates.append(f'images/products/{slug}/{clean_stem}.webp')
-    if field_name_value.startswith('products/'):
-        candidates.append(f'images/{field_name_value}')
+    # Slug-dir candidates BEFORE legacy normalized paths: see
+    # _dict_product_image_url — legacy segments may only exist as stale
+    # STATIC_ROOT copies the dev server never serves.
     if slug and filename:
         candidates.append(f'images/products/{slug}/{filename}')
     if filename:
         candidates.append(f'images/products/{filename}')
     if slug and stem:
         candidates.append(f'images/products/{slug}/{stem}.webp')
+    if field_name_value.startswith('products/'):
+        candidates.append(f'images/{field_name_value}')
     if stem and field_name_value.startswith('products/'):
         candidates.append(f'images/{field_name_value.rsplit(".", 1)[0]}.webp')
 

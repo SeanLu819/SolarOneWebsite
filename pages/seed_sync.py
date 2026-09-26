@@ -162,6 +162,37 @@ def _project_gallery_paths(project):
     return paths
 
 
+def _news_gallery_dicts(article):
+    """Return the ``NewsImage`` rows of an article as seed dicts.
+
+    Same contract as the product/project ``gallery`` lists — canonical static
+    paths — but each entry also carries the editor-written ``alt``/``caption``
+    and the ``order``, because the news card renders a figure per image and the
+    alt text is the only accessibility copy on the card.
+    """
+    entries = []
+    try:
+        for img in article.images.all().order_by('order', 'pk'):
+            fname = getattr(img.image, 'name', '')
+            if not fname:
+                continue
+            entry = {
+                'image': _resolve_static_path(
+                    fname, article.slug, 'news', field_name='image'),
+                'alt': img.alt_text or '',
+                'caption': img.caption or '',
+                'order': img.order,
+            }
+            if img.width:
+                entry['width'] = img.width
+            if img.height:
+                entry['height'] = img.height
+            entries.append(entry)
+    except Exception:
+        pass
+    return entries
+
+
 def _product_to_dict(product):
     """Convert a Product model instance to a seed dict with ALL fields."""
     slug = product.slug
@@ -288,11 +319,17 @@ def _news_to_dict(article):
     return {
         'slug': article.slug,
         'title': article.title,
+        'category': article.category,
         'summary': article.summary or '',
         'content': article.content,
         'image': image_path,
+        'images': _news_gallery_dicts(article),
         'published_at': article.published_at.isoformat() if article.published_at else '',
         'is_published': bool(article.is_published),
+        # Exporting ``translations`` is a correctness requirement, not a nicety:
+        # the admin save hook re-runs this sync, so omitting the field would wipe
+        # the five languages from the committed seed on the next save.
+        'translations': article.translations or {},
     }
 
 
@@ -611,6 +648,13 @@ def sync_seed_from_json(base_dir=None):
                 missing.append(f"  project {p['slug']} gallery: {g}")
         if p.get('pdf_url') and not _static_file_exists(p['pdf_url'], base_dir):
             missing.append(f"  project {p['slug']}.pdf_url: {p['pdf_url']}")
+
+    for n in seed_data.get('news', []):
+        if n.get('image') and not _static_file_exists(n['image'], base_dir):
+            missing.append(f"  news {n['slug']}.image: {n['image']}")
+        for g in n.get('images', []):
+            if g.get('image') and not _static_file_exists(g['image'], base_dir):
+                missing.append(f"  news {n['slug']} images: {g['image']}")
 
     if missing:
         print(f'[seed_sync] WARNING: {len(missing)} path(s) not found in static/:')

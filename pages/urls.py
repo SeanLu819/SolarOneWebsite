@@ -7,6 +7,7 @@ urlpatterns = [
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),
     path('news/', views.news, name='news'),
+    path('news/<slug:slug>/', views.news_detail, name='news_detail'),
     path('products/', views.products, name='products'),
     path('products/series/<slug:slug>/', views.product_series, name='product_series'),
     path('products/<slug:slug>/', views.product_detail, name='product_detail'),

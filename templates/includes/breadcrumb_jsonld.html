@@ -1,11 +1,11 @@
 {% load i18n %}
 {% comment %}
-BreadcrumbList JSON-LD — the single source for the five pages that emit one
-(products, product_detail, product_series, projects, project_detail).
+BreadcrumbList JSON-LD — the single source for the six pages that emit one
+(products, product_detail, product_series, projects, project_detail, news_detail).
 
 Params
-  section    'products' | 'projects' — resolves the 2nd crumb (translated name
-             + listing URL) so no call site builds a URL itself.
+  section    'products' | 'projects' | 'news' — resolves the 2nd crumb
+             (translated name + listing URL) so no call site builds a URL itself.
   leaf_name  optional 3rd crumb name. Callers pass the model value already
              piped through |escapejs wherever the original did, so the emitted
              bytes are unchanged.
@@ -19,6 +19,9 @@ could leak its own hostname into structured data (audit §4 #1).
 {% if section == 'projects' %}
 {% trans "Projects" as section_name %}
 {% url 'projects' as section_url %}
+{% elif section == 'news' %}
+{% trans "News" as section_name %}
+{% url 'news' as section_url %}
 {% else %}
 {% trans "Products" as section_name %}
 {% url 'products' as section_url %}

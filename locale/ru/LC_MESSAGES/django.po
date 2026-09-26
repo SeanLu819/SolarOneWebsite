@@ -903,3 +903,18 @@ msgstr "старое освещение HID"
 
 msgid "New LED lighting"
 msgstr "новое светодиодное освещение"
+msgid "Read article"
+msgstr "Читать статью"
+
+msgid "Load more"
+msgstr "Показать ещё"
+
+msgid "Featured"
+msgstr "Главное"
+
+msgid "Back to all news"
+msgstr "Вернуться ко всем новостям"
+
+msgid "More news"
+msgstr "Другие новости"
+

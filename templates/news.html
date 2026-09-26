@@ -9,118 +9,226 @@
 
 {% block content %}
 
-<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+<section class="news-page" style="padding: 100px 0 80px;">
   <div class="container">
-    <div class="sidebar-layout">
 
-      <!-- ===== LEFT SIDEBAR ===== -->
-      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
-      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
-      <aside class="sidebar-nav">
-        <div class="sidebar-nav-header">{% trans "News" %}</div>
-        <nav class="sidebar-nav-list">
-          <a href="{% url 'news' %}" class="sidebar-nav-child active">{% trans "All News" %}</a>
-        </nav>
-      </aside>
-
-      <!-- ===== MAIN CONTENT ===== -->
-      <div class="sidebar-content">
-        <div class="sidebar-content-header" style="margin-bottom: 40px;">
-          <span class="section-accent-label section-accent-label--compact">{% trans "SolarOne News" %}</span>
-          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Latest Updates" %}</h1>
-          <p class="section-body" style="max-width: none;">{% trans "News, product launches, and insights from SolarOne." %}</p>
-        </div>
-
-        <div class="news-grid">
-          {% for article in articles %}
-          <article class="news-card reveal">
-            {% if article.image_url %}
-            <div class="news-card-img">
-              <img src="{{ article.image_url }}" alt="{{ article.title }}" loading="lazy">
-            </div>
-            {% endif %}
-            <div class="news-card-body">
-              <div class="news-card-meta">{{ article.published_at|date:"Y-m-d" }}</div>
-              <h3 class="news-card-title">{{ article.title }}</h3>
-              {% if article.summary %}<p class="news-card-summary">{{ article.summary }}</p>{% endif %}
-              <div class="news-card-content">{{ article.content|linebreaks }}</div>
-            </div>
-          </article>
-          {% empty %}
-          <p class="section-body" style="color: var(--ink-mute);">{% trans "No news articles yet." %}</p>
-          {% endfor %}
-        </div>
-      </div>
-
+    <div class="news-page-header">
+      <span class="section-accent-label section-accent-label--compact">{% trans "SolarOne News" %}</span>
+      <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Latest Updates" %}</h1>
+      <p class="section-body" style="max-width: none;">{% trans "News, product launches, and insights from SolarOne." %}</p>
     </div>
+
+    <!-- Category chips (server-side filtering; labels are precomputed with _t()
+         in the view — the trans tag only accepts literals, see
+         NewsChipsAndCopyTests). -->
+    <nav class="news-chips" aria-label="{% trans "News" %}">
+      <a href="{% url 'news' %}"
+         class="news-chip{% if not news_active_category %} is-active{% endif %}">
+        {% trans "All News" %}
+        <span class="news-chip-count">{{ news_total_count }}</span>
+      </a>
+      {% for cat in news_categories %}
+      <a href="{% url 'news' %}?category={{ cat.key|urlencode }}"
+         class="news-chip{% if news_active_category == cat.key %} is-active{% endif %}">
+        {{ cat.label }}
+        <span class="news-chip-count">{{ cat.count }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+
+    <div class="news-grid" id="newsGrid">
+      {% for article in articles %}
+      <!-- The whole card links to the detail page (industry-standard newsroom
+           pattern). Gallery photos render there, not here: list cards show one
+           uniform 16:9 cover so the grid stays level. -->
+      <a class="news-card reveal{% if forloop.first and not news_active_category %} news-card--featured{% endif %}{% if forloop.counter0 >= 9 %} is-hidden{% endif %}"
+         href="{% url 'news_detail' article.slug %}">
+        <div class="news-card-cover">
+          {% if article.image_url %}
+          <img src="{{ article.image_url }}"
+               alt="{{ article.title_t|default:article.title }}"
+               {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
+          {% else %}
+          <div class="news-card-cover-fallback" aria-hidden="true"></div>
+          {% endif %}
+        </div>
+        <div class="news-card-body">
+          {% if forloop.first and not news_active_category %}
+          <span class="news-card-flag">{% trans "Featured" %}</span>
+          {% endif %}
+          <div class="news-card-meta">
+            <span class="news-card-category">{{ article.category_label|default:article.category }}</span>
+            <span class="news-card-date">{{ article.published_at|date:"Y-m-d" }}</span>
+          </div>
+          <h3 class="news-card-title">{{ article.title_t|default:article.title }}</h3>
+          {% if article.summary %}
+          <p class="news-card-summary">{{ article.summary_t|default:article.summary }}</p>
+          {% endif %}
+          <span class="news-card-more">{% trans "Read article" %}<span class="news-card-more-arrow" aria-hidden="true">&#8594;</span></span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% if not articles %}
+    <p class="section-body" style="color: var(--ink-mute);">{% trans "No news articles yet." %}</p>
+    {% endif %}
+
+    <div class="news-loadmore">
+      <button type="button" id="newsLoadMore" hidden>{% trans "Load more" %}</button>
+    </div>
+
   </div>
 </section>
 
 <style nonce="{{ request.csp_nonce }}">
-  .news-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  .news-page { background: var(--bg); }
+  .news-page-header { margin-bottom: 34px; }
+
+  /* ---- category chips ---- */
+  .news-chips {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px;
   }
-  .news-card {
-    background: var(--bg-soft);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
+  .news-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em;
+    color: var(--ink-soft); background: var(--bg-soft);
+    border: 1px solid var(--line-strong); border-radius: 99px;
+    padding: 8px 16px; text-decoration: none; transition: color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
   }
-  .news-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.35);
+  .news-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .news-chip.is-active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    box-shadow: 0 0 0 3px var(--accent-glow);
   }
-  .news-card-img {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: var(--bg-raised);
-  }
-  .news-card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .news-card-body {
-    padding: 28px 24px 32px;
-  }
-  .news-card-meta {
-    font-family: var(--ff-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-  .news-card-title {
-    font-family: var(--ff-display);
-    font-size: var(--fs-card-title);
-    font-weight: 500;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-    line-height: 1.2;
-  }
-  .news-card-summary {
-    font-size: 0.95rem;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    margin-bottom: 16px;
-  }
-  .news-card-content {
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: var(--ink-mute);
-  }
-  .news-card-content p:last-child {
-    margin-bottom: 0;
+  .news-chip.is-active .news-chip-count { color: rgba(255, 255, 255, 0.75); }
+  .news-chip-count {
+    font-size: 0.72rem; color: var(--ink-mute);
   }
 
+  /* ---- card grid ---- */
+  .news-grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px;
+  }
+  .news-card {
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 14px; text-decoration: none; color: inherit;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .news-card:hover {
+    transform: translateY(-4px); border-color: var(--line-strong);
+    box-shadow: 0 18px 36px -18px rgba(0, 0, 0, 0.55);
+  }
+  /* Uniform 16:9 covers keep the grid level; gallery photos live on the detail
+     page uncropped. `html.js` gates the pagination hiding so no-JS visitors
+     still see every card (same pattern as `.reveal`). */
+  html.js .news-card.is-hidden { display: none; }
+  .news-card-cover {
+    aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-raised);
+  }
+  .news-card-cover img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s;
+  }
+  .news-card:hover .news-card-cover img { transform: scale(1.04); }
+  .news-card-cover-fallback {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--bg-raised), var(--bg-soft));
+  }
+  .news-card-body {
+    display: flex; flex-direction: column; flex: 1;
+    padding: 20px 22px 24px;
+  }
+  .news-card-flag {
+    align-self: flex-start;
+    font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid var(--accent-glow);
+    border-radius: 99px; padding: 3px 10px; margin-bottom: 12px;
+  }
+  .news-card-meta {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+    font-family: var(--ff-mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .news-card-category { color: var(--accent); font-weight: 600; }
+  .news-card-date { color: var(--ink-mute); }
+  .news-card-title {
+    font-family: var(--ff-display); font-size: 19px; font-weight: 600;
+    color: var(--ink); letter-spacing: -0.01em; line-height: 1.3;
+    margin-bottom: 10px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .news-card-summary {
+    font-size: 14.5px; line-height: 1.6; color: var(--ink-mute);
+    margin-bottom: 4px;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .news-card-more {
+    margin-top: auto; padding-top: 16px;
+    font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  .news-card-more-arrow { margin-left: 6px; display: inline-block; }
+  html[dir="rtl"] .news-card-more-arrow { transform: scaleX(-1); }
+
+  /* Featured: latest article spans two columns with a horizontal layout. */
+  .news-card--featured { grid-column: span 2; flex-direction: row; }
+  .news-card--featured .news-card-cover {
+    flex: 0 0 55%; aspect-ratio: auto; min-height: 300px;
+  }
+  .news-card--featured .news-card-body { padding: 30px; }
+  .news-card--featured .news-card-title { font-size: 26px; margin-bottom: 12px; }
+  .news-card--featured .news-card-summary { -webkit-line-clamp: 4; font-size: 15.5px; }
+
+  /* ---- load more ---- */
+  .news-loadmore { display: flex; justify-content: center; margin-top: 44px; }
+  .news-loadmore button {
+    font-family: var(--ff-mono); font-size: 13px; letter-spacing: 0.08em;
+    color: var(--ink); background: transparent;
+    border: 1px solid var(--line-strong); border-radius: 99px;
+    padding: 13px 34px; cursor: pointer; transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .news-loadmore button:hover {
+    border-color: var(--accent); color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  @media (max-width: 1199px) {
+    .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .news-card--featured { flex-direction: column; }
+    .news-card--featured .news-card-cover {
+      flex: none; aspect-ratio: 16 / 9; min-height: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .news-grid { grid-template-columns: 1fr; }
+    .news-page { padding-top: 84px !important; }
+  }
 </style>
+
+<script nonce="{{ request.csp_nonce }}">
+  /* Progressive-enhancement pagination: the server renders every matching
+     article (SEO + no-JS safe — `html.js` gates the hiding); this only reveals
+     more cards on demand. */
+  (function () {
+    var grid = document.getElementById('newsGrid');
+    var btn = document.getElementById('newsLoadMore');
+    if (!grid || !btn) return;
+    var hidden = Array.prototype.slice.call(
+      grid.querySelectorAll('.news-card.is-hidden'));
+    if (!hidden.length) return;
+    btn.hidden = false;
+    btn.addEventListener('click', function () {
+      hidden.splice(0, 9).forEach(function (el) {
+        el.classList.remove('is-hidden');
+      });
+      if (!hidden.length) btn.hidden = true;
+    });
+  })();
+</script>
 
 {% endblock %}

@@ -28,16 +28,6 @@ from .mixins import CacheClearMixin, admin_image_preview
 from pages.models import ProductsPageCard, SiteConfig, _clean_hashed_filename
 
 
-PRODUCTS_PAGE_WHITELIST = [
-    'm-series',
-    'rt410-series',
-    'vsp-xxxxw-9m-yp',
-    'rt590fl-s',
-    'rt400hb',
-    'rt600sl-t',
-]
-
-
 @admin.register(ProductsPageCard)
 class ProductsPageCardAdmin(CacheClearMixin, admin.ModelAdmin):
     list_display = ('image_preview', 'title', 'slug', 'link_url', 'order', 'is_active')

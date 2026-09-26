@@ -19,7 +19,7 @@ SolarOne worked on the project. Do not add "we delivered it" anywhere — it is 
 | `content` | See **Body below** (plain paragraphs, blank-line separated — the news page runs `\|linebreaks`, so **no markdown, no tables, no images inside `content`**) |
 | `image` | see **Image plan** |
 
-`summary` = 186 chars → **over-trim for the card/meta**; final ≤160 version below.
+`summary` = 131 chars ✅ (`NewsArticle.summary` usually reused as card text and `og:description`).
 
 ---
 
@@ -52,25 +52,38 @@ The obvious part is the cabinet. The hard part is the 30 metres of cable feeding
 
 ## Image plan
 
-⚠️ **Do not use the photos from the original article.** They are © 中国民航报社 /
-中国民航网 and were shot by 冯嵩. Reusing them on a commercial site is a copyright
-infringement, regardless of attribution.
+Photos have been downloaded from the original 中国民航网 article and copied to
+`static/images/news/low-cct-high-cri-high-mast-led-retrofit/`. Source files with the
+original IDs are kept in the `_source/` sub-folder for provenance.
 
-| slot | asset | filename to use | EN alt | source |
+| file | dimensions | what it shows | suggested use | EN alt |
 |---|---|---|---|---|
-| hero (`NewsArticle.image`) | night apron lit by a high-mast LED luminaire, or a clean product shot of a high-mast/floodlight head | `high-mast-led-retrofit-hero.webp` (1920×1000, <200 KB) | High-mast LED floodlight illuminating an airport apron at night | ⚠️ **you must supply** — your own product/apron photography |
-| inline #1 | cutaway diagram: driver relocated from mast head to ground cabinet | `high-mast-driver-relocation-diagram.svg` | Diagram: the LED driver is relocated from the high-mast luminaire head to a ground-level power control cabinet | ✅ I authored this (original, safe to use) — `docs/news/en/high-mast-driver-relocation-diagram.svg` |
-| inline #2 (optional) | ground-level maintenance crew / control cabinet | `high-mast-ground-control-cabinet.webp` | Ground-level power control cabinet servicing a high-mast luminaire | ⚠️ optional, only if you have your own |
+| `tianjin-binhai-high-mast-retrofit-hero.jpg` | 581×380 (3:2, ~17 KB) | Apron at dusk: airplane on left, high-mast lights on right | ⚠️ **Not recommended as hero** on the current card: it is 3:2 while `news-card-img` enforces `aspect-ratio: 16 / 9`, so it will be heavily cropped; also low resolution for large cards. | Airplane on the apron at dusk with high-mast floodlights in the background, Tianjin Binhai Airport |
+| `tianjin-binhai-high-mast-retrofit-ground-work.jpg` | 600×337 (16:9, ~200 KB) | Technicians on the ground assembling LED floodlight modules | ✅ **Recommended hero**. Already close to 16:9, fits the card aspect ratio, and visually tells the main story: the work has moved to ground level. | Technicians assembling LED high-mast floodlight modules at ground level, Tianjin Binhai Airport |
+| `tianjin-binhai-high-mast-retrofit-head-work.jpg` | 600×337 (16:9, ~147 KB) | Technician on a ladder servicing the luminaire head | ⚠️ **Cannot be used on the current list page without a code change** — the news list only shows `NewsArticle.image`. Save this for a future news detail page or a project case-study page. | Technician servicing a high-mast luminaire head on a ladder, Tianjin Binhai Airport |
 
-Notes:
-- Naming follows `docs/image-seo-naming-spec.md`: lowercase, hyphen-separated, no caps, no
-  underscore, no resolution noise (`1080p`), no redundant product word when the folder
-  already says it.
-- Admin upload → `media/news/<filename>` → copied to `static/images/news/<slug>/`.
-  ⚠️ **The filename is fixed the moment it is uploaded** (see the image-pipeline note in
-  project memory). Decide the names above *before* uploading.
-- ⚠️ Existing code limitation: `templates/news.html:39` renders `alt="{{ article.title }}"`.
-  Only the hero image gets an alt; inline images in `content` carry no alt at all.
+Source URLs (for your records):
+- hero / apron: `http://fuwu.caacnews.com.cn/1/5/202608/W020260827591086452823.jpg`
+- ground work: `http://fuwu.caacnews.com.cn/1/5/202608/W020260827591086468159.jpg`
+- head work: `http://fuwu.caacnews.com.cn/1/5/202608/W020260827591086472965.jpg`
+
+⚠️ All three carry the **中国民航网 watermark** in the corner. If that is not acceptable
+for a manufacturer site, you will need to request un-watermarked originals from the
+source or use your own photos.
+
+⚠️ Existing code limitation: `templates/news.html:39` renders `alt="{{ article.title }}"`.
+Only the hero image gets an alt on the card. The inline images in `content` carry no
+alt at all (and cannot, because `content|linebreaks` is plain text).
+
+### If you decide to use one of the 16:9 photos as hero
+Set `NewsArticle.image` to:
+`tianjin-binhai-high-mast-retrofit-ground-work.jpg`
+(or whichever file you pick).
+
+### Optional: convert to .webp
+The site generally serves `.webp` elsewhere. If you re-encode these to `.webp` for
+better compression, rename them consistently and update this plan. But do **not**
+change the filename after uploading — the image pipeline fixes the name on upload.
 
 ## Translation to prepare later
 
@@ -100,8 +113,12 @@ that reads like compliance or safety text.
 4. Decide whether `templates/news.html` should gain (a) a news detail page, (b) markdown
    rendering, (c) real `alt` text per image. `content|linebreaks` cannot render the
    bullet list as a real list.
+5. If you want to use the third photo (`head-work.jpg`) in the body, you must first add
+   a detail page or an inline-image tag that survives rendering — otherwise it cannot
+   be displayed.
 
 ## Open question for you
 
-Do you have your own high-mast / floodlight photography we should use for the hero, or
-should the hero be a SolarOne product render? The diagram is ready either way.
+1. Which photo do you want as the hero? I recommend `tianjin-binhai-high-mast-retrofit-ground-work.jpg`.
+2. Is the 中国民航网 watermark acceptable, or should we swap these out for your own
+   product/site photography before publication?

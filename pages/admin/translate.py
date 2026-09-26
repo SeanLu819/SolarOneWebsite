@@ -24,14 +24,6 @@ logger = logging.getLogger(__name__)
 
 TARGET_LANGS = ['fr', 'es', 'de', 'ru', 'ar']
 
-LANG_NAMES = {
-    'fr': 'French',
-    'es': 'Spanish',
-    'de': 'German',
-    'ru': 'Russian',
-    'ar': 'Arabic',
-}
-
 
 @staff_member_required
 @require_POST

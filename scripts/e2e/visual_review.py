@@ -50,7 +50,8 @@ DEFAULT_PATHS = [
     "/products/rgb-rgbw/",                  # product_overview.html（另一套产品模板）
     "/projects/",                           # 项目列表
     "/projects/chunan-velodrome/",          # project_detail.html
-    "/news/",                               # 新闻列表
+    "/news/",                               # 新闻列表（v1.6.3 卡片网格）
+    "/news/low-cct-high-cri-high-mast-led-retrofit/",  # news_detail.html
     "/about/",                              # 关于
     "/contact/",                            # 联系
 ]

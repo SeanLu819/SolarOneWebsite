@@ -54,6 +54,10 @@ def main():
 
     # settings.py: ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ...).split(',')
     env = os.environ.copy()
+    # Local preview only: skip the per-GET visitor write so read-only serving
+    # works even when sqlite commits are blocked (e.g. some sandboxes). Production
+    # never sets this env var, so real analytics are unaffected.
+    env["DJANGO_DISABLE_VISITOR_TRACKING"] = "1"
     base = ["localhost", "127.0.0.1", ip]
     extra = [h for h in env.get("ALLOWED_HOSTS", "").split(",") if h.strip()]
     env["ALLOWED_HOSTS"] = ",".join(dict.fromkeys(base + extra))

@@ -437,6 +437,7 @@
     color: var(--ink-soft);
     padding: 6px 12px;
     letter-spacing: 0.01em;
+    white-space: nowrap;
     transition: color 0.2s, background 0.2s;
   }
   .nav-links a:hover { color: var(--accent); }
@@ -478,13 +479,13 @@
     z-index: 110;
     flex-shrink: 0;
   }
-  @media (min-width: 768px) { .hamburger { display: none; } }
+  @media (min-width: 1025px) { .hamburger { display: none; } }
   .hamburger svg { width: 20px; height: 20px; color: var(--ink); }
 
-  /* Mobile nav bar: keep only brand + hamburger so the bar can never
-     overflow a 390px viewport. Nav links, CTA, theme and language all
-     move into the mobile panel — no functionality is lost. */
-  @media (max-width: 767px) {
+  /* Compact nav bar (phones + tablets): keep only brand + hamburger so the
+     bar can never overflow a narrow/tablet viewport. Nav links, CTA, theme and
+     language all move into the mobile panel — no functionality is lost. */
+  @media (max-width: 1024px) {
     .nav-inner { gap: 12px; }
     .nav-links { display: none; }
     .nav-actions { display: none; }
@@ -574,11 +575,11 @@
   }
   .mobile-panel-overlay.open { opacity: 1; pointer-events: auto; }
 
-  /* N-29: the drawer is mobile-only (the hamburger that opens it is hidden at
-     >=768px). Keep it out of the desktop render entirely so its off-screen
+  /* N-29: the drawer is compact-nav-only (the hamburger that opens it is hidden
+     at >=1025px). Keep it out of the desktop render entirely so its off-screen
      box-shadow can never bleed a dark strip onto the right edge on PC. The
-     visibility rule above handles the same bleed on mobile. */
-  @media (min-width: 768px) {
+     visibility rule above handles the same bleed on mobile/tablet. */
+  @media (min-width: 1025px) {
     .mobile-panel,
     .mobile-panel-overlay { display: none; }
   }

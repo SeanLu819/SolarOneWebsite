@@ -904,3 +904,18 @@ msgstr "ancien éclairage HID"
 
 msgid "New LED lighting"
 msgstr "nouvel éclairage LED"
+msgid "Read article"
+msgstr "Lire l'article"
+
+msgid "Load more"
+msgstr "Charger plus"
+
+msgid "Featured"
+msgstr "À la une"
+
+msgid "Back to all news"
+msgstr "Retour aux actualités"
+
+msgid "More news"
+msgstr "Plus d'actualités"
+

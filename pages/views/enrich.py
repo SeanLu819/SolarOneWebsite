@@ -1,9 +1,8 @@
 import logging
 from types import SimpleNamespace
-from django.conf import settings
 from django.templatetags.static import static
 from django.utils.translation import gettext as _
-from pages.models import Product, ProductImage, Project, ProjectImage
+from pages.models import Product, Project
 from .utils import (
     _find_static, _static_url, _dict_product_image_url, _product_image_url,
     _project_image_url, _project_gallery_urls, _find_project_cover_path,

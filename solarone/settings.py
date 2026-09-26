@@ -224,6 +224,13 @@ _LOCAL_SQLITE = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        # 2026-09-26 故障：本地 dev 下 runserver / 测试进程 / 预览自动刷新并发
+        # 访问同一个 db.sqlite3，VisitorTrackingMiddleware 的 INSERT 在默认
+        # busy 等待里一卡 30-56s（期间读锁也被压制），页面请求整体 30-56s，
+        # admin 写路径直接 "database is locked" → 500。给 2s 短超时：中间件
+        # 本来就 except-pass 吞掉写失败（页面照常渲染），admin 则快速报错
+        # 而不是挂着。Vercel /tmp 分支是单进程无并发，无需设置。
+        'OPTIONS': {'timeout': 2},
     }
 }
 
@@ -422,4 +429,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.6.3'
+APP_VERSION = '1.8.1'

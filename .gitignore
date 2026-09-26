@@ -51,6 +51,10 @@ static/images/logo.original-compressed.png
 # Orphan image directory (not under static/, not served)
 /images/
 
+# Original source scans behind the news photos — byte-identical duplicates of the
+# deployed files. Kept locally as masters, never shipped to the Vercel bundle.
+static/images/news/*/_source/
+
 # Vercel preview / design canvas (not runtime code)
 solarone-website-preview/
 
@@ -87,3 +91,8 @@ git_status*.txt
 gitlog*.txt
 # WorkBuddy local workspace data (memory / archive backups)
 .workbuddy/
+
+# Windows reserved device-name artifact left in repo root (cannot be deleted via
+# Win32 DeleteFile even with the \\?\ prefix — OS returns ERROR_ACCESS_DENIED).
+# Local-only; keep it out of the repo so it is never committed or pushed.
+/nul

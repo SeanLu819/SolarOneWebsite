@@ -1,11 +1,13 @@
 import ast
 import gettext
+import inspect
 import json
 import re
 import shutil
 import sys
 import tempfile
 import types
+from html import unescape as html_unescape
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
@@ -58,6 +60,26 @@ class ProductImagePathResolutionTests(SimpleTestCase):
         url = _strip_static_hash(_product_image_url(product, 'banner_image'))
 
         self.assertIn('/static/images/products/vsp/vsp-bar-1.webp', url)
+
+    def test_gallery_legacy_path_prefers_slug_dir_over_stale_static_root_copy(self):
+        """2026-09-26 故障回归：DB 里的 legacy 图集路径 products/gallery/x.webp
+        被规范化成 images/products/gallery/x.webp 并因 staticfiles/（STATIC_ROOT，
+        本地 dev 不对外服务）里还留着旧拷贝而在候选排序里抢先命中 → 浏览器
+        404。slug 目录里明明有同名文件时必须优先命中 slug 目录。"""
+        from pages.views.utils import _dict_product_image_url
+
+        legacy = 'products/gallery/rt410fl-s-01.webp'
+        expected = '/static/images/products/rt410-series/rt410fl-s-01.webp'
+
+        # DB 分支（ProductImage.image FieldFile 形状）
+        product = SimpleNamespace(
+            slug='rt410-series',
+            image=SimpleNamespace(name=legacy),
+        )
+        self.assertIn(expected, _strip_static_hash(_product_image_url(product, 'image')))
+
+        # seed/dict 分支（plain str 路径形状）
+        self.assertIn(expected, _strip_static_hash(_dict_product_image_url(legacy, 'rt410-series')))
 
 
 class ProjectAdminOrderingTests(SimpleTestCase):
@@ -725,7 +747,9 @@ class ResponsivePhase1Tests(TestCase):
 
     # ---- F4': 侧栏 checkbox hack —— input/label/aside 同级且按序（~ 选择器前提） ----
     def test_f4_sidebar_toggle_dom_contract(self):
-        for url in ('/products/', '/projects/', '/news/'):
+        # /news/ 不在此列：v1.6.3 新闻页改版为顶部 chips + 卡片网格，
+        # 不再使用 sidebar 抽屉（chips 契约归 NewsChipsAndCopyTests 管）。
+        for url in ('/products/', '/projects/'):
             html = self._get(url)
             self.assertIn('class="sidebar-toggle-input"', html, url)
             self.assertIn('for="sidebarToggle"', html, url)
@@ -1167,17 +1191,19 @@ class ResponsivePhase2Tests(TestCase):
         「收敛/统一」类改造的断言必须枚举**所有**可能旧值与边界值，
         因此这里改用白名单：任何不在允许集合内的断点值一律失败。
 
-        允许集合（F7 三档 + 两个有意例外）：
+        允许集合（F7 三档 + 三个有意例外）：
           max-width ∈ {767, 1024, 1199}
             - 767  手机档上界（F7）
             - 1024 F8 detail-grid 折单列的有意例外（≥1200 才双列）
+            - 1024 亦是导航平板/桌面分界：≤1024 走汉堡抽屉，≥1025 显示内联链接
             - 1199 平板档封闭区间上界 `@media (min-width:768px) and (max-width:1199px)`
-          min-width ∈ {768, 1200}
+          min-width ∈ {768, 1025, 1200}
+            - 1025 导航抽屉的桌面侧阈值（与 max-width:1024 配对，避免 1024px 点重叠）
         """
         import re
         allowed = {
             'max-width': {'767px', '1024px', '1199px'},
-            'min-width': {'768px', '1200px'},
+            'min-width': {'768px', '1025px', '1200px'},
         }
         paths = [Path(settings.BASE_DIR, 'static/css/base.css')]
         paths += sorted(Path(settings.BASE_DIR, 'templates').rglob('*.html'))
@@ -2131,6 +2157,12 @@ class DataDrivenTranslationTests(SimpleTestCase):
     KNOWN_DYNAMIC_SITES = {
         'pages/views/common.py': 8,   # _t(config.hero_title / …_subtitle / meta_title / meta_description 等 8 个字段)
         'pages/views/enrich.py': 1,   # _t(card_label) —— 取自两个映射字典
+        # _t(cat, lang) x2（news 视图的 chips 数据 + 卡片分类徽章）+ x2（
+        # news_detail 视图的详情页分类标签 + related 卡片徽章）。取值只有
+        # NewsArticle.NEWS_CATEGORIES 的 3 个 choice，现已在 _SIDEBAR_I18N 里
+        # 补齐 fr/es/de/ru/ar 五语；将来新增分类必须同步补字典，否则该语种静默
+        # 回退英文。
+        'pages/views/views_other.py': 4,
     }
 
     # 边界说明：SiteConfig 里**未经** common.py 传给 _t() 的字段不在覆盖范围内
@@ -3043,6 +3075,23 @@ class ProductAdminSidebarTreeTests(SimpleTestCase):
             settings.BASE_DIR, 'static', 'admin', 'js',
             'page_layout_toggle.js')))
 
+    def test_page_layout_widget_and_toggle_js_are_compatible(self):
+        """2026-09-26 故障回归：page_layout 在 admin 渲染为 <select>（默认
+        控件），而 page_layout_toggle.js 旧版只监听 radio input → 选择
+        「系列首页」后 detail-only 区块从不隐藏。JS 必须同时支持 select 与
+        radio；若将来把控件换成其他类型，须同步核对该 JS 的选择器。"""
+        js = Path(settings.BASE_DIR, 'static', 'admin', 'js',
+                  'page_layout_toggle.js').read_text(encoding='utf-8')
+        self.assertIn("select[name=\"page_layout\"]", js,
+                      'toggle JS 必须监听 <select>（admin 当前实际控件）')
+        self.assertIn("input[name=\"page_layout\"]", js,
+                      'toggle JS 必须继续兼容 radio 渲染')
+        from django import forms as dj_forms
+        from pages.admin.product import ProductAdminForm
+        widget = ProductAdminForm().fields['page_layout'].widget
+        self.assertIsInstance(widget, dj_forms.Select,
+                              'page_layout 控件类型变更时须同步 page_layout_toggle.js')
+
     def test_get_queryset_annotates_sidebar_rank(self):
         """get_queryset 只做 annotate；排序权在 SidebarOrderedChangeList。
 
@@ -3442,6 +3491,7 @@ class P2SectionLabelTests(SimpleTestCase):
         cls.css = (base / 'static' / 'css' / 'base.css').read_text(encoding='utf-8')
         cls.projects = (base / 'templates' / 'projects.html').read_text(encoding='utf-8')
         cls.news = (base / 'templates' / 'news.html').read_text(encoding='utf-8')
+        cls.news_detail = (base / 'templates' / 'news_detail.html').read_text(encoding='utf-8')
         cls.about = (base / 'templates' / 'about.html').read_text(encoding='utf-8')
         cls.contact = (base / 'templates' / 'contact.html').read_text(encoding='utf-8')
 
@@ -3462,6 +3512,29 @@ class P2SectionLabelTests(SimpleTestCase):
         self.assertIn('margin-bottom: 16px;', self.contact)
         self.assertNotIn('section-accent-label--compact', self.about)
         self.assertNotIn('section-accent-label--compact', self.contact)
+
+    def test_news_detail_media_is_a_bento_grid_with_object_fit_cover(self):
+        """详情页媒体区是 bento 网格：左大图跨两行，右侧小图上下叠放。
+
+        v1.6.4 用户明确要求主图缩小、三张图按 bento 排布、允许裁剪铺满以
+        减少桌面端滚动。本守卫把这一契约钉在 `news_detail.html` 源码上。
+        """
+        self.assertIn('.news-detail-media', self.news_detail)
+        self.assertIn('.news-detail-media-cell--large', self.news_detail)
+        self.assertIn('grid-template-columns:', self.news_detail)
+        self.assertIn('grid-row: 1 / 3', self.news_detail)
+        self.assertIn('object-fit: cover', self.news_detail)
+
+    def test_list_card_covers_render_the_uniform_16x9_contract(self):
+        """列表卡片封面统一 16:9 —— 改版后 object-fit: cover 是故意的。"""
+        html = self.news
+        self.assertIn(
+            'aspect-ratio: 16 / 9', html,
+            '列表卡片必须统一 16:9 封面（网格版式契约）')
+        self.assertIn('object-fit: cover', html)
+        # 反空洞：封面规则与卡片标记都得真实存在
+        self.assertIn('.news-card-cover img', html)
+        self.assertIn('class="news-card-cover"', html)
 
 
 # ---------------------------------------------------------------------------
@@ -3704,5 +3777,755 @@ class P3VisualReviewCoverageTests(SimpleTestCase):
                       '主题未生效必须记为问题（否则深浅两张图一模一样）')
         self.assertIn('return 1', self.src, '有问题时必须非零退出')
         self.assertIn('sys.exit(main())', self.src, '退出码必须真的传出去')
+
+
+# ---------------------------------------------------------------------------
+# 新闻卡片图集：seed / DB 两条路径必须给出同一套 `article.images` 接口，
+# 且图片按原始尺寸展示（不裁剪、不放大）。
+#
+# 背景：news.html 原先用一张 `NewsArticle.image` + `aspect-ratio: 16/9` +
+# `object-fit: cover`。新闻素材常只有 600px 左右，拉满卡片必然糊，还会切掉
+# 画面。改成「每张文章卡片渲染全部 NewsImage，按原始比例、受限宽度」之后，
+# 下面这些断言替代原来的版式契约。
+# ---------------------------------------------------------------------------
+class NewsGalleryLayoutTests(TestCase):
+    """新闻图集排版：双通道一致 + 详情页原尺寸渲染。
+
+    v1.6.3 起列表卡片只渲染一张统一 16:9 封面（裁剪是网格版式的核心诉求），
+    图集照片全部迁到详情页 `/news/<slug>/` 原尺寸渲染 —— 本类的 figure 断言
+    随之全部指向详情页；列表侧的 16:9 契约由
+    ``P2SectionLabelTests.test_list_card_covers_render_the_uniform_16x9_contract``
+    钉住。
+    """
+
+    CELL_RE = re.compile(r'<figure class="news-detail-media-cell[^"]*">.*?</figure>', re.S)
+    IMG_RE = re.compile(r'<img\b[^>]*>')
+
+    FAKE = [
+        {
+            'image': 'images/news/qa-news-a.jpg',
+            'alt': 'QA alt A — apron at dusk',
+            'caption': 'QA caption A',
+            'order': 0,
+            'width': 581,
+            'height': 380,
+        },
+        {
+            'image': 'images/news/qa-news-b.jpg',
+            'alt': 'QA alt B — ground level assembly',
+            'caption': 'QA caption B',
+            'order': 1,
+            'width': 600,
+            'height': 337,
+        },
+    ]
+
+    # ---- helpers ---------------------------------------------------------
+    @staticmethod
+    def _cells(html):
+        return NewsGalleryLayoutTests.CELL_RE.findall(html)
+
+    @staticmethod
+    def _imgs(html):
+        return NewsGalleryLayoutTests.IMG_RE.findall(html)
+
+    # ---- ① seed JSON 路径 -------------------------------------------------
+    @override_settings(IS_VERCEL=True)
+    def test_seed_json_renders_all_three_photos_with_alt_and_dimensions(self):
+        """生产（无状态）路径：cover + 2 gallery 共 3 张图都要进 bento 网格。"""
+        seed = {'news': [{
+            'slug': 'qa-news',
+            'title': 'QA NewsTitleXYZ',
+            'summary': 's',
+            'content': 'c',
+            'image': 'images/news/qa-news-cover.jpg',
+            'images': NewsGalleryLayoutTests.FAKE,
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+        }]}
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            resp = self.client.get(reverse('news_detail', args=['qa-news']))
+
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode('utf-8')
+
+        self.assertIn('QA NewsTitleXYZ', html, 'seed 文章没有被渲染')
+        cells = self._cells(html)
+        self.assertEqual(len(cells), 3,
+                         'seed 里有 3 张图（cover+2 gallery），bento 必须渲染 3 个 cell')
+        joined = '\n'.join(cells)
+        for needle in ('images/news/qa-news-cover.jpg', 'images/news/qa-news-a.jpg',
+                       'images/news/qa-news-b.jpg', 'QA alt A — apron at dusk',
+                       'QA alt B — ground level assembly'):
+            self.assertIn(needle, joined, f'图集里缺少：{needle}')
+        # 反空洞：width / height / lazy 不能是空字符串占位
+        self.assertIn('width="581"', joined)
+        self.assertIn('height="380"', joined)
+        self.assertIn('loading="lazy"', joined)
+
+    @override_settings(IS_VERCEL=True)
+    def test_seed_entry_without_images_key_renders_single_large_cell(self):
+        """只有旧 `image` 键的 seed 条目：详情页只渲染一个左大图 cell。"""
+        seed = {'news': [{
+            'slug': 'qa-legacy-news',
+            'title': 'QA LegacyNewsXYZ',
+            'summary': 's',
+            'content': 'c',
+            'image': 'images/news/qa-legacy.jpg',
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+        }]}
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            resp = self.client.get(reverse('news_detail', args=['qa-legacy-news']))
+
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode('utf-8')
+        self.assertIn('QA LegacyNewsXYZ', html)
+        cells = self._cells(html)
+        self.assertEqual(len(cells), 1, '没有 images 时详情页应只渲染一个 cell')
+        self.assertIn('news-detail-media-cell--large', cells[0])
+        self.assertIn('images/news/qa-legacy.jpg', cells[0])
+
+        # 列表页不受影响：旧条目照样渲染出卡片封面（16:9 裁剪是故意的）
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            list_resp = self.client.get(reverse('news'))
+        self.assertEqual(list_resp.status_code, 200)
+        self.assertIn('class="news-card-cover"',
+                      list_resp.content.decode('utf-8'))
+
+    # ---- ② DB 路径 --------------------------------------------------------
+    def test_db_path_renders_all_three_images_with_correct_urls(self):
+        from pages.models import NewsArticle, NewsImage
+
+        article = NewsArticle.objects.create(
+            slug='qa-news-db',
+            title='QA DB NewsTitleXYZ',
+            summary='s',
+            content='c',
+            published_at='2026-02-02T00:00:00Z',
+            is_published=True,
+        )
+        article.image = 'news/qa-news-cover.jpg'
+        article.save()
+        for spec in (
+            dict(order=0, image='news/qa-news-a.jpg',
+                 alt_text='QA alt A — apron at dusk',
+                 caption='QA caption A', width=581, height=380),
+            dict(order=1, image='news/qa-news-b.jpg',
+                 alt_text='QA alt B — ground level assembly',
+                 caption='QA caption B', width=600, height=337),
+        ):
+            NewsImage.objects.create(article=article, **spec)
+
+        resp = self.client.get(reverse('news_detail', args=['qa-news-db']))
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode('utf-8')
+
+        cells = self._cells(html)
+        self.assertEqual(
+            len(cells), 3,
+            f'DB 路径必须渲染出 3 个 bento cell，实际 {len(cells)}')
+
+        srcs = []
+        for idx, cell in enumerate(cells):
+            img = re.search(r'<img\b[^>]*>', cell)
+            self.assertIsNotNone(img, 'cell 里必须有 img')
+            tag = img.group(0)
+            # 大图（封面，bento 左格）eager 利于 LCP；图集图 lazy。
+            if idx == 0:
+                self.assertIn('loading="eager"', tag,
+                              '首格大图应 eager 渲染封面')
+            else:
+                self.assertIn('loading="lazy"', tag,
+                              '图集格应 lazy 渲染')
+            self.assertRegex(tag, r'src="/media/news/qa-news-(cover|[ab])\.jpg"',
+                             f'图片 URL 不对：{tag}')
+            srcs.append(tag)
+        # 反空洞：三张图的 src 必须真的不同
+        self.assertEqual(len(set(srcs)), 3, '三张图必须渲染成不同的 src')
+        self.assertIn('QA alt A — apron at dusk', cells[1])
+        self.assertIn('QA alt B — ground level assembly', cells[2])
+
+
+class NewsTranslationTests(TestCase):
+    """/news/ 的多语言守卫（2026-09-25 建）。
+
+    ``NewsArticle.translations`` 是新加的第三条翻译路径 —— 它的特殊之处是
+    **两条数据路径都必须带译文**：
+
+      * 本地（``_get_news_from_db``）走模型，模板读 ``article.<field>_t``；
+      * Vercel（``_get_news_from_json``）走 seed dict，同一个模板。
+
+    这两个坑都是实测踩出来的，本守卫就是为了防止它们重来：
+
+    1. ``get_news(lang)`` 曾经**收下 lang 却完全不用**（只渲染英文），界面上不
+       报错，只是非英语页面的新闻永远不变。运行时 spy 能抓到「请求了某语种却
+       一次查询都没命中该语种」。
+    2. ``_news_to_dict`` 一旦漏掉 ``translations``，后台**任意一次保存**都会把
+       五种语言从 seed 里抹掉 —— 而本地看不出来，因为本地还留着 DB 行。所以
+       这条必须静态钉死在函数返回值里。
+    3. 缺译文时必须**回退英文**而不是返回空串，否则半翻译的文章在 /ar/ 上是
+       一个空白卡片，比整篇英文更难看。
+
+    第 ① 层是常量钉死（字段集变了要显式改表），第 ②③④ 层靠运行时 spy 与
+    端到端渲染，不依赖能否静态分析出来。
+    """
+
+    ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    def _seed_news(self, **over):
+        row = {
+            'slug': 'qa-news-tr',
+            'title': 'QA EN title.',
+            'summary': 'QA EN summary.',
+            'content': 'QA EN content.',
+            'image': '',
+            'images': [],
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+            'translations': {},
+        }
+        row.update(over)
+        return row
+
+    # ---- ① 字段集钉死 ----------------------------------------------------
+    def test_translatable_field_set_is_pinned(self):
+        from pages.views.data_loaders import (
+            NEWS_TRANSLATABLE_FIELDS,
+            NEWS_TRANSLATED_KEYS,
+        )
+        self.assertEqual(
+            NEWS_TRANSLATABLE_FIELDS, ('title', 'summary', 'content'),
+            '可译字段集被改动 —— 模板/seed/后台都要同步改，请显式确认')
+        self.assertEqual(
+            NEWS_TRANSLATED_KEYS, ('title_t', 'summary_t', 'content_t'))
+
+    # ---- ② 两条路径的 key 集必须一致 -------------------------------------
+    def test_seed_and_db_rows_expose_identical_key_sets(self):
+        from pages.models import NewsArticle
+        from pages.views.data_loaders import (
+            _NEWS_ROW_BASE,
+            _normalize_news_article,
+            _normalize_news_row,
+            NEWS_TRANSLATED_KEYS,
+        )
+        self.assertEqual(
+            set(_NEWS_ROW_BASE) | set(NEWS_TRANSLATED_KEYS),
+            set(_normalize_news_article(self._seed_news()).keys()),
+            'seed 路径的 key 集变了')
+        article = NewsArticle.objects.create(
+            slug='qa-news-tr-db',
+            title='QA EN title.',
+            summary='QA EN summary.',
+            content='QA EN content.',
+            published_at='2026-01-01T00:00:00Z',
+            is_published=True,
+        )
+        self.assertEqual(
+            set(_normalize_news_row(article).keys()),
+            set(_NEWS_ROW_BASE) | set(NEWS_TRANSLATED_KEYS),
+            'DB 路径与 seed 路径的 key 集必须完全一致，否则模板在 Vercel 上会缺字段')
+
+    # ---- ③ 缺译文回退英文（不能是空串） ----------------------------------
+    @override_settings(IS_VERCEL=True)
+    def test_missing_translation_falls_back_to_english(self):
+        from pages.views.data_loaders import _get_news_from_json
+
+        seed = {'news': [self._seed_news()]}
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            for lang in self.ALL_LANGS:
+                rows = _get_news_from_json(lang)
+                row = rows[0]
+                for field in ('title', 'summary', 'content'):
+                    self.assertEqual(
+                        row[f'{field}_t'], f'QA EN {field}.',
+                        f'{lang} 缺少译文时应回退英文，实际拿到空值')
+
+    @override_settings(IS_VERCEL=True)
+    def test_translated_seed_overrides_english(self):
+        from pages.views.data_loaders import _get_news_from_json
+
+        tr = {lang: {'title': f'TR {lang} title',
+                     'summary': f'TR {lang} summary',
+                     'content': f'TR {lang} content'}
+              for lang in self.ALL_LANGS}
+        seed = {'news': [self._seed_news(translations=tr)]}
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            for lang in self.ALL_LANGS:
+                row = _get_news_from_json(lang)[0]
+                for field in ('title', 'summary', 'content'):
+                    self.assertEqual(
+                        row[f'{field}_t'], f'TR {lang} {field}',
+                        f'{lang} 的 {field} 译文未生效')
+
+    # ---- ④ 运行时 spy：lang 真的被用上了 ---------------------------------
+    def test_every_requested_lang_reaches_the_lookup(self):
+        from pages.views import data_loaders
+        from pages.views.data_loaders import _get_news_from_json
+
+        seen = set()
+        real = data_loaders._news_translated
+
+        def spy(row, field, lang):
+            seen.add((field, lang))
+            return real(row, field, lang)
+
+        with mock.patch.object(data_loaders, '_news_translated', spy):
+            for lang in ('fr', 'de', 'ar'):
+                with override_settings(IS_VERCEL=True):
+                    with mock.patch(
+                        'pages.views.data_loaders._load_seed',
+                        return_value={'news': [self._seed_news()]},
+                    ):
+                        data_loaders.get_news(lang)
+        for lang in ('fr', 'de', 'ar'):
+            for field in ('title', 'summary', 'content'):
+                self.assertIn(
+                    (field, lang), seen,
+                    f'{lang} 请求下 {field} 没有真正走翻译查找（get_news 大概又忽略了 lang）')
+
+    # ---- ⑤ 渲染端到端 ----------------------------------------------------
+    @override_settings(IS_VERCEL=True)
+    def test_french_article_renders_french_on_the_page(self):
+        """译文真的渲染出来。v1.6.3 起列表卡片只显示 title + summary（正文
+        迁到详情页），所以 title/summary 在列表页断言，content 在详情页断言。
+        """
+        fr = {'fr': {'title': 'TR fr titre',
+                     'summary': 'TR fr résumé',
+                     'content': 'TR fr contenu'}}
+        seed = {'news': [self._seed_news(translations=fr)]}
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            list_resp = self.client.get('/fr/news/')
+        self.assertEqual(list_resp.status_code, 200)
+        list_html = list_resp.content.decode('utf-8')
+        self.assertIn('TR fr titre', list_html)
+        self.assertIn('TR fr résumé', list_html)
+        self.assertNotIn('QA EN title.', list_html)
+
+        with mock.patch('pages.views.data_loaders._load_seed', return_value=seed):
+            detail_resp = self.client.get('/fr/news/qa-news-tr/')
+        self.assertEqual(detail_resp.status_code, 200)
+        detail_html = detail_resp.content.decode('utf-8')
+        self.assertIn('TR fr contenu', detail_html)
+        self.assertNotIn('QA EN content.', detail_html)
+
+    # ---- ⑥ seed 导出必须带 translations ---------------------------------
+    def test_news_to_dict_exports_translations(self):
+        """漏掉这一行，后台任意一次保存都会把五种语言抹出 seed。"""
+        from pages import seed_sync
+
+        src = inspect.getsource(seed_sync._news_to_dict)
+        self.assertIn(
+            "'translations'", src,
+            '_news_to_dict 不再导出 translations：后台保存会静默删除所有译文')
+
+    def test_article_model_exposes_translations(self):
+        from pages.models import NewsArticle
+        field_names = {f.name for f in NewsArticle._meta.get_fields()}
+        self.assertIn('translations', field_names,
+                      'NewsArticle 缺少 translations 字段')
+        self.assertTrue(callable(getattr(NewsArticle, 't')))
+
+    def test_admin_wires_the_translations_widget(self):
+        from django.contrib.admin.sites import AdminSite
+        from pages.models import NewsArticle
+        from pages.admin.news import NewsArticleAdmin
+        from pages.admin.widgets import TranslationsWidget
+        admin = NewsArticleAdmin(NewsArticle, AdminSite())
+        field = admin.formfield_for_dbfield(
+            NewsArticle._meta.get_field('translations'), None)
+        self.assertIsInstance(field.widget, TranslationsWidget,
+                              '后台的多语言输入框没挂上')
+
+
+class NewsChipsAndCopyTests(TestCase):
+    """/news/ 顶部分类 chips 与正文语言的守卫（2026-09-25 建）。
+
+    三个 bug 都是「代码不报错、界面慢慢不对」型，所以这里既有静态断言也有
+    渲染断言：
+
+    1. ``{% trans %}`` 只接受**字面量**。模板里原来写的是 ``{% trans cat.name %}``
+       （变量），Django 不报错、直接渲染空串 —— 分类名全部消失。现在的约定
+       是「视图用 ``_t()`` 算好 label，模板只负责 ``{{ cat.label }}``」。
+    2. 新闻正文的**英文基础字段被写成了中文**。英文站读不到译文时回退基础字段，
+       于是什么语种都显示中文。约定：基础字段永远是英文，中文等译文进
+       ``translations``。
+    3. v1.6.3 版式改版：原左侧栏目录换成顶部 chips（企业 newsroom 惯例，
+       调研结论见 .workbuddy/preview/news-redesign-mockup.html），本类从
+       ``NewsSidebarAndCopyTests`` 更名而来，断言目标同步迁移。
+    """
+
+    ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+    CJK_RE = re.compile(r'[　-〿一-鿿！-｠]')
+
+    def _row(self, slug, category='Company News'):
+        return {
+            'slug': slug,
+            'title': f'QA EN title {slug}',
+            'summary': f'QA EN summary {slug}',
+            'content': f'QA EN content {slug}',
+            'category': category,
+            'image': '',
+            'images': [],
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+            'translations': {},
+        }
+
+    def _render(self, lang='en', query='', seed_news=None):
+        """Render the news page, optionally against a three-category seed.
+
+        ``i18n_patterns(prefix_default_language=False)`` means English lives at
+        ``/news/`` and everything else at ``/<lang>/news/`` — ``/en/news/``
+        is a legitimate 404, not a typo.
+        """
+        path = '/news/' if lang == 'en' else f'/{lang}/news/'
+        if seed_news is None:
+            seed_news = [
+                self._row('qa-co', 'Company News'),
+                self._row('qa-pn', 'Product News'),
+                self._row('qa-cs', 'Case Studies'),
+            ]
+        with override_settings(IS_VERCEL=True):
+            with mock.patch(
+                'pages.views.data_loaders._load_seed',
+                return_value={'news': seed_news},
+            ):
+                resp = self.client.get(f'{path}{query}')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode('utf-8')
+
+    def _chips(self, html):
+        nav = re.search(r'<nav class="news-chips"[^>]*>(.*?)</nav>', html, re.S)
+        self.assertIsNotNone(nav, '分类 chips 整块没渲染出来')
+        # Label 是 <a> 与计数 <span> 之间的文本节点；class 可能带 ` is-active`
+        # 修饰符。href 与 class 属性在模板里分行书写 —— 模式必须容忍换行。
+        return re.findall(
+            r'<a\s+href="([^"]*)"\s+class="news-chip([^"]*)"\s*>\s*([^<]*)<',
+            nav.group(1), re.S,
+        )
+
+    # ---- ① 模板不许再用 {% trans %} 包变量 --------------------------------
+    def test_template_never_runs_trans_tag_on_a_variable(self):
+        src = (Path(__file__).resolve().parent.parent
+               / 'templates' / 'news.html').read_text(encoding='utf-8')
+        offenders = re.findall(r'{%\s*trans\s+[^{}%]+\s*%}', src)
+        offenders = [o for o in offenders if not re.fullmatch(r'{%\s*trans\s+"[^"]*"\s*%}', o)]
+        self.assertEqual([], offenders,
+                         '{% trans %} 只接受字面量，套在变量上会渲染成空串：' + str(offenders))
+
+    # ---- ② 分类名在每个语种都本地化 ---------------------------------------
+    def test_chip_labels_are_localised_in_every_language(self):
+        expected = {
+            'fr': 'Nouvelles de l\'Entreprise',   # Company News
+            'es': 'Noticias de la Empresa',
+            'de': 'Unternehmensnachrichten',
+            'ar': 'أخبار الشركة',
+            'ru': 'Корпоративные новости',
+        }
+        html = self._render('en')
+        labels = [html_unescape(entry[2].strip()) for entry in self._chips(html)]
+        self.assertIn('All News', labels, '英文页丢了 All News 聚合 chip')
+        self.assertIn('Company News', labels, '英文 chips 丢了分类')
+        self.assertIn('Product News', labels)
+        self.assertIn('Case Studies', labels)
+        for lang, want in expected.items():
+            html = self._render(lang)
+            labels = [html_unescape(entry[2].strip()) for entry in self._chips(html)]
+            self.assertIn(want, labels,
+                          f'{lang} chips 没有本地化分类名（_SIDEBAR_I18N 缺条目或视图没走 _t）')
+            self.assertNotIn(
+                'Company News', labels,
+                f'{lang} chips 仍在显示英文原文')
+
+    # ---- ③ 分类链接真的会筛选 --------------------------------------------
+    def test_category_link_filters_the_feed_and_marks_itself_active(self):
+        html = self._render(query='?category=Case+Studies')
+        entries = self._chips(html)
+        active = [e for e in entries if 'active' in e[1]]
+        self.assertEqual(['Case Studies'], [e[2].strip() for e in active],
+                         '筛选后选中态没落在正确的分类 chip 上')
+        self.assertEqual(1, html.count('<h3 class="news-card-title">'),
+                         '?category= 没有真的过滤文章')
+
+    def test_unknown_category_key_falls_back_to_the_full_feed(self):
+        """A stale bookmark must not render as an empty news page."""
+        html = self._render(query='?category=No+Such+Category')
+        self.assertEqual(3, html.count('<h3 class="news-card-title">'))
+        active = [e for e in self._chips(html) if 'active' in e[1]]
+        self.assertEqual(['All News'], [e[2].strip() for e in active])
+
+    # ---- ④ 正文基础字段必须是英文 ----------------------------------------
+    @override_settings(IS_VERCEL=True)
+    def test_english_news_copy_contains_no_chinese(self):
+        """中文写进基础字段 → 英文站回退显示中文。译文请放进 translations。"""
+        from pages.views.data_loaders import _load_seed
+        seed = _load_seed()
+        articles = seed.get('news') or []
+        self.assertTrue(articles, 'seed 里一条新闻都没有，这条守卫失去意义')
+        for a in articles:
+            for field in ('title', 'summary', 'content'):
+                value = a.get(field) or ''
+                self.assertIsNone(
+                    self.CJK_RE.search(value),
+                    f"seed 新闻 {a.get('slug')} 的 {field} 是中文："
+                    f'{value[:60]}… 请改用英文基础字段，中文放进 translations')
+
+    def test_english_page_renders_no_chinese_in_the_card_body(self):
+        html = self._render('en')
+        # 卡片整体是 <a>（整卡可点），body 是其最后一个子元素。
+        bodies = re.findall(r'<div class="news-card-body">(.*?)</a>', html, re.S)
+        self.assertTrue(bodies, '新闻卡片正文没渲染出来')
+        for body in bodies:
+            self.assertIsNone(
+                self.CJK_RE.search(body),
+                '英文页面上出现中文正文 —— 基础字段里混进了中文')
+
+    # ---- ⑤ 封面 + 图集一张不少（列表 1 张 + 详情 3 张） --------------------
+    @override_settings(IS_VERCEL=True)
+    def test_article_shows_its_cover_plus_every_gallery_photo(self):
+        """Against the real seed: one cover on the list card; cover + 2 gallery
+        photos on the detail page — never a lone one.
+
+        Regression: the second gallery photo was deleted during the dead-file
+        audit as "unreferenced" (it referenced the article through a join
+        table, which the audit's grep could not see), leaving one image.
+        v1.6.3: the list card shows only the 16:9 cover; the gallery moved to
+        the detail page.
+        """
+        from pages.views.data_loaders import _load_seed
+        articles = _load_seed().get('news') or []
+
+        def _is_target(a):
+            urls = [a.get('image') or ''] + [
+                (i.get('image') or '') for i in (a.get('images') or [])]
+            return any('tianjin-binhai' in u for u in urls)
+
+        slug = next((a.get('slug') for a in articles if _is_target(a)), None)
+        self.assertIsNotNone(slug, 'seed 里找不到天津新闻，守卫失去意义')
+
+        resp = self.client.get('/news/')
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode('utf-8')
+        self.assertEqual(1, html.count('class="news-card-cover"'))
+        self.assertIn('tianjin-binhai-high-mast-retrofit-hero.jpg', html)
+
+        detail = self.client.get(f'/news/{slug}/')
+        self.assertEqual(detail.status_code, 200)
+        detail_html = detail.content.decode('utf-8')
+        # v1.6.4: 详情页改为 bento 网格（左大图跨两行 + 右 2 小图上下叠），
+        # 封面与 2 张图集图统一为 3 个 .news-detail-media-cell。
+        self.assertIn('class="news-detail-media"', detail_html)
+        self.assertEqual(
+            3, detail_html.count('class="news-detail-media-cell'),
+            '详情页应显示封面 + 2 张图集图，统一为 3 个 media-cell')
+        for name in ('hero', 'head-work', 'ground-work'):
+            self.assertIn(f'tianjin-binhai-high-mast-retrofit-{name}.jpg', detail_html)
+
+
+class NewsDetailPageTests(TestCase):
+    """新闻详情页的路由 / 发布门 / related 卡片守卫（v1.6.3 新增）。
+
+    列表卡片改版后整卡都链到 `/news/<slug>/`，这条路由成了新闻模块的门面：
+    未知 slug 与未发布草稿必须 404（否则站外坏链渲染成空页），related 只出
+    别人的文章。
+    """
+
+    def _row(self, slug, title=None, category='Company News'):
+        return {
+            'slug': slug,
+            'title': title or f'QA EN title {slug}',
+            'summary': f'QA EN summary {slug}',
+            'content': f'QA EN content {slug}',
+            'category': category,
+            'image': '',
+            'images': [],
+            'published_at': '2026-01-01T00:00:00',
+            'is_published': True,
+            'translations': {},
+        }
+
+    def _get(self, path, seed):
+        with override_settings(IS_VERCEL=True):
+            with mock.patch('pages.views.data_loaders._load_seed',
+                            return_value={'news': seed}):
+                return self.client.get(path)
+
+    def test_unknown_or_unpublished_slug_is_a_404(self):
+        seed = [self._row('qa-live'),
+                dict(self._row('qa-draft'), is_published=False)]
+        self.assertEqual(self._get('/news/qa-nope/', seed).status_code, 404,
+                         '未知 slug 必须是 404')
+        self.assertEqual(self._get('/news/qa-draft/', seed).status_code, 404,
+                         '未发布草稿必须 404（is_published 门失效）')
+
+    def test_related_cards_link_to_other_articles_with_labels(self):
+        seed = [
+            self._row('qa-live', category='Product News'),
+            self._row('qa-other', title='QA Related TitleXYZ',
+                      category='Case Studies'),
+        ]
+        resp = self._get('/news/qa-live/', seed)
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode('utf-8')
+        self.assertIn('QA Related TitleXYZ', html, 'related 卡片没渲染')
+        self.assertIn('href="/news/qa-other/"', html)
+        self.assertIn('Case Studies', html, 'related 卡片缺分类徽章')
+        # 自己不出现在自己的 More news 里
+        self.assertNotIn('href="/news/qa-live/"', html)
+
+
+class NewsImageSyncTests(TestCase):
+    """Guards the media/ -> static/ copy that news photos depend on.
+
+    Regression: ``NewsArticle``/``NewsImage`` had no post_save receiver, so an
+    admin upload only ever landed under ``media/``. The production seed records
+    news photos as ``images/news/<slug>/...``, which resolve against ``static/``
+    -- so every news photo 404'd on Vercel while looking perfect locally. The
+    DB row still rendered ``/media/...``, which is exactly why the mismatch is
+    invisible until you deploy.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.media = self.root / 'media'
+        self.media.mkdir(exist_ok=True)
+        # Everything points into the temp tree so nothing can escape.
+        self.ctx = override_settings(
+            BASE_DIR=str(self.root),
+            MEDIA_ROOT=str(self.media),
+        )
+        self.ctx.enable()
+
+    def tearDown(self):
+        self.ctx.disable()
+        self.tmp.cleanup()
+
+    # ---- helpers ---------------------------------------------------------
+    def _put_media(self, relpath):
+        path = self.media / relpath
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'\x89PNG\r\n\x1a\nQA')
+        return str(path)
+
+    def _static_dir_for(self, slug):
+        return self.root / 'static' / 'images' / 'news' / slug
+
+    def _article(self, slug='qa-news-sync'):
+        from django.utils.timezone import now
+        from pages.models import NewsArticle
+        return NewsArticle.objects.create(
+            slug=slug, title='QA sync', content='QA sync body',
+            published_at=now())
+
+    # ---- ① 拷贝行为 -------------------------------------------------------
+    def test_saving_an_article_copies_its_cover_into_static(self):
+        self._put_media('news/cover_a1b2c3d.jpg')
+        article = self._article()
+        article.image = 'news/cover_a1b2c3d.jpg'
+        article.save()
+
+        target = self._static_dir_for('qa-news-sync') / 'cover.jpg'
+        self.assertTrue(target.exists(),
+                        '封面没拷进 static/：线上 seed 会指向一个不存在的路径')
+
+    def test_saving_a_gallery_image_copies_it_into_static(self):
+        from pages.models import NewsImage
+        self._put_media('news/gal_a1b2c3d.jpg')
+        article = self._article()
+        NewsImage.objects.create(article=article,
+                                 image='news/gal_a1b2c3d.jpg')
+
+        target = self._static_dir_for('qa-news-sync') / 'gal.jpg'
+        self.assertTrue(target.exists(),
+                        '图集图没拷进 static/：Vercel 上会 404')
+
+    # ---- ② 真正在线上炸的那个 bug -----------------------------------------
+    def test_seed_export_path_points_at_a_real_static_file(self):
+        """The end-to-end check: what the seed writes must exist on disk.
+
+        Locally the DB path (``/media/...``) still renders, so the only way to
+        catch this class of bug is to compare the *exported* path with the disk.
+        """
+        from pages import seed_sync
+
+        self._put_media('news/export_a1b2c3d.jpg')
+        article = self._article()
+        article.image = 'news/export_a1b2c3d.jpg'
+        article.save()
+
+        row = seed_sync._news_to_dict(article)
+        exported = row['image']
+        self.assertTrue(exported.startswith('images/news/'),
+                        f'seed 导出的封面不是 static 相对路径：{exported!r}')
+        on_disk = self.root / 'static' / exported
+        self.assertTrue(on_disk.exists(),
+                        f'seed 导出的封面在磁盘上不存在 → 线上 404：{exported}')
+
+    # ---- ③ 剪枝安全网 -----------------------------------------------------
+    def test_prune_keeps_files_that_media_still_backs(self):
+        """A static photo the sync could not re-derive must survive the prune.
+
+        If the DB-stored media path no longer matches the file on disk, the
+        sync silently skips the copy. Pruning it anyway would turn a recoverable
+        image into a permanent 404 -- exactly the failure mode this guard exists
+        to prevent.
+        """
+        from pages.models import _sync_news_media_to_static
+
+        self._put_media('news/orphan_a1b2c3d.jpg')
+        article = self._article()
+        static_dir = self._static_dir_for('qa-news-sync')
+        static_dir.mkdir(parents=True, exist_ok=True)
+        (static_dir / 'orphan.jpg').write_bytes(b'\x89PNG\r\n\x1a\nQA')
+
+        _sync_news_media_to_static(article)
+        self.assertTrue((static_dir / 'orphan.jpg').exists(),
+                        '剪枝把 media/ 里仍在用的图删掉了')
+
+    def test_prune_removes_files_referenced_by_nothing(self):
+        from pages.models import _sync_news_media_to_static
+
+        article = self._article()
+        static_dir = self._static_dir_for('qa-news-sync')
+        static_dir.mkdir(parents=True, exist_ok=True)
+        (static_dir / 'unreferenced.jpg').write_bytes(b'\x89PNG\r\n\x1a\nQA')
+
+        _sync_news_media_to_static(article)
+        self.assertFalse((static_dir / 'unreferenced.jpg').exists(),
+                         '无人引用的图没被清掉，static 目录会无限膨胀')
+
+    def test_build_media_protected_set_scans_the_news_subdir(self):
+        """The ``subdir`` argument must be honoured, or news photos are not
+        protected the way product photos are."""
+        from pages.models import _build_media_protected_set
+
+        self._put_media('news/kept_a1b2c3d.jpg')
+        self.assertEqual({'kept.jpg'},
+                         _build_media_protected_set(str(self.media), 'news'))
+        # Defaulting back to products must not accidentally protect news files.
+        self.assertEqual(set(), _build_media_protected_set(str(self.media)))
+
+    # ---- ④ receiver 接线 --------------------------------------------------
+    def test_deleting_a_gallery_image_triggers_the_static_sync(self):
+        from pages.models import NewsImage
+
+        # ``doomed.jpg`` deliberately survives: media/ still backs that file, so
+        # the prune safety net keeps it. What this test proves is that the
+        # delete *re-ran* the sync -- evidenced by the orphan below, which
+        # nothing else would have removed.
+        self._put_media('news/doomed_a1b2c3d.jpg')
+        orphan = self._static_dir_for('qa-news-sync') / 'stale.jpg'
+        orphan.parent.mkdir(parents=True, exist_ok=True)
+        orphan.write_bytes(b'\x89PNG\r\n\x1a\nQA')
+
+        article = self._article()
+        image = NewsImage.objects.create(article=article,
+                                         image='news/doomed_a1b2c3d.jpg')
+
+        image.delete()
+        self.assertFalse(orphan.exists(),
+                         '删除图集图没有触发 static 同步 → 孤儿文件会留在函数包里')
 
 

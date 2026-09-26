@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ article.title_t|default:article.title }} — SolarOne News{% endblock %}
+{% block meta_description %}{{ article.summary_t|default:article.summary|truncatechars:160 }}{% endblock %}
+{% block og_title %}{{ article.title_t|default:article.title }} — SolarOne News{% endblock %}
+{% block og_description %}{{ article.summary_t|default:article.summary|truncatechars:160 }}{% endblock %}
+{% block og_type %}<meta property="og:type" content="article">{% endblock %}
+{% block og_image %}{% if article.image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ article.image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+
+{% include "includes/breadcrumb_jsonld.html" with section="news" leaf_name=article.title_t|escapejs leaf_url=request.path %}
+
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "{{ article.title_t|default:article.title|escapejs }}",
+  "description": "{{ article.summary_t|default:article.summary|escapejs }}",
+  "datePublished": "{{ article.published_at|date:'c' }}",
+  "image": "{{ canonical_origin }}{{ article.image_url }}",
+  "publisher": {"@type": "Organization", "name": "SolarOne"}
+}
+</script>
+
+<section class="news-detail" style="padding: 100px 0 80px;">
+  <div class="container">
+
+    <a href="{% url 'news' %}" class="news-detail-back">{% trans "Back to all news" %}</a>
+
+    <article class="news-detail-article">
+      <div class="news-detail-meta">
+        <span class="news-detail-cat">{{ category_label }}</span>
+        <span class="news-detail-date">{{ article.published_at|date:"Y-m-d" }}</span>
+      </div>
+
+      <h1 class="news-detail-title">{{ article.title_t|default:article.title }}</h1>
+      {% if article.summary_t|default:article.summary %}
+      <p class="news-detail-summary">{{ article.summary_t|default:article.summary }}</p>
+      {% endif %}
+
+      {% if article.image_url or article.images %}
+      <div class="news-detail-media">
+        {% if article.image_url %}
+        <figure class="news-detail-media-cell news-detail-media-cell--large">
+          <img src="{{ article.image_url }}" alt="{{ article.title_t|default:article.title }}" loading="eager">
+        </figure>
+        {% endif %}
+        {% for img in article.images %}
+        <figure class="news-detail-media-cell">
+          <img src="{{ img.url }}" alt="{{ img.alt|default:article.title }}"
+               {% if img.width %}width="{{ img.width }}"{% endif %}
+               {% if img.height %}height="{{ img.height }}"{% endif %}
+               loading="lazy" decoding="async">
+        </figure>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="news-detail-body">{{ article.content_t|default:article.content|linebreaks }}</div>
+    </article>
+
+    {% if related_articles %}
+    <div class="news-related">
+      <h2 class="news-related-heading">{% trans "More news" %}</h2>
+      <div class="news-related-grid">
+        {% for a in related_articles %}
+        <a class="news-related-card" href="{% url 'news_detail' a.slug %}">
+          {% if a.image_url %}
+          <div class="news-related-cover">
+            <img src="{{ a.image_url }}" alt="{{ a.title_t|default:a.title }}" loading="lazy">
+          </div>
+          {% endif %}
+          <div class="news-related-body">
+            <div class="news-related-meta">
+              <span class="news-related-cat">{{ a.category_label|default:a.category }}</span>
+              <span class="news-related-date">{{ a.published_at|date:"Y-m-d" }}</span>
+            </div>
+            <h3>{{ a.title_t|default:a.title }}</h3>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style nonce="{{ request.csp_nonce }}">
+  .news-detail { background: var(--bg); }
+  .news-detail-wrap { max-width: 880px; }
+  .news-detail-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute);
+    text-decoration: none; margin-bottom: 36px; transition: color 0.2s;
+  }
+  .news-detail-back::before { content: '←'; }
+  .news-detail-back:hover { color: var(--accent); }
+
+  .news-detail-meta {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    font-family: var(--ff-mono); font-size: 15px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .news-detail-cat { color: var(--accent); font-weight: 700; }
+  .news-detail-date { color: var(--ink-mute); font-weight: 700; }
+
+  .news-detail-title {
+    font-family: var(--ff-display); font-weight: 500; color: var(--ink);
+    font-size: clamp(26px, 2.8vw, 34px); line-height: 1.15;
+    letter-spacing: -0.02em; margin-bottom: 14px;
+  }
+  .news-detail-summary {
+    font-size: 1.08rem; line-height: 1.55; color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+
+  /* Bento media grid: left large cell spans two rows, right column stacks the
+     remaining images. All cells fill via object-fit: cover so the whole block
+     stays compact on a single desktop screen. */
+  .news-detail-media {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 18px; margin: 0 0 28px 0;
+    max-height: min(520px, 60vh);
+  }
+  .news-detail-media-cell {
+    margin: 0; overflow: hidden;
+    border-radius: 14px; border: 1px solid var(--line);
+    background: var(--bg-raised);
+  }
+  .news-detail-media-cell--large { grid-row: 1 / 3; }
+  .news-detail-media-cell img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .news-detail-body {
+    font-size: 1rem; line-height: 1.65; color: var(--ink-soft);
+  }
+  .news-detail-body p { margin-bottom: 12px; }
+  .news-detail-body p:last-child { margin-bottom: 0; }
+
+  .news-related { margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--line); }
+  .news-related-heading {
+    font-family: var(--ff-display); font-size: 1.4rem; font-weight: 600;
+    color: var(--ink); margin-bottom: 24px; letter-spacing: -0.01em;
+  }
+  .news-related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .news-related-card {
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 12px; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  .news-related-card:hover {
+    transform: translateY(-3px); border-color: var(--line-strong);
+    box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.5);
+  }
+  .news-related-cover { aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-raised); }
+  .news-related-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .news-related-body { padding: 16px 18px 20px; }
+  .news-related-meta {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    font-family: var(--ff-mono); font-size: 10.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .news-related-cat { color: var(--accent); font-weight: 600; }
+  .news-related-date { color: var(--ink-mute); }
+  .news-related-card h3 {
+    font-size: 1rem; font-weight: 500; line-height: 1.35; color: var(--ink);
+  }
+  @media (max-width: 1199px) { .news-related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 767px) {
+    .news-related-grid { grid-template-columns: 1fr; }
+    .news-detail { padding-top: 84px !important; }
+    .news-detail-media { grid-template-columns: 1fr; grid-template-rows: auto; max-height: none; }
+    .news-detail-media-cell--large { grid-row: auto; aspect-ratio: 16 / 9; }
+    .news-detail-media-cell { aspect-ratio: 16 / 9; }
+  }
+</style>
+
+{% endblock %}

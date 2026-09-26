@@ -1,6 +1,49 @@
 {
   "products": [
     {
+      "pk": 27,
+      "name": "Mseries GS",
+      "slug": "mseries-gs",
+      "category": "ACCESSORY",
+      "description": "Glare shield for M series\r\nWe provide a variety of glare shield lengths to accommodate diverse application environments.",
+      "power": "",
+      "efficacy": "",
+      "output": "",
+      "beam_angle": "",
+      "protection": "",
+      "image": "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
+      "banner_image": "images/products/mseries-gs/accessory-fl9m-banner-02.webp",
+      "dimension_image": "images/products/mseries-gs/fl9m-gs-3d-view-540p.webp",
+      "beam_angle_image": "",
+      "ordering_image": "",
+      "cert_image": "",
+      "order": 0,
+      "is_active": true,
+      "page_layout": "detail",
+      "parent_slug": "accessory",
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      },
+      "gallery": [
+        "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
+        "images/products/mseries-gs/mseries-glare-shield-720p-02.webp",
+        "images/products/mseries-gs/mseries-glare-shield-720p-03.webp"
+      ],
+      "specs": [],
+      "energy_data": [
+        {
+          "label": "Material",
+          "value": "Stainless Steel 304"
+        }
+      ],
+      "model_number": "",
+      "ordering_info": []
+    },
+    {
       "pk": 1,
       "name": "M Series",
       "slug": "m-series",
@@ -16,7 +59,7 @@
       "dimension_image": "",
       "beam_angle_image": "",
       "ordering_image": "images/products/m-series/sample-number.webp",
-      "cert_image": "",
+      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 1,
       "is_active": true,
       "page_layout": "overview",
@@ -84,7 +127,7 @@
       "dimension_image": "images/products/rt410-series/rt410-3d-view.webp",
       "beam_angle_image": "images/products/rt410-series/beamangle183050100.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt410-series/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 2,
       "is_active": true,
       "page_layout": "detail",
@@ -228,18 +271,18 @@
       "name": "RGB / RGBW",
       "slug": "rgb-rgbw",
       "category": "AREA_SITE",
-      "description": "Any Color from anywhere, anytime, at your convenience! FL9M-RGBW-600W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
+      "description": "Discover any color, anywhere, anytime, at your convenience!\r\nOur M series, RT410, and HB-M models feature both RGB and RGBW lighting fixtures. White light color temperature is fully customizable, ranging from 3000K to 5700K.",
       "power": "",
       "efficacy": "",
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rgb-rgbw/rgbw-9m-w.webp",
-      "banner_image": "images/products/rgb-rgbw/rgbw-bar-01.webp",
+      "image": "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
+      "banner_image": "images/products/rgb-rgbw/rgbw-banner-02.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rgb-rgbw/rgbw-interface-0-10v-dali-dmx-certification-ip66-ik08.png",
       "order": 3,
       "is_active": true,
       "page_layout": "overview",
@@ -252,10 +295,9 @@
         "ar": {}
       },
       "gallery": [
-        "images/products/rgb-rgbw/rgbw-9m-r.webp",
-        "images/products/rgb-rgbw/rgbw-9m-g.webp",
-        "images/products/rgb-rgbw/rgbw-9m-b.webp",
-        "images/products/rgb-rgbw/rgbw-9m-w.webp"
+        "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
+        "images/products/rgb-rgbw/rgbw-rt410-855p-01.webp",
+        "images/products/rgb-rgbw/rgbw-hbm-855p-01.webp"
       ],
       "specs": [],
       "energy_data": [],
@@ -267,14 +309,14 @@
       "name": "Accessory",
       "slug": "accessory",
       "category": "ACCESSORY",
-      "description": "Glare Shield for RT410",
+      "description": "Glare Shield for fixtures\r\nTo address varying glare and light spill requirements in different venues and environments, we equip our products with the corresponding glare shield to perfectly suit your application.",
       "power": "",
       "efficacy": "",
       "output": "",
       "beam_angle": "",
       "protection": "",
       "image": "images/products/accessory/rt410-glare-shield-01.webp",
-      "banner_image": "images/products/accessory/glare-shield-rt410-bar-03.webp",
+      "banner_image": "images/products/accessory/accessory-banner-02.webp",
       "dimension_image": "",
       "beam_angle_image": "",
       "ordering_image": "",
@@ -291,10 +333,8 @@
         "ar": {}
       },
       "gallery": [
-        "images/products/accessory/rt410-glare-shield-01.webp",
-        "images/products/accessory/rt410-glare-shield-02.webp",
-        "images/products/accessory/rt410-glare-shield-03.webp",
-        "images/products/accessory/rt410-glare-shield-04.webp"
+        "images/products/accessory/mseries-glare-shield-720p-02.webp",
+        "images/products/accessory/rt410-glare-shield-01.webp"
       ],
       "specs": [],
       "energy_data": [],
@@ -317,7 +357,7 @@
       "dimension_image": "images/products/fl1m/fl1m-3d-view.webp",
       "beam_angle_image": "images/products/fl1m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl1m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 11,
       "is_active": true,
       "page_layout": "detail",
@@ -351,6 +391,14 @@
         {
           "label": "Beam Angle",
           "value": "18~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
         }
       ],
       "energy_data": [
@@ -360,7 +408,7 @@
         },
         {
           "label": "Lumen Output",
-          "value": "10400 lm"
+          "value": "10400 lm Typ."
         },
         {
           "label": "System Wattage",
@@ -452,7 +500,7 @@
       "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
       "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl4m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 12,
       "is_active": true,
       "page_layout": "detail",
@@ -513,7 +561,7 @@
         },
         {
           "label": "Lumen Output",
-          "value": ">41,600lm"
+          "value": "41,600lm Typ."
         },
         {
           "label": "System Wattage",
@@ -602,10 +650,10 @@
       "protection": "",
       "image": "images/products/fl6m/fl6m-01.webp",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
-      "dimension_image": "images/products/fl6m/fl6m-3d-view.webp",
+      "dimension_image": "images/products/fl6m/fl6m-ngs-3d-view-540p.webp",
       "beam_angle_image": "images/products/fl6m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl6m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 13,
       "is_active": true,
       "page_layout": "detail",
@@ -639,6 +687,14 @@
         {
           "label": "Beam Angle",
           "value": "18~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
         }
       ],
       "energy_data": [
@@ -648,7 +704,7 @@
         },
         {
           "label": "Lumen Output",
-          "value": ">58700lm"
+          "value": "62,400lm Typ."
         },
         {
           "label": "System Wattage",
@@ -737,10 +793,10 @@
       "protection": "",
       "image": "images/products/fl9m/fl9m-01.webp",
       "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
-      "dimension_image": "images/products/fl9m/fl9m-3d-view.webp",
+      "dimension_image": "images/products/fl9m/fl9m-ngs-3d-view-540p.webp",
       "beam_angle_image": "images/products/fl9m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl9m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 14,
       "is_active": true,
       "page_layout": "detail",
@@ -774,6 +830,14 @@
         {
           "label": "Beam Angle",
           "value": "18~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
         }
       ],
       "energy_data": [
@@ -783,7 +847,7 @@
         },
         {
           "label": "Lumen Output",
-          "value": ">87,600lm"
+          "value": "93,600lm Typ."
         },
         {
           "label": "System Wattage",
@@ -875,7 +939,7 @@
       "dimension_image": "images/products/fl12m/fl12m-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl12m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 15,
       "is_active": true,
       "page_layout": "detail",
@@ -909,20 +973,28 @@
         {
           "label": "Beam Angle",
           "value": "18~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
         }
       ],
       "energy_data": [
         {
           "label": "Series Name",
-          "value": "FL12M-1000W"
+          "value": "FL12M-960W"
         },
         {
           "label": "Lumen Output",
-          "value": ">123,000 lm"
+          "value": "124,800 lm  Typ."
         },
         {
           "label": "System Wattage",
-          "value": "1000W"
+          "value": "960W"
         },
         {
           "label": "CRI",
@@ -984,7 +1056,7 @@
       "model_number": "FL12M-1000W-YYK-H-30",
       "ordering_info": [
         "FL12M (Light With 12 Module)",
-        "1000W",
+        "960W",
         "30=3000K\r\n40=4000K\r\n57=5700K",
         "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
         "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
@@ -1007,10 +1079,10 @@
       "protection": "",
       "image": "images/products/fl16m/fl16m-01.webp",
       "banner_image": "images/products/fl16m/fl16m-bar-01.webp",
-      "dimension_image": "images/products/fl16m/fl16m-3d-view.webp",
+      "dimension_image": "images/products/fl16m/fl16m-ngs-3d-view-650p.webp",
       "beam_angle_image": "images/products/fl16m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/fl16m/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 16,
       "is_active": true,
       "page_layout": "detail",
@@ -1044,20 +1116,28 @@
         {
           "label": "Beam Angle",
           "value": "18~50°"
+        },
+        {
+          "label": "CCT",
+          "value": "3000~5700K"
+        },
+        {
+          "label": "CRI",
+          "value": "70~95"
         }
       ],
       "energy_data": [
         {
           "label": "Series Name",
-          "value": "FL16M-1360W"
+          "value": "FL16M-1280W"
         },
         {
           "label": "Lumen Output",
-          "value": ">163,000 lm"
+          "value": "166,400 lm Typ."
         },
         {
           "label": "System Wattage",
-          "value": "1360W"
+          "value": "1280W"
         },
         {
           "label": "CRI",
@@ -1116,10 +1196,10 @@
           "value": "Inventronics Or Equal"
         }
       ],
-      "model_number": "FL12M-1360W-30K-H",
+      "model_number": "FL16M-1280W-30K-H",
       "ordering_info": [
         "FL16M (Light With 16 Module)",
-        "1360W",
+        "1280W",
         "30=3000K\r\n40=4000K\r\n57=5700K",
         "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
         "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
@@ -1134,7 +1214,7 @@
       "name": "FL9M-RGBW",
       "slug": "fl9m-rgbw",
       "category": "AREA_SITE",
-      "description": "Any Color from anywhere, anytime, at your convenience! FL9M-RGBW-600W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
+      "description": "FL9M-RGBW\r\nAny Color from anywhere, anytime, at your convenience! FL9M-RGBW-600W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1142,7 +1222,7 @@
       "protection": "",
       "image": "images/products/fl9m-rgbw/rgbw-9m-w.webp",
       "banner_image": "images/products/fl9m-rgbw/rgbw-bar-01.webp",
-      "dimension_image": "images/products/fl9m-rgbw/fl9m-3d-view.webp",
+      "dimension_image": "images/products/fl9m-rgbw/fl9m-gs-3d-view-540p.webp",
       "beam_angle_image": "images/products/fl9m-rgbw/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "images/products/fl9m-rgbw/rgbw-interface-0-10v-dali-dmx-certification-ip66-ik08.webp",
@@ -1244,7 +1324,7 @@
       "name": "Glare Shield for RT410",
       "slug": "glare-shield-for-rt410",
       "category": "ACCESSORY",
-      "description": "Glare Shield for RT410",
+      "description": "Glare Shield for RT410\r\nWe provide a variety of glare shield lengths to accommodate diverse application environments.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1294,7 +1374,7 @@
       "dimension_image": "images/products/vsp-xxxxw-9m-yp/ac-en-3d-view.webp",
       "beam_angle_image": "images/products/vsp-xxxxw-9m-yp/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/vsp-xxxxw-9m-yp/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 21,
       "is_active": true,
       "page_layout": "detail",
@@ -1416,7 +1496,7 @@
       "dimension_image": "images/products/vsp-xxxxw-12m-yp/led-en-3d-view.webp",
       "beam_angle_image": "images/products/vsp-xxxxw-12m-yp/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/vsp-xxxxw-12m-yp/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 22,
       "is_active": true,
       "page_layout": "detail",
@@ -1538,7 +1618,7 @@
       "dimension_image": "images/products/rt590fl-s/tr590-3d-view.webp",
       "beam_angle_image": "images/products/rt590fl-s/beamangle-3050120.webp",
       "ordering_image": "",
-      "cert_image": "images/products/rt590fl-s/rt590fl-s-flood-light-certifications.webp",
+      "cert_image": "images/products/rt590fl-s/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 31,
       "is_active": true,
       "page_layout": "detail",
@@ -1655,7 +1735,7 @@
       "dimension_image": "images/products/rt390fl/rt390-3d-view.webp",
       "beam_angle_image": "images/products/rt390fl/beamangle-3050120.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt390fl/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 32,
       "is_active": true,
       "page_layout": "detail",
@@ -1768,7 +1848,7 @@
       "dimension_image": "images/products/rt400hb/rt400hb-3d-view01.webp",
       "beam_angle_image": "images/products/rt400hb/rt400hb-beamangle-254590.png",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt400hb/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 42,
       "is_active": true,
       "page_layout": "detail",
@@ -1877,7 +1957,7 @@
       "dimension_image": "images/products/rt500hb/rt500hb-3d-view.webp",
       "beam_angle_image": "images/products/rt500hb/rt500hb-beamangle-254590.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt500hb/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 43,
       "is_active": true,
       "page_layout": "detail",
@@ -1890,10 +1970,10 @@
         "ar": {}
       },
       "gallery": [
-        "images/products/rt500hb/hb500-04.webp",
+        "images/products/rt500hb/hb500-05.webp",
         "images/products/rt500hb/hb500-02.webp",
         "images/products/rt500hb/hb500-03.webp",
-        "images/products/rt500hb/hb500-05.webp"
+        "images/products/rt500hb/hb500-04.webp"
       ],
       "specs": [],
       "energy_data": [
@@ -1962,7 +2042,7 @@
           "value": "Inventronics Or Equal"
         }
       ],
-      "model_number": "FL1M-80W",
+      "model_number": "RT500HB-280W",
       "ordering_info": [
         "HB=HighBay Light",
         "280W",
@@ -1990,7 +2070,7 @@
       "dimension_image": "images/products/rt220ub/rt220ub-3d-view.webp",
       "beam_angle_image": "images/products/rt220ub/beamangle-120d-1.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt220ub/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 44,
       "is_active": true,
       "page_layout": "detail",
@@ -2103,7 +2183,7 @@
       "dimension_image": "images/products/rt420fs-s/rt420fl-3d-view.webp",
       "beam_angle_image": "images/products/rt420fs-s/beamangle-120d-1.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt420fs-s/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 45,
       "is_active": true,
       "page_layout": "detail",
@@ -2205,7 +2285,7 @@
       "name": "RT410-RGBW",
       "slug": "rt410-rgbw",
       "category": "AREA_SITE",
-      "description": "RT410-RGBW",
+      "description": "RT410-RGBW\r\nAny Color from anywhere, anytime, at your convenience! RT410-RGBW-200W, We offer M-series RGB and RGBW lighting fixtures. The white light color temperature can be customized to your requirements, ranging from 3000K to 5700K.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -2238,19 +2318,23 @@
       "energy_data": [
         {
           "label": "Series Name",
-          "value": "FL1M-80W"
+          "value": "RT410-RGBW"
         },
         {
           "label": "Lumen Output",
-          "value": ">10,400lm"
+          "value": "10,000lm"
         },
         {
           "label": "System Wattage",
-          "value": "80W"
+          "value": "200W"
         },
         {
           "label": "CRI",
           "value": "70-95"
+        },
+        {
+          "label": "Color Temperature (Kevin)",
+          "value": "3000K-3500K、 4000K-4500k、5000K 、5700K"
         },
         {
           "label": "Input Voltage (High Voltage)",
@@ -2281,8 +2365,12 @@
           "value": "0.26 (sq. ft.)"
         },
         {
+          "label": "L\" × W\" × H\"",
+          "value": "15.8\" X 15.8\"X 4.2\" / 418 X 400 X 172 (mm)"
+        },
+        {
           "label": "Approximate Weight",
-          "value": "2.3 kgs( 5.2 lbs)"
+          "value": "(30lbs)13.5kgs"
         },
         {
           "label": "Material",
@@ -2293,8 +2381,17 @@
           "value": "Inventronics Or Equal"
         }
       ],
-      "model_number": "FL1M-80W",
-      "ordering_info": []
+      "model_number": "RT410-RGBW",
+      "ordering_info": [
+        "RT410-RGBW",
+        "200W",
+        "30=3000K\r\n40=4000K\r\n57=5700K",
+        "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
+        "12=12°\r\n18=18°\r\n30=30°\r\n50=50°",
+        "GRY=Grey\r\nBLK=Black",
+        "1.0-10V\r\n2. DMX\r\n3. DALI",
+        "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket"
+      ]
     },
     {
       "pk": 14,
@@ -2312,7 +2409,7 @@
       "dimension_image": "images/products/rt600sl-t/RT600SL-dimension-1.webp",
       "beam_angle_image": "images/products/rt600sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt600sl-t/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 51,
       "is_active": true,
       "page_layout": "detail",
@@ -2400,7 +2497,7 @@
       "model_number": "RT600SL-T",
       "ordering_info": [
         "RT600SL-T",
-        "1200W",
+        "120W",
         "30=3000K\r\n40=4000K\r\n57=5700K",
         "S=Standard Voltage (110-277VAC)\r\nH=High Voltage (347-480VAC)",
         "70140=70°x 140°",
@@ -2413,7 +2510,7 @@
       "name": "RT820SL-T",
       "slug": "rt820sl-t",
       "category": "ROADWAY",
-      "description": "RT820SL-T",
+      "description": "Professional LED roadway lighting solution designed for streets, highways, and infrastructure projects. Delivers uniform illumination with energy-efficient performance.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -2421,10 +2518,10 @@
       "protection": "",
       "image": "images/products/rt820sl-t/rt820-01.webp",
       "banner_image": "images/products/rt820sl-t/rt820sl-bar-2.webp",
-      "dimension_image": "images/products/rt820sl-t/rt820-3d-view.png",
+      "dimension_image": "images/products/rt820sl-t/rt820-3d-view.webp",
       "beam_angle_image": "images/products/rt820sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
-      "cert_image": "",
+      "cert_image": "images/products/rt820sl-t/certifications-ul-dlc-gs-ce-ip66.webp",
       "order": 52,
       "is_active": true,
       "page_layout": "detail",
@@ -2755,7 +2852,7 @@
       "sport_type": "MULTI_SPORT",
       "description": "【Customer Profile】\r\nLocated in Roanne, France, Halle André Vacheresse is a premier indoor arena serving as the home of Chorale Roanne Basket and a host venue for the Tennis Fed Cup.\r\n\r\n【Scope of Work】\r\nThe project entailed a one-for-one upgrade of legacy 1500W metal halide fixtures. To accommodate diverse events like basketball and tennis, the gymnasium required a versatile lighting system. Premium LED lighting was chosen to dramatically elevate the athlete experience, providing high-lumen, glare-free illumination essential for tracking fast-moving action and executing precise shots.\r\n\r\n【The Solution】\r\nThrough rigorous photometric modeling, we optimized glare control and established exact aiming coordinates for every fixture. The SolarOne Vision Smart FL9M-720W lights were effortlessly integrated via our one-for-one retrofit plan. Our LED solution outperforms legacy metal halides by delivering exceptional uniformity in the air and on the court, achieving an outstanding average uniformity of 82%.",
       "results": "over 2000 lux — meeting HD broadcast standards.",
-      "image": "images/projects/multi-sport-arena-hd-broadcast/basketball.webp",
+      "image": "images/projects/multi-sport-arena-hd-broadcast/choecm-basketball-02.webp",
       "order": 10,
       "translations": {
         "fr": {
@@ -3048,7 +3145,7 @@
       "sport_type": "KARTING",
       "description": "Red 1 Karting Beijing is a well-known indoor and outdoor comprehensive karting operator in Beijing, featuring China's first CIK-FIA certified international professional karting track.",
       "results": "",
-      "image": "images/projects/red-1-karting-beijing/red1-karting-01.webp",
+      "image": "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
       "order": 29,
       "translations": {
         "fr": {},
@@ -3367,5 +3464,39 @@
       "is_active": true
     }
   ],
-  "news": []
+  "news": [
+    {
+      "slug": "low-cct-high-cri-high-mast-led-retrofit",
+      "title": "SolarOne FL6M-480W Light Up Tianjin Binhai International Airport",
+      "category": "Case Studies",
+      "summary": "The SolarOne FL6M-480W LED high-mast family replaces the old metal halide apron lighting at Tianjin Binhai International Airport with warm, high-CRI light.",
+      "content": "SolarOne FL6M-480W high-mast luminaires have been installed on the apron of Tianjin Binhai International Airport, replacing the site's legacy metal halide system.\r\n\r\nThe FL6M delivers warm white light at a high colour rendering index (CRI), keeping the apron familiar to pilots and ground staff while raising uniformity and making surfaces easier to read after dark.\r\n\r\nSince commissioning the apron lighting has run consistently through dusk and night operations, with even coverage and controlled glare across the whole apron — supporting safe aircraft movement and ground handling.\r\n\r\nSee the FL6M specification sheet for photometrics and mounting options.",
+      "image": "images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-hero.webp",
+      "images": [
+        {
+          "image": "images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-head-work.webp",
+          "alt": "SolarOne FL6M luminaires installed on the apron head-frame",
+          "caption": "SolarOne FL6M luminaires mounted on the apron head-frame",
+          "order": 1
+        },
+        {
+          "image": "images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-ground-work.webp",
+          "alt": "Technicians assembling LED high-mast floodlight modules at ground level",
+          "caption": "Warm-white light across the apron after the FL6M retrofit",
+          "order": 2,
+          "width": 600,
+          "height": 337
+        }
+      ],
+      "published_at": "2026-09-25T00:00:00+00:00",
+      "is_published": true,
+      "translations": {
+        "fr": {},
+        "es": {},
+        "de": {},
+        "ru": {},
+        "ar": {}
+      }
+    }
+  ]
 }

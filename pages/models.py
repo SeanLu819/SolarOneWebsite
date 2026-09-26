@@ -150,7 +150,7 @@ class Product(models.Model):
     # Energy & Performance Data: list of {"label": "...", "value": "..."} dicts.
     # Rendered as the ENERGY AND PERFORMANCE DATA table on product detail page.
     energy_data = JSONField(
-        default=default_energy_data,
+        default=list,
         blank=True,
         verbose_name='Energy & Performance Data',
         help_text='产品能效参数表，用于详情页 ENERGY AND PERFORMANCE DATA 表格。'
@@ -200,8 +200,19 @@ class Product(models.Model):
 
 
 class NewsArticle(models.Model):
+    NEWS_CATEGORIES = [
+        ('Company News', 'Company News'),
+        ('Product News', 'Product News'),
+        ('Case Studies', 'Case Studies'),
+    ]
+
     title = models.CharField(max_length=300)
     slug = models.SlugField(unique=True)
+    category = models.CharField(
+        max_length=50,
+        choices=NEWS_CATEGORIES,
+        default='Company News',
+    )
     summary = models.TextField(blank=True)
     content = models.TextField()
     image = models.ImageField(upload_to='news/', blank=True)
@@ -209,12 +220,57 @@ class NewsArticle(models.Model):
     is_published = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # JSON translations: {"fr": {"title": "...", "summary": "...", "content": "..."}, ...}
+    # Mirrors Product.translations / Project.translations. Missing languages fall back
+    # to the English fields via ``translate()``, so an untranslated article still
+    # renders everywhere instead of going blank on the non-English pages.
+    translations = models.JSONField(default=dict, blank=True)
 
     class Meta:
         ordering = ['-published_at']
 
     def __str__(self):
         return self.title
+
+    def t(self, field_name, lang='en'):
+        """Get translated value for a field, falling back to the default English value."""
+        return translate(self, field_name, lang)
+
+
+class NewsImage(models.Model):
+    """Gallery image for a news article.
+
+    The list page used to show a single cropped ``NewsArticle.image`` (16:9
+    ``object-fit: cover``), which threw away the phrasing of square-ish source
+    photos. News photography is often small (500-600 px wide), so the card now
+    renders every gallery image at its own aspect ratio instead of stretching it
+    to full width. ``width``/``height`` are optional and only emitted as HTML
+    attributes (CLS guard) — they are never resized.
+    """
+    article = models.ForeignKey(
+        NewsArticle,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Article'
+    )
+    image = models.ImageField(
+        upload_to='news/',
+        help_text='Gallery photo for this article. Rendered at its native size — '
+                  'keep the file around 600 px wide; it will not be cropped.'
+    )
+    alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt text')
+    caption = models.CharField(max_length=250, blank=True, verbose_name='Caption')
+    order = models.IntegerField(default=0, verbose_name='Order')
+    width = models.PositiveIntegerField(blank=True, null=True, verbose_name='Width (px)')
+    height = models.PositiveIntegerField(blank=True, null=True, verbose_name='Height (px)')
+
+    class Meta:
+        ordering = ['order', 'pk']
+        verbose_name = 'News image'
+        verbose_name_plural = 'News images'
+
+    def __str__(self):
+        return f'{self.article.title} — {self.alt_text or self.image.name}'
 
 
 class ProductImage(models.Model):
@@ -743,13 +799,18 @@ def _prune_stale_images(static_dir, current_names, media_protected=None):
         pass
 
 
-def _build_media_protected_set(media_root):
-    """Set of hash-stripped basenames for every image under media/products/**.
+def _build_media_protected_set(media_root, subdir='products'):
+    """Set of hash-stripped basenames for every image under media/<subdir>/**.
 
     Used by the prune pass as a safety net so a valid static image is never
-    deleted just because the sync could not locate its exact media source."""
+    deleted just because the sync could not locate its exact media source.
+
+    ``subdir`` defaults to ``products`` (existing callers). News passes
+    ``news`` so a photo whose DB-stored media path no longer matches the file
+    on disk is protected the same way product photos are.
+    """
     protected = set()
-    root = os.path.join(media_root, 'products')
+    root = os.path.join(media_root, subdir)
     if not os.path.isdir(root):
         return protected
     valid = ('.webp', '.png', '.jpg', '.jpeg', '.gif', '.svg')
@@ -936,3 +997,94 @@ def sync_ppc_on_save(sender, instance, **kwargs):
 def sync_ppc_on_delete(sender, instance, **kwargs):
     _sync_ppc_media_to_static()
     _invalidate_views_cache()
+
+
+# ============================================================
+# News image sync (mirrors the Product/Project pattern)
+# ============================================================
+
+def _resolve_media_image(fname, media_root):
+    """Resolve one uploaded media path to ``(hash-stripped name, source path)``.
+
+    ``source`` is ``None`` when nothing under ``media/`` can back the upload —
+    which happens for photos that were renamed by a build/export step, or for
+    assets committed straight into ``static/`` with no media counterpart. The
+    stripped name is returned *regardless* so callers can still register it as
+    "current" and stop the prune pass from deleting the existing static copy.
+    """
+    clean = _clean_hashed_filename(fname)
+    src = os.path.join(media_root, str(fname))
+    if os.path.exists(src):
+        return clean, src
+    head, tail = os.path.split(str(fname))
+    stripped = _clean_hashed_filename(tail)
+    if stripped != tail:
+        alt = os.path.join(media_root, head, stripped) if head \
+            else os.path.join(media_root, stripped)
+        if os.path.exists(alt):
+            return clean, alt
+    return clean, None
+
+
+def _news_photo_names(article):
+    """Every media path the article currently references (cover + gallery)."""
+    names = []
+    cover = getattr(article, 'image', None)
+    if cover and getattr(cover, 'name', ''):
+        names.append(cover.name)
+    try:
+        for im in article.images.all():
+            name = getattr(im.image, 'name', '')
+            if name:
+                names.append(name)
+    except Exception:
+        pass
+    return names
+
+
+def _sync_news_media_to_static(instance):
+    """Copy news photos from media/ to static/images/news/<slug>/.
+
+    Without this the photos uploaded in admin only ever exist under ``media/``,
+    while the production seed exports them as ``images/news/<slug>/...`` paths
+    that resolve against ``static/``. Locally that mismatch is invisible (the
+    DB path still renders ``/media/...``) but on Vercel every news photo 404s.
+    Mirrors ``sync_product_on_save``: strip the upload hash, then prune files
+    that are referenced by nothing and backed by nothing in media/.
+    """
+    article = getattr(instance, 'article', None) or instance
+    slug = getattr(article, 'slug', None)
+    if not slug:
+        return
+    media_root = str(settings.MEDIA_ROOT)
+    static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'news', slug)
+    os.makedirs(static_dir, exist_ok=True)
+
+    current_names = set()
+    for fname in _news_photo_names(article):
+        clean, src = _resolve_media_image(fname, media_root)
+        current_names.add(clean)
+        if not src:
+            continue
+        try:
+            shutil.copy2(src, os.path.join(static_dir, clean))
+        except Exception:
+            pass
+
+    media_protected = _build_media_protected_set(media_root, 'news')
+    _prune_stale_images(static_dir, current_names, media_protected)
+
+
+@receiver(post_save, sender=NewsArticle)
+def sync_news_on_save(sender, instance, **kwargs):
+    _sync_news_media_to_static(instance)
+
+
+@receiver(post_save, sender=NewsImage)
+def sync_news_image_on_save(sender, instance, **kwargs):
+    _sync_news_media_to_static(instance)
+
+
+@receiver(post_delete, sender=NewsImage)
+def sync_news_image_on_delete(sender, instance, **kwargs):
+    _sync_news_media_to_static(instance)

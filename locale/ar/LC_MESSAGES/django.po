@@ -861,3 +861,18 @@ msgstr "إضاءة HID القديمة"
 
 msgid "New LED lighting"
 msgstr "إضاءة LED الجديدة"
+msgid "Read article"
+msgstr "اقرأ المقال"
+
+msgid "Load more"
+msgstr "تحميل المزيد"
+
+msgid "Featured"
+msgstr "مميز"
+
+msgid "Back to all news"
+msgstr "العودة إلى جميع الأخبار"
+
+msgid "More news"
+msgstr "المزيد من الأخبار"
+

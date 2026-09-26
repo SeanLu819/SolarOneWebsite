@@ -422,11 +422,17 @@
     color: var(--accent);
     margin-bottom: 16px;
   }
-  /* Dimension / beam-angle diagram dark-mode inversion: black background + white lines */
+  /* Dimension / beam-angle diagram dark-mode inversion: black background + white lines.
+     background: transparent is REQUIRED here: filter:invert(1) flips the element's
+     own rendering INCLUDING its CSS background, so an inherited --bg-soft panel
+     becomes a light slab that shows through TRANSPARENT line-art diagrams (the
+     glare-shield dimension webp is ~92% alpha=0 → washed-out white box). Opaque
+     diagrams are unaffected — their pixels cover the background entirely. */
   [data-theme="dark"] .detail-dimension-img,
   [data-theme="dark"] .detail-beam-angle-img,
   [data-theme="dark"] .detail-ordering-image img {
     filter: invert(1);
+    background: transparent;
   }
 
   /* === Energy and Performance Data table === */
@@ -524,6 +530,10 @@
   .detail-ordering-table {
     width: 100%;
     min-width: 900px;
+    /* fixed 布局：9 列宽度由下方 nth-child 显式分配，不随内容长短漂移。
+       auto 布局会把宽度让给内容最长的列（Voltage/Beam），把 CCT/Finish/
+       Dimming 挤到 "30=30 00K" / "GRY=Gre y" / "Dimmi ng" 式碎断（v1.6.4）。 */
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 0.78rem;
     line-height: 1.45;
@@ -531,10 +541,20 @@
   }
   .detail-ordering-table th,
   .detail-ordering-table td {
-    padding: 10px 12px;
+    /* 水平内边距 12→10px：9 列共释放 36px 给 Bracket 等窄列，
+       替代缩小字号（与 energy 表同为 0.78rem，低于 12px 伤可读性）。 */
+    padding: 10px;
     text-align: left;
     vertical-align: top;
     border-right: 1px solid var(--line);
+    /* 兜底：fixed 布局下超长无空格 token 允许断字，防止溢出。
+       正常内容（见列宽注释）已按最长 token 预留，不会触发。 */
+    overflow-wrap: break-word;
+  }
+  .detail-ordering-table th {
+    /* 表头水平+垂直居中（数据单元格保持左上对齐） */
+    text-align: center;
+    vertical-align: middle;
   }
   .detail-ordering-table th:last-child,
   .detail-ordering-table td:last-child {
@@ -549,14 +569,34 @@
     letter-spacing: -0.01em;
     border-bottom: 1px solid var(--line);
   }
+  /* 9 列显式宽度（合计 100%），依据 seed 19 个产品页各列最长内容行分配：
+     1 Series   11% — 长型号在连字符处可断行，长描述含空格可换行
+     2 Power     8% — 仅 "4200W" 5 字符，1 行
+     3 CCT      10% — "30=3000K" 9 字符无空格，禁止碎断（≥70px 内容宽）
+     4 Voltage  16% — 最长 "S=Standard Voltage (110-277VAC)"，含空格可换行
+     5 Beam     12% — 最长 token "11060=110°X" 11 字符，最多 5 行
+     6 Finish   10% — "GRY=Grey" 8 字符无空格，禁止碎断
+     7 Dimming  10% — 以最长单词 "Photocell"（9 字符）为下限
+     8 Bracket  13% — "U = Hang Mount Bracket" 两行排下（原 9% 过窄）
+     9 Driver   10% — "S = Separated from Fixture"，含空格可换行 */
+  .detail-ordering-table th:nth-child(1),
+  .detail-ordering-table td:nth-child(1) { width: 11%; }
+  .detail-ordering-table th:nth-child(2),
+  .detail-ordering-table td:nth-child(2) { width: 8%; }
+  .detail-ordering-table th:nth-child(3),
+  .detail-ordering-table td:nth-child(3) { width: 10%; }
+  .detail-ordering-table th:nth-child(4),
+  .detail-ordering-table td:nth-child(4) { width: 16%; }
   .detail-ordering-table th:nth-child(5),
-  .detail-ordering-table td:nth-child(5) {
-    width: 14%;
-  }
+  .detail-ordering-table td:nth-child(5) { width: 12%; }
+  .detail-ordering-table th:nth-child(6),
+  .detail-ordering-table td:nth-child(6) { width: 10%; }
   .detail-ordering-table th:nth-child(7),
-  .detail-ordering-table td:nth-child(7) {
-    width: 7%;
-  }
+  .detail-ordering-table td:nth-child(7) { width: 10%; }
+  .detail-ordering-table th:nth-child(8),
+  .detail-ordering-table td:nth-child(8) { width: 13%; }
+  .detail-ordering-table th:nth-child(9),
+  .detail-ordering-table td:nth-child(9) { width: 10%; }
   .detail-ordering-table td {
     background: transparent;
   }
@@ -601,7 +641,8 @@
     width: 100%;
     max-width: 760px;
     aspect-ratio: 16 / 9;
-    background: var(--bg-soft);
+    /* 透明：产品图本身是 RGBA 抠图，容器不再铺灰底，否则透明区会透出 --bg-soft 看着像不透明 */
+    background: transparent;
     border-radius: 12px;
     overflow: hidden;
   }
@@ -670,7 +711,7 @@
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    background: var(--bg-soft);
+    background: transparent;
     padding: 0;
     transition: border-color 0.2s, opacity 0.2s;
     opacity: 0.55;

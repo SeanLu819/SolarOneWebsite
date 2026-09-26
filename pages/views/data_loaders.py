@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime
 
@@ -232,13 +233,77 @@ def get_project_detail(slug, lang):
     return project
 
 
-def _normalize_news_article(a):
+#: NewsArticle fields that participate in translation. ``slug`` is a URL
+#: fragment and ``image``/``content`` siblings are not translated — keeping the
+#: tuple narrow is what lets a test pin the contract instead of trusting it.
+NEWS_TRANSLATABLE_FIELDS = ('title', 'summary', 'content')
+#: Extra dict keys the normalizer emits per language (``title_t`` & friends).
+NEWS_TRANSLATED_KEYS = tuple(f'{f}_t' for f in NEWS_TRANSLATABLE_FIELDS)
+
+
+def _news_translated(row, field, lang):
+    """Return ``row[field]`` in ``lang``, falling back to the English value.
+
+    ``pages.utils.translate()`` reads ``obj.translations`` off an *object*, but
+    news rows are plain dicts on the seed path (and models on the DB path), so
+    the lookup happens here rather than shimming a fake attribute onto the dict.
+    Untranslated languages must fall back to English — otherwise a half-translated
+    article renders blank on ``/ar/``, which is worse than an English article.
+
+    ``row`` must already carry both ``translations`` and the English ``field``.
+    """
+    if not lang or lang == 'en':
+        return row.get(field, '')
+    tr = row.get('translations') or {}
+    if isinstance(tr, str):
+        try:
+            tr = json.loads(tr)
+        except (ValueError, TypeError):
+            tr = {}
+    val = (tr.get(lang) or {}).get(field, '') or ''
+    return val or row.get(field, '')
+
+
+def _news_translated_row(row, lang):
+    """Return a copy of ``row`` with one ``<field>_t`` key per translatable field."""
+    out = dict(row)
+    for field in NEWS_TRANSLATABLE_FIELDS:
+        out[f'{field}_t'] = _news_translated(row, field, lang)
+    return out
+
+
+def _normalize_news_image(i):
+    """Normalize one seed ``news[].images[]`` entry to a template dict.
+
+    The seed / admin shapes differ slightly (``alt`` vs ``alt_text``), so both
+    aliases are accepted. ``width``/``height`` stay optional: the template only
+    emits them when present (they are a CLS hint, never a resize instruction).
+    """
+    return {
+        'url': _static_url(i.get('image', '') or ''),
+        'alt': i.get('alt') or i.get('alt_text') or '',
+        'caption': i.get('caption') or '',
+        'width': i.get('width') or None,
+        'height': i.get('height') or None,
+    }
+
+
+def _normalize_news_article(a, lang='en'):
     """Normalize a seed ``news`` dict into the shape the template expects.
 
     The template renders ``article.published_at|date:"Y-m-d"`` (which requires a
     real ``datetime``) and ``article.image_url``. We parse the ISO ``published_at``
     string back into a datetime and resolve the image to a static URL so the seed
     path and the local-DB path present an identical interface to the template.
+
+    ``images`` is normalized the same way as the DB path: a list of dicts with
+    ``url``/``alt``/``caption`` (see ``_normalize_news_image``). Older seeds that
+    only carry the single ``image`` key get an empty list and fall back to the
+    legacy ``image_url`` rendering.
+
+    ``lang`` selects the rendered ``<field>_t`` values (title/summary/content).
+    Both the English keys and ``translations`` stay in the dict so sitemaps and
+    the translation guards can still read the raw source.
     """
     raw = a.get('published_at', '') or ''
     published_at = raw
@@ -246,31 +311,91 @@ def _normalize_news_article(a):
         published_at = datetime.fromisoformat(raw)
     except (ValueError, TypeError):
         published_at = raw
-    return {
+    images = [
+        _normalize_news_image(i)
+        for i in (a.get('images') or [])
+        if i.get('image')
+    ]
+    return _news_translated_row({
         'slug': a.get('slug', ''),
         'title': a.get('title', ''),
+        'category': a.get('category', 'Company News'),
         'summary': a.get('summary', ''),
         'content': a.get('content', ''),
         'published_at': published_at,
         'image_url': _static_url(a.get('image', '')),
+        'images': images,
+        'translations': a.get('translations') or {},
+    }, lang)
+
+
+_NEWS_ROW_BASE = (
+    'slug',
+    'title',
+    'category',
+    'summary',
+    'content',
+    'published_at',
+    'image_url',
+    'images',
+    'translations',
+)
+
+
+def _normalize_news_row(a, lang='en'):
+    """Serialize a ``NewsArticle`` row into the same dict the seed path builds.
+
+    The DB rows are genuinely different objects (models) from the seed rows
+    (plain dicts), but the template must not care: both hands it ``published_at``
+    as a ``datetime``, ``image_url`` and the ``images`` list. Going through the
+    same normalizer is what keeps the two paths from drifting apart.
+
+    The key set is pinned to ``_NEWS_ROW_BASE`` + the ``<field>_t`` keys so a test
+    can assert the two paths stay identical — a silently dropped ``translations``
+    key here would make admin edits vanish on Vercel while looking fine locally.
+    """
+    row = {
+        'slug': a.slug,
+        'title': a.title,
+        'category': a.category,
+        'summary': a.summary or '',
+        'content': a.content,
+        'published_at': a.published_at,
+        'image_url': a.image.url if a.image else '',
+        'images': [
+            {
+                'url': im.image.url,
+                'alt': im.alt_text or '',
+                'caption': im.caption or '',
+                'width': im.width or None,
+                'height': im.height or None,
+            }
+            for im in a.images.all()
+        ],
+        'translations': a.translations or {},
     }
+    return _news_translated_row({k: row[k] for k in _NEWS_ROW_BASE}, lang)
 
 
-def _get_news_from_db():
-    """Query published news articles from the DB. Returns [] on any failure."""
-    articles = list(
-        NewsArticle.objects.filter(is_published=True).order_by('-published_at')
-    )
-    for a in articles:
-        a.image_url = a.image.url if a.image else ''
-    return articles
+def _get_news_from_db(lang='en'):
+    """Query published news articles from the DB. Returns [] on any failure.
+
+    Prefetching matters here: a card renders one ``<img>`` per gallery row, so
+    without ``prefetch_related`` every article would hit the DB again per photo.
+    """
+    return [
+        _normalize_news_row(a, lang)
+        for a in NewsArticle.objects.filter(is_published=True)
+        .order_by('-published_at')
+        .prefetch_related('images')
+    ]
 
 
-def _get_news_from_json():
+def _get_news_from_json(lang='en'):
     """Load published news articles from the committed seed JSON."""
     seed_news = _load_seed().get('news', []) or []
     return [
-        _normalize_news_article(a)
+        _normalize_news_article(a, lang)
         for a in seed_news
         if a.get('is_published', True)
     ]
@@ -285,9 +410,37 @@ def get_news(lang):
     page degrades gracefully instead of erroring.
     """
     if getattr(settings, 'IS_VERCEL', False):
-        return _get_news_from_json()
+        return _get_news_from_json(lang)
     try:
-        return _get_news_from_db()
+        return _get_news_from_db(lang)
     except Exception:
         logger.warning('DB news query failed, returning empty list', exc_info=True)
         return []
+
+
+def get_news_detail(slug, lang='en'):
+    """Return one published news article as a dict, or ``None`` if unknown.
+
+    Same duality as ``get_news``: seed JSON on Vercel (stateless), DB locally.
+    The returned dict is the exact shape the list rows use (``<field>_t``
+    translations, ``image_url``, ``images`` gallery), so the detail template is
+    path-agnostic and cannot drift from the list cards.
+    """
+    if getattr(settings, 'IS_VERCEL', False):
+        for a in _load_seed().get('news', []) or []:
+            if a.get('slug') == slug and a.get('is_published', True):
+                return _normalize_news_article(a, lang)
+        return None
+    try:
+        article = (
+            NewsArticle.objects
+            .filter(slug=slug, is_published=True)
+            .prefetch_related('images')
+            .get()
+        )
+    except NewsArticle.DoesNotExist:
+        return None
+    except Exception:
+        logger.warning('DB news detail query failed', exc_info=True)
+        return None
+    return _normalize_news_row(article, lang)

@@ -100,6 +100,12 @@ _SIDEBAR_I18N = {
     # 字典里没有条目 → 项目页标题在五个语种里一直是英文。
     'Featured Projects': {'fr': 'Projets Phares', 'es': 'Proyectos Destacados', 'de': 'Ausgewählte Projekte', 'ar': 'مشاريع مميزة', 'ru': 'Избранные проекты'},
     'From compact modular luminaires to stadium-grade high bay systems. Precision optics, modular architecture, and field-proven reliability across every product line.': {'fr': 'Des luminaires modulaires compacts aux systèmes high bay de qualité stade. Optiques de précision, architecture modulaire et fiabilité éprouvée sur chaque gamme.', 'es': 'Desde luminarias modulares compactas hasta sistemas high bay de grado estadio. Ópticas de precisión, arquitectura modular y fiabilidad probada en cada línea.', 'de': 'Von kompakten modularen Leuchten bis zu stadiontauglichen High-Bay-Systemen. Präzisionsoptik, modulare Architektur und bewährte Zuverlässigkeit in jeder Produktlinie.', 'ar': 'من الإضاءات المعيارية المدمجة إلى أنظمة الإضاءة العالية بمستوى الملاعب. بصريات دقيقة، بنية معيارية، وموثوقية مثبتة في كل خط منتج.', 'ru': 'От компактных модульных светильников до систем High-Bay стадионного класса. Прецизионная оптика, модульная архитектура и проверенная надёжность в каждой линейке.'},
+    # News — article categories. `NewsArticle.NEWS_CATEGORIES` values, rendered
+    # into the news sidebar. They used to be missing here, so `/news/` fell back
+    # to English in all five non-English locales.
+    'Company News': {'fr': 'Nouvelles de l\'Entreprise', 'es': 'Noticias de la Empresa', 'de': 'Unternehmensnachrichten', 'ar': 'أخبار الشركة', 'ru': 'Корпоративные новости'},
+    'Product News':  {'fr': 'Nouvelles Produits', 'es': 'Noticias de Productos', 'de': 'Produktneuheiten', 'ar': 'أخبار المنتجات', 'ru': 'Новости продукции'},
+    'Case Studies': {'fr': 'Études de Cas', 'es': 'Estudios de Caso', 'de': 'Fallstudien', 'ar': 'دراسات الحالة', 'ru': 'Кейсы'},
     'Trusted Worldwide': {'fr': 'Reconnu Mondialement', 'es': 'Confianza Mundial', 'de': 'Weltweit Vertraut', 'ar': 'موثوق عالميًا', 'ru': 'Нам доверяют по всему миру'},
     'Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.': {'fr': 'Installations réelles sur cinq continents. Des centres d\'entraînement olympiques aux terrains de football communautaires, nos luminaires offrent des performances fiables dans les conditions les plus difficiles.', 'es': 'Instalaciones reales en cinco continentes. Desde centros de entrenamiento olímpicos hasta campos de fútbol comunitarios, nuestros luminarios ofrecen un rendimiento fiable en las condiciones más difíciles.', 'de': 'Echte Installationen auf fünf Kontinenten. Vom Olympia-Trainingszentrum bis zum kommunalen Fußballplatz — unsere Leuchten liefern zuverlässige Leistung unter den härtesten Bedingungen.', 'ar': 'تركيبات حقيقية عبر خمس قارات. من مراكز التدريب الأولمبية إلى ملاعب كرة القدم المجتمعية، توفر إضاءاتنا أداءً موثوقًا في أصعب الظروف.', 'ru': 'Реальные установки на пяти континентах. От олимпийских тренировочных центров до местных футбольных полей — наши светильники обеспечивают надёжную работу в самых суровых условиях.'},
 }
@@ -227,6 +233,9 @@ def _get_products_sidebar(lang='en'):
                     'label': _t('Accessory', lang),
                     'subseries': [
                         {'key': 'RT410_GS', 'slug': 'glare-shield-for-rt410', 'label': 'RT410 GS'},
+                        # Mseries GS（后台新建，parent=accessory）——必须在侧栏里，
+                        # 否则前端无入口、admin Sidebar Position 显示 "outside sidebar"。
+                        {'key': 'MSERIES_GS', 'slug': 'mseries-gs', 'label': 'Mseries GS'},
                     ],
                 },
             ],

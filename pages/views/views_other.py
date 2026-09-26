@@ -8,6 +8,8 @@ from django.utils.translation import get_language, override
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from .common import get_common_context
+from .data_loaders import get_news, get_news_detail, get_product_detail, get_project_detail
+from .i18n import _t
 from .data_loaders import get_news, get_product_detail, get_project_detail
 from .utils import _load_seed
 
@@ -24,8 +26,64 @@ def about(request):
 def news(request):
     context = get_common_context()
     lang = get_language()
-    context['articles'] = get_news(lang)
+    articles = get_news(lang)
+
+    # Sidebar directory: every category in the feed, its translated label and
+    # how many articles it holds. Labels go through `_t()` on purpose — the
+    # template cannot run `{% trans %}`, which only accepts *literal* strings,
+    # so the earlier `{% trans cat.name %}` silently rendered an empty label.
+    counts = {}
+    for a in articles:
+        cat = a.get('category') or 'Company News'
+        counts[cat] = counts.get(cat, 0) + 1
+        # Per-article badge label. `get_news()` builds fresh dicts per request
+        # (there is no news-level cache), so writing the key here is safe.
+        a['category_label'] = _t(cat, lang)
+    context['news_categories'] = sorted(
+        (
+            {'key': cat, 'label': _t(cat, lang), 'count': cnt}
+            for cat, cnt in counts.items()
+        ),
+        key=lambda c: c['key'],
+    )
+    context['news_total_count'] = sum(counts.values())
+
+    # Category filter. An unknown key falls back to "everything" instead of
+    # rendering an empty page — a stale bookmark should not read as "no news".
+    requested = (request.GET.get('category') or '').strip()
+    if requested and requested not in counts:
+        requested = ''
+    if requested:
+        articles = [
+            a for a in articles
+            if (a.get('category') or 'Company News') == requested
+        ]
+    context['articles'] = articles
+    context['news_active_category'] = requested
     return render(request, 'news.html', context)
+
+
+def news_detail(request, slug):
+    """One news article. Cards on the list page link here (industry standard:
+    the listing never carries the body copy). Unknown/unpublished slug -> 404,
+    on both the seed path and the DB path."""
+    context = get_common_context()
+    lang = get_language()
+    article = get_news_detail(slug, lang)
+    if article is None:
+        raise Http404('No published news article with that slug.')
+    context['article'] = article
+
+    # Sidebar-style category labels come from `_t()` — see news() above.
+    cat = article.get('category') or 'Company News'
+    context['category_label'] = _t(cat, lang)
+
+    # "More news": the latest other articles, same shape as the list cards.
+    related = [a for a in get_news(lang) if a.get('slug') != slug]
+    for a in related:
+        a['category_label'] = _t(a.get('category') or 'Company News', lang)
+    context['related_articles'] = related[:3]
+    return render(request, 'news_detail.html', context)
 
 
 def robots_txt(request):
@@ -193,6 +251,27 @@ def sitemap_xml(request):
                 )
                 urls.append(_entry(
                     reverse('project_detail', args=[slug]), '0.7', _lastmod, images))
+
+        # News detail pages: same treatment as products/projects. The seed's
+        # `is_published` gate mirrors what get_news_detail() enforces, so an
+        # unpublished article never leaks into the sitemap. Image tuples are
+        # (url, title, caption) — `_image_entries` dedupes cover vs gallery.
+        for art in data.get('news', []) or []:
+            slug = art.get('slug', '')
+            if not slug or not art.get('is_published', True):
+                continue
+            detail = get_news_detail(slug, 'en')
+            if detail is None:
+                continue
+            title = detail.get('title_t', '') or detail.get('title', '')
+            caption = detail.get('summary_t', '') or detail.get('summary', '')
+            images = (
+                [(detail.get('image_url', ''), title, caption)]
+                + [(g.get('url', ''), title, caption)
+                   for g in (detail.get('images') or [])]
+            )
+            urls.append(_entry(
+                reverse('news_detail', args=[slug]), '0.6', _lastmod, images))
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
