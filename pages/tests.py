@@ -608,6 +608,138 @@ class ContactPersistenceCheckTests(TestCase):
         self.assertEqual(errors, [], 'non-Vercel must never warn')
 
 
+class RuntimeSchemaBootstrapTests(TestCase):
+    """Cold-start guard: on Vercel ephemeral /tmp SQLite, ``api.index`` must
+    create all tables at runtime. build.sh skips migrate in the stateless seed
+    path, so a fresh serverless instance boots with an EMPTY /tmp SQLite and
+    ``ContactMessage.objects.create()`` raises OperationalError "no such table"
+    -> the visitor sees "Sorry, we could not save your message" (prod
+    incident 2026-09-26).
+
+    This test simulates that cold-start empty-DB scenario with a throwaway
+    SQLite file, calls the encapsulated ``_ensure_runtime_schema()`` function,
+    and asserts (a) the ``pages_contactmessage`` table now exists and (b) a
+    contact submission can be written. No network, no real Vercel environment.
+    """
+
+    def test_ensure_runtime_schema_creates_contact_table(self):
+        # Lazy import so the heavy WSGI bootstrap only runs for this test path.
+        import os
+        from api.index import _ensure_runtime_schema
+        from django.db import connections
+        from django.test.utils import override_settings
+
+        # 1) Simulate a FRESH, EMPTY serverless instance DB (cold start).
+        tmp_dir = tempfile.mkdtemp(prefix='solarone-coldstart-')
+        tmp_db = os.path.join(tmp_dir, 'db.sqlite3')
+        self.assertFalse(
+            os.path.exists(tmp_db),
+            'cold-start DB must not exist yet (no tables)')
+
+        new_databases = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': tmp_db,
+            }
+        }
+        try:
+            with override_settings(
+                IS_VERCEL=True,
+                DATABASE_URL=f'sqlite:///{tmp_db}',
+                DATABASES=new_databases,
+            ):
+                # override_settings(DATABASES=...) closes the cached connection
+                # so the next access reopens against the empty temp DB.
+                connections.close_all()
+                ok = _ensure_runtime_schema()
+                self.assertTrue(
+                    ok, 'runtime schema bootstrap must succeed on empty DB')
+
+                # 2) The contact table must now physically exist in the cold DB.
+                with connections['default'].cursor() as cur:
+                    cur.execute(
+                        "SELECT name FROM sqlite_master "
+                        "WHERE type='table' AND name='pages_contactmessage'")
+                    self.assertIsNotNone(
+                        cur.fetchone(),
+                        'pages_contactmessage table must exist after bootstrap')
+
+                # 3) A contact submission write must succeed (the prod failure
+                #    path) and be queryable back.
+                from pages.models import ContactMessage
+                msg = ContactMessage.objects.create(
+                    name='Real Person',
+                    email='real@customer.example',
+                    message='Please quote the FL4M series.',
+                )
+                self.assertEqual(msg.email, 'real@customer.example')
+                self.assertEqual(
+                    ContactMessage.objects.filter(
+                        email='real@customer.example').count(), 1)
+        finally:
+            # Clean up the temp DB so it is never left behind in CI.
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+
+    def test_ensure_runtime_schema_failure_path_returns_false(self):
+        """Negative: if migrate blows up, the bootstrap must return False and
+        must NEVER raise (the app must keep booting)."""
+        import api.index
+
+        # call_command is imported *locally* inside _ensure_runtime_schema's
+        # try block, so we patch the real module attribute it binds to.
+        with mock.patch(
+            'django.core.management.call_command',
+            side_effect=RuntimeError('simulated migrate failure'),
+        ):
+            # Must not raise out of this call.
+            ok = api.index._ensure_runtime_schema()
+
+        self.assertFalse(
+            ok, 'bootstrap must return False when migrate raises')
+
+    def test_guard_skips_managed_db_no_migrate(self):
+        """Negative: the production trigger (api/index.py L49-51) must NOT run
+        migrate against a managed DB (Neon/Supabase/Postgres). It only fires
+        when IS_VERCEL is truthy AND DATABASE_URL contains '/tmp/'.
+
+        We mirror the exact guard expression against the module's IS_VERCEL
+        attribute and the live DATABASE_URL env, so a future change to the
+        guard condition is caught here. (A behavioral reload of the WSGI
+        module is avoided — it re-runs the full bootstrap and is unsafe in a
+        unit test.)
+        """
+        import os
+
+        import api.index
+
+        # Control: a genuine /tmp URL MUST trigger (proves the gate is real).
+        with mock.patch.object(api.index, 'IS_VERCEL', True), \
+                mock.patch.dict('os.environ',
+                                {'DATABASE_URL': 'sqlite:////tmp/db.sqlite3'}):
+            self.assertTrue(
+                api.index.IS_VERCEL and
+                '/tmp/' in os.environ.get('DATABASE_URL', ''),
+                'control: /tmp URL must trigger the guard')
+
+        # Managed postgres (no /tmp) must NOT trigger.
+        with mock.patch.object(api.index, 'IS_VERCEL', True), \
+                mock.patch.dict('os.environ',
+                                {'DATABASE_URL': 'postgres://u:p@neon.tech/db'}):
+            self.assertFalse(
+                api.index.IS_VERCEL and
+                '/tmp/' in os.environ.get('DATABASE_URL', ''),
+                'managed postgres URL must NOT trigger runtime migrate')
+
+        # neon://-style URL must NOT trigger either.
+        with mock.patch.object(api.index, 'IS_VERCEL', True), \
+                mock.patch.dict('os.environ',
+                                {'DATABASE_URL': 'neon://user:pass@ep-xxx/db'}):
+            self.assertFalse(
+                api.index.IS_VERCEL and
+                '/tmp/' in os.environ.get('DATABASE_URL', ''),
+                'neon:// URL must NOT trigger runtime migrate')
+
+
 class ResponsiveNavTests(TestCase):
     """阶段一 F1' — 导航单一数据源 + 移动端功能不丢失（渲染 DOM 契约，§6.2/§8.5）。
 

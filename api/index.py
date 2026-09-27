@@ -16,6 +16,44 @@ from django.conf import settings
 
 application = get_wsgi_application()
 
+# --- cold-start schema bootstrap (Vercel /tmp ephemeral sqlite) ---------------
+def _ensure_runtime_schema():
+    """Create DB tables on a cold serverless start when the runtime DB is the
+    ephemeral /tmp SQLite file.
+
+    build.sh intentionally SKIPS migrate in the stateless seed path, so a fresh
+    Vercel instance boots with an EMPTY /tmp SQLite. Every
+    ``ContactMessage.objects.create()`` then raises OperationalError
+    "no such table" and the visitor sees
+    "Sorry, we could not save your message" (prod incident 2026-09-26).
+
+    Running ``migrate`` here materialises all tables on cold start. This runs
+    ONLY when ``IS_VERCEL`` is set and ``DATABASE_URL`` points at ``/tmp/`` (the
+    ephemeral scenario), so it never touches a managed DB (Neon/Supabase).
+
+    Fully defensive: any failure is logged to stderr and swallowed so it can
+    NEVER take down the application. Returns ``True`` on success, ``False`` on
+    failure. Exposed as a module-level function so it can be unit-tested
+    directly without booting a real Vercel instance.
+    """
+    try:
+        from django.core.management import call_command
+        call_command('migrate', interactive=False, verbosity=0)
+        sys.stderr.write('[index.py] runtime schema ensured (migrate) ok\n')
+        return True
+    except Exception as exc:  # never let bootstrap break the app
+        sys.stderr.write(f'[index.py] runtime schema ensured (migrate) fail: {exc!r}\n')
+        return False
+
+
+try:
+    # Guard: only the Vercel ephemeral /tmp SQLite case lacks tables at runtime.
+    if IS_VERCEL and '/tmp/' in os.environ.get('DATABASE_URL', ''):
+        _ensure_runtime_schema()
+except Exception as exc:  # belt-and-suspenders; _ensure_runtime_schema never raises
+    sys.stderr.write(f'[index.py] cold-start schema bootstrap guard failed: {exc!r}\n')
+sys.stderr.flush()
+
 import whitenoise
 
 STATIC_ROOT_VAL = str(settings.STATIC_ROOT)
