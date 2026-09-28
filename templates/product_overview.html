@@ -73,13 +73,13 @@
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{{ banner_label }}</span>
-            <h1 class="section-title">{{ product.name_t }}</h1>
+            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi></h1>
           </div>
         </div>
         {% else %}
         <div class="detail-hero">
           <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;">{{ product.name_t }}</h1>
+          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi></h1>
         </div>
         {% endif %}
 
@@ -165,6 +165,22 @@
             {% for lines in product.ordering_cols %}{% for line in lines %}<p>{{ line }}</p>{% endfor %}{% endfor %}
           </div>
           {% endif %}
+        </div>
+        {% endif %}
+
+        {# B3 (SEO/GEO): visible FAQ section — pure HTML, no JS; answers show even with JavaScript disabled; mirrors the FAQPage JSON-LD above. #}
+        {% if product_faq %}
+        <div class="detail-faq">
+          <span class="detail-faq-label">Frequently Asked Questions</span>
+          <h2 class="detail-faq-title">Product FAQ</h2>
+          <div class="detail-faq-list">
+            {% for faq in product_faq %}
+            <details class="detail-faq-item">
+              <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
+              <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
+            </details>
+            {% endfor %}
+          </div>
         </div>
         {% endif %}
 
@@ -487,6 +503,75 @@
       min-height: 240px;
     }
   }
+
+  /* === B3: Product FAQ (visible, no-JS required) === */
+  .detail-faq {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .detail-faq-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .detail-faq-title {
+    font-family: var(--ff-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+  }
+  .detail-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .detail-faq-item {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-soft);
+    padding: 0;
+    overflow: hidden;
+  }
+  .detail-faq-q {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    font-family: var(--ff-display);
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .detail-faq-q::-webkit-details-marker { display: none; }
+  .detail-faq-q::after {
+    content: "+";
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .detail-faq-item[open] > .detail-faq-q::after {
+    transform: rotate(45deg);
+  }
+  .detail-faq-a {
+    padding: 0 20px 18px;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+  .detail-faq-a p { margin: 0 0 8px; }
+  .detail-faq-a p:last-child { margin-bottom: 0; }
 </style>
 
 {% include "includes/carousel_js.html" %}
@@ -499,19 +584,20 @@
   "name": "{{ product.name_t|escapejs }}",
   "description": "{{ product.description_t|default:''|escapejs }}",
   "image": "{{ canonical_origin }}{{ product.banner_image_url|default:'' }}",
-  "url": "{{ request.build_absolute_uri }}",
+  "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}",
   "brand": {"@type": "Brand", "name": "SolarOne"},
   "sku": "{{ product.model_number|default:product.slug|escapejs }}",
   "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.power %},
   "additionalProperty": [
-    {"@type": "PropertyValue", "name": "Power", "value": "{{ product.power|escapejs }}"},
-    {% if product.efficacy %}{"@type": "PropertyValue", "name": "Efficacy", "value": "{{ product.efficacy|escapejs }}"},{% endif %}
-    {% if product.output %}{"@type": "PropertyValue", "name": "Output", "value": "{{ product.output|escapejs }}"},{% endif %}
-    {% if product.beam_angle %}{"@type": "PropertyValue", "name": "Beam Angle", "value": "{{ product.beam_angle|escapejs }}"},{% endif %}
-    {% if product.protection %}{"@type": "PropertyValue", "name": "Protection", "value": "{{ product.protection|escapejs }}"},{% endif %}
-    {"@type": "PropertyValue", "name": "Category", "value": "{{ product.category_t|escapejs }}"}
+    {% for label, value in product.jsonld_properties %}{"@type": "PropertyValue", "name": "{{ label }}", "value": "{{ value|escapejs }}"}{% if not forloop.last %},
+    {% endif %}{% endfor %}
   ]{% endif %}
 }
+</script>
+
+{# B3 (SEO/GEO): FAQPage JSON-LD — whole blob built in Python (json.dumps) and injected safe; FAQ text is our own constant, not user input. #}
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{{ product_faq_json|safe }}
 </script>
 {% endif %}
 

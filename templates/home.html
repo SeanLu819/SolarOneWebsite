@@ -132,13 +132,8 @@
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "{{ config.brand_name }}",
-  "url": "{{ canonical_origin }}",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{{ canonical_origin }}/en/products/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
+  "name": "{{ config.brand_name|escapejs }}",
+  "url": "{{ canonical_origin }}"
 }
 </script>
 

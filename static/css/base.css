@@ -245,6 +245,12 @@
   .lang-switch-option.active { color: var(--accent); font-weight: 600; }
 
   /* RTL support for Arabic */
+  /* v1.8.2 — bidi isolation. <bdi> is isolate by default per spec, but any
+     inherited `unicode-bidi` or author reset can override it, and on RTL pages
+     an unisolated Latin string (model code "VSP-4200W-9M-YP", "2200 lux",
+     "Beijing, China") gets reorder-punctuated against the Arabic paragraph
+     direction. Declaring it explicitly makes the intent non-negotiable. */
+  [dir="rtl"] bdi { unicode-bidi: isolate; }
   [dir="rtl"] .nav-links { flex-direction: row-reverse; }
   [dir="rtl"] .nav-brand { order: 1; }
   [dir="rtl"] .nav-actions { flex-direction: row-reverse; }

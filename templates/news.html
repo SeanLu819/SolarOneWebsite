@@ -60,7 +60,7 @@
             <span class="news-card-category">{{ article.category_label|default:article.category }}</span>
             <span class="news-card-date">{{ article.published_at|date:"Y-m-d" }}</span>
           </div>
-          <h3 class="news-card-title">{{ article.title_t|default:article.title }}</h3>
+          <h3 class="news-card-title"><bdi>{{ article.title_t|default:article.title }}</bdi></h3>
           {% if article.summary %}
           <p class="news-card-summary">{{ article.summary_t|default:article.summary }}</p>
           {% endif %}

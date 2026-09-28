@@ -568,23 +568,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "{{ config.brand_name }}",
+  "name": "{{ config.brand_name|escapejs }}",
   "url": "{{ canonical_origin }}",
-  "logo": "{{ config.logo_url }}",
-  "description": "{{ config.meta_description }}",
+  "logo": "{{ canonical_origin }}{{ config.logo_url }}",
+  "description": "{{ config.meta_description|escapejs }}",
+  "foundingDate": "{{ config.founding_date }}",
+  "address": {
+    "@type": "PostalAddress"{% if config.address_street %},
+    "streetAddress": "{{ config.address_street|escapejs }}"{% endif %}{% if config.address_locality %},
+    "addressLocality": "{{ config.address_locality|escapejs }}"{% endif %}{% if config.address_country %},
+    "addressCountry": "{{ config.address_country|escapejs }}"{% endif %}
+  },
+  "areaServed": {"@type": "Place", "name": "Worldwide"},
+  "knowsAbout": [{% for topic in config.knows_about %}"{{ topic|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
   "contactPoint": {
     "@type": "ContactPoint",
-    "email": "{{ config.contact_email }}",
-    "phone": "{{ config.contact_phone_1 }}",
+    "email": "{{ config.contact_email|escapejs }}",
+    "phone": "{{ config.contact_phone_1|escapejs }}",
     "contactType": "sales",
     "availableLanguage": ["English", "French", "Spanish", "German", "Arabic", "Russian"]
   },
-  "sameAs": [
-    {% if config.social_facebook %}"{{ config.social_facebook }}",{% endif %}
-    {% if config.social_instagram %}"{{ config.social_instagram }}",{% endif %}
-    {% if config.social_youtube %}"{{ config.social_youtube }}",{% endif %}
-    {% if config.social_linkedin %}"{{ config.social_linkedin }}"{% endif %}
-  ]
+  "sameAs": [{% for url in config.social_same_as %}"{{ url }}"{% if not forloop.last %}, {% endif %}{% endfor %}]
 }
 </script>
 

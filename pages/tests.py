@@ -1963,10 +1963,15 @@ class StatelessProductionTests(TestCase):
             )
 
         self.assertEqual(resp.status_code, 200)
+        # v1.8.2: the title text is wrapped in <bdi> for RTL bidi isolation, so
+        # the inner markup must be stripped instead of matching plain text.
+        # (Asserting on the *expected behaviour* — which titles render, in what
+        # order — not on the exact markup, which legitimately changes.)
         rendered = [
-            t.strip() for t in re.findall(
-                r'<h3[^>]*class="[^"]*product-card-title[^"]*"[^>]*>\s*([^<]+?)\s*</h3>',
-                resp.content.decode('utf-8'))
+            re.sub(r'<[^>]+>', '', m.group(1)).strip()
+            for m in re.finditer(
+                r'<h3[^>]*class="[^"]*product-card-title[^"]*"[^>]*>(.*?)</h3>',
+                resp.content.decode('utf-8'), re.S)
         ]
 
         from pages.views.utils import _load_seed
@@ -2967,11 +2972,21 @@ class ProductPageLayoutSplitTests(TestCase):
             self.assertEqual(name, 'product_detail.html',
                              f'{slug} 的 page_layout=detail，却渲染了 {name}')
 
-    def test_unknown_slug_keeps_not_found_page(self):
-        """未知 slug → product 为 None → 仍走 detail 模板的 Not Found 分支。"""
-        name, resp = self._template_name('/products/no-such-product-xyz/')
-        self.assertEqual(name, 'product_detail.html')
-        self.assertIn('Product Not Found', resp.content.decode('utf-8'))
+    def test_unknown_slug_returns_real_404(self):
+        """未知 slug 必须返回真 404。
+
+        契约在 v1.8.2 反转：此前 product 为 None 时渲染 product_detail.html 的
+        "Product Not Found" 分支并返回 200 —— 软 404 会让 Google 收录任意
+        伪造 URL 并判为低质页。现在直接抛 Http404 走 templates/404.html。
+        """
+        resp = self.client.get('/products/no-such-product-xyz/')
+        self.assertEqual(resp.status_code, 404)
+        self.assertNotIn('Product Not Found', resp.content.decode('utf-8'))
+
+        # 404 分支不得误伤真实产品页
+        slug = self._detail_slugs()[0]
+        self.assertEqual(
+            self.client.get(f'/products/{slug}/').status_code, 200)
 
     # -- ② overview 页：无技术区块，但有 SEO head ------------------------------
     def test_overview_pages_drop_technical_blocks(self):
@@ -3826,7 +3841,10 @@ class P3VisualReviewCoverageTests(SimpleTestCase):
     # robots.txt / sitemap.xml 不是给人看的 HTML；diagnostic 只在 DEBUG=True 存在
     # （且限 STAFF）；product_series 是历史 URL 的 301 别名（规范 URL 是
     # /products/<slug>/），评审默认路径不应落在它上面。
-    NON_PAGE_ROUTES = {'robots_txt', 'sitemap_xml', 'diagnostic', 'product_series'}
+    # news_feed 是 RSS 2.0 XML 输出（B4），同属机器可读端点，没有可截图的人眼
+    # HTML 评审价值，故同样排除在默认视觉评审路径之外。
+    NON_PAGE_ROUTES = {'robots_txt', 'sitemap_xml', 'diagnostic', 'product_series',
+                       'news_feed'}
 
     @classmethod
     def setUpClass(cls):
@@ -4440,7 +4458,9 @@ class NewsChipsAndCopyTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         html = resp.content.decode('utf-8')
         self.assertEqual(1, html.count('class="news-card-cover"'))
-        self.assertIn('tianjin-binhai-high-mast-retrofit-hero.jpg', html)
+        # v1.8.2: the seed images were converted to WebP; the old `.jpg`
+        # assertion could never match again.
+        self.assertIn('tianjin-binhai-high-mast-retrofit-hero.webp', html)
 
         detail = self.client.get(f'/news/{slug}/')
         self.assertEqual(detail.status_code, 200)
@@ -4452,7 +4472,8 @@ class NewsChipsAndCopyTests(TestCase):
             3, detail_html.count('class="news-detail-media-cell'),
             '详情页应显示封面 + 2 张图集图，统一为 3 个 media-cell')
         for name in ('hero', 'head-work', 'ground-work'):
-            self.assertIn(f'tianjin-binhai-high-mast-retrofit-{name}.jpg', detail_html)
+            self.assertIn(f'tianjin-binhai-high-mast-retrofit-{name}.webp',
+                          detail_html)
 
 
 class NewsDetailPageTests(TestCase):
@@ -4661,3 +4682,487 @@ class NewsImageSyncTests(TestCase):
                          '删除图集图没有触发 static 同步 → 孤儿文件会留在函数包里')
 
 
+
+
+class RtlBidiIsolationTests(TestCase):
+    """v1.8.2 — RTL 双向文本隔离守卫。
+
+    阿语站 (/ar/) 此前**零** bidi 隔离：卡片里的拉丁型号 (VSP-4200W-9M-YP)、
+    地名 ("Beijing, China") 与数值 ("2200 lux, U0 0.8") 会被周围 RTL 段落
+    方向重排。修复是把这些动态文本包进 <bdi>（规范默认 unicode-bidi:
+    isolate），并在 base.css 显式声明 `[dir="rtl"] bdi`，防止被作者样式覆盖。
+
+    本类只锁「已修复的渲染点」，不追求全站覆盖 —— 规格表数值等仍待专项。
+    """
+
+    def _template(self, name):
+        from django.conf import settings
+        return (settings.BASE_DIR / 'templates' / name).read_text(
+            encoding='utf-8')
+
+    # NOTE: assertions are made against the template source, not rendered HTML.
+    # The test DB carries no Product/Project rows, so /ar/products/ renders an
+    # empty grid — a rendered-HTML assertion would pass vacuously. Source-level
+    # checks still fail if someone removes the <bdi> wrapper.
+    def test_card_titles_are_wrapped_in_bdi(self):
+        cases = [
+            ('products.html', '<h3 class="product-card-title"><bdi>'),
+            ('projects.html', '<h3 class="project-card-title"><bdi>'),
+            ('news.html', '<h3 class="news-card-title"><bdi>'),
+        ]
+        for name, needle in cases:
+            self.assertIn(needle, self._template(name),
+                          f'{name}: 卡片标题未包 <bdi>，RTL 下拉丁型号会被重排')
+
+    def test_project_location_and_results_are_isolated(self):
+        src = self._template('projects.html')
+        self.assertIn('<div class="project-card-location"><bdi>', src)
+        self.assertIn('<bdi>{{ project.results_t }}</bdi>', src)
+
+    def test_detail_headings_are_isolated(self):
+        for name in ('news_detail.html', 'product_detail.html',
+                     'product_overview.html'):
+            src = self._template(name)
+            self.assertIn('<bdi>', src, name)
+        self.assertIn('<h1 class="news-detail-title"><bdi>',
+                      self._template('news_detail.html'))
+        self.assertIn('<h3><bdi>{{ a.title_t|default:a.title }}</bdi></h3>',
+                      self._template('news_detail.html'))
+
+    def test_model_number_is_isolated(self):
+        self.assertIn('<bdi>{{ product.model_number }}</bdi>',
+                      self._template('product_detail.html'))
+
+    def test_arabic_pages_still_render(self):
+        # Guard against the bdi markup breaking the RTL pages outright.
+        for path in ('/ar/', '/ar/products/', '/ar/projects/', '/ar/news/',
+                     '/ar/contact/'):
+            resp = self.client.get(path, HTTP_HOST='localhost')
+            self.assertEqual(resp.status_code, 200, path)
+
+    def test_css_declares_bidi_isolate_for_rtl(self):
+        from django.conf import settings
+        css = (settings.BASE_DIR / 'static' / 'css' / 'base.css').read_text(
+            encoding='utf-8')
+        self.assertIn('[dir="rtl"] bdi', css)
+        self.assertIn('unicode-bidi: isolate', css)
+
+class JsonLdValidityTests(TestCase):
+    """Guard tests for the structured-data (JSON-LD) P0 fixes.
+
+    This class is the anti-regression net for the audit's P0 items:
+
+    * ``test_every_page_has_parsable_jsonld`` / ``test_organization_block_is_valid``
+      — P0-1: ``base.html`` built ``Organization.sameAs`` by concatenating
+      ``{% if %}``-guarded strings in the template, so an empty *last* field
+      (seed ships ``social_linkedin=""``) left a trailing comma and made the
+      block invalid JSON on 8/8 pages. The list is now built in Python
+      (``SiteConfig.social_same_as``) and joined in the template.
+    * ``test_organization_logo_is_absolute`` — P0-2: ``logo`` was the relative
+      ``/static/images/logo.webp``; consumers reject relative logo URLs.
+    * ``test_organization_same_as_entries_are_absolute`` — P0-1 follow-up: no
+      empty strings may slip back into ``sameAs``.
+    * ``test_home_website_block_has_no_search_action`` — P0-4: ``home.html``
+      advertised a ``SearchAction`` pointing at ``/en/products/?q=...``, but the
+      English site has no ``/en/`` prefix and no search route/view exists. The
+      block was deleted; this locks the contract so nobody re-adds it without
+      also building the page.
+    * ``test_product_url_uses_canonical_origin`` — P0-5: Product blocks used
+      ``request.build_absolute_uri``, which emits ``http://localhost/...``
+      locally and ``*.vercel.app`` on preview deploys.
+
+    Every request passes ``HTTP_HOST='localhost'`` because DEBUG=False +
+    ALLOWED_HOSTS would otherwise answer 400.
+    """
+
+    #: Paths exercised. Includes an Arabic page (RTL + translated config) and
+    #: both product layouts (``detail`` for fl6m, ``overview`` for m-series).
+    PAGE_PATHS = (
+        '/',
+        '/products/',
+        '/projects/',
+        '/news/',
+        '/about/',
+        '/contact/',
+        '/products/fl6m/',
+        '/products/m-series/',
+        '/ar/',
+        '/ar/products/',
+    )
+
+    JSONLD_RE = re.compile(
+        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
+        re.DOTALL | re.IGNORECASE,
+    )
+
+    def _blocks(self, path):
+        """Return every JSON-LD block on ``path`` as (raw_text, parsed_obj)."""
+        resp = self.client.get(path, HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200, f'{path} did not render')
+        html = resp.content.decode('utf-8')
+        return [m.group(1) for m in self.JSONLD_RE.finditer(html)]
+
+    def _types(self, obj):
+        """Return the set of @type values of a parsed block (or a nested graph)."""
+        if '@graph' in obj:
+            return {node.get('@type') for node in obj.get('@graph', [])}
+        return {obj.get('@type')} if obj.get('@type') else set()
+
+    def _blocks_of_type(self, path, want_type):
+        """Return every parsed JSON-LD block on ``path`` whose @type is ``want_type``."""
+        out = []
+        for raw in self._blocks(path):
+            obj = json.loads(raw)
+            if want_type in self._types(obj):
+                out.append(obj)
+        return out
+
+    def test_every_page_has_parsable_jsonld(self):
+        """P0-1 guard: >=1 block per page and every block is valid JSON."""
+        for path in self.PAGE_PATHS:
+            blocks = self._blocks(path)
+            self.assertTrue(blocks, f'{path} emitted no JSON-LD block at all')
+            for raw in blocks:
+                try:
+                    json.loads(raw)
+                except ValueError as exc:
+                    snippet = raw.strip()[:400]
+                    self.fail(
+                        f'{path}: invalid JSON-LD ({exc}). Offending block://n'
+                        f'{snippet}'
+                    )
+
+    def test_organization_block_is_valid(self):
+        """P0-1/P0-3: the Organization block parses and carries the entity fields."""
+        for path in self.PAGE_PATHS:
+            orgs = self._blocks_of_type(path, 'Organization')
+            self.assertEqual(len(orgs), 1,
+                             f'{path}: expected exactly 1 Organization block')
+            org = orgs[0]
+            self.assertEqual(org.get('@context'), 'https://schema.org')
+            self.assertTrue(org.get('name'), f'{path}: Organization.name empty')
+            # P0-3: entity enrichment (foundingDate / address / areaServed / knowsAbout).
+            self.assertEqual(org.get('foundingDate'), '2007', path)
+            address = org.get('address') or {}
+            self.assertEqual(address.get('@type'), 'PostalAddress', path)
+            self.assertEqual(address.get('addressLocality'), 'Beijing', path)
+            self.assertEqual(address.get('addressCountry'), 'China', path)
+            self.assertIn('areaServed', org, path)
+            self.assertTrue(org.get('knowsAbout'), f'{path}: knowsAbout empty')
+
+    def test_organization_logo_is_absolute(self):
+        """P0-2: Organization.logo must be an absolute URL, not a static path."""
+        for path in self.PAGE_PATHS:
+            for org in self._blocks_of_type(path, 'Organization'):
+                logo = org.get('logo', '')
+                self.assertTrue(
+                    logo.startswith('http'),
+                    f'{path}: Organization.logo is not absolute: {logo!r}',
+                )
+
+    def test_organization_same_as_entries_are_absolute(self):
+        """P0-1: no empty string may re-enter ``sameAs`` via a template comma."""
+        for path in self.PAGE_PATHS:
+            for org in self._blocks_of_type(path, 'Organization'):
+                # v1.8.2 (QA): the original guard did ``if same_as is None:
+                # continue``, so *deleting* the ``sameAs`` key entirely still
+                # passed — mutation-verified (removing the line from base.html
+                # kept all 8 tests green). Require the key to be present; an
+                # empty list is still legitimate (no social profiles configured)
+                # and remains valid JSON as ``[]``.
+                self.assertIn('sameAs', org,
+                              f'{path}: Organization.sameAs key missing')
+                same_as = org['sameAs']
+                self.assertIsInstance(same_as, list, path)
+                for url in same_as:
+                    self.assertTrue(url, f'{path}: empty entry in sameAs')
+                    self.assertTrue(
+                        url.startswith('http'),
+                        f'{path}: non-absolute sameAs entry: {url!r}',
+                    )
+
+    def test_home_website_block_has_no_search_action(self):
+        """P0-4: WebSite must not advertise a SearchAction we cannot serve."""
+        sites = self._blocks_of_type('/', 'WebSite')
+        self.assertEqual(len(sites), 1, 'expected exactly 1 WebSite block on /')
+        site = sites[0]
+        self.assertNotIn('potentialAction', site)
+        self.assertNotIn('SearchAction', json.dumps(site))
+        # The block itself must survive: @type / name / url stay.
+        self.assertTrue(site.get('name'))
+        self.assertTrue(site.get('url'))
+
+    def test_product_url_uses_canonical_origin(self):
+        """P0-5: Product.url must use CANONICAL_ORIGIN, never the request host."""
+        origin = settings.CANONICAL_ORIGIN
+        for path in ('/products/fl6m/', '/products/m-series/'):
+            products = self._blocks_of_type(path, 'Product')
+            self.assertEqual(len(products), 1,
+                             f'{path}: expected exactly 1 Product block')
+            url = products[0].get('url', '')
+            self.assertTrue(
+                url.startswith(origin),
+                f'{path}: Product.url not rooted at CANONICAL_ORIGIN: {url!r}',
+            )
+            self.assertNotIn('localhost', url, path)
+
+    def test_news_article_url_uses_canonical_origin(self):
+        """P0-5 (same class of bug): NewsArticle.url must be canonical too.
+
+        Checked at the template level on purpose: locally ``get_news_detail``
+        reads the DB and the test database carries no news rows, so
+        ``/news/<slug>/`` 404s in tests. Pinning the template keeps the guard
+        honest without seeding a fixture.
+        """
+        src = (settings.BASE_DIR / 'templates' / 'news_detail.html').read_text(
+            encoding='utf-8')
+        block = src.split('"@type": "NewsArticle"', 1)[1].split('</script>', 1)[0]
+        self.assertIn('"url": "{{ canonical_origin }}{% url \'news_detail\' article.slug %}"',
+                      block)
+        self.assertNotIn('build_absolute_uri', block)
+
+    def test_arabic_pages_have_parsable_organization_block(self):
+        """RTL pages run the config through _t(); the JSON must still parse."""
+        for path in ('/ar/', '/ar/products/', '/ar/about/', '/ar/contact/'):
+            orgs = self._blocks_of_type(path, 'Organization')
+            self.assertEqual(len(orgs), 1, f'{path}: Organization block missing')
+            self.assertTrue(orgs[0]['logo'].startswith('http'), path)
+
+    def test_additional_property_field_set_is_stable(self):
+        """Follow-up QA finding: `additionalProperty` is now built in Python.
+
+        The array used to be assembled in the template with a trailing comma on
+        every intermediate entry, surviving only because the final `Category`
+        entry was unconditional. The expected sets below are pinned so a future
+        change to ``pages.utils.JSONLD_PROPERTY_FIELDS`` cannot silently drop
+        or reorder advertised properties.
+        """
+        expected = {
+            '/products/fl6m/': [
+                ('Power', '480W'), ('Efficacy', '130lm/W'), ('Output', '60K+ lm'),
+                ('Beam Angle', '18~50°'), ('Category', 'AREA_SITE'),
+            ],
+            '/products/m-series/': [
+                ('Power', '80~1280W+'), ('Efficacy', '130lm/W'),
+                ('Category', 'AREA_SITE'),
+            ],
+        }
+        for path, want in expected.items():
+            products = self._blocks_of_type(path, 'Product')
+            self.assertEqual(len(products), 1, path)
+            actual = [
+                (p['name'], p['value'])
+                for p in products[0].get('additionalProperty', [])
+            ]
+            self.assertEqual(actual, want, path)
+
+    # NOTE (QA round 2): every entry is ``(template, needle, expected_count)``.
+    # Counting — not just ``assertIn`` — is what makes this guard real:
+    # ``products.html`` and ``projects.html`` render their ItemList array with a
+    # duplicated ``{% if not forloop.last %} / {% else %}`` pair, so the needle
+    # legitimately appears TWICE. A plain ``assertIn`` was mutation-verified to
+    # pass even after deleting ``|escapejs`` from one branch (re-exposing every
+    # non-last entry to the original bug), because the surviving branch still
+    # satisfied the containment check.
+    ESCAPEJS_CHECKS = (
+        ('base.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
+        ('base.html', '"description": "{{ config.meta_description|escapejs }}"', 1),
+        ('base.html', '"streetAddress": "{{ config.address_street|escapejs }}"', 1),
+        ('base.html', '"addressLocality": "{{ config.address_locality|escapejs }}"', 1),
+        ('base.html', '"addressCountry": "{{ config.address_country|escapejs }}"', 1),
+        ('base.html', '"{{ topic|escapejs }}"', 1),
+        ('base.html', '"email": "{{ config.contact_email|escapejs }}"', 1),
+        ('base.html', '"phone": "{{ config.contact_phone_1|escapejs }}"', 1),
+        ('home.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
+        ('products.html', '"name": "{{ config.products_title|escapejs }}"', 1),
+        # Duplicated if/else ItemList branch — must stay escaped on BOTH.
+        ('products.html', '"name": "{{ product.name_t|escapejs }}"', 2),
+        ('projects.html', '"name": "{{ config.projects_title|escapejs }}"', 1),
+        ('projects.html', '"headline": "{{ project.title_t|escapejs }}"', 2),
+        ('news_detail.html',
+         '"headline": "{{ article.title_t|default:article.title|escapejs }}"', 1),
+        ('news_detail.html',
+         '"description": "{{ article.summary_t|default:article.summary|escapejs }}"', 1),
+        # Breadcrumb trails are array members too: the include passes an
+        # escaped leaf name so " translated titles cannot break BreadcrumbList.
+        ('news_detail.html', 'leaf_name=article.title_t|escapejs', 1),
+        ('product_detail.html', 'leaf_name=product.name_t|escapejs', 1),
+        ('product_overview.html', 'leaf_name=product.name_t|escapejs', 1),
+        ('project_detail.html', 'leaf_name=project.title_t|escapejs', 1),
+        ('product_detail.html', '"name": "{{ product.name_t|escapejs }}"', 1),
+        ('product_detail.html',
+         '"description": "{{ product.description_t|default:\'\'|escapejs }}"', 1),
+        ('product_detail.html',
+         '"sku": "{{ product.model_number|default:product.slug|escapejs }}"', 1),
+        ('product_detail.html',
+         '"mpn": "{{ product.model_number|default:product.slug|escapejs }}"', 1),
+        ('product_detail.html', '"value": "{{ value|escapejs }}"', 1),
+        ('product_overview.html', '"name": "{{ product.name_t|escapejs }}"', 1),
+        ('product_overview.html',
+         '"description": "{{ product.description_t|default:\'\'|escapejs }}"', 1),
+        ('product_overview.html',
+         '"sku": "{{ product.model_number|default:product.slug|escapejs }}"', 1),
+        ('product_overview.html',
+         '"mpn": "{{ product.model_number|default:product.slug|escapejs }}"', 1),
+        ('product_overview.html', '"value": "{{ value|escapejs }}"', 1),
+        ('project_detail.html', '"headline": "{{ project.title_t|escapejs }}"', 1),
+        ('project_detail.html',
+         '"description": "{{ project.description_t|default:\'\'|escapejs }}"', 1),
+        ('project_detail.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
+        ('project_detail.html', '"name": "{{ project.location_t|escapejs }}"', 1),
+    )
+
+    def test_jsonld_strings_are_js_escaped(self):
+        """Follow-up QA finding: every interpolated JSON-LD string needs escapejs.
+
+        An unescaped admin-editable value containing a backslash broke the whole
+        block (`Invalid \\escape`); a double quote survived HTML autoescaping as
+        `&quot;` and silently corrupted the value Google reads. Round 1 pinned 7
+        spots; round 2 pins every remaining one (32 checks) and switches to
+        counted assertions so a duplicated template branch cannot mask a removal.
+        URLs/paths stay deliberately unescaped — see the class docstring.
+        """
+        for name, needle, want in self.ESCAPEJS_CHECKS:
+            src = (settings.BASE_DIR / 'templates' / name).read_text(
+                encoding='utf-8')
+            self.assertEqual(
+                src.count(needle), want,
+                f'{name}: expected {want} x {needle!r}, found '
+                f'{src.count(needle)}')
+
+        # The template-built-array pattern must not come back.
+        for name in ('product_detail.html', 'product_overview.html'):
+            src = (settings.BASE_DIR / 'templates' / name).read_text(
+                encoding='utf-8')
+            self.assertNotIn('{% if product.efficacy %}{"@type": "PropertyValue"',
+                             src)
+            self.assertEqual(
+                src.count('{% for label, value in product.jsonld_properties %}'),
+                1, f'{name}: additionalProperty loop missing or duplicated')
+
+
+class ProductFaqSchemaTests(TestCase):
+    """B3 guard (SEO/GEO 2026-09): product pages emit a valid FAQPage JSON-LD
+    with exactly the 6 confirmed Q&A, and a visible (no-JS) FAQ section.
+
+    Mirrors the JSON-LD acquisition pattern from JsonLdValidityTests but
+    asserts the FAQPage-specific contract. ``HTTP_HOST='localhost'`` is passed
+    because DEBUG=False + ALLOWED_HOSTS would otherwise answer 400.
+    """
+
+    PATHS = ('/products/fl6m/', '/products/m-series/')
+
+    JSONLD_RE = re.compile(
+        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
+        re.DOTALL | re.IGNORECASE,
+    )
+
+    def _blocks(self, path):
+        resp = self.client.get(path, HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200, f'{path} did not render')
+        html = resp.content.decode('utf-8')
+        return [m.group(1) for m in self.JSONLD_RE.finditer(html)], html
+
+    def test_faqpage_block_present_parseable_and_has_six_entries(self):
+        for path in self.PATHS:
+            blocks, _ = self._blocks(path)
+            faq_blocks = []
+            for raw in blocks:
+                # Must be valid JSON (this is what locks the json.dumps contract).
+                obj = json.loads(raw)
+                types = set()
+                if '@graph' in obj:
+                    types |= {n.get('@type') for n in obj.get('@graph', [])}
+                else:
+                    types.add(obj.get('@type'))
+                if 'FAQPage' in types:
+                    faq_blocks.append(obj)
+            self.assertEqual(len(faq_blocks), 1,
+                             f'{path}: expected exactly 1 FAQPage block')
+            main = faq_blocks[0].get('mainEntity', [])
+            self.assertEqual(len(main), 6,
+                             f'{path}: expected 6 FAQ entries, got {len(main)}')
+            for item in main:
+                self.assertEqual(item.get('@type'), 'Question', path)
+                self.assertTrue(item.get('name'), f'{path}: empty question name')
+                ans = item.get('acceptedAnswer', {})
+                self.assertEqual(ans.get('@type'), 'Answer', path)
+                self.assertTrue(ans.get('text'), f'{path}: empty answer text')
+
+    def test_faq_visible_section_renders_with_six_details(self):
+        """The FAQ must be user-visible without JavaScript (GEO/SEO value)."""
+        for path in self.PATHS:
+            _, html = self._blocks(path)
+            self.assertIn('class="detail-faq"', html,
+                          f'{path}: visible FAQ section missing')
+            self.assertIn('class="detail-faq-list"', html,
+                          f'{path}: FAQ list wrapper missing')
+            # Six <details> items — one per question.
+            self.assertEqual(
+                html.count('<details'), 6,
+                f'{path}: expected 6 <details> FAQ items, got '
+                f'{html.count("<details")}')
+            # The first question reads as visible text (Django-autoescaped).
+            self.assertIn(
+                'Are SolarOne stadium lights flicker-free for broadcast?', html,
+                f'{path}: first FAQ question not visible')
+
+
+class NewsFeedTests(TestCase):
+    """B4 guard (SEO/GEO 2026-09): /news/feed.xml serves a valid RSS 2.0 feed.
+
+    AI crawlers and human aggregators hit this endpoint; it must return 200,
+    advertise ``application/rss+xml``, parse as XML, and list exactly the
+    published seed news entries (currently 1).
+    """
+
+    def _seed_published_news_count(self):
+        import json as _json
+        seed = _json.loads(
+            (settings.BASE_DIR / 'seed_data.json').read_text(encoding='utf-8'))
+        return len([
+            n for n in seed.get('news', []) if n.get('is_published', True)
+        ])
+
+    def test_feed_renders_valid_rss(self):
+        import xml.etree.ElementTree as ET
+
+        resp = self.client.get('/news/feed.xml', HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200, 'feed.xml did not render')
+        self.assertIn('rss+xml', resp['Content-Type'])
+
+        content = resp.content.decode('utf-8')
+        # Valid XML (this is what locks the Python-built-XML contract).
+        root = ET.fromstring(content)
+        self.assertEqual(root.tag, 'rss')
+        channel = root.find('channel')
+        self.assertIsNotNone(channel, 'RSS missing <channel>')
+        self.assertIsNotNone(channel.find('title').text, 'feed title empty')
+        self.assertIsNotNone(channel.find('link').text, 'feed link empty')
+
+        items = channel.findall('item')
+        expected = self._seed_published_news_count()
+        self.assertEqual(len(items), expected,
+                         f'feed item count {len(items)} != published news {expected}')
+        for it in items:
+            self.assertIsNotNone(it.find('title').text, 'item title empty')
+            self.assertIsNotNone(it.find('link').text, 'item link empty')
+            self.assertIsNotNone(
+                it.find('description').text, 'item description empty')
+            # pubDate must be present and RFC-822 shaped.
+            pub = it.find('pubDate').text or ''
+            self.assertRegex(pub, r'^\w{3}, \d{2} \w{3} \d{4} ',
+                             f'non-RFC822 pubDate: {pub!r}')
+
+    def test_feed_item_links_are_canonical(self):
+        import xml.etree.ElementTree as ET
+
+        resp = self.client.get('/news/feed.xml', HTTP_HOST='localhost')
+        root = ET.fromstring(resp.content.decode('utf-8'))
+        origin = settings.CANONICAL_ORIGIN
+        for it in root.find('channel').findall('item'):
+            link = it.find('link').text or ''
+            self.assertTrue(
+                link.startswith(f'{origin}/news/'),
+                f'feed item link not rooted at CANONICAL_ORIGIN: {link!r}')
+            self.assertNotIn('localhost', link)

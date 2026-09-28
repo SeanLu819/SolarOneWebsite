@@ -1,0 +1,83 @@
+# llm.txt — SolarOne Lighting
+# AI-readable summary of https://solaronelighting.com
+# Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
+# Brand name is always "SolarOne" — never transliterated or translated.
+# Content source of truth: seed_data.json · Site version v1.8.1
+
+## Who
+SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
+2007; 500+ completed projects in 50+ countries.
+Specialty: LED **sports lighting** (stadiums, fields, arenas), plus roadway and
+industrial lighting (high bay, floodlight). Serves new-build and HID retrofit
+projects (replacing 400–1500W metal halide).
+
+## Sports lighting — what makes it different
+- Low glare: proprietary COB light engine + polished aluminium reflector +
+  99%-transmission glass lens with Fresnel pattern (never yellows); optional
+  external glare shields in multiple lengths for RT410 and M Series.
+- Precision optics: 18° long-throw to 50°/100° short-throw beams, crisp edge
+  cut-off, minimal spill and obtrusive light.
+- Flicker-free broadcast drive: VSP (Vision Strobe Protection) series uses
+  stable high-frequency drive to eliminate flicker in slow-motion HDTV replay —
+  the requirement ordinary LED floodlights fail in televised venues.
+- Modular architecture: M Series scales from a single 1M module (80W) to 16M
+  (1280W+) in one housing, keeping optics and spare parts common across a
+  tennis court and a 20,000-seat stadium.
+- Performance: 130 lm/W, up to 120,000+ lm per fixture, CRI 70–95,
+  CCT 3000–5700K, L70 >100,000 h @ 25°C, 5+ year warranty.
+- Outdoor-hardened: IP66, 10kV surge (common + differential mode), −40°C to
+  55°C operation, 347–480VAC or 110–277VAC input, Bridgelux LEDs,
+  Inventronics drivers, stainless steel 304 or aluminium + glass housings.
+- Engineering service: DIALux photometric layouts plus structural design
+  delivered with the proposal; full photometric proposal within 48 hours.
+- Energy outcome: 50%+ saving versus legacy HID; intelligent control and
+  interval-lighting modes add a further ~50% on selected arenas.
+
+## Measured results (documented figures, not claims)
+- Yuanshen Sports Centre Stadium, Shanghai: 2200 lux avg, U0 0.8, Ra>80 —
+  meets AFC Stadium Lighting Guidelines 2018.
+- Hangzhou Asian Games Velodrome: >3200 lx horizontal (U 0.90), >2600 lx main
+  camera (0.84) — HD broadcast compliant.
+- Olympic Sports Center Gymnasium, Beijing: >4000 lx horizontal (U 0.8),
+  >3000 lx camera (0.7) — HD broadcast compliant.
+- CISM Military World Games fencing hall, Wuhan: >3600 lx (U 0.90),
+  >1500 lx main camera (0.80).
+- National Snow & Ice Research Center (2022 Winter Olympics venue), Beijing:
+  2000 lx, U0 0.7, interval-lighting control for an extra 50% saving.
+- Yingdong Natatorium, Beijing: >2700 lx (U 0.70), >2200 lx main camera (0.60).
+- Halle André Vacheresse, Roanne (France): >2000 lux — HD broadcast standard,
+  1:1 retrofit of legacy 1500W metal halide.
+- US high-school football fields (Maryland, Georgia): 30 fc average,
+  uniformity 1.37:1 – 1.56:1, exceeding specification.
+- Carroll County Sports Complex baseball: 50/30 fc average, uniformity
+  2.0:1 / 2.5:1.
+- Morgan State University tennis courts: >80 fc average, uniformity 1.67:1.
+
+## Products
+- M Series (FL1M–FL16M, FL9M-RGBW): modular stadium/area floodlight,
+  80–1280W+, 130 lm/W, 18–50°.
+- RT410 Series: 260W, 32,500+ lm, 18–100°, Olympic/HDTV grade sports lighting.
+- RT410-RGBW, RGB/RGBW: colour-changing architectural and arena variants.
+- VSP-XXXXW-9M-YP / VSP-XXXXW-12M-YP: 4200W broadcast sports luminaire,
+  flicker-free, IP66, stainless steel 304.
+- RT220UB, RT390FL-S, RT420FS-S, RT590FL-S: floodlights for areas, facades,
+  ski slopes, karting.
+- RT400HB, RT500HB: high bay / low bay for stadiums and industrial halls.
+- RT600SL-T, RT820SL-T: roadway and expressway luminaires.
+- Accessories: external glare shields and visors in multiple lengths.
+
+## Venue types
+Football and soccer fields, baseball, tennis and pickleball courts, indoor
+multi-sport arenas, basketball, fencing, ice rinks and speed skating,
+velodromes, aquatics centres, ski areas, karting circuits, airports, seaports,
+roadways.
+
+## Site structure
+`/` home · `/products/` · `/products/<slug>/` · `/projects/` ·
+`/projects/<slug>/` · `/about/` · `/contact/` · `/news/` · `/news/<slug>/` ·
+`/sitemap.xml` (with `<image:image>` entries) · `/robots.txt`
+
+English serves with no URL prefix. Other locales use i18n prefixes:
+`/fr/`, `/es/`, `/de/`, `/ru/`, `/ar/` (Arabic is right-to-left).
+Six locales: en, fr, es, de, ru, ar. Pages carry Breadcrumb, Product and
+NewsArticle JSON-LD structured data.

@@ -45,7 +45,7 @@ related:
 | 内页缺 srcset（P2） | 仅首页有 | 确认：首页 hero 有 `<picture>`+`srcset`；产品/项目页图片无 | ❌ 未改（待拍板多尺寸变体） |
 | 无 apple-touch-icon/manifest/preload（P2） | 仅 favicon | 确认 `base.html:26` 仅 `favicon.webp`；无 manifest；已内联 ~2KB critical CSS（`base.html:40-79`），但 `base.css` 仍 `<link>` 阻塞（`base.html:80`） | ❌ 未改 |
 | 技术强项（✓） | HTTPS/HSTS/HTTP2/压缩/308/canonical/hreflang/alt/结构化数据/404 | 全部保持，且自审计后新增：CSP 基础版、字体自托管、critical CSS 内联、N-43 翻译通道 | ✅ 保持+增强 |
-| 结构化数据（✓） | WebSite+Organization / Product+BreadcrumbList | 实测更全：`base.html:539` Organization+ContactPoint；`home.html:129` WebSite+SearchAction；`products.html:100` ItemList；`product_detail.html:927` Product+PropertyValue；`breadcrumb_jsonld.html` BreadcrumbList；`project_detail.html:447` Article；`projects.html:116` ItemList | ✅ 保持 |
+| 结构化数据（✓） | WebSite+Organization / Product+BreadcrumbList | 实测更全：`base.html` Organization+ContactPoint+foundingDate/address/areaServed/knowsAbout；`home.html` WebSite（**已移除 SearchAction** —— 站点无搜索功能，见 P0-4）；`products.html` ItemList；`product_detail.html` / `product_overview.html` Product+additionalProperty；`breadcrumb_jsonld.html` BreadcrumbList；`project_detail.html` Article；`projects.html` ItemList | ✅ 保持（v1.8.2 结构化数据修补后） |
 
 ## 2. 问题清单（按优先级重排）
 

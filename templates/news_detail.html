@@ -21,6 +21,7 @@
   "description": "{{ article.summary_t|default:article.summary|escapejs }}",
   "datePublished": "{{ article.published_at|date:'c' }}",
   "image": "{{ canonical_origin }}{{ article.image_url }}",
+  "url": "{{ canonical_origin }}{% url 'news_detail' article.slug %}",
   "publisher": {"@type": "Organization", "name": "SolarOne"}
 }
 </script>
@@ -36,7 +37,7 @@
         <span class="news-detail-date">{{ article.published_at|date:"Y-m-d" }}</span>
       </div>
 
-      <h1 class="news-detail-title">{{ article.title_t|default:article.title }}</h1>
+      <h1 class="news-detail-title"><bdi>{{ article.title_t|default:article.title }}</bdi></h1>
       {% if article.summary_t|default:article.summary %}
       <p class="news-detail-summary">{{ article.summary_t|default:article.summary }}</p>
       {% endif %}
@@ -78,7 +79,7 @@
               <span class="news-related-cat">{{ a.category_label|default:a.category }}</span>
               <span class="news-related-date">{{ a.published_at|date:"Y-m-d" }}</span>
             </div>
-            <h3>{{ a.title_t|default:a.title }}</h3>
+            <h3><bdi>{{ a.title_t|default:a.title }}</bdi></h3>
           </div>
         </a>
         {% endfor %}

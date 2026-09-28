@@ -456,7 +456,7 @@
   "url": "{{ canonical_origin }}{{ request.path }}",
   "publisher": {
     "@type": "Organization",
-    "name": "{{ config.brand_name }}"
+    "name": "{{ config.brand_name|escapejs }}"
   }{% if project.location_t %},
   "contentLocation": {
     "@type": "Place",

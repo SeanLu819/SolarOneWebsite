@@ -70,10 +70,10 @@
               {% endif %}
             </div>
             <div class="project-card-body">
-              <div class="project-card-location">{{ project.location_t }}</div>
-              <h3 class="project-card-title">{{ project.title_t }}</h3>
+              <div class="project-card-location"><bdi>{{ project.location_t }}</bdi></div>
+              <h3 class="project-card-title"><bdi>{{ project.title_t }}</bdi></h3>
               <p class="project-card-desc">{{ project.description_t }}</p>
-              {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} {{ project.results_t }}</p>{% endif %}
+              {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} <bdi>{{ project.results_t }}</bdi></p>{% endif %}
               <span class="project-card-link">{% trans "View project" %} →</span>
             </div>
           </a>
@@ -119,10 +119,10 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "{{ config.projects_title }}",
+  "name": "{{ config.projects_title|escapejs }}",
   "itemListElement": [
-    {% for project in projects %}{% if not forloop.last %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t }}"},
-    {% else %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t }}"}{% endif %}{% endfor %}
+    {% for project in projects %}{% if not forloop.last %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t|escapejs }}"},
+    {% else %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t|escapejs }}"}{% endif %}{% endfor %}
   ]
 }
 </script>

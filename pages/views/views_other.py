@@ -1,8 +1,9 @@
+import email.utils
 import os
 from datetime import datetime
 from xml.sax.saxutils import escape as _xml_escape
 from django.shortcuts import render
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.urls import reverse
 from django.utils.translation import get_language, override
 from django.conf import settings
@@ -282,6 +283,69 @@ def sitemap_xml(request):
     xml += '\n'.join(urls)
     xml += '\n</urlset>'
     return render(request, 'sitemap.xml', {'xml': xml}, content_type='application/xml')
+
+
+def news_feed(request):
+    """RSS 2.0 feed of published news articles (B4, SEO/GEO).
+
+    Served so AI answer engines and human aggregators can discover new
+    articles. XML is built in Python (no template array concatenation) and
+    every text node is XML-escaped via ``xml.sax.saxutils.escape`` — this is a
+    SEPARATE escaping channel from the JSON-LD ``|escapejs`` used elsewhere.
+    ``link`` uses ``settings.CANONICAL_ORIGIN`` (never the request host), the
+    same choice as ``sitemap_xml``.
+    """
+    data = _load_seed()
+    # Fixed canonical origin (#17) — same choice as sitemap_xml.
+    origin = settings.CANONICAL_ORIGIN
+    news = [a for a in (data.get('news') or []) if a.get('is_published', True)]
+
+    items = []
+    for art in news:
+        slug = art.get('slug', '')
+        if not slug:
+            continue
+        title = art.get('title', '') or ''
+        summary = art.get('summary', '') or ''
+        link = f'{origin}/news/{slug}/'
+        pub = art.get('published_at', '') or ''
+        pubdate = ''
+        try:
+            # RFC 822 pubDate from the ISO published_at. usegmt=True emits the
+            # "GMT" form (e.g. "Fri, 25 Sep 2026 00:00:00 GMT"), which is valid
+            # RFC 822 and parsed by all readers; requires a tz-aware datetime,
+            # which the seed's "+00:00" suffix provides.
+            pubdate = email.utils.format_datetime(
+                datetime.fromisoformat(pub), usegmt=True)
+        except (ValueError, TypeError):
+            pubdate = pub
+        items.append(
+            '    <item>\n'
+            f'      <title>{_xml_escape(title)}</title>\n'
+            f'      <link>{_xml_escape(link)}</link>\n'
+            f'      <description>{_xml_escape(summary)}</description>\n'
+            f'      <pubDate>{_xml_escape(pubdate)}</pubDate>\n'
+            f'      <guid isPermaLink="true">{_xml_escape(link)}</guid>\n'
+            '    </item>'
+        )
+
+    items_xml = ('\n'.join(items) + '\n') if items else ''
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" '
+        'xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '  <channel>\n'
+        f'    <title>{_xml_escape("SolarOne News")}</title>\n'
+        f'    <link>{_xml_escape(origin)}/news/</link>\n'
+        f'    <description>{_xml_escape("Latest news, product launches and project case studies from SolarOne LED lighting.")}</description>\n'
+        '    <language>en</language>\n'
+        f'    <atom:link href="{_xml_escape(origin)}/news/feed.xml" '
+        'rel="self" type="application/rss+xml"/>\n'
+        f'{items_xml}'
+        '  </channel>\n'
+        '</rss>'
+    )
+    return HttpResponse(xml, content_type='application/rss+xml')
 
 
 @staff_member_required

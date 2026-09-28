@@ -5,7 +5,7 @@ from pathlib import Path
 from django.conf import settings
 from django.templatetags.static import static
 from pages.static_scan import build_file_set
-from pages.utils import strip_hash_suffix, translate
+from pages.utils import strip_hash_suffix, translate, jsonld_property_pairs
 
 logger = logging.getLogger(__name__)
 
@@ -522,6 +522,16 @@ class _DictProduct:
 
     def t(self, field_name, lang='en'):
         return translate(self, field_name, lang)
+
+    @property
+    def jsonld_properties(self):
+        """Seed-path mirror of ``pages.models.Product.jsonld_properties``.
+
+        Both paths must expose the same attribute name so the two product
+        templates render one identical array whether the object came from the
+        database or from the committed seed JSON.
+        """
+        return jsonld_property_pairs(self)
 
 
 class _DictProject:

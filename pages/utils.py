@@ -52,3 +52,46 @@ def translate(obj, field, lang='en'):
         return getattr(obj, field, '')
     val = (translations.get(lang) or {}).get(field, '')
     return val if val else getattr(obj, field, '')
+
+
+#: Ordered ``(PropertyValue.name, Product attribute)`` pairs emitted as the
+#: Product JSON-LD ``additionalProperty`` array. Order is part of the emitted
+#: contract — search engines surface the values in array order — so the pair
+#: order here IS the output order.
+#:
+#: ``category_t`` is the translated display label the templates already render
+#: (set by ``_enrich_product``); the rest are raw spec fields.
+JSONLD_PROPERTY_FIELDS = (
+    ('Power', 'power'),
+    ('Efficacy', 'efficacy'),
+    ('Output', 'output'),
+    ('Beam Angle', 'beam_angle'),
+    ('Protection', 'protection'),
+    ('Category', 'category_t'),
+)
+
+
+def jsonld_property_pairs(obj):
+    """Return the non-empty ``(label, value)`` pairs for Product JSON-LD.
+
+    A6 single source for the Product ``additionalProperty`` array, which the
+    two product templates used to hand-assemble in Django template syntax:
+    each intermediate entry carried its own trailing ``{% if %},`` and only the
+    final ``Category`` entry was unconditional, so deleting or re-ordering that
+    last entry reproduced the P0-1 trailing-comma bug verbatim.
+
+    Building the list in Python means an empty field is simply absent and the
+    template can never emit a trailing comma. Empty/falsy values are skipped so
+    the advertised property set tracks real data.
+
+    Pure Python (no Django import) so both ``pages.models.Product`` and the
+    seed shim ``pages.views.utils._DictProduct`` can use it without circular
+    imports — see ``translate`` above for the same constraint.
+    """
+    pairs = []
+    for label, field in JSONLD_PROPERTY_FIELDS:
+        value = getattr(obj, field, '')
+        if not value:
+            continue
+        pairs.append((label, str(value)))
+    return pairs

@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
 
 # NOTE (SEO P3.3): /media/ is intentionally left crawlable. Product/project pages
 # fall back to /media/... URLs when no committed /static/ copy exists, and a
@@ -8,4 +7,44 @@ Disallow: /admin/
 # media/ contains only public product / products_page / project assets — no
 # private uploads — so there is nothing to hide.
 
+Disallow: /admin/
+
+# ---------------------------------------------------------------------------
+# AI crawler allow-list (B2, SEO/GEO 2026-09)
+#
+# Explicitly permit the major AI answer-engine crawlers to read the whole site.
+# robots.txt is only a *courtesy signal* — well-behaved bots honour it, but it
+# is NOT a firewall. If these pages are still not crawled, the real blocker is
+# almost always Cloudflare's "AI Crawl Control" (on by default for new domains
+# since 2025-07), which sits in front of the origin and drops AI User-Agents at
+# the edge regardless of what robots.txt says. Fix that in the Cloudflare
+# dashboard (Security -> Bots -> AI Crawl Control), not in this file. This block
+# only removes ambiguity for bots that DO consult robots.txt.
+# ---------------------------------------------------------------------------
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: {{ canonical_origin }}/sitemap.xml
+
+# AI summary (llm.txt convention): machine-readable overview of this site.
+# Served from public/llm.txt by build.sh.
+LLM-Txt: {{ canonical_origin }}/llm.txt
+
+# News RSS feed (B4, SEO/GEO): an entry point for AI crawlers & aggregators.
+# Non-standard robots directive (harmless; not every crawler reads it).
+Feed: {{ canonical_origin }}/news/feed.xml

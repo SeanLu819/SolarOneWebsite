@@ -172,6 +172,22 @@ else
     echo "  ✗ WARNING: favicon.webp not found in public/static/images/"
 fi
 
+# 5.5. Root AI summary (llm.txt) — must be reachable at https://<domain>/llm.txt.
+# public/ is Vercel's CDN root, and the filesystem hit takes precedence over the
+# catch-all rewrite to Django, so a plain copy here is what makes it live.
+# Source of truth is the repo-root llm.txt (do NOT put it in public/ — step 3
+# does `rm -rf public`).
+if [ -f llm.txt ]; then
+    cp llm.txt public/llm.txt
+    # B1 (SEO/GEO 2026-09): also publish the plural llm.txt convention name
+    # (Jeremy Howard's llms.txt proposal). Some AI crawlers only recognise
+    # /llms.txt, so copy the same source to both filenames.
+    cp llm.txt public/llms.txt
+    echo "  ✓ Copied llm.txt + llms.txt -> public/"
+else
+    echo "  ✗ WARNING: repo-root llm.txt not found — /llm.txt and /llms.txt will 404."
+fi
+
 # 6. Detailed listing for debugging
 echo ""
 echo "=== [build.sh] BUILD SUMMARY ==="

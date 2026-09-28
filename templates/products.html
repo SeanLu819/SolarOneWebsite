@@ -83,7 +83,7 @@
               <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy" decoding="async"></div>
               {% endif %}
             </a>
-            <h3 class="product-card-title">{{ product.name_t }}</h3>
+            <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
             <p class="product-card-desc">{{ product.description_t }}</p>
             <div class="product-card-specs">
               {% for spec in product.specs|slice:":3" %}
@@ -103,10 +103,10 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  "name": "{{ config.products_title }}",
+  "name": "{{ config.products_title|escapejs }}",
   "itemListElement": [
-    {% for product in products %}{% if not forloop.last %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t }}"},
-    {% else %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t }}"}{% endif %}{% endfor %}
+    {% for product in products %}{% if not forloop.last %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t|escapejs }}"},
+    {% else %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t|escapejs }}"}{% endif %}{% endfor %}
   ]
 }
 </script>

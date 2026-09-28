@@ -7,7 +7,7 @@ from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
-from pages.utils import strip_hash_suffix, translate
+from pages.utils import strip_hash_suffix, translate, jsonld_property_pairs
 
 
 # --- CSS input validators (#11) -------------------------------------------
@@ -197,6 +197,18 @@ class Product(models.Model):
     def t(self, field_name, lang='en'):
         """Get translated value for a field, falling back to the default English value."""
         return translate(self, field_name, lang)
+
+    @property
+    def jsonld_properties(self):
+        """Return the Product JSON-LD ``additionalProperty`` list of (label, value) tuples.
+
+        Delegates to ``pages.utils.jsonld_property_pairs`` — see its docstring
+        for why the list is built in Python rather than assembled by the
+        templates (P0-1 trailing-comma class). Mirrored by
+        ``pages.views.utils._DictProduct.jsonld_properties`` so the DB path and
+        the seed path emit an identical array.
+        """
+        return jsonld_property_pairs(self)
 
 
 class NewsArticle(models.Model):
@@ -565,12 +577,92 @@ class SiteConfig(models.Model):
         help_text="Primary accent color, e.g. #0088FF, #FF6B00"
     )
 
+    # --- JSON-LD (schema.org Organization) helpers -------------------------
+    #
+    # These exist so templates never hand-assemble JSON arrays. The previous
+    # `base.html` emitted ``"sameAs": [ ... "url", ]`` with a trailing comma
+    # whenever the *last* social field was empty (seed has social_linkedin=""),
+    # which made the Organization block invalid on 8/8 pages. The rule is now:
+    # Python builds the list, the template only joins it — an empty list renders
+    # as ``[]``, which is still valid JSON.
+    #: Year SolarOne started designing/manufacturing LED lighting systems
+    #: (matches about_text_1 "Since 2007, ..."). Used as Organization.foundingDate.
+    FOUNDING_YEAR = '2007'
+    #: Expertise keywords for Organization.knowsAbout. Kept English-only and
+    #: deliberately short: schema.org treats this as topical hints, not copy.
+    KNOWS_ABOUT = (
+        'LED sports lighting',
+        'stadium floodlighting',
+        'photometric design',
+        'flicker-free broadcast lighting',
+        'high mast lighting',
+    )
+
     class Meta:
         verbose_name = "Site Configuration"
         verbose_name_plural = "Site Configuration"
 
     def __str__(self):
         return "Site Configuration"
+
+    @property
+    def social_same_as(self):
+        """Return the non-empty social profile URLs, in display order.
+
+        Feeds ``Organization.sameAs`` in ``base.html``. Empty fields (the seed
+        ships ``social_linkedin=""``) are dropped here rather than in the
+        template, so the rendered array can never end with a trailing comma.
+        """
+        return [
+            url for url in (
+                self.social_facebook,
+                self.social_instagram,
+                self.social_youtube,
+                self.social_tiktok,
+                self.social_linkedin,
+            ) if url
+        ]
+
+    @property
+    def knows_about(self):
+        """Return the Organization expertise keywords as a list."""
+        return list(self.KNOWS_ABOUT)
+
+    @property
+    def founding_date(self):
+        """Return the Organization founding year (ISO 8601 partial date)."""
+        return self.FOUNDING_YEAR
+
+    @property
+    def address_locality(self):
+        """Return the city portion of ``contact_address`` ('Beijing, China' -> 'Beijing').
+
+        Returns '' when ``contact_address`` is empty so no template branch is
+        needed and no placeholder city is invented.
+        """
+        return (self.contact_address or '').split(',')[0].strip()
+
+    @property
+    def address_country(self):
+        """Return the country portion of ``contact_address`` ('Beijing, China' -> 'China').
+
+        The last comma-separated segment is used because the seed format is
+        "<city>, <country>"; a single-segment value yields that segment itself.
+        """
+        parts = [part.strip() for part in (self.contact_address or '').split(',')]
+        return parts[-1] if parts else ''
+
+    @property
+    def address_street(self):
+        """Return the street portion of ``contact_address``, or '' when absent.
+
+        ``contact_address`` is only "Beijing, China" — there is no street, so
+        this returns '' and the template omits ``streetAddress`` instead of
+        fabricating a house number. It exists so a future "12 X Road, Beijing,
+        China" value is picked up without touching the template.
+        """
+        parts = [part.strip() for part in (self.contact_address or '').split(',')]
+        return parts[0] if len(parts) > 2 else ''
 
     def save(self, *args, **kwargs):
         # Ensure only one instance exists

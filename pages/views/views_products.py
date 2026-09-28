@@ -1,4 +1,7 @@
+import json
+
 from django.conf import settings
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import get_language
 from django.templatetags.static import static
@@ -9,6 +12,97 @@ from .i18n import (
     _resolve_product_sidebar,
 )
 from .data_loaders import get_products, get_product_detail
+
+
+# ---------------------------------------------------------------------------
+# Product FAQ (B3, SEO/GEO 2026-09)
+#
+# Six high-value Q&A based strictly on confirmed product facts already in the
+# repository (seed data / copy). These are CONSTANTS authored by us — never
+# user input — so they are safe to inject wholesale into JSON-LD via
+# ``{{ product_faq_json|safe }}`` (see the JSON-LD iron law in AGENTS.md: the
+# whole blob is built in Python with ``json.dumps``, not concatenated in the
+# template, so there is no trailing-comma / escapejs foot-gun).
+#
+# NOTE: we deliberately do NOT invent business FAQs (MOQ, lead time, warranty
+# years, certification numbers) — that data is absent from the repo. Add those
+# only once the business supplies the real numbers.
+#
+# SAFETY CONSTRAINT (do not relax): PRODUCT_FAQ is injected via
+# ``{{ product_faq_json|safe }}`` with NO escaping. Keep it a list of literal
+# string constants authored by us. Never interpolate user input, form fields,
+# or any external/untrusted data into this blob — that would open an XSS /
+# JSON-LD injection vector. The qa tests assert none of the 6 entries contain
+# a ``</script>`` sequence precisely to guard this invariant.
+# ---------------------------------------------------------------------------
+PRODUCT_FAQ = [
+    {
+        'question': 'Are SolarOne stadium lights flicker-free for broadcast?',
+        'answer': (
+            'Yes. Our VSP high-frequency drivers eliminate flicker, so footage '
+            'stays clean even in super-slow-motion broadcast replays.'
+        ),
+    },
+    {
+        'question': 'Do you provide DIALux photometric studies?',
+        'answer': (
+            'Yes. Our engineering team delivers a full photometric proposal — '
+            'layout, illuminance and uniformity — within 48 hours of receiving '
+            'your venue drawing.'
+        ),
+    },
+    {
+        'question': 'What is the luminous efficacy and rated lifespan?',
+        'answer': (
+            'Up to 130 lm/W, with an L70 lifetime exceeding 100,000 hours.'
+        ),
+    },
+    {
+        'question': 'What ingress and surge protection do the luminaires have?',
+        'answer': (
+            'IP66 ingress protection, 10 kV surge protection, and an operating '
+            'range of −40 °C to +55 °C.'
+        ),
+    },
+    {
+        'question': (
+            'How much energy can we save versus existing HID / metal-halide '
+            'lighting?'
+        ),
+        'answer': (
+            'Retrofits typically cut energy use by 50% or more while improving '
+            'uniformity.'
+        ),
+    },
+    {
+        'question': 'Are the luminaires modular and field-serviceable?',
+        'answer': (
+            'The M Series is modular from 80 W to 1280 W, with '
+            'field-replaceable modules that keep maintenance downtime short.'
+        ),
+    },
+]
+
+
+def build_product_faq_jsonld(faq_list):
+    """Build a schema.org FAQPage dict from ``faq_list`` (list of
+    ``{"question": ..., "answer": ...}``). Returned as a Python dict so the
+    caller can ``json.dumps(..., ensure_ascii=False)`` it for injection."""
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+            {
+                '@type': 'Question',
+                'name': item['question'],
+                'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': item['answer'],
+                },
+            }
+            for item in (faq_list or [])
+        ],
+    }
 
 
 def _resolve_ppc_image(card):
@@ -238,9 +332,20 @@ def product_detail(request, slug):
         context['gallery'] = product.gallery
         context['is_variant'] = bool(product.parent_slug)
         context['parent_slug'] = parent_slug or product.parent_slug
+        # B3: product FAQ (FAQPage JSON-LD + visible section). Built in Python
+        # and injected as one safe blob — never concatenated in the template.
+        context['product_faq'] = PRODUCT_FAQ
+        context['product_faq_json'] = json.dumps(
+            build_product_faq_jsonld(PRODUCT_FAQ),
+            ensure_ascii=False,
+        )
 
-    # Unknown slug → product is None → 'detail' → product_detail.html renders
-    # its "Product Not Found" branch (the 404 UX is unchanged).
+    # Unknown slug → real 404. Previously this rendered product_detail.html's
+    # "Product Not Found" branch with HTTP 200 (a soft 404): Google indexes
+    # unlimited bogus URLs and ranks them as thin content.
+    if product is None:
+        raise Http404(f'No product matches slug {slug!r}')
+
     template = ('product_overview.html'
                 if getattr(product, 'page_layout', 'detail') == 'overview'
                 else 'product_detail.html')
