@@ -289,9 +289,13 @@ LOCALE_PATHS = [BASE_DIR / 'locale']
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 # STATIC_ROOT must be consistent for both build-time collectstatic and runtime.
-# build.sh outputs to ./staticfiles (per vercel.json distDir: "staticfiles"),
-# and at runtime we also serve from ./staticfiles via WhiteNoise.
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Locally we keep the conventional ./staticfiles (git-ignored). On the Vercel
+# build, build.sh sets VERCEL_STATIC_ROOT=public/static so collectstatic writes
+# the hashed assets DIRECTLY into the CDN root (public/static) — this skips the
+# redundant ~140 MB `cp -R staticfiles public/static` that otherwise doubled the
+# build's static-processing cost (2026-09-28 build-speed fix).
+_VERCEL_STATIC_ROOT = os.environ.get('VERCEL_STATIC_ROOT')
+STATIC_ROOT = BASE_DIR / (_VERCEL_STATIC_ROOT or 'staticfiles')
 
 # WhiteNoise 6.x emits a "No directory at: <STATIC_ROOT>" UserWarning at
 # middleware-init time when STATIC_ROOT does not exist. build.sh creates

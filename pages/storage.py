@@ -2,9 +2,15 @@
 
 为什么需要这个文件
 ------------------
-生产用内容哈希（`CompressedManifestStaticFilesStorage`）换取 Vercel 边缘 CDN 的
-`Cache-Control: immutable, max-age=31536000`。代价是运行时 `{% static %}` /
-`static()` **必须**能查到「原名 → 哈希名」映射：
+生产用内容哈希（`ManifestStaticFilesStorage`，**不带** WhiteNoise 的 gzip 压缩）
+换取 Vercel 边缘 CDN 的 `Cache-Control: immutable, max-age=31536000`。
+
+为什么不 gzip（2026-09-28 构建提速）：Vercel 的静态由边缘 CDN 从 `public/static/`
+直供，CDN 在请求时会**自行做 brotli/gzip**。构建期再对每一个文件（含已压缩的
+webp/pdf）做一遍 gzip 纯属浪费 CPU，且多写一份 `.gz` 还拖慢后续的 `cp` 与产物上传。
+去掉压缩后哈希文件名、`staticfiles.json` 的 `paths` 映射、CDN 缓存策略**完全不变**，
+URL 一字不差，零缓存失效风险。代价是运行时 `{% static %}` / `static()` **必须**能
+查到「原名 → 哈希名」映射：
 
 * 清单在 → `/static/css/base.280e03822c88.css`，CDN 命中 immutable 缓存；
 * 清单不在 → Django/WhiteNoise 回退去磁盘找原文件，而 `static/`、`staticfiles/`
@@ -26,7 +32,7 @@
 
 import logging
 
-from whitenoise.storage import CompressedManifestStaticFilesStorage
+from django.contrib.staticfiles.storage import ManifestStaticFilesStorage
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +54,12 @@ def bundled_hashed_files():
     return _bundled_cache
 
 
-class BundledManifestStaticFilesStorage(CompressedManifestStaticFilesStorage):
-    """优先读包内 Python 清单，且任何情况下都不因查不到文件名而抛异常。"""
+class BundledManifestStaticFilesStorage(ManifestStaticFilesStorage):
+    """优先读包内 Python 清单，且任何情况下都不因查不到文件名而抛异常。
+
+    基类用 Django 的 `ManifestStaticFilesStorage`（只做内容哈希，不 gzip），
+    因为 Vercel CDN 自己会压缩，构建期 gzip 是冗余开销（见模块 docstring）。
+    """
 
     # WhiteNoise 会从 settings.WHITENOISE_MANIFEST_STRICT 覆盖这个属性；
     # 显式设一次，保证即使该设置被误改也不会走上「strict 抛错」的分支。

@@ -3,15 +3,18 @@
 
 Reproduces the same chain build.sh runs on Vercel and asserts every hop:
 
-    collectstatic (production storage) -> staticfiles/staticfiles.json
+    collectstatic (production storage, VERCEL_STATIC_ROOT=public/static)
+        -> public/static/staticfiles.json
         -> pages/static_index_data.py (HASHED_FILES)
-        -> public/static/  (the Vercel CDN root)
+        -> public/static/  (the Vercel CDN root, written directly by collectstatic)
 
 collectstatic is executed with ``VERCEL=1`` on purpose: locally settings uses
 plain ``StaticFilesStorage`` (no manifest, un-hashed names), and only
 ``IS_VERCEL=True`` switches to ``pages.storage.BundledManifestStaticFilesStorage``
-— i.e. the production code path. Any unexpected state exits non-zero, and
-``--require-manifest`` makes the index generator fail closed as well.
+— i.e. the production code path. ``VERCEL_STATIC_ROOT`` points collectstatic at
+``public/static`` so it skips the redundant ~140 MB copy the old build did.
+Any unexpected state exits non-zero, and ``--require-manifest`` makes the index
+generator fail closed as well.
 
 Usage::
 
@@ -31,16 +34,18 @@ PYTHON = sys.executable
 REQUIRED = (
     "css/base.css",
     "css/fonts.css",
-    "images/hero-main.webp",
+    "images/hero-main-1.webp",
     "images/logo.webp",
     "images/favicon.webp",
 )
 
 
 def build_env() -> dict:
-    """build.sh 的构建期环境：VERCEL=1 触发生产静态存储；SECRET_KEY 给占位值。"""
+    """build.sh 的构建期环境：VERCEL=1 触发生产静态存储；SECRET_KEY 给占位值；
+    VERCEL_STATIC_ROOT 让 collectstatic 直接写进 public/static（跳过冗余拷贝）。"""
     env = os.environ.copy()
     env["VERCEL"] = "1"
+    env["VERCEL_STATIC_ROOT"] = "public/static"
     env.setdefault("SECRET_KEY", "build-time-placeholder")
     return env
 
@@ -50,9 +55,13 @@ def run(*args: str) -> None:
 
 
 def main() -> int:
+    # collectstatic writes straight into public/static (VERCEL_STATIC_ROOT).
+    public_static = ROOT / "public" / "static"
+    if public_static.exists():
+        shutil.rmtree(public_static)
+    public_static.parent.mkdir(parents=True, exist_ok=True)
     run("manage.py", "collectstatic", "--noinput")
-    static_root = ROOT / "staticfiles"
-    manifest_path = static_root / "staticfiles.json"
+    manifest_path = public_static / "staticfiles.json"
     if not manifest_path.is_file():
         raise SystemExit("[p3-1] FAIL: staticfiles.json missing")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -62,7 +71,7 @@ def main() -> int:
         raise SystemExit(f"[p3-1] FAIL: required manifest entries missing: {missing}")
 
     index_path = ROOT / "pages" / "static_index_data.py"
-    run("-m", "pages.static_index", "--root", str(static_root),
+    run("-m", "pages.static_index", "--root", str(public_static),
         "--out", str(index_path), "--require-manifest")
     if not index_path.is_file():
         raise SystemExit("[p3-1] FAIL: bundled static index missing")
@@ -76,17 +85,11 @@ def main() -> int:
     if drift:
         raise SystemExit(f"[p3-1] FAIL: bundled hash map drifted from the manifest: {drift}")
 
-    # Rebuild only public/static — public/.gitkeep is tracked by git and must
-    # survive (build.sh regenerates the whole tree on Vercel, where that is moot).
-    public_static = ROOT / "public" / "static"
-    if public_static.exists():
-        shutil.rmtree(public_static)
-    public_static.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(static_root, public_static)
+    # public/static is what production serves (immutable CDN URLs).
     missing = [name for name in REQUIRED if not (public_static / name).is_file()]
     if missing:
         raise SystemExit(f"[p3-1] FAIL: public assets missing: {missing}")
-    # The hashed copies are what production actually serves (immutable CDN URLs).
+    # The hashed copies are what production actually serves.
     missing = [name for name in REQUIRED
                if not (public_static / paths[name]).is_file()]
     if missing:

@@ -10,8 +10,9 @@
 # Vercel's edge CDN already serves public/static/* (probe returns
 # `X-Vercel-Cache: HIT`), so NO `handle: filesystem` route is required.
 # Long-term caching comes from the content-hashed filenames emitted by
-# CompressedManifestStaticFilesStorage (settings.py -> STORAGES): Vercel then
-# serves them `immutable, max-age=31536000` instead of `max-age=0, must-revalidate`.
+# ManifestStaticFilesStorage (hashing only, no gzip — Vercel CDN compresses at
+# the edge; settings.py -> STORAGES): Vercel then serves them
+# `immutable, max-age=31536000` instead of `max-age=0, must-revalidate`.
 
 set -e
 set -o pipefail
@@ -68,7 +69,19 @@ echo "=== [build.sh] pip install done ==="
 echo "=== [build.sh] Regenerating seed_data.py from seed_data.json ==="
 python -m pages.seed_sync --json 2>&1
 
-# 2. Run Django collectstatic -> outputs to ./staticfiles per STATIC_ROOT
+# 1.6. Prepare the Vercel CDN root (public/) and point collectstatic AT it.
+# On Vercel the build output directory is `public/` (vercel.json outputDirectory),
+# and static assets are served straight from the edge CDN at /static/*. So we
+# collectstatic directly into public/static instead of ./staticfiles and THEN copying
+# the whole ~140 MB tree across — that copy was the single heaviest step in the old
+# build (2026-09-28 build-speed fix).
+echo "=== [build.sh] Preparing public/ CDN root ==="
+rm -rf public
+mkdir -p public
+export VERCEL_STATIC_ROOT=public/static
+
+# 2. Run Django collectstatic -> writes the hashed assets into $VERCEL_STATIC_ROOT
+#    (public/static) per STATIC_ROOT. No separate ./staticfiles -> public/ copy.
 #    FAIL CLOSED (P3-1): collectstatic 产出 staticfiles.json（原名 → 哈希名），
 #    生产用 BundledManifestStaticFilesStorage，运行期只认这份映射。它缺失时
 #    {% static %} 只能退回未哈希 URL，而 public/static/ 里只有哈希文件名
@@ -92,13 +105,13 @@ if [ -n "$DATABASE_URL" ] && [[ "$DATABASE_URL" != *"/tmp/"* ]]; then
   python manage.py migrate --noinput
 fi
 
-echo "=== [build.sh] Checking staticfiles/ ==="
-if [ -d staticfiles ]; then
-    echo "  staticfiles/ exists ✓"
-    ls staticfiles/ 2>&1 | head -20
-    echo "  Total files in staticfiles/: $(find staticfiles -type f | wc -l)"
+echo "=== [build.sh] Checking public/static/ ==="
+if [ -d public/static ]; then
+    echo "  public/static/ exists ✓"
+    ls public/static/ 2>&1 | head -20
+    echo "  Total files in public/static/: $(find public/static -type f | wc -l)"
 else
-    echo "  ERROR: staticfiles/ does NOT exist!"
+    echo "  ERROR: public/static/ does NOT exist!"
     echo "  Contents of current dir:"
     ls -la
     exit 1
@@ -122,7 +135,7 @@ echo "=== [build.sh] collectstatic done ==="
 echo "=== [build.sh] Generating static index (pages/static_index_data.py) ==="
 # --require-manifest = 严格模式（fail closed）：staticfiles.json 缺失或没有 paths
 # 时以退出码 2 结束 → 构建立即失败。CI 走的是 `--root static` 的宽松模式，不受影响。
-if ! python -m pages.static_index --root staticfiles --out pages/static_index_data.py --require-manifest 2>&1; then
+if ! python -m pages.static_index --root public/static --out pages/static_index_data.py --require-manifest 2>&1; then
     echo "  ERROR: static index generation failed — aborting the build."
     echo "         Runtime image/CSS resolution and hashed static URLs depend on it."
     exit 1
@@ -130,22 +143,13 @@ fi
 echo "  ✓ pages/static_index_data.py generated"
 
 # 3. Mirror staticfiles/* into public/static/*  (Vercel CDN auto-deploys public/)
-echo "=== [build.sh] Creating public/ directory for Vercel CDN ==="
-rm -rf public
-mkdir -p public
-
-# Ensure public/static contains everything Django collected
-if [ -d staticfiles ]; then
-    cp -R staticfiles public/static
-    echo "  ✓ Copied staticfiles/ -> public/static/"
-else
-    echo "  ✗ WARNING: staticfiles/ not found, skipping copy"
-fi
-
-# Merge anything in source static/ that collectstatic may have skipped
+echo "=== [build.sh] Verifying public/static/ contents ==="
+# collectstatic already wrote the hashed assets directly into public/static
+# (via VERCEL_STATIC_ROOT). This no-clobber merge is a safety net for any source
+# file collectstatic might have skipped — normally a no-op (all already present).
 if [ -d static ]; then
     cp -R -n static/* public/static/ 2>/dev/null || true
-    echo "  ✓ Merged static/ -> public/static/ (no-clobber)"
+    echo "  ✓ Merged static/ -> public/static/ (no-clobber safety net)"
 fi
 
 # 4. Verify public/static/ has content
