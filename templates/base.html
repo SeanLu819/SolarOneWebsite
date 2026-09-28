@@ -47,6 +47,8 @@
 {% endif %}
 {% if gsc_code %}<meta name="google-site-verification" content="{{ gsc_code }}">{% endif %}
 <link rel="icon" type="image/webp" href="{% static 'images/favicon.webp' %}">
+<link rel="manifest" href="{% static 'manifest.json' %}">
+<link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
 <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
 <script nonce="{{ request.csp_nonce }}">
 (function(){
@@ -237,8 +239,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="footer-bottom">
       <span class="footer-copy">&copy; 2007 &mdash; 2026 {{ config.brand_name }} Lighting Co., Ltd. {% trans "All rights reserved." %}</span>
       <div class="footer-legal">
-        <span>{% trans "Privacy Policy" %}</span>
-        <span>{% trans "Terms of Service" %}</span>
+        <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a>
+        <a href="{% url 'terms' %}">{% trans "Terms of Service" %}</a>
       </div>
     </div>
   </div>
@@ -563,6 +565,53 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 })();
 </script>
 {% endif %}
+
+{% comment %}B0 / D3 (SEO P1c): conversion-event tracking. Safe degradation: every
+call goes through gaTrack(), a no-op unless window.gtag is a real function (GA4 is
+only loaded when GA4_MEASUREMENT_ID is set — see the head block above). With
+analytics disabled, no ReferenceError is thrown and no third-party request fires.
+CSP: this script is nonce-allowed; the only outbound calls are gtag beacons to
+google-analytics.com, already permitted by connect-src.{% endcomment %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    'use strict';
+    function gaTrack(name, params) {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', name, params || {});
+      }
+    }
+    // contact_click: WhatsApp / tel / mailto (H3). One event per click.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a') : null;
+      if (!a) return;
+      var href = (a.getAttribute('href') || '').toLowerCase();
+      if (href.indexOf('mailto:') === 0) {
+        gaTrack('contact_click', { method: 'email' });
+      } else if (href.indexOf('tel:') === 0) {
+        gaTrack('contact_click', { method: 'phone' });
+      } else if (href.indexOf('wa.me/') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
+        gaTrack('contact_click', { method: 'whatsapp' });
+      } else if (href.indexOf('.pdf') !== -1) {
+        gaTrack('pdf_download', { file_name: (a.getAttribute('href') || '').split('/').pop() || a.getAttribute('href') });
+      }
+    });
+    // quote_view: product-page quote/inquiry CTA exposure (fires once on scroll-in).
+    var quoteEls = document.querySelectorAll('[data-ga-event="quote_view"]');
+    if (quoteEls.length && 'IntersectionObserver' in window) {
+      var quoteFired = false;
+      var quoteIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting && !quoteFired) {
+            quoteFired = true;
+            gaTrack('quote_view', { page_path: window.location.pathname });
+            quoteIO.disconnect();
+          }
+        });
+      }, { threshold: 0.5 });
+      for (var q = 0; q < quoteEls.length; q++) { quoteIO.observe(quoteEls[q]); }
+    }
+  })();
+</script>
 
 <script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {

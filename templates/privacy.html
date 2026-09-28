@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{# B1/F1: legal pages are English-only for now; multilingual legal is a follow-up (B5/C). #}
+
+{% block title %}Privacy Policy — SolarOne LED Lighting{% endblock %}
+{% block meta_description %}SolarOne privacy policy: what data we collect through our contact form and analytics, how we use cookies, and your rights under GDPR and CCPA.{% endblock %}
+{% block og_title %}Privacy Policy — SolarOne LED Lighting{% endblock %}
+{% block og_description %}How SolarOne collects, uses and protects your personal data when you visit our website or contact us.{% endblock %}
+
+{% block content %}
+
+<section style="padding: 120px 0 80px; border-top: 1px solid var(--line);">
+  <div class="container" style="max-width: 860px;">
+    <span class="section-accent-label">Legal</span>
+    <h1 style="font-family: var(--ff-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 600; color: var(--ink); margin-bottom: 12px;">
+      Privacy Policy
+    </h1>
+    <p style="color: var(--ink-mute); margin-bottom: 40px;">
+      Last updated: this policy describes how {{ config.brand_name }} Lighting Co., Ltd. ("SolarOne", "we") collects, uses and protects your personal data.
+    </p>
+
+    <div style="line-height: 1.85; color: var(--ink-soft);">
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">1. Data controller</h2>
+      <p>The data controller is {{ config.brand_name }} Lighting Co., Ltd. You can reach us at {{ config.contact_email }} for any privacy request.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">2. What we collect</h2>
+      <ul style="margin: 0 0 12px 20px;">
+        <li>Contact form data you submit voluntarily: name, email, phone, company and message.</li>
+        <li>Analytics data collected via Google Analytics (pages viewed, approximate location, device type) — aggregated and non-identifying by default.</li>
+        <li>Technical logs such as IP address and browser type, retained only for security and diagnostics.</li>
+      </ul>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">3. How we use your data</h2>
+      <p>We use your data solely to respond to inquiries, provide quotations, improve our website, and comply with legal obligations. We do not sell your personal data.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">4. Cookies</h2>
+      <p>We use strictly necessary cookies and Google Analytics cookies. You can disable analytics cookies in your browser settings at any time.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">5. Your rights</h2>
+      <p>Under GDPR (EU) and CCPA (California) you may request access to, correction of, or deletion of your personal data, and object to its processing. To exercise these rights, contact us at the email above.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">6. International transfers</h2>
+      <p>As a global manufacturer, your data may be processed outside your country of residence through our service providers (e.g. email and analytics platforms). We rely on standard contractual safeguards.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">7. Contact</h2>
+      <p>Questions about this policy? Email {{ config.contact_email }}.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

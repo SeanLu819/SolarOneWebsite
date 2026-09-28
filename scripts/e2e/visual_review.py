@@ -53,6 +53,8 @@ DEFAULT_PATHS = [
     "/news/",                               # 新闻列表（v1.6.3 卡片网格）
     "/news/low-cct-high-cri-high-mast-led-retrofit/",  # news_detail.html
     "/about/",                              # 关于
+    "/privacy/",                            # 隐私政策（B1/F1）
+    "/terms/",                              # 服务条款（B1/F1）
     "/contact/",                            # 联系
 ]
 

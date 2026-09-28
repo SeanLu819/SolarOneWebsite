@@ -114,6 +114,7 @@ def contact(request):
                 notify_ok = _send_contact_notification(contact_msg)
                 if notify_ok:
                     messages.success(request, _('Your message has been sent successfully!'))
+                    context['contact_submitted_success'] = True
                 elif getattr(settings, 'IS_RUNTIME', False):
                     # Ephemeral /tmp DB + no email delivery => submission will be
                     # lost on the next redeploy. Be honest with the user instead of
@@ -126,6 +127,7 @@ def contact(request):
                     )
                 else:
                     messages.success(request, _('Your message has been sent successfully!'))
+                    context['contact_submitted_success'] = True
             except Exception:
                 logger.warning('Failed to save contact message', exc_info=True)
                 messages.error(request, _('Sorry, we could not save your message. Please try again.'))

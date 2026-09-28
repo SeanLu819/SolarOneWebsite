@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{# B1/F1: legal pages are English-only for now; multilingual legal is a follow-up (B5/C). #}
+
+{% block title %}Terms of Service — SolarOne LED Lighting{% endblock %}
+{% block meta_description %}SolarOne terms of service: website use, intellectual property, product information disclaimer, and limitations of liability.{% endblock %}
+{% block og_title %}Terms of Service — SolarOne LED Lighting{% endblock %}
+{% block og_description %}The terms governing your use of the SolarOne website and the limitations that apply to product information shown.{% endblock %}
+
+{% block content %}
+
+<section style="padding: 120px 0 80px; border-top: 1px solid var(--line);">
+  <div class="container" style="max-width: 860px;">
+    <span class="section-accent-label">Legal</span>
+    <h1 style="font-family: var(--ff-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 600; color: var(--ink); margin-bottom: 12px;">
+      Terms of Service
+    </h1>
+    <p style="color: var(--ink-mute); margin-bottom: 40px;">
+      By using this website you agree to the following terms. {{ config.brand_name }} Lighting Co., Ltd. may update them without notice.
+    </p>
+
+    <div style="line-height: 1.85; color: var(--ink-soft);">
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">1. Acceptance of terms</h2>
+      <p>Accessing or using this website constitutes acceptance of these terms. If you do not agree, please do not use the site.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">2. Intellectual property</h2>
+      <p>All content — including product names, specifications, photographs, drawings and text — is the property of SolarOne or its licensors and is protected by applicable intellectual-property laws. Reproduction without written permission is prohibited.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">3. Product information</h2>
+      <p>Specifications, photometric data and prices are provided for reference. Actual performance depends on installation, environment and applicable standards. Confirm all details with our engineering team before purchase or project design.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">4. Quotations and orders</h2>
+      <p>Any quotation is valid only for the period stated and is subject to our formal order confirmation. These terms do not constitute a binding offer.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">5. Limitation of liability</h2>
+      <p>The website is provided "as is". SolarOne is not liable for indirect, incidental or consequential damages arising from its use, to the maximum extent permitted by law.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">6. Governing law</h2>
+      <p>These terms are governed by the laws of the People's Republic of China. Disputes shall be resolved in the competent courts of the manufacturer's jurisdiction.</p>
+
+      <h2 style="color: var(--ink); font-size: 1.25rem; margin: 32px 0 12px;">7. Contact</h2>
+      <p>Questions about these terms? Email {{ config.contact_email }}.</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

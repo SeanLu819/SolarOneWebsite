@@ -3,7 +3,7 @@ from .views_projects import projects, project_detail
 from .views_contact import contact
 from .views_other import (
     home, about, news, news_detail, news_feed, robots_txt, sitemap_xml,
-    diagnostic,
+    privacy, terms, diagnostic,
 )
 from .enrich import invalidate_enrichment_cache
 from .utils import (

@@ -24,6 +24,17 @@ def about(request):
     return render(request, 'about.html', context)
 
 
+def privacy(request):
+    """Static legal page (B1/F1). English base copy; section headings go
+    through ``{% trans %}`` so they can be localised later via gettext."""
+    return render(request, 'privacy.html', get_common_context())
+
+
+def terms(request):
+    """Static legal page (B1/F1). See privacy() for the i18n note."""
+    return render(request, 'terms.html', get_common_context())
+
+
 def news(request):
     context = get_common_context()
     lang = get_language()
@@ -226,6 +237,8 @@ def sitemap_xml(request):
             ('projects', '0.9'),
             ('news', '0.7'),
             ('about', '0.7'),
+            ('privacy', '0.4'),
+            ('terms', '0.4'),
             ('contact', '0.7'),
         ]
         for name, priority in static_pages:

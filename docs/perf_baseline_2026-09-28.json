@@ -1,0 +1,179 @@
+{
+  "generated_at": "2026-09-28T04:49:04.133589+00:00",
+  "base_url": "https://www.solaronelighting.com",
+  "mode": "skeleton",
+  "gate": {
+    "lcp_regression_limit": "<10%",
+    "cls_max": 0.1,
+    "inp_max_ms": 200,
+    "pass": null,
+    "notes": [
+      "Skeleton baseline — set PSI_API_KEY (or fill metrics manually) to capture real CWV."
+    ]
+  },
+  "pages": {
+    "home": {
+      "path": "/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    },
+    "products": {
+      "path": "/products/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    },
+    "product_detail": {
+      "path": "/products/m-series/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    },
+    "projects": {
+      "path": "/projects/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    },
+    "project_detail": {
+      "path": "/projects/yuanshen-sports-centre-stadium/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    },
+    "contact": {
+      "path": "/contact/",
+      "strategies": {
+        "mobile": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        },
+        "desktop": {
+          "fetched_at": "2026-09-28T04:49:04.133589+00:00",
+          "source": "skeleton",
+          "metrics": {
+            "lcp_ms": null,
+            "cls": null,
+            "inp_ms": null,
+            "fcp_ms": null,
+            "ttfb_ms": null
+          }
+        }
+      }
+    }
+  },
+  "manual_instructions": "No PSI_API_KEY supplied. To capture real CWV: (1) enable the PageSpeed Insights API in Google Cloud and create an API key; (2) run `PSI_API_KEY=xxx python scripts/perf_baseline.py`. Alternatively export a Lighthouse JSON per page and copy LCP/CLS/INP/FCP/TTFB into the metrics blocks above."
+}

@@ -1,11 +1,30 @@
+import datetime as _dt
 import hashlib
 import os
 import secrets
+import zoneinfo
 import user_agents
 from django.conf import settings
 from django.utils import timezone
 from pages.ip import get_client_ip as django_get_client_ip
 from .models import Visitor, DailyStats
+
+
+def _site_day_bounds_utc(day):
+    """Return (start, end) UTC datetimes covering ``day`` in the site timezone.
+
+    SQLite evaluates ``__date`` in UTC, so comparing it against a
+    site-local date gives the wrong answer for part of every day. Building the
+    range explicitly keeps "today" defined by ``settings.TIME_ZONE`` while the
+    comparison itself stays in UTC.
+    """
+    try:
+        tz = zoneinfo.ZoneInfo(getattr(settings, 'TIME_ZONE', 'UTC') or 'UTC')
+    except Exception:  # unknown/empty timezone → fall back to UTC semantics
+        tz = _dt.timezone.utc
+    start = _dt.datetime.combine(day, _dt.time.min, tzinfo=tz)
+    end = start + _dt.timedelta(days=1)
+    return start.astimezone(_dt.timezone.utc), end.astimezone(_dt.timezone.utc)
 
 
 def _hash_ip(ip):
@@ -59,11 +78,21 @@ class VisitorTrackingMiddleware:
             else:
                 device = 'Desktop'
             
-            # Check if unique visit (first from this IP today)
-            today = timezone.now().date()
+            # Check if unique visit (first from this IP today).
+            #
+            # v1.8.2: `visited_at__date=today` silently used UTC on SQLite while
+            # `today` came from the site timezone (Asia/Shanghai). For the
+            # 00:00–08:00 CST window the two dates differ, so *every* visit was
+            # counted as unique — daily unique stats were inflated overnight.
+            # Compare an explicit UTC range built from the site-local day
+            # boundaries instead: same business meaning, no backend-dependent
+            # `__date` timezone behaviour.
+            today = timezone.localdate()
+            day_start, day_end = _site_day_bounds_utc(today)
             is_unique = not Visitor.objects.filter(
                 ip_address=ip,
-                visited_at__date=today
+                visited_at__gte=day_start,
+                visited_at__lt=day_end,
             ).exists()
             
             Visitor.objects.create(

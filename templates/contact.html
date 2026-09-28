@@ -176,4 +176,17 @@
   }
 </style>
 
+{% if contact_submitted_success %}
+{% comment %}B0 / D3: fire generate_lead once when the contact form is genuinely submitted
+   (NOT on the honeypot bot-drop path). Guarded by window.gtag so it is a safe
+   no-op when GA4 is not configured.{% endcomment %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'generate_lead', { currency: 'USD', value: 1 });
+    }
+  })();
+</script>
+{% endif %}
+
 {% endblock %}
