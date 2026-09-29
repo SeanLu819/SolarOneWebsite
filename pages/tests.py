@@ -4795,6 +4795,23 @@ class JsonLdValidityTests(TestCase):
         re.DOTALL | re.IGNORECASE,
     )
 
+    @classmethod
+    def setUpTestData(cls):
+        """Seed one Product and one Project so list-page ItemList is non-empty."""
+        from pages.models import Product, Project
+        Product.objects.create(
+            name='Guard Product',
+            category='AREA_SITE',
+            slug='guard-product',
+            description='A product used only to validate list-page JSON-LD.',
+        )
+        Project.objects.create(
+            title='Guard Project',
+            location='Beijing, China',
+            slug='guard-project',
+            description='A project used only to validate list-page JSON-LD.',
+        )
+
     def _blocks(self, path):
         """Return every JSON-LD block on ``path`` as (raw_text, parsed_obj)."""
         resp = self.client.get(path, HTTP_HOST='localhost')
@@ -4956,14 +4973,56 @@ class JsonLdValidityTests(TestCase):
             ]
             self.assertEqual(actual, want, path)
 
+    def test_list_pages_use_itemlist_with_webpage_items(self):
+        """ItemList on /products/ and /projects/ must use ListItem -> WebPage.
+
+        Previously the list pages embedded ``Product``/``Article`` items directly,
+        which triggered Google rich-result warnings because list cards lack the
+        required offers/review/image/publisher fields. Using ``WebPage`` keeps the
+        structured data valid while still exposing name/url/description.
+        """
+        for path in ('/products/', '/projects/'):
+            item_lists = self._blocks_of_type(path, 'ItemList')
+            self.assertEqual(len(item_lists), 1,
+                             f'{path}: expected exactly 1 ItemList block')
+            item_list = item_lists[0]
+            elements = item_list.get('itemListElement', [])
+            self.assertTrue(elements, f'{path}: ItemList has no items')
+            for element in elements:
+                self.assertEqual(element.get('@type'), 'ListItem', path)
+                item = element.get('item') or {}
+                self.assertEqual(item.get('@type'), 'WebPage', path)
+                self.assertTrue(item.get('name'), f'{path}: WebPage.name empty')
+                self.assertTrue(item.get('url'), f'{path}: WebPage.url empty')
+                self.assertIn('description', item, f'{path}: WebPage.description missing')
+
+    def test_list_pages_do_not_advertise_product_or_article_summary(self):
+        """/products/ must not emit Product blocks; /projects/ must not emit Article.
+
+        These types belong on the detail pages where the full entity fields are
+        available; listing cards lack the required fields and would be flagged as
+        invalid rich results.
+        """
+        for path, forbidden in (('/products/', 'Product'), ('/projects/', 'Article')):
+            for raw in self._blocks(path):
+                obj = json.loads(raw)
+                types = self._types(obj)
+                if 'ItemList' in types:
+                    # The ItemList itself is fine; inspect its children.
+                    for element in obj.get('itemListElement', []):
+                        item = element.get('item') or {}
+                        self.assertNotEqual(item.get('@type'), forbidden,
+                                            f'{path}: list item uses {forbidden}')
+
     # NOTE (QA round 2): every entry is ``(template, needle, expected_count)``.
     # Counting — not just ``assertIn`` — is what makes this guard real:
-    # ``products.html`` and ``projects.html`` render their ItemList array with a
-    # duplicated ``{% if not forloop.last %} / {% else %}`` pair, so the needle
-    # legitimately appears TWICE. A plain ``assertIn`` was mutation-verified to
-    # pass even after deleting ``|escapejs`` from one branch (re-exposing every
-    # non-last entry to the original bug), because the surviving branch still
-    # satisfied the containment check.
+    # ``products.html`` and ``projects.html`` used to render their ItemList array
+    # with a duplicated ``{% if not forloop.last %} / {% else %}`` pair, so the
+    # needle legitimately appeared TWICE. The list pages now use a single
+    # ListItem -> WebPage template branch with a trailing comma conditional, so
+    # every interpolated string appears exactly once. A plain ``assertIn`` was
+    # mutation-verified to pass even after deleting ``|escapejs`` from one
+    # branch, because the surviving branch still satisfied the containment check.
     ESCAPEJS_CHECKS = (
         ('base.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
         ('base.html', '"description": "{{ config.meta_description|escapejs }}"', 1),
@@ -4975,10 +5034,11 @@ class JsonLdValidityTests(TestCase):
         ('base.html', '"phone": "{{ config.contact_phone_1|escapejs }}"', 1),
         ('home.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
         ('products.html', '"name": "{{ config.products_title|escapejs }}"', 1),
-        # Duplicated if/else ItemList branch — must stay escaped on BOTH.
-        ('products.html', '"name": "{{ product.name_t|escapejs }}"', 2),
+        ('products.html', '"name": "{{ product.name_t|escapejs }}"', 1),
+        ('products.html', '"description": "{{ product.description_t|escapejs }}"', 1),
         ('projects.html', '"name": "{{ config.projects_title|escapejs }}"', 1),
-        ('projects.html', '"headline": "{{ project.title_t|escapejs }}"', 2),
+        ('projects.html', '"name": "{{ project.title_t|escapejs }}"', 1),
+        ('projects.html', '"description": "{{ project.description_t|escapejs }}"', 1),
         ('news_detail.html',
          '"headline": "{{ article.title_t|default:article.title|escapejs }}"', 1),
         ('news_detail.html',

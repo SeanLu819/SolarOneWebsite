@@ -121,8 +121,17 @@
   "@type": "ItemList",
   "name": "{{ config.projects_title|escapejs }}",
   "itemListElement": [
-    {% for project in projects %}{% if not forloop.last %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t|escapejs }}"},
-    {% else %}{"@type": "Article", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}", "headline": "{{ project.title_t|escapejs }}"}{% endif %}{% endfor %}
+    {% for project in projects %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.counter }},
+      "item": {
+        "@type": "WebPage",
+        "name": "{{ project.title_t|escapejs }}",
+        "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}",
+        "description": "{{ project.description_t|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}{% endfor %}
   ]
 }
 </script>

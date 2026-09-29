@@ -105,8 +105,17 @@
   "@type": "ItemList",
   "name": "{{ config.products_title|escapejs }}",
   "itemListElement": [
-    {% for product in products %}{% if not forloop.last %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t|escapejs }}"},
-    {% else %}{"@type": "Product", "position": "{{ forloop.counter }}", "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}", "name": "{{ product.name_t|escapejs }}"}{% endif %}{% endfor %}
+    {% for product in products %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.counter }},
+      "item": {
+        "@type": "WebPage",
+        "name": "{{ product.name_t|escapejs }}",
+        "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}",
+        "description": "{{ product.description_t|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}{% endfor %}
   ]
 }
 </script>

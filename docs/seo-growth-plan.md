@@ -403,3 +403,33 @@ related:
 - **测试**：全量 319/0 failures/3 errors（3 errors 为已知 `SidebarOrderedChangeList` 缺 `lookup_opts` 后台遗留，与 B3 无关）；`tests_seo_keywords` 11 全绿。
 - **影响面**：仅改产品/项目详情页的 title/description 生成；列表页（products/projects/home 等）仍是 `{% blocktrans %}` 硬编码，不受影响。B4/C1 后续可把显式 `seo_description` 译文写进 seed 提升文案质量。
 - **待部署验证**：Vercel 重部署后跑 `python scripts/e2e/smoke_online.py` 复核产品页 `<title>` 含品类词。
+
+### v1.0.4 (2026-09-30, GSC 结构化数据修复 + SEMrush 词库校准)
+- **背景**：GSC「网页编制索引」报告 —— 首页正常；`/products/` 报 **产品摘要 6 项无效内容**，
+  `/products/`、`/projects/`、`/news/`、`/about/`、`/contact/` 报「无法解析的结构化数据」。
+  实测 curl 线上 6 页全部 JSON-LD 均 `json.loads` 通过 → 说明「无法解析」是 Google 旧快照
+  （站点 2026-09-29 才被读 sitemap，旧版 JSON-LD 有 bug），重爬后自愈；**唯一真问题是 ItemList**。
+- **根因**：`templates/products.html` / `templates/projects.html` 的 `ItemList.itemListElement`
+  直接塞 `@type: Product` / `@type: Article`，但列表卡片只有 `name` + `url`（无 `offers`/`review`/
+  `image`/`brand`/`sku`，Article 缺 `image`/`datePublished`/`author`/`publisher`）→ 触发 Google
+  富媒体摘要校验失败。
+- **修复**：两个列表页改为标准 `ItemList → ListItem → WebPage`（`name`/`url`/`description`），
+  不再宣称产品/文章富媒体类型；同时把 `{% if not forloop.last %}/{% else %}` 的**重复分支**合并为
+  单分支 + `{% if not forloop.last %},{% endif %}`（消除"删掉一边的 `|escapejs` 仍可通过断言"的盲区）。
+- **守卫**（`pages/tests.py: JsonLdValidityTests`）：新增 `test_list_pages_use_itemlist_with_webpage_items`
+  （ListItem/WebPage 契约 + name/url/description 非空）与 `test_list_pages_do_not_advertise_product_or_article_summary`
+  （列表项不得是 Product/Article）；`ESCAPEJS_CHECKS` 同步更新（`products.html` `product.name_t` 2→1、
+  新增 `product.description_t`；`projects.html` `headline: project.title_t` → `name: project.title_t`，2→1、
+  新增 `project.description_t`）。
+- **测试坑**：`JsonLdValidityTests` 原无 fixture，列表页走 DB 且测试库为空 → `itemListElement` 为 `[]`，
+  新增断言会假通过。已加 `setUpTestData()` 造 1 个 Product + 1 个 Project 作守卫物料。
+- **测试**：`JsonLdValidityTests` 12/12 绿；`pages` 全量 280/0 failures/3 errors（3 errors 均为已知
+  `SidebarOrderedChangeList` 缺 `lookup_opts` 后台遗留）。
+- **B1 词库校准**：`docs/keyword-inventory.csv` 追加 6 行 SEMrush 实测词（US，2026-09-29）：
+  `stadium lights` 2900/KD18、`led stadium lights` 1000/KD6、`stadium light` 720/KD12、
+  `tennis court lighting` 590/KD9、`football stadium lights` 480/KD14、`led sports lighting` 390/KD15。
+  `impressions/clicks/ctr/avg_position` 仍留空（GSC 无查询数据，站点未收录）。
+- **GSC 冷启动事实**：过去 3 个月全站仅 3 次展示、0 点击、查询数表为空 → B3 效果当前**无法衡量**，
+  需先「申请编入索引」+ 内链/外链，4 周后再导数据做改前/改后对比。
+- **工具选型结论**：SEMrush 属行业权威但非 Google 官方（volume/KD 为模型估算）；Google 官方替代为
+  GSC（自有站真实数据）/ Keyword Planner（Ads 区间值）/ Trends（趋势）。最终效果以 GSC + 询盘为准。
