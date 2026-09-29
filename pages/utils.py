@@ -116,9 +116,16 @@ def jsonld_property_pairs(obj):
 #: Category -> SEO keyword phrase (English). Leading token of the product
 #: <title> and folded into the meta description. Mirrors the 8
 #: ``Product.CATEGORY_CHOICES`` keys; an unmapped category falls back to ''.
+#:
+#: Phrases are chosen against measured search demand, not internal taxonomy.
+#: SPORTS_LIGHTING used to read "LED Sports Stadium Lighting" (internal label
+#: 'Sports Lighting System'); SEMrush US data (2026-09-29) shows the demand sits
+#: on ``stadium lights`` (2,900/mo) and ``led stadium lights`` (1,000/mo, KD 6 —
+#: our best difficulty/volume trade), so the phrase was re-cut to the wording
+#: buyers actually type. The old wording ranked for neither phrase exactly.
 CATEGORY_KEYWORD = {
     'AREA_SITE': 'LED Area & Site Lighting',
-    'SPORTS_LIGHTING': 'LED Sports Stadium Lighting',
+    'SPORTS_LIGHTING': 'LED Stadium Lights',
     'FLOODLIGHT': 'LED Flood Lights',
     'HIGHBAY_LOWBAY': 'High Bay & Low Bay LED Lights',
     'ROADWAY': 'LED Roadway & Street Lights',

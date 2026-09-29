@@ -433,3 +433,26 @@ related:
   需先「申请编入索引」+ 内链/外链，4 周后再导数据做改前/改后对比。
 - **工具选型结论**：SEMrush 属行业权威但非 Google 官方（volume/KD 为模型估算）；Google 官方替代为
   GSC（自有站真实数据）/ Keyword Planner（Ads 区间值）/ Trends（趋势）。最终效果以 GSC + 询盘为准。
+
+### v1.0.5 (2026-09-30, 品类词按实测搜索需求重切 — SPORTS_LIGHTING)
+- **改动**：`pages/utils.py: CATEGORY_KEYWORD['SPORTS_LIGHTING']` 由
+  `LED Sports Stadium Lighting` → **`LED Stadium Lights`**。
+- **理由**：旧值是内部 taxonomy 直译（模型 choices 叫 'Sports Lighting System'），
+  与实测搜索措辞对不上。SEMrush US（2026-09-29）：`stadium lights` 2,900/mo、
+  `led stadium lights` 1,000/mo **KD 6**（本站体积/难度性价比最好）、
+  `football stadium lights` 480/KD14、`tennis court lighting` 590/KD9、
+  `led sports lighting` 390/KD15。标题要吃的是买家实际敲的词，不是内部分类名。
+- **影响面**：仅 2 个产品页（`vsp-xxxxw-9m-yp` / `vsp-xxxxw-12m-yp`，功率字段为空、
+  瓦数已嵌型号）。新 title 45/46 字符（`LED Stadium Lights VSP-4200W-9M-YP | SolarOne`），
+  远低于 SERP 60 字符截断线。其余 22 个产品页不受影响。
+- **守卫**：`pages/tests_seo_keywords.py` 新增 `CategoryKeywordSearchDemandTests`（品类词含
+  'Stadium Lights' 且不得回退成旧内部叫法；seed 的 SPORTS_LIGHTING 产品 title 必须以该词开头、
+  description 含该词）+ `SeoTitleLengthTests`（全部产品 title ≤ 60 字符，防 SERP 截断；
+  当前最长 58）。`scripts/e2e/smoke_online.py` 的 B3 检查扩到三元组 `(path, ident, keyword)`，
+  新增 `/products/vsp-xxxxw-9m-yp/` 线上必须含 'Stadium Lights'。
+- **同步**：`docs/keyword-inventory.csv` 里 3 行 `LED Sports Stadium Lighting` 一并改为
+  `LED Stadium Lights`（1 行品类 + 2 行 VSP 产品）。
+- **测试**：`tests_seo_keywords` 14/14 绿（原 11 + 新增 3）；`pages` 全量 280/0 failures/3 errors
+  （已知：`SidebarOrderedChangeList` 缺 `lookup_opts` ×2 + build.sh fail-closed traceback ×1）。
+- **未做（可选后续）**：`SLUG_KEYWORD_OVERRIDE`（机制已预留、当前为空）可给单个产品挂更长的
+  长尾词，例如把 VSP 两款挂到 `LED Football Stadium Lights`（480/KD14）。等 B4/C1 内容批次再定。

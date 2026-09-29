@@ -112,14 +112,19 @@ def run():
     # (proves the per-page title formula is live, not the old global/name-only title).
     print('== B3 per-page SEO titles ==')
     seo_targets = [
-        ('/products/m-series/', 'M Series'),
-        ('/products/fl6m/', 'FL6M'),
+        ('/products/m-series/', 'M Series', ''),
+        ('/products/fl6m/', 'FL6M', ''),
+        # SPORTS_LIGHTING 品类词按实测搜索需求重切为 "LED Stadium Lights"
+        # （SEMrush US 2026-09-29：stadium lights 2,900/mo、led stadium lights
+        # 1,000/mo KD 6）。线上必须看到新措辞，否则说明改动没生效。
+        ('/products/vsp-xxxxw-9m-yp/', 'VSP', 'Stadium Lights'),
     ]
-    for path, ident in seo_targets:
+    for path, ident, keyword in seo_targets:
         code, html = _get(BASE_URL + path)
         m = re.search(r'<title>(.*?)</title>', html, re.S)
         title = m.group(1) if m else ''
-        ok = (code == 200 and ident in title and '| SolarOne' in title)
+        ok = (code == 200 and ident in title and '| SolarOne' in title
+              and (not keyword or keyword in title))
         print('  [%s] %-14s %-16s %s' % ('PASS' if ok else 'FAIL', 'seo_title', path, title))
         if not ok:
             fails.result_failures.append(('seo_title', path, title))

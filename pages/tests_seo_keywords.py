@@ -152,6 +152,55 @@ class SeoFieldFallbackTests(TestCase):
         self.assertEqual(p.seo_description('fr'), 'Lumière LED française')
 
 
+class CategoryKeywordSearchDemandTests(TestCase):
+    """SPORTS_LIGHTING 的品类词必须按**实测搜索习惯**措辞，不是内部 taxonomy 直译。
+
+    旧值 ``LED Sports Stadium Lighting`` 来自模型 choices 的 'Sports Lighting
+    System' 直译，两个高频词都吃不到：SEMrush US（2026-09-29）显示需求落在
+    ``stadium lights`` 2,900/mo 与 ``led stadium lights`` 1,000/mo 且 KD 6
+    （本站体积/难度性价比最好的机会）。故重切为 ``LED Stadium Lights``。
+
+    这两个用例锁住"按搜索需求而非内部分类名措辞"的决策，防止有人照着
+    ``Product.CATEGORY_CHOICES`` 把它改回内部叫法。
+    """
+
+    def test_sports_lighting_phrase_uses_the_wording_buyers_search(self):
+        kw = CATEGORY_KEYWORD['SPORTS_LIGHTING']
+        self.assertIn('Stadium Lights', kw,
+                      f'SPORTS_LIGHTING keyword lost the searched phrase: {kw!r}')
+        self.assertNotEqual(kw, 'LED Sports Stadium Lighting',
+                            'internal-taxonomy phrasing came back')
+
+    def test_seed_sports_products_lead_with_stadium_lights(self):
+        seed = _load_seed()
+        sports = [i for i in seed['products']
+                  if i.get('category') == 'SPORTS_LIGHTING']
+        self.assertTrue(sports, 'seed has no SPORTS_LIGHTING product to guard')
+        for item in sports:
+            p = _DictProduct(item)
+            title = p.seo_title('en')
+            self.assertTrue(
+                title.startswith('LED Stadium Lights'),
+                f"{p.slug} title must lead with the searched phrase: {title!r}")
+            self.assertIn('Stadium Lights', p.seo_description('en'), p.slug)
+
+
+class SeoTitleLengthTests(TestCase):
+    """Title 长度守卫：Google SERP 约在 60 字符处截断，超出即白写。"""
+
+    #: 当前最长 58（Glare Shield for RT410 / FL9M-720W-XXK-S — 630W）。
+    MAX_TITLE_LEN = 60
+
+    def test_all_product_titles_fit_serp_display(self):
+        seed = _load_seed()
+        for item in seed['products']:
+            title = _DictProduct(item).seo_title('en')
+            self.assertLessEqual(
+                len(title), self.MAX_TITLE_LEN,
+                f"{item.get('slug')}: title would be truncated in SERP "
+                f'({len(title)} chars) -> {title!r}')
+
+
 class SeoTemplateRenderTests(TestCase):
     """End-to-end: the product detail template renders per-page seo_title_t."""
 
