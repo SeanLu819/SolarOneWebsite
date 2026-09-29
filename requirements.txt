@@ -1,7 +1,8 @@
-django>=6.0,<6.1
+django==6.0.8  # 钉死版本：Vercel 上 uv 对 '<6.1' 上界解析会误判不可满足并回退 pip（见 2026-09-28 build 日志）；6.0.8 为已验证可运行版本，与 Vercel 实际安装一致
 Pillow>=10.0,<12  # Django ImageField 运行期依赖：缺失会让系统检查报 fields.E210 并中断 CI
 user-agents>=2.2,<3
 gunicorn>=21.0,<23
 whitenoise>=6.0,<7
 dj-database-url>=2.0,<3
 deep-translator>=1.11,<2  # used by admin auto-translate endpoint (pages/admin.py)
+polib>=1.2,<2  # 构建期编译 .po->.mo（Vercel 无 GNU gettext，替代 compilemessages）

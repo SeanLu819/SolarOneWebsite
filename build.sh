@@ -208,8 +208,37 @@ echo "    Projects:     $(find public/static/images/projects -type f 2>/dev/null
 echo "    Processed:    $(find public/static/images/processed -type f 2>/dev/null | wc -l)"
 echo "    PDFs:         $(find public/static/files -type f 2>/dev/null | wc -l)"
 
-# 7. Translations (non-fatal)
-python manage.py compilemessages 2>&1 || true
+# 7. Translations — compile .po -> .mo at build time (non-fatal).
+# Vercel ships NO GNU gettext, so Django's `compilemessages`/`msgfmt` fails there
+# (2026-09-28 build log: "CommandError: Can't find msgfmt" silently swallowed by
+# the old `|| true`). We compile with polib (pure-Python, declared in
+# requirements.txt) so .mo always tracks .po even if a .po was edited without a
+# local compile. A compile failure warns but does NOT abort the deploy — the site
+# still renders (English fallback) without translations.
+python - <<'PY'
+import glob, os, sys, subprocess
+PO_FILES = sorted(glob.glob("locale/*/LC_MESSAGES/*.po"))
+if not PO_FILES:
+    print("[build.sh] no .po files found — skipping translation compile")
+    sys.exit(0)
+try:
+    import polib
+except ImportError:
+    print("[build.sh] polib missing — falling back to Django compilemessages")
+    sys.exit(subprocess.call([sys.executable, "manage.py", "compilemessages"]))
+ok = 0
+fail = 0
+for po in PO_FILES:
+    mo = os.path.splitext(po)[0] + ".mo"
+    try:
+        polib.pofile(po).save_as_mofile(mo)
+        ok += 1
+    except Exception as e:  # noqa: BLE001 - non-fatal: warn, never abort deploy
+        fail += 1
+        print(f"[build.sh] WARN: failed to compile {po}: {e}")
+print(f"[build.sh] compiled {ok} .po -> .mo via polib"
+      + (f" ({fail} failed)" if fail else ""))
+PY
 
 echo ""
 echo "=== [build.sh] ✅ FINISHED SUCCESSFULLY ==="
