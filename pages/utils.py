@@ -95,3 +95,134 @@ def jsonld_property_pairs(obj):
             continue
         pairs.append((label, str(value)))
     return pairs
+
+
+# ---------------------------------------------------------------------------
+# Per-page SEO (B3 batch): category keyword map + title/description formulas.
+#
+# Pure-Python (no Django import) so ``pages.models.Product`` / ``Project`` and
+# the seed shims ``_DictProduct`` / ``_DictProject`` can import them without
+# circular imports — same constraint as ``translate`` above.
+#
+# Design note (deliberate): ``seo_title`` / ``seo_description`` are stored
+# inside the existing ``translations`` JSON (per language) — NOT as new DB
+# columns. This reuses the established 3rd i18n mechanism, needs no migration,
+# and needs no seed_sync schema change (``translations`` is already synced
+# DB<->seed). The formulas below are the *fallback* when no explicit
+# translation is set, so editors can override any page later (B4/C1 content
+# work) without touching code.
+# ---------------------------------------------------------------------------
+
+#: Category -> SEO keyword phrase (English). Leading token of the product
+#: <title> and folded into the meta description. Mirrors the 8
+#: ``Product.CATEGORY_CHOICES`` keys; an unmapped category falls back to ''.
+CATEGORY_KEYWORD = {
+    'AREA_SITE': 'LED Area & Site Lighting',
+    'SPORTS_LIGHTING': 'LED Sports Stadium Lighting',
+    'FLOODLIGHT': 'LED Flood Lights',
+    'HIGHBAY_LOWBAY': 'High Bay & Low Bay LED Lights',
+    'ROADWAY': 'LED Roadway & Street Lights',
+    'ACCESSORY': 'LED Lighting Accessories',
+    'MODULAR': 'Modular LED Lighting',
+    'OTHER': 'LED Lighting Solutions',
+}
+
+#: Optional per-slug keyword override for exceptional products whose category
+#: label is a poor search phrase. Empty by default — B3 wires the mechanism,
+#: individual overrides land with B4/C1 content work.
+SLUG_KEYWORD_OVERRIDE = {}
+
+#: Brand token — never translated (project convention: ``SolarOne`` stays).
+_SEO_BRAND = 'SolarOne'
+
+
+def get_seo_override(obj, field, lang='en'):
+    """Read an explicit ``seo_title`` / ``seo_description`` override from the
+    object's ``translations`` map — WITHOUT going through ``translate()``.
+
+    Why not ``translate()`` / ``obj.t()``: those fall back to
+    ``getattr(obj, field)`` for English, and ``obj`` now has a method named
+    ``seo_title`` / ``seo_description``, so ``getattr`` would return the bound
+    method (truthy) and the override check would never fall through to the
+    formula. Reading the ``translations`` dict directly sidesteps that name
+    collision entirely.
+    """
+    translations = getattr(obj, 'translations', None)
+    if not isinstance(translations, dict):
+        return ''
+    entry = translations.get(lang) or {}
+    return (entry or {}).get(field, '') or ''
+
+
+def _seo_keyword(obj, lang='en'):
+    """Localized SEO keyword phrase for ``obj``.
+
+    Slug override wins (English only), then the category map. For non-English
+    the category keyword is localized via the object's translated category
+    label; full per-language keyword phrasing is B8/E2 (later batch).
+    """
+    slug = getattr(obj, 'slug', '') or ''
+    override = SLUG_KEYWORD_OVERRIDE.get(slug)
+    if override and lang == 'en':
+        return override
+    cat = getattr(obj, 'category', '') or ''
+    kw = CATEGORY_KEYWORD.get(cat, '')
+    if lang == 'en' or not kw:
+        return kw
+    localized = obj.t('category', lang) if hasattr(obj, 't') else kw
+    return localized or kw
+
+
+def _seo_identifier(obj):
+    """The unique token guaranteeing title/description uniqueness."""
+    return (getattr(obj, 'model_number', '')
+            or getattr(obj, 'name', '')
+            or getattr(obj, 'title', '')
+            or '')
+
+
+def build_seo_title(obj, lang='en'):
+    """B4 title formula: ``{品类词} {型号} — {关键参数} | SolarOne``.
+
+    Keyword leads so the page ranks for the category phrase; the model/name
+    identifier follows; power is appended only when not already inside the
+    identifier (some ``model_number`` codes embed wattage).
+    """
+    kw = _seo_keyword(obj, lang)
+    identifier = _seo_identifier(obj)
+    power = (getattr(obj, 'power', '') or '').strip()
+    if kw and identifier:
+        core = f'{kw} {identifier}'
+    elif identifier:
+        core = identifier
+    elif kw:
+        core = kw
+    else:
+        core = _SEO_BRAND
+    if power and power not in core:
+        core = f'{core} — {power}'
+    return f'{core} | {_SEO_BRAND}'
+
+
+def build_seo_description(obj, lang='en'):
+    """B5 description formula: unique, 50–160 chars (English baseline).
+
+    The identifier is always embedded, guaranteeing uniqueness across the 24
+    product pages even when specs are sparse. Non-English callers fall back to
+    the translated ``description`` at the model-method level, not here. B4/C1
+    will replace these with richer, hand-written per-page prose.
+    """
+    kw = _seo_keyword(obj, lang)
+    identifier = _seo_identifier(obj)
+    power = (getattr(obj, 'power', '') or '').strip()
+    bit = f'{_SEO_BRAND} {identifier}'.rstrip()
+    if kw:
+        bit = f'{bit} {kw}'.rstrip()
+    desc = bit
+    if power:
+        desc = f'{desc} delivers {power} of high-efficiency LED output'
+    desc = (f'{desc} for professional sports, industrial and commercial '
+            f'lighting projects.')
+    if len(desc) > 160:
+        desc = desc[:157].rstrip() + '...'
+    return desc

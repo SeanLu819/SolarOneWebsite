@@ -20,6 +20,7 @@ Standard library only.
 """
 import json
 import os
+import re
 import sys
 import urllib.request
 
@@ -106,6 +107,22 @@ def run():
             print('  [%s] %-14s %-16s %s' % ('PASS' if ok else 'FAIL', name, 'jsonld_valid', path))
             if not ok:
                 fails.result_failures.append((name, 'jsonld_valid', path))
+
+    # B3 — per-page SEO titles must contain the category keyword + brand signature
+    # (proves the per-page title formula is live, not the old global/name-only title).
+    print('== B3 per-page SEO titles ==')
+    seo_targets = [
+        ('/products/m-series/', 'M Series'),
+        ('/products/fl6m/', 'FL6M'),
+    ]
+    for path, ident in seo_targets:
+        code, html = _get(BASE_URL + path)
+        m = re.search(r'<title>(.*?)</title>', html, re.S)
+        title = m.group(1) if m else ''
+        ok = (code == 200 and ident in title and '| SolarOne' in title)
+        print('  [%s] %-14s %-16s %s' % ('PASS' if ok else 'FAIL', 'seo_title', path, title))
+        if not ok:
+            fails.result_failures.append(('seo_title', path, title))
 
     print('== Asset checks ==')
     for name, path in ASSETS:

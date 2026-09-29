@@ -7,7 +7,10 @@ from .cards import ProductsPageCard  # noqa: F401
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.conf import settings
-from pages.utils import strip_hash_suffix, translate, jsonld_property_pairs
+from pages.utils import (
+    strip_hash_suffix, translate, jsonld_property_pairs,
+    build_seo_title, build_seo_description, get_seo_override,
+)
 
 
 # --- CSS input validators (#11) -------------------------------------------
@@ -198,6 +201,23 @@ class Product(models.Model):
         """Get translated value for a field, falling back to the default English value."""
         return translate(self, field_name, lang)
 
+    def seo_title(self, lang='en'):
+        """Per-page <title> (B3/B4). Explicit ``seo_title`` translation wins; else formula."""
+        explicit = get_seo_override(self, 'seo_title', lang)
+        if explicit:
+            return explicit
+        return build_seo_title(self, lang)
+
+    def seo_description(self, lang='en'):
+        """Per-page meta description (B3/B5). Explicit wins; English falls back to the
+        formula, non-English to the translated ``description`` (no English regression)."""
+        explicit = get_seo_override(self, 'seo_description', lang)
+        if explicit:
+            return explicit
+        if lang == 'en':
+            return build_seo_description(self, lang)
+        return self.t('description', lang)
+
     @property
     def jsonld_properties(self):
         """Return the Product JSON-LD ``additionalProperty`` list of (label, value) tuples.
@@ -374,6 +394,22 @@ class Project(models.Model):
     def t(self, field_name, lang='en'):
         """Get translated value for a field, falling back to the default English value."""
         return translate(self, field_name, lang)
+
+    def seo_title(self, lang='en'):
+        """Per-page <title> (B3). Explicit ``seo_title`` translation wins; else
+        ``{title} — SolarOne LED Lighting Project`` (preserves current format)."""
+        explicit = get_seo_override(self, 'seo_title', lang)
+        if explicit:
+            return explicit
+        return f'{self.title} — SolarOne LED Lighting Project'
+
+    def seo_description(self, lang='en'):
+        """Per-page meta description (B3). Explicit wins; else translated description
+        (no English-formula regression for non-English project pages)."""
+        explicit = get_seo_override(self, 'seo_description', lang)
+        if explicit:
+            return explicit
+        return self.t('description', lang)
 
 
 class ProjectImage(models.Model):

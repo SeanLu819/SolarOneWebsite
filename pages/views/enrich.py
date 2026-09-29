@@ -116,6 +116,8 @@ def _enrich_product(product, lang):
     product.name_t = product.t('name', lang)
     product.description_t = product.t('description', lang)
     product.category_t = product.t('category', lang)
+    product.seo_title_t = product.seo_title(lang)
+    product.seo_description_t = product.seo_description(lang)
     card_label = _PRODUCT_CARD_LABELS.get(product.slug) or _PRODUCT_CAT_TO_SIDEBAR_LABEL.get(product.category, product.category_t)
     product.category_display = _t(card_label, lang)
 
@@ -198,6 +200,8 @@ def _enrich_project(project, lang):
     project.description_t = project.t('description', lang)
     project.location_t = project.t('location', lang)
     project.results_t = project.t('results', lang)
+    project.seo_title_t = project.seo_title(lang)
+    project.seo_description_t = project.seo_description(lang)
 
     slug = getattr(project, 'slug', '')
     project.has_compare_images = slug in _COMPARE_IMAGE_SLUGS

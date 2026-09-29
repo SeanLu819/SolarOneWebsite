@@ -3,10 +3,10 @@
 {% load static %}
 {% load text_filters %}
 
-{% block title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
-{% block meta_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
-{% block og_title %}{% if product %}{{ product.name_t }} — SolarOne LED Lighting{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
-{% block og_description %}{% if product %}{{ product.description_t|default:''|truncatechars:160 }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block title %}{% if product %}{{ product.seo_title_t }}{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
+{% block meta_description %}{% if product %}{{ product.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
+{% block og_title %}{% if product %}{{ product.seo_title_t }}{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
+{% block og_description %}{% if product %}{{ product.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
 {% block og_type %}<meta property="og:type" content="product">{% endblock %}
 {% block og_image %}{% if product and product.banner_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ product.banner_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 

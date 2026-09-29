@@ -5,7 +5,10 @@ from pathlib import Path
 from django.conf import settings
 from django.templatetags.static import static
 from pages.static_scan import build_file_set
-from pages.utils import strip_hash_suffix, translate, jsonld_property_pairs
+from pages.utils import (
+    strip_hash_suffix, translate, jsonld_property_pairs,
+    build_seo_title, build_seo_description, get_seo_override,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -523,6 +526,22 @@ class _DictProduct:
     def t(self, field_name, lang='en'):
         return translate(self, field_name, lang)
 
+    def seo_title(self, lang='en'):
+        """Seed-path mirror of ``pages.models.Product.seo_title``."""
+        explicit = get_seo_override(self, 'seo_title', lang)
+        if explicit:
+            return explicit
+        return build_seo_title(self, lang)
+
+    def seo_description(self, lang='en'):
+        """Seed-path mirror of ``pages.models.Product.seo_description``."""
+        explicit = get_seo_override(self, 'seo_description', lang)
+        if explicit:
+            return explicit
+        if lang == 'en':
+            return build_seo_description(self, lang)
+        return self.t('description', lang)
+
     @property
     def jsonld_properties(self):
         """Seed-path mirror of ``pages.models.Product.jsonld_properties``.
@@ -551,3 +570,17 @@ class _DictProject:
 
     def t(self, field_name, lang='en'):
         return translate(self, field_name, lang)
+
+    def seo_title(self, lang='en'):
+        """Seed-path mirror of ``pages.models.Project.seo_title``."""
+        explicit = get_seo_override(self, 'seo_title', lang)
+        if explicit:
+            return explicit
+        return f'{self.title} — SolarOne LED Lighting Project'
+
+    def seo_description(self, lang='en'):
+        """Seed-path mirror of ``pages.models.Project.seo_description``."""
+        explicit = get_seo_override(self, 'seo_description', lang)
+        if explicit:
+            return explicit
+        return self.t('description', lang)

@@ -2,7 +2,7 @@
 doc_id: seo-growth-plan
 title: SolarOne 增长方案 — 测速 / 关键词 / 内容 / 数据闭环（含测试方案与里程碑）
 version: 1.0.0
-status: approved（B0 已完成；B1 进行中：footer 法律页 + PWA manifest/apple-touch-icon 已落地并通过守卫；GSC 索引覆盖率待数据回填；CI 自动冒烟为 follow-up）
+status: approved（B0/B1 已完成；B3 进行中：per-page SEO 字段 + 品类词映射 + title/description 公式 + 唯一化守卫已落地；P2 图片外置已出方案并暂缓）
 last_updated: 2026-09-28
 owner: Sean Lu
 related:
@@ -390,3 +390,16 @@ related:
 - **测试**：全量 305/0 failures/2 errors（2 errors 为已知 ProductAdminSidebarTreeTests 遗留）。修复两处坑：① 测试文件顶层重复 `setup_test_environment()` 会 RuntimeError（与 tests_analytics.py 同坑）；② 模板多行 `{# #}` 注释触发 `test_no_multiline_hash_comment_in_templates`（改单行注释）。
 - **待部署后验证**：新页面/资源需 Vercel 重新部署才上线，跑 `python scripts/e2e/smoke_online.py` 复核。
 - **未做（本轮外）**：① GSC 索引覆盖率审计需等 GSC 数据（2–3 天后）再查 F3/F4 类重复内容/404；② CI 部署后自动冒烟（J2）为 follow-up；③ 法律页多语种翻译（B5/C）。
+
+### v1.0.3 (2026-09-29, B3 第一批 — per-page SEO)
+- **B2（per-page SEO 字段）**：`seo_title`/`seo_description` 不新增 DB 列，改存入既有 `translations` JSON（按语种），复用第三套 i18n 机制、免迁移、免 seed_sync 改 schema。**铁律**：方法名 `seo_title`/`seo_description` 与 `translations` 的 key 同名，会撞 `translate()` 的 `getattr(obj, field)` 回退（en 时返回方法本身→真值→永远不落公式）；新增 `pages/utils.py: get_seo_override()` 直接读 `translations` 字典避开碰撞。
+- **B3（品类词映射）**：`pages/utils.py: CATEGORY_KEYWORD`（8 类→SEO 短语）+ `SLUG_KEYWORD_OVERRIDE`（空，机制预留）；`pages/utils.py: _seo_keyword()` 解析。
+- **B4（title 公式）**：`build_seo_title()` = `{品类词} {型号} — {关键参数} | SolarOne`；`model_number` 已含功率时不重复追加。
+- **B5（description 公式 + 唯一化）**：`build_seo_description()` 英文公式，嵌入唯一标识（型号/名称）保证 24 页互异、50–160 字符；非英文回退翻译 `description`（不退化成英文公式）。
+- **接入点**：`pages/views/enrich.py` 在 `_enrich_product`/`_enrich_project` 挂 `seo_title_t`/`seo_description_t`；模板 `product_detail`/`product_overview`/`project_detail` 改用这两个属性（保留 Not Found 分支）。
+- **B1（词库）**：新增 `docs/keyword-inventory.csv`（32 行：8 品类 + 24 产品 slug，量级/KD 留空待 GSC 校准）。
+- **G2（llm.txt 版本）**：经核实 `VERSION` 文件与 `llm.txt` 均为 v1.8.1，**已自洽**，无需改（记忆里"实际 1.8.3"与文件不符，以文件为准，待用户确认是否 bump）。
+- **守卫**：新增 `pages/tests_seo_keywords.py`（11 用例：品类词覆盖、title 含品类词、非英文 localized keyword、description 唯一+长度、显式覆盖优先、非英文回退翻译、模板渲染端到端）；`scripts/e2e/smoke_online.py` 增加产品页 title 含品类词+`| SolarOne` 校验。
+- **测试**：全量 319/0 failures/3 errors（3 errors 为已知 `SidebarOrderedChangeList` 缺 `lookup_opts` 后台遗留，与 B3 无关）；`tests_seo_keywords` 11 全绿。
+- **影响面**：仅改产品/项目详情页的 title/description 生成；列表页（products/projects/home 等）仍是 `{% blocktrans %}` 硬编码，不受影响。B4/C1 后续可把显式 `seo_description` 译文写进 seed 提升文案质量。
+- **待部署验证**：Vercel 重部署后跑 `python scripts/e2e/smoke_online.py` 复核产品页 `<title>` 含品类词。
