@@ -173,7 +173,7 @@ related:
 | G1 | JSON-LD 扩展：`Service`（DIALux 设计）、`FAQPage` 已 ✅、`Product` 参数随 C2 自动增强 | `views_products.py` | M | M | L | M | C2 | B7 | Rich Results Test 通过 |
 | G2 | `llm.txt` 维护机制（🔴 文件头仍写 v1.8.1，实际 1.8.3；内容变更须同步） | `llm.txt:5` | M | M | L | S | — | B3 | 版本号同步 |
 | G3 | AI 引用监测：每月用 GPT/Perplexity 问 10 个目标问题，记录是否被引用 | — | M | M | L | S | — | 持续 | 监测表 |
-| G4 | JSON-LD 守卫保持（`JsonLdValidityTests` 10 用例） | `pages/tests.py` | H | H | L | S | — | 每次提交 | 全绿 |
+| G4 | JSON-LD 守卫保持（`JsonLdValidityTests` 14 用例） | `pages/tests.py` | H | H | L | S | — | 每次提交 | 全绿 |
 
 ### H — 转化路径与 UX（补充）
 
@@ -456,3 +456,31 @@ related:
   （已知：`SidebarOrderedChangeList` 缺 `lookup_opts` ×2 + build.sh fail-closed traceback ×1）。
 - **未做（可选后续）**：`SLUG_KEYWORD_OVERRIDE`（机制已预留、当前为空）可给单个产品挂更长的
   长尾词，例如把 VSP 两款挂到 `LED Football Stadium Lights`（480/KD14）。等 B4/C1 内容批次再定。
+
+### v1.0.6 (2026-09-30, GSC 实测回访 — ItemList 修复确认 + 产品摘要告警定策)
+
+**GSC 网址检查 · 测试实际版本（2026-09-30 07:56–08:01，用户截图）**：
+
+| URL | 结果 | 结构化数据 |
+|---|---|---|
+| `/`（GOOGLE 索引） | ✅ **网址已收录到 Google**（较 09-29 的"零收录"实质进展） | — |
+| `/products/` | ✅ 可编入索引 | 路径 1 项有效 → **ItemList 修复被 Google 确认** |
+| `/projects/` | ✅ 可编入索引 | 路径 1 项有效 |
+| `/contact/` | ✅ 可编入索引 | 无增强选项（正常，无结构化摘要资格） |
+| `/products/vsp-xxxxw-9m-yp/` | ✅ 可编入索引 | ⚠️ 产品摘要 1 项无效（见下）+ 路径 1 项有效 |
+| M Series（详情页） | — | ⚠️ 产品摘要 1 项严重问题：应指定 offers/review/aggregateRating |
+
+- **ItemList「无法解析的结构化数据」**：昨修的 `ListItem → WebPage` 已实测生效，该报告应随重爬清零。
+- **🔴 产品详情页「产品摘要」告警 — 定策：保留 Product 标记，接受告警（用户拍板）**。
+  根因：`Product` 缺 `offers`/`review`/`aggregateRating` 三者之一 → 无产品富媒体片段资格。
+  这是**业务模式决定，非 bug**：B2B 询盘制无公开价格（offers 无真实数据源）、无评价系统。
+  **影响评估**：收录/排名完全不受影响（Google 原话"网址可编入索引"），仅失去"产品摘要"
+  增强——而没有公开价格本来就永远拿不到，告警只是把这个事实显式化。
+  **为什么保留**：Product 块的 brand/sku/mpn/additionalProperty 是知识图谱与 AI 搜索
+  （GEO）实体识别的真信号，是本项目 G 大类核心资产；删掉 = 为消一个无害告警拆掉有价值标注。
+- **守卫（宁缺毋假）**：`JsonLdValidityTests.test_product_block_does_not_fabricate_offers_or_ratings`
+  —— 锁住 Product 块**不得**含 `offers`/`aggregateRating`/`review`，防止将来有人为消告警
+  伪造价格/评分（虚假信息 + 富媒体作弊风险）。
+- **运维注**：GSC 验证依赖「GA4 跟踪代码」方式（gtag 在即成立，meta 备份未配）→
+  **gtag 一旦移除，GSC 验证会掉**；冗余方案是在 Vercel 配 `GSC_VERIFICATION_CODE`
+  （`templates/base.html:48` 输出位已就绪）。

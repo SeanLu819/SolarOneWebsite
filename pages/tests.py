@@ -5014,6 +5014,28 @@ class JsonLdValidityTests(TestCase):
                         self.assertNotEqual(item.get('@type'), forbidden,
                                             f'{path}: list item uses {forbidden}')
 
+    def test_product_block_does_not_fabricate_offers_or_ratings(self):
+        """GSC「产品摘要：缺少 offers/review/aggregateRating」是**已知且接受**的状态。
+
+        Product 详情页的 JSON-LD 没有 ``offers``/``review``/``aggregateRating``
+        （B2B 询盘制没有公开价格，也没有评价系统），因此永远拿不到「产品摘要」
+        富媒体片段资格 —— GSC 会常驻一条「严重问题」告警。这是业务模式决定的，
+        **不是 bug**：收录/排名完全不受影响（GSC 实测 2026-09-30：「网址可编入
+        Google 索引，但存在一些问题」），告警只表示"无增强资格"。
+
+        保留 Product 标记是决策（brand/sku/mpn/additionalProperty 喂知识图谱与
+        AI 搜索实体识别，GEO 资产）。本用例锁住「宁缺毋假」：任何人不得为了消
+        告警而伪造 offers 价格或 aggregateRating 评分 —— 那是虚假信息 + 富媒体
+        作弊风险。真要消告警，正确做法是整块删除 Product 标记。
+        """
+        for path in ('/products/fl6m/', '/products/m-series/'):
+            products = self._blocks_of_type(path, 'Product')
+            self.assertEqual(len(products), 1, path)
+            p = products[0]
+            self.assertNotIn('offers', p, f'{path}: fabricated offers')
+            self.assertNotIn('aggregateRating', p, f'{path}: fabricated aggregateRating')
+            self.assertNotIn('review', p, f'{path}: fabricated review')
+
     # NOTE (QA round 2): every entry is ``(template, needle, expected_count)``.
     # Counting — not just ``assertIn`` — is what makes this guard real:
     # ``products.html`` and ``projects.html`` used to render their ItemList array
