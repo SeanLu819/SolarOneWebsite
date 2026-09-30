@@ -10,6 +10,9 @@ from pathlib import Path
 
 from django.test import TestCase
 
+from pages.utils import build_seo_description
+from pages.views.utils import _DictProduct, _load_seed
+
 _SEED = Path(__file__).resolve().parent.parent / 'seed_data.json'
 
 # B4 紧急项：曾仅 9 字符（型号名），必须已扩写
@@ -68,3 +71,55 @@ class ProductDescriptionDepthTests(TestCase):
                     en_len, MIN_DESC_LEN,
                     f'fl4m[{lang}] 清空回退英文，但英文 description 不足 {MIN_DESC_LEN}',
                 )
+
+
+class ProductSeoDescriptionHandWrittenTests(TestCase):
+    """B4 子步①守卫：24 个产品的英文 seo_description 为手写（非通用公式）。
+
+    覆盖 docs/seo-growth-plan.md v1.0.11：手写 seo_description 写入
+    translations['en']['seo_description']，覆盖 build_seo_description 通用公式。
+    守卫锁住：(1) 全部 24 款均存在显式英文 seo_description；(2) 运行时真的采用它
+    （!= 通用公式）；(3) 长度 50-160；(4) 全部唯一。防止有人删除 override 后
+    静默回退到千篇一律的公式。
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.seed = _load_seed()
+        cls.items = cls.seed['products']
+        cls.products = [_DictProduct(i) for i in cls.items]
+        cls.by_slug = {i['slug']: i for i in cls.items}
+
+    def test_every_product_has_explicit_en_seo_description(self):
+        missing = [
+            p.slug for p in self.products
+            if not (p.translations.get('en') or {}).get('seo_description')
+        ]
+        self.assertEqual(
+            missing, [],
+            f'以下产品缺少手写英文 seo_description（应覆盖通用公式）: {missing}',
+        )
+
+    def test_runtime_uses_handwritten_override_not_formula(self):
+        for p in self.products:
+            override = (p.translations.get('en') or {}).get('seo_description', '')
+            self.assertEqual(
+                p.seo_description('en'), override,
+                f'{p.slug}: 运行时 seo_description 未采用手写 override',
+            )
+            self.assertNotEqual(
+                p.seo_description('en'), build_seo_description(p, 'en'),
+                f'{p.slug}: seo_description 仍等于通用公式（手写未生效）',
+            )
+
+    def test_handwritten_seo_description_length_and_uniqueness(self):
+        descs = [p.seo_description('en') for p in self.products]
+        for d in descs:
+            self.assertTrue(
+                50 <= len(d) <= 160,
+                f'seo_description 长度越界（需 50-160）: {len(d)} -> {d!r}',
+            )
+        self.assertEqual(
+            len(descs), len(set(descs)),
+            f'seo_description 非唯一: {[d for d in descs if descs.count(d) > 1]}',
+        )
