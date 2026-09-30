@@ -103,7 +103,8 @@ E:/Python/python3/python.exe -m pages.seed_sync --json   # JSON → 构建产物
   现用 `_site_day_bounds_utc()` 显式按站点时区日界转 UTC 区间比较。
   ⚠️ 该 bug 只在 UTC 与本地日期不同的窗口可复现，白天跑测试是绿的。
 - 另见（2026-09-27 日志）：preview 子域名 `*.vercel.app` 未进 ALLOWED_HOSTS → 预览站 400；
-  `images/hero-main.webp` 不在静态哈希清单 → 回退未哈希 URL（能显示但无长效缓存）。
+  `images/hero-main.webp` 曾因不在静态哈希清单 → 回退未哈希 URL + 每请求 warning（2026-09-30 已修复：
+  回退名改为实际存在的 `images/hero-main-1.webp`，见 `pages/tests_static_assets.py` 守卫）。
 
 ### 改模板前必查
 给动态文本加包裹元素（如 RTL 的 `<bdi>`）会打破「标签内纯文本」型正则断言

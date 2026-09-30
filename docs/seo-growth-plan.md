@@ -380,6 +380,16 @@ related:
 
 ## 变更记录
 
+### v1.0.9 (2026-09-30, hero-main 幽灵图修复)
+- 修复 `pages/views/common.py:67` 的 hero 回退幽灵名 `'images/hero-main.webp'`
+  （磁盘/清单均不存在）→ 改为实际存在的 `'images/hero-main-1.webp'`，消除生产
+  每次 GET 的 `no hashed static URL` warning 与 404 幽灵图。
+- 同步 `api/index.py:147` 诊断 probe 由 `images/hero-main.webp` → `images/hero-main-1.webp`。
+- 新增守卫 `pages/tests_static_assets.py`（`HeroFallbackImageTests`，3 用例）：幽灵名永不复现 +
+  回退目标真实存在 + 与 `home.html` 首图一致。本地 3/3 通过。
+- 注：`hero_bg_url` / `hero_background` 在模板中**无渲染引用**（首页 hero 走 `home.html`
+  的 `<picture>` 直接用 `hero-main-1/2/3`），该回退仅是防御性安全网。
+
 ### v1.0.1 (2026-09-28, B0 闭环)
 - B0 数据分析/转化基座完成：GA4 商务账号 `G-81MQ1C1L5H` 上线、GSC 商务账号验证 + sitemap 提交 53 页、4 个转化事件守卫、CWV 基线脚本、线上冒烟脚本、KPI 看板。
 
@@ -522,3 +532,51 @@ related:
 （或持久 `DATABASE_URL`）」时**失败**——按设计拒绝丢线索部署。上线前需在 Vercel 配置：
 `CONTACT_NOTIFY_EMAIL`（如 sales@）+ `EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD`（Gmail 应用专用密码），
 **或** 填一个 Neon/Supabase 的 `DATABASE_URL`。两者任一即可解。
+
+### v1.0.8 (2026-09-30, J1 邮件通道线上验证 + hero-main 静态警告排查)
+
+**J1 邮件通道端到端验证（12:4x 用户操作）**：
+- 4 个邮件变量（`CONTACT_NOTIFY_EMAIL` / `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` /
+  `DEFAULT_FROM_EMAIL`）已从 `Production` 扩作用域为 **`Production and Preview`**；
+  `bbae9bd` 推送后 Vercel 双构建通过，`build.sh` 门禁打印 `✓ contact durability OK`，无 `pages.W001`。
+- **收件地址对照实验**：`CONTACT_NOTIFY_EMAIL` 先用 `sales@solaronelighting.com`（域名邮箱，经
+  Cloudflare Email Routing 转发到 Gmail）→ **收不到**；改用 `ledsportslighting07@gmail.com`
+  （真实 Gmail 直接收）→ **收发成功** → 证明 SMTP 链路（Gmail 应用专用密码）本身 OK。
+- **根因（DMARC 对齐）**：Cloudflare Email Routing 转发**外部发来**的 `sales@` 邮件正常；但本系统
+  自动发的、且 `From=sales@solaronelighting.com` 而 SMTP 又来自 Gmail 的邮件，Gmail 作为收件方
+  因 `sales@` 域名的 SPF/DKIM 与 Gmail 发送服务器**不对齐（DMARC）**而拒收/丢垃圾箱。直接收
+  Gmail 时 `From=sales@` 是 Gmail 已验证的 send-as 地址，Gmail 内部信任，故收到。
+- **决策（已落地）**：保持 `CONTACT_NOTIFY_EMAIL = ledsportslighting07@gmail.com`（绕过 Cloudflare
+  转发，最稳）。`DEFAULT_FROM_EMAIL` 仍 `sales@`（send-as 已配）。长期根治：上 Google Workspace
+  给 `sales@` 做域名级 DKIM 对齐。J1 邮件持久通道**已端到端验证通过，无需再改代码/变量**。
+
+**hero-main.webp 静态警告排查（已修复 v1.0.9）**：
+- 现象：运行时 `warn: no hashed static URL for 'images/hero-main.webp' ... serving un-hashed URL`，
+  出现在 `/`、`/products/`、`/contact/` 等多页。
+- 根因：`seed_data.json` 的 `SiteConfig.hero_background` 为 `""`（空）；`pages/views/common.py:67`
+  在 `hero_background` 为空时回退 `static('images/hero-main.webp')`，但**实际首图文件是
+  `hero-main-1/-2/-3.webp`（含 portrait/1280 变体），磁盘上不存在不带数字后缀的 `hero-main.webp`**
+  → 哈希清单无此文件 → 回退未哈希 + warning，线上该 URL 实际 404。
+- 影响：非首页的 hero 背景（依赖 `config.hero_bg_url`）拿到 404 幽灵图；首页 `home.html` 用
+  `<picture>` 元素 `hero-main-1/2/3`（不依赖该回退）不受影响。无功能崩溃，仅无长效缓存 +
+  部分页面 hero 背景可能缺失。
+- 修复（已落地 v1.0.9，约 2 行 + 守卫）：`common.py:67` 回退名 `'images/hero-main.webp'` → `'images/hero-main-1.webp'`
+  （存在且在哈希清单，`home.html` 已用无 warning）；`api/index.py:147` 诊断 probe 同步改为
+  `'images/hero-main-1.webp'` 消除噪声日志。守卫见 `pages/tests_static_assets.py`：断言幽灵名不复现 +
+  回退目标文件存在 + 与 `home.html` 首图一致。
+
+---
+
+## 13. 运维笔记（线上验证结论，方便回看）
+
+### 13.1 联系表单邮件通道（J1，2026-09-30 验证）
+- 收件地址用**真实 Gmail 直收**（`ledsportslighting07@gmail.com`）最稳；`sales@` 经 Cloudflare
+  Email Routing 在「系统自送 + `From`=自己域名」场景因 **DMARC 不对齐**被 Gmail 拒收/丢垃圾箱。
+- `EMAIL_HOST_USER` **必须填真实 Gmail 登录账号**（域名邮箱不能登录 SMTP）。
+- Gmail **必须用「应用专用密码」**，非登录密码。
+- Vercel 改 Secret 变量时 value 不可见，保存会保留原值（留空保存才会清空）——改作用域时 value 不必重填。
+
+### 13.2 静态资源幽灵文件名（hero-main.webp，已修复 v1.0.9）
+- 引用/回退文件名必须与实际磁盘文件名**逐字符一致**；裸 `hero-main.webp` 不存在，真文件带
+  `-1/-2/-3` 后缀（及 `-portrait` / `-1280` 变体）。`{% static %}` 回退到清单外文件只报警不报错，
+  但线上该 URL 实际 404。

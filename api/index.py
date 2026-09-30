@@ -144,7 +144,7 @@ try:
             )
     except Exception as exc:
         sys.stderr.write(f'[index.py] bundled manifest check skipped: {exc!r}\n')
-    for _probe in ('css/base.css', 'images/hero-main.webp'):
+    for _probe in ('css/base.css', 'images/hero-main-1.webp'):
         try:
             sys.stderr.write(f'[index.py] static("{_probe}") -> {staticfiles_storage.url(_probe)}\n')
         except Exception as exc:

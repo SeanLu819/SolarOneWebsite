@@ -64,7 +64,10 @@ def get_common_context():
     if hero_name:
         config.hero_bg_url = static(hero_name)
     else:
-        config.hero_bg_url = static('images/hero-main.webp')
+        # 2026-09-30 fix: 真实首图是 hero-main-1/-2/-3.webp（含 portrait/1280 变体），
+        # 磁盘上不存在裸名 hero-main.webp。之前回退到幽灵名会导致生产每次 GET 都打
+        # "no hashed static URL" warning 并回退 404。回退到确实存在的 hero-main-1.webp。
+        config.hero_bg_url = static('images/hero-main-1.webp')
 
     logo = getattr(config, 'logo', '')
     logo_name = getattr(logo, 'name', logo) if logo else ''
