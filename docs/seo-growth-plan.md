@@ -380,6 +380,21 @@ related:
 
 ## 变更记录
 
+### v1.0.10 (2026-09-30, B4 内容深度 — 产品 description 扩写)
+- **B4 核心（description 字段，正文 + JSON-LD description 数据源）**：审计发现 16/24 产品英文
+  `description` 偏短，其中 `rt590fl-s`/`rt390fl` 仅 9 字符（就是型号名 "RT590FL-S"），喂给正文与
+  JSON-LD 等于废的。已用质量 SEO 文案扩写到 **298–387 字符**（应用/收益导向，不编造光通/配光数值）。
+- `fl4m` 已有 fr/es/de/ru/ar 短翻译（45–79 字符）：fr/es/de 用正确拉丁文扩写；ru/ar **清空**→
+  经 `translate()` 回退到已扩写的英文（比 45–65 字符 stub 更好，符合"缺译回退英文绝不空串"）。
+  其余 15 个产品无翻译，英文扩写经 `t()` 自动惠及全语种。
+- **未动**：`seo_description`（走 `build_seo_description()` 公式，仍唯一可用、不重复）；`specs`/
+  `energy_data`（避免编造参数，留 B4 子步）。
+- 守卫 `pages/tests_seo_b4.py`（`ProductDescriptionDepthTests` 3 用例：全产品 ≥150、紧急项非型号名、
+  fl4m ru/ar 回退英文）。本地 3/3 绿；`JsonLdValidityTests` 13/13 绿（渲染走改动后数据）。
+- 可复现脚本 `scripts/seo_b4_expand_descriptions.py`；写回保持 CRLF（二进制核验 3501 CRLF / 0 裸 LF）。
+- **B4 剩余子步**：① 手写 `seo_description`（24 个）替换通用公式，做真正每页独特的 meta 摘要；
+  ② `specs` 补齐（真实参数）喂 Product JSON-LD `additionalProperty`；均属内容/数据录入，需核对参数准确性。
+
 ### v1.0.9 (2026-09-30, hero-main 幽灵图修复)
 - 修复 `pages/views/common.py:67` 的 hero 回退幽灵名 `'images/hero-main.webp'`
   （磁盘/清单均不存在）→ 改为实际存在的 `'images/hero-main-1.webp'`，消除生产
