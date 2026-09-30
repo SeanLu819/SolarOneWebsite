@@ -62,6 +62,25 @@ fi
 set -e
 echo "=== [build.sh] pip install done ==="
 
+# 2.2. Contact-form durability gate (J1): fail the build if Vercel has NO
+# durable delivery channel for contact submissions. pages.W001 is raised by
+# pages/checks.py when (a) DATABASE_URL is empty (build time — the /tmp runtime
+# default isn't injected yet) or points at the ephemeral /tmp SQLite, AND (b)
+# email is not fully configured (CONTACT_NOTIFY_EMAIL + SMTP creds). Under these
+# conditions submissions are lost on every redeploy, so we refuse to ship rather
+# than silently deploy a lead-losing config. Set CONTACT_NOTIFY_EMAIL +
+# EMAIL_HOST_USER/PASSWORD (or a persistent DATABASE_URL) to clear it.
+echo "=== [build.sh] Contact durability check ==="
+if python manage.py check 2>&1 | tee /tmp/contact_check.log | grep -q "pages.W001"; then
+  echo "  ✗ ERROR: pages.W001 — contact form has no durable delivery on Vercel."
+  echo "    Set CONTACT_NOTIFY_EMAIL + EMAIL_HOST_USER + EMAIL_HOST_PASSWORD"
+  echo "    (Gmail app password), or set DATABASE_URL to Neon/Supabase Postgres."
+  echo "    Refusing to deploy a config that loses leads on redeploy (J1)."
+  exit 1
+else
+  echo "  ✓ contact durability OK (persistent DB or email configured)"
+fi
+
 # 1.5. Regenerate pages/seed_data.py from seed_data.json (Vercel only uses seed_data.py).
 # Uses the unified seed_sync.py in JSON mode (no Django DB needed on Vercel).
 # pages/seed_data.py is git-ignored — this step is what produces it on every build.

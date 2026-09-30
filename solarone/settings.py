@@ -214,12 +214,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'solarone.wsgi.application'
 
-# Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase)
-# On Vercel: index.py sets DATABASE_URL=sqlite:////tmp/db.sqlite3 before settings loads.
-# IS_RUNTIME now checks for /tmp/ in DATABASE_URL (set by index.py).
-# We use direct SQLite config on Vercel to avoid dj_database_url parsing issues.
-# B3: the two local fallback branches below (no DATABASE_URL / dj_database_url
-# not installed) were byte-identical — hoist to one shared default.
+# Database — support DATABASE_URL for cloud databases (e.g., Neon, Supabase).
+# On Vercel the runtime defaults to sqlite:////tmp/... (ephemeral) — api/index.py
+# injects that fallback ONLY when DATABASE_URL is absent, so a persistent
+# DATABASE_URL (postgres:// / mysql://) set on Vercel OVERRIDES the ephemeral
+# default with no further code changes. build.sh already runs `migrate` when
+# DATABASE_URL is present and not /tmp/ (build.sh:98), so the contact form
+# (and any real DB model) survives redeploys once DATABASE_URL points at Neon/
+# Supabase. This is the J1 "持久化" fix: a config-only switch.
 _LOCAL_SQLITE = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -234,23 +236,55 @@ _LOCAL_SQLITE = {
     }
 }
 
-if IS_VERCEL:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': '/tmp/db.sqlite3',
-        }
+# Ephemeral Vercel runtime SQLite (lost on every deploy / instance recycle).
+_EPHEMERAL_SQLITE = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '/tmp/db.sqlite3',
     }
-else:
-    DATABASE_URL = os.environ.get('DATABASE_URL', '')
-    if DATABASE_URL:
+}
+
+# Extracted as a pure function so it is unit-testable without booting Django
+# (tests_contact.py imports it directly). See J1 changelog (seo-growth-plan.md).
+def _resolve_databases(is_vercel, db_url):
+    """Return the DATABASES dict for the given runtime context.
+
+    - Local dev (is_vercel False) honours a real DATABASE_URL if set, else the
+      shared local SQLite (2s busy-timeout to survive concurrent dev access).
+    - Vercel honours a persistent DATABASE_URL (postgres/mysql) if supplied; the
+      api/index.py /tmp fallback only kicks in when DATABASE_URL is absent, so a
+      Neon/Supabase connection string is a drop-in — no further code changes.
+    - Anything else (absent or sqlite:////tmp/...) uses the ephemeral /tmp SQLite,
+      which is the documented J1 risk: submissions there are lost on redeploy.
+    """
+    if not is_vercel:
+        if db_url:
+            try:
+                import dj_database_url
+                return {'default': dj_database_url.parse(db_url, conn_max_age=600)}
+            except ImportError:
+                return _LOCAL_SQLITE
+        return _LOCAL_SQLITE
+    # Vercel: persistent external DB wins; otherwise ephemeral /tmp.
+    _persistent = bool(db_url) and 'sqlite:////tmp' not in db_url and db_url.startswith(
+        ('postgres', 'postgresql', 'postgres+', 'mysql', 'mysql+')
+    )
+    if _persistent:
         try:
             import dj_database_url
-            DATABASES = {'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+            return {'default': dj_database_url.parse(db_url, conn_max_age=600)}
         except ImportError:
-            DATABASES = _LOCAL_SQLITE
-    else:
-        DATABASES = _LOCAL_SQLITE
+            # dj_database_url missing on Vercel => never crash the build; fall
+            # back to ephemeral (the pre-existing behaviour) rather than the
+            # persistent DB, because we cannot parse the URL safely.
+            return _EPHEMERAL_SQLITE
+    return _EPHEMERAL_SQLITE
+
+
+if IS_VERCEL:
+    DATABASES = _resolve_databases(True, os.environ.get('DATABASE_URL', ''))
+else:
+    DATABASES = _resolve_databases(False, os.environ.get('DATABASE_URL', ''))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

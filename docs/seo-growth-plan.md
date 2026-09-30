@@ -484,3 +484,41 @@ related:
 - **运维注**：GSC 验证依赖「GA4 跟踪代码」方式（gtag 在即成立，meta 备份未配）→
   **gtag 一旦移除，GSC 验证会掉**；冗余方案是在 Vercel 配 `GSC_VERIFICATION_CODE`
   （`templates/base.html:48` 输出位已就绪）。
+
+---
+
+### v1.0.7 (2026-09-30, J1 表单持久化 — A+B 就绪)
+
+**问题（🔴 致命项）**：联系表单在 Vercel 落库到 `/tmp/db.sqlite3`（serverless 临时文件系统，
+每次部署/扩容即清空），重部署即丢线索；唯一持久通道是邮件，但仅在 `CONTACT_NOTIFY_EMAIL`
++ SMTP 配置后才生效，否则 `views_contact.py` 仅显示诚实报错。
+
+**A — 邮件优先加固（零新基础设施）**：
+- `pages/checks.py:check_contact_persistence`（`pages.W001`）：原本只在 `/tmp` 时报警；
+  改为 `risky = (not db_url) or ('/tmp/' in db_url)`，使 **Vercel 构建期（DATABASE_URL 为空）**
+  也能触发 → 真正在构建阶段暴露"无持久通道"。
+- `build.sh` 新增构建门禁：跑 `manage.py check`，若输出含 `pages.W001` 则**非零退出**，
+  拒绝部署一个会丢线索的配置（除非已配邮件或持久库）。
+- `pages/views/views_contact.py` 交付诚实度逻辑原本已正确（运行时无邮件→诚实报错），本次未改。
+
+**B — Neon/Supabase 就绪（配置即生效）**：
+- `solarone/settings.py`：把 `IS_VERCEL` 分支的硬编码 `/tmp` 提取为可测函数
+  `_resolve_databases(is_vercel, db_url)`；当 `DATABASE_URL` 为 `postgres://`/`mysql://`
+  时在 Vercel **也**走 `dj_database_url` 解析 → 持久库成为「填连接串即生效」的就绪态
+  （`api/index.py` 仅在 DATABASE_URL 缺失时注入 /tmp，故不冲突；`build.sh:98` 已对真库跑 migrate）。
+- 含义：在 Vercel 配一个 `DATABASE_URL`（Neon/Supabase），ContactMessage 即跨部署持久，
+  后台还能直接看「线索收件箱」；无需任何代码改动。
+
+**守卫（新增 `pages/tests_contact.py`，15 用例）**：
+- `DatabaseResolutionTests`（6）：Vercel+postgres/mysql→持久引擎；Vercel+空/+/tmp→ephemeral；local 各种路径。
+- `ContactDeliveryHonestyTests`（6）：运行态无邮件→诚实报错（不得假成功）；本地无邮件→落库成功；
+  邮件送达→成功；邮件失败+临时库→诚实报错；邮件失败+持久库→成功；蜜罐静默丢弃。
+- `ContactDurabilitySystemCheckTests`（3）：W001 在 Vercel 无持久通道时触发、配持久库时静默。
+
+**测试结果**：`pages.tests_contact` 15/15 绿；`pages.tests` 全量 281/0 failures/3 errors
+（3 errors 为已知 legacy 后台 `lookup_opts` 与 `P3StaticBuildGateTests`，与本次无关）。
+
+**待用户动作（部署前提）**：本提交后 Vercel 构建将在「未配 `CONTACT_NOTIFY_EMAIL` + SMTP
+（或持久 `DATABASE_URL`）」时**失败**——按设计拒绝丢线索部署。上线前需在 Vercel 配置：
+`CONTACT_NOTIFY_EMAIL`（如 sales@）+ `EMAIL_HOST_USER`/`EMAIL_HOST_PASSWORD`（Gmail 应用专用密码），
+**或** 填一个 Neon/Supabase 的 `DATABASE_URL`。两者任一即可解。

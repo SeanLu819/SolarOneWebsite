@@ -20,20 +20,28 @@ def check_contact_persistence(app_configs, **kwargs):
     smtp_user = getattr(settings, 'EMAIL_HOST_USER', '')
     smtp_pass = getattr(settings, 'EMAIL_HOST_PASSWORD', '')
     db_url = os.environ.get('DATABASE_URL', '')
-    ephemeral = '/tmp/' in db_url
-    if not ephemeral:
+    # On Vercel the runtime defaults to the ephemeral /tmp SQLite (injected by
+    # api/index.py). At BUILD time DATABASE_URL is empty (the /tmp default is only
+    # set at runtime), so an empty URL on Vercel is the SAME risk as /tmp/: no
+    # persistent DB is configured. Treat both as the ephemeral scenario so the
+    # warning also fires during `manage.py check` at build (build.sh runs it and
+    # refuses to ship if pages.W001 is present). A real postgres/mysql
+    # DATABASE_URL => not risky => no warning.
+    risky = (not db_url) or ('/tmp/' in db_url)
+    if not risky:
         return errors
-    # Ephemeral DB => email is the ONLY durable channel. Both the recipient and
-    # working SMTP credentials are required; a half-config (notify set but no
+    # Ephemeral/empty DB => email is the ONLY durable channel. Both the recipient
+    # and working SMTP credentials are required; a half-config (notify set but no
     # SMTP creds) silently discards mail via the locmem backend and still loses
     # the lead, so flag it explicitly.
+    db_desc = 'is unset' if not db_url else 'points at the ephemeral /tmp SQLite (lost on redeploy)'
     if not notify:
         errors.append(
             Warning(
-                'Contact form has no durable delivery on Vercel: DATABASE_URL points at the '
-                'ephemeral /tmp SQLite (lost on redeploy) and CONTACT_NOTIFY_EMAIL is empty, '
-                'so submissions are silently lost. Set CONTACT_NOTIFY_EMAIL + SMTP credentials, '
-                'or point DATABASE_URL at a persistent DB (Neon/Supabase).',
+                'Contact form has no durable delivery on Vercel: DATABASE_URL ' + db_desc + ' and '
+                'CONTACT_NOTIFY_EMAIL is empty, so submissions are silently lost. '
+                'Set CONTACT_NOTIFY_EMAIL + SMTP credentials, or point DATABASE_URL at a '
+                'persistent DB (Neon/Supabase).',
                 id='pages.W001',
             )
         )
