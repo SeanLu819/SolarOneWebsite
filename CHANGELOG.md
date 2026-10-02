@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.2 - 2026-10-02
+
+Project meta descriptions are SERP snippets again. All 22 project pages used to
+ship the raw `description` body copy — 599 to 1215 characters measured — into a
+tag Google truncates at ~155, opening with a CJK `【Customer Profile】` /
+`【Scope of Work】` marker and never mentioning the category keyword at all.
+
+- New `MAX_SEO_DESCRIPTION_LEN` (160), `clean_project_prose()`,
+  `build_project_seo_description()` and `build_project_og_description()` in
+  `pages/utils.py` (pure stdlib, no Django import — an import would re-trigger
+  the `pages.views` → models cycle).
+- The formula is `{品类词} — {first sentence}`: the keyword leads because it is
+  the part worth paying for and the part a tail truncation eats last; the body
+  is cut on a sentence boundary when that boundary sits past the halfway mark of
+  the budget, otherwise on a word boundary with an ellipsis. CJK section markers
+  are stripped, newlines collapsed. Empty prose still yields a keyword-only tag.
+- `Project.seo_description()` and `_DictProject.seo_description()` both route
+  through the formula. **The seed path is not optional** — production runs on
+  `IS_VERCEL` `_load_seed()`, so a one-sided edit would look fine locally and
+  ship the 1200-char body copy online only.
+- og:description now uses `build_project_og_description()` (full project name +
+  keyword, never clamped) via a new `og_description()` on both paths, exposed to
+  templates as `project.og_description_t` in `pages/views/enrich.py`. Reusing
+  the meta description would have ended every shared card in an ellipsis.
+- Guard `pages/tests_project_seo_description.py` (17 cases): formula shape,
+  marker stripping, 160-char budget across all 17 sport types, sentence- vs
+  word-boundary behaviour, empty-prose fallback, all 22 seeded projects clamped
+  and keyword-led, seed↔formula agreement, override precedence, and the two
+  rendered `<meta>` tags on `/projects/perryville-high-school/`.
+
 ## v1.9.1 - 2026-10-02
 
 Project pages carry their category keyword in `<title>` — 22 of 22 project URLs

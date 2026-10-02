@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.9.1
+# Content source of truth: seed_data.json · Site version v1.9.2
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
@@ -79,11 +79,13 @@ roadways.
 
 Keyword landing pages — one primary term each (v1.9.0); every project detail
 page links to the matching one through its `sport_type`, and each project
-`<title>` carries its own category keyword (v1.9.1), e.g.
-`Bohemia Manor… — LED football Stadium Lights | SolarOne`
-or `Morgan State… — LED tennis Court Lights | SolarOne` (project names are
-clamped to keep the keyword inside the 60-character SERP budget; the full
-project name always appears in the page heading and body):
+`<title>` and meta description carries its own category keyword (v1.9.1,
+v1.9.2), e.g.
+`Bohemia Manor… — LED football Stadium Lights | SolarOne` over
+`LED football Stadium Lights — Perryville High School is a prominent public
+educational institution…` (project names are clamped to keep the keyword
+inside the 60-character SERP budget; the full project name always appears in
+the page heading and body, and the og card is never clamped):
 - `/products/sports-lighting/` — LED stadium lights hub; football, tennis,
   baseball and indoor arena coverage. Primary terms: "stadium lights",
   "led stadium lights", "stadium light", "led sports lighting".

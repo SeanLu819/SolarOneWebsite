@@ -8,6 +8,7 @@ from pages.static_scan import build_file_set
 from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
     build_seo_title, build_seo_description, build_project_seo_title,
+    build_project_seo_description, build_project_og_description,
     get_seo_override,
 )
 
@@ -585,8 +586,18 @@ class _DictProject:
         return build_project_seo_title(self.title, self.sport_type, lang)
 
     def seo_description(self, lang='en'):
-        """Seed-path mirror of ``pages.models.Project.seo_description``."""
+        """Seed-path mirror of ``pages.models.Project.seo_description``.
+
+        Formula must stay byte-identical to the model — this class backs
+        ``IS_VERCEL`` production, so drift here would ship the raw 600-1200
+        char body copy online only.
+        """
         explicit = get_seo_override(self, 'seo_description', lang)
         if explicit:
             return explicit
-        return self.t('description', lang)
+        return build_project_seo_description(self.t('description', lang),
+                                             self.sport_type, lang)
+
+    def og_description(self, lang='en'):
+        """Seed-path mirror of ``pages.models.Project.og_description``."""
+        return build_project_og_description(self.title, self.sport_type, lang)

@@ -284,6 +284,80 @@ def build_project_seo_title(title, sport_type='', lang='en'):
     return f'{fitted} — {kw} | {_SEO_BRAND}'
 
 
+#: Hard budget for the English project meta description. Google renders roughly
+#: the first 150-160 characters and drops the rest, so anything longer is both
+#: wasted markup and a truncated SERP line.
+MAX_SEO_DESCRIPTION_LEN = 160
+
+#: Section markers the seeded project prose uses as pseudo-headings, e.g.
+#: ``【Customer Profile】`` / ``【Scope of Work】``. They are CJK brackets on an
+#: English page, they sit at the very front of the text, and they used to be
+#: the first thing a searcher saw in the SERP snippet. Stripped, not translated
+#: — the heading itself carries no meaning once the sentence is inlined.
+_CJK_SECTION_MARKER_RE = re.compile(r'[【〔][^】〕]*[】〕][ \t]*')
+
+
+def clean_project_prose(text):
+    """Normalise seeded project prose into a single-line, marker-free string."""
+    cleaned = _CJK_SECTION_MARKER_RE.sub(' ', text or '')
+    cleaned = cleaned.replace('\r', ' ').replace('\n', ' ')
+    return re.sub(r'\s{2,}', ' ', cleaned).strip()
+
+
+def _fit_project_description(prose, limit):
+    """Cut ``prose`` to ``limit`` chars, preferring a sentence boundary.
+
+    A sentence break is worth keeping because the snippet then ends on a full
+    stop instead of mid-clause; a word boundary is the fallback; a hard cut
+    only happens when a single word is longer than the whole budget. The
+    ellipsis is reserved for the two lossy cases, so an exactly-fitting string
+    is never decorated.
+    """
+    if len(prose) <= limit:
+        return prose
+    stop = prose.rfind('. ', 0, limit)
+    if stop >= max(40, limit // 2):
+        # +1 keeps the full stop: it is part of the sentence, and dropping it
+        # would make the snippet look truncated even though nothing was lost.
+        return prose[:stop + 1].strip()
+    space = prose.rfind(' ', 0, limit)
+    if space > 0:
+        return f'{prose[:space].rstrip()}…'
+    return f'{prose[:limit - 1].rstrip()}…'
+
+
+def build_project_seo_description(prose, sport_type='', lang='en'):
+    """Project meta description: ``{品类词} — {first sentence}`` (<= 160 chars).
+
+    v1.9.1 left project descriptions as the raw ``description`` field, so every
+    project page shipped 600-1200 characters of body copy into a tag Google
+    truncates at ~155, and the snippet opened with a CJK ``【Customer Profile】``
+    marker. The commercial keyword also never appeared — it only lived at the
+    end of the body text.
+
+    The keyword now leads (it is the part worth paying for and the part a
+    truncation would otherwise eat last), followed by the first sentence of the
+    profile, cleaned of markers and cut on a sentence/word boundary.
+    """
+    kw = project_category_keyword(sport_type, lang)
+    body = _fit_project_description(clean_project_prose(prose),
+                                    MAX_SEO_DESCRIPTION_LEN - len(kw) - 3)
+    if not body:
+        return f'{kw} | {_SEO_BRAND}'
+    return f'{kw} — {body}'
+
+
+def build_project_og_description(title, sport_type='', lang='en'):
+    """Unclamped og:description: the full project name plus its category keyword.
+
+    The meta description is deliberately clamped for the SERP, which leaves the
+    shared card with a truncated sentence. Social preview has no such limit and
+    no keyword budget, so it gets the readable full-name form instead.
+    """
+    kw = project_category_keyword(sport_type, lang)
+    return f'{title} — {kw} | {_SEO_BRAND}'
+
+
 def _seo_identifier(obj):
     """The unique token guaranteeing title/description uniqueness."""
     return (getattr(obj, 'model_number', '')

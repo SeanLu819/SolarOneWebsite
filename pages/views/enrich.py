@@ -202,6 +202,11 @@ def _enrich_project(project, lang):
     project.results_t = project.t('results', lang)
     project.seo_title_t = project.seo_title(lang)
     project.seo_description_t = project.seo_description(lang)
+    # og:description uses the unclamped full-name form — the meta description
+    # is cut to 160 chars for the SERP, which would leave a shared card ending
+    # in an ellipsis. Set on both Project and _DictProject (both expose the
+    # method); template falls back defensively if an object predates this.
+    project.og_description_t = project.og_description(lang)
 
     slug = getattr(project, 'slug', '')
     project.has_compare_images = slug in _COMPARE_IMAGE_SLUGS

@@ -10,6 +10,7 @@ from django.conf import settings
 from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
     build_seo_title, build_seo_description, build_project_seo_title,
+    build_project_seo_description, build_project_og_description,
     get_seo_override,
 )
 
@@ -412,12 +413,23 @@ class Project(models.Model):
         return build_project_seo_title(self.title, self.sport_type, lang)
 
     def seo_description(self, lang='en'):
-        """Per-page meta description (B3). Explicit wins; else translated description
-        (no English-formula regression for non-English project pages)."""
+        """Per-page meta description (B3). Explicit wins; else the clamped
+        ``{品类词} — {first sentence}`` formula (v1.9.2).
+
+        Before v1.9.2 this returned the translated ``description`` verbatim —
+        600-1200 chars of body copy whose snippet opened with a CJK
+        ``【Customer Profile】`` marker and never mentioned the category
+        keyword.
+        """
         explicit = get_seo_override(self, 'seo_description', lang)
         if explicit:
             return explicit
-        return self.t('description', lang)
+        return build_project_seo_description(self.t('description', lang),
+                                             self.sport_type, lang)
+
+    def og_description(self, lang='en'):
+        """Share-card description: full project name + category keyword."""
+        return build_project_og_description(self.title, self.sport_type, lang)
 
 
 class ProjectImage(models.Model):
