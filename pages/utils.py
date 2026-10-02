@@ -297,10 +297,23 @@ MAX_SEO_DESCRIPTION_LEN = 160
 _CJK_SECTION_MARKER_RE = re.compile(r'[【〔][^】〕]*[】〕][ \t]*')
 
 
+def scrub_project_markers(text):
+    """Drop the CJK section markers, touching nothing else.
+
+    Line breaks are left **exactly** as they are — no normalisation. The SERP
+    channel wants one flat line (``clean_project_prose``), while rendered body
+    copy relies on the author's line breaks for `nl2para` to split paragraphs.
+    Turning ``\\r`` into ``\\n`` here would silently promote single breaks into
+    paragraph breaks and repackage the whole body copy, so the two channels
+    share only the marker deletion and each does its own whitespace handling.
+    """
+    return _CJK_SECTION_MARKER_RE.sub(' ', text or '')
+
+
 def clean_project_prose(text):
     """Normalise seeded project prose into a single-line, marker-free string."""
-    cleaned = _CJK_SECTION_MARKER_RE.sub(' ', text or '')
-    cleaned = cleaned.replace('\r', ' ').replace('\n', ' ')
+    cleaned = scrub_project_markers(text)
+    cleaned = cleaned.replace('\n', ' ')
     return re.sub(r'\s{2,}', ' ', cleaned).strip()
 
 

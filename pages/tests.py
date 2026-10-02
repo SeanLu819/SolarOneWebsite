@@ -5063,7 +5063,10 @@ class JsonLdValidityTests(TestCase):
         ('products.html', '"description": "{{ product.description_t|escapejs }}"', 1),
         ('projects.html', '"name": "{{ config.projects_title|escapejs }}"', 1),
         ('projects.html', '"name": "{{ project.title_t|escapejs }}"', 1),
-        ('projects.html', '"description": "{{ project.description_t|escapejs }}"', 1),
+        # v1.9.3: descrub precedes escapejs so the seeded CJK section markers
+        # are stripped before the value is escaped into structured data.
+        ('projects.html',
+         '"description": "{{ project.description_t|descrub|escapejs }}"', 1),
         ('news_detail.html',
          '"headline": "{{ article.title_t|default:article.title|escapejs }}"', 1),
         ('news_detail.html',
@@ -5091,8 +5094,10 @@ class JsonLdValidityTests(TestCase):
          '"mpn": "{{ product.model_number|default:product.slug|escapejs }}"', 1),
         ('product_overview.html', '"value": "{{ value|escapejs }}"', 1),
         ('project_detail.html', '"headline": "{{ project.title_t|escapejs }}"', 1),
+        # v1.9.3: descrub runs before escapejs so the CJK section markers never
+        # reach the structured-data value either.
         ('project_detail.html',
-         '"description": "{{ project.description_t|default:\'\'|escapejs }}"', 1),
+         '"description": "{{ project.description_t|default:\'\'|descrub|escapejs }}"', 1),
         ('project_detail.html', '"name": "{{ config.brand_name|escapejs }}"', 1),
         ('project_detail.html', '"name": "{{ project.location_t|escapejs }}"', 1),
     )

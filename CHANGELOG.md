@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.3 - 2026-10-02
+
+CJK section markers stopped leaking into the visible project body copy. v1.9.2
+cleaned them out of the `<meta>` tag, but the page body (`detail-desc`) and the
+project listing cards still rendered the raw `description`, so every project
+page opened with a Chinese bracket — `【Customer Profile】` — in front of English
+prose, in the body and in the JSON-LD value alike.
+
+- New `scrub_project_markers()` in `pages/utils.py`: deletes the markers and
+  **nothing else**. Line breaks are left exactly as authored — no `\r` → `\n`
+  promotion — because the SERP channel and the body channel want different
+  whitespace and share only the marker deletion; `clean_project_prose()` keeps
+  its own flattening so v1.9.2 output is unchanged.
+- New `descrub` template filter in `pages/templatetags/text_filters.py`. **One
+  definition covers both data paths**: it acts on the rendered value, so the DB
+  model and the seed mirror cannot drift apart (the classic two-path bug).
+  SafeString identity is preserved, so escaping still belongs to `nl2para`.
+- Templates: `project_detail.html` body and JSON-LD `description`, and
+  `projects.html` cards and JSON-LD `description` all route through `descrub`
+  before `escapejs` / `nl2para`.
+- Verified across all 22 seeded projects: paragraph count identical before and
+  after (body is repackaged the same way), length drop equals the markers alone,
+  and the markers gone everywhere. Guard
+  `pages/tests_project_prose_scrub.py` (13 cases) covers the scrubber, the
+  filter, raw-input escaping, SafeString passthrough, per-project paragraph
+  stability, and the rendered detail page, listing page and JSON-LD.
+
 ## v1.9.2 - 2026-10-02
 
 Project meta descriptions are SERP snippets again. All 22 project pages used to

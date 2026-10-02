@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load text_filters %}
 
 {% block title %}{% blocktrans %}LED Lighting Projects — SolarOne Projects Worldwide{% endblocktrans %}{% endblock %}
 {% block meta_description %}{% blocktrans %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities worldwide.{% endblocktrans %}{% endblock %}
@@ -72,7 +73,7 @@
             <div class="project-card-body">
               <div class="project-card-location"><bdi>{{ project.location_t }}</bdi></div>
               <h3 class="project-card-title"><bdi>{{ project.title_t }}</bdi></h3>
-              <p class="project-card-desc">{{ project.description_t }}</p>
+              <p class="project-card-desc">{{ project.description_t|descrub }}</p>
               {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} <bdi>{{ project.results_t }}</bdi></p>{% endif %}
               <span class="project-card-link">{% trans "View project" %} →</span>
             </div>
@@ -129,7 +130,7 @@
         "@type": "WebPage",
         "name": "{{ project.title_t|escapejs }}",
         "url": "{{ canonical_origin }}{% url 'project_detail' project.slug %}",
-        "description": "{{ project.description_t|escapejs }}"
+        "description": "{{ project.description_t|descrub|escapejs }}"
       }
     }{% if not forloop.last %},{% endif %}{% endfor %}
   ]

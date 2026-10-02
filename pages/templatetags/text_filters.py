@@ -16,10 +16,29 @@ from django.utils.html import conditional_escape, escape
 from django.utils.safestring import mark_safe, SafeData
 import re
 
+from pages.utils import scrub_project_markers
+
 register = template.Library()
 
 _BR_RE = re.compile(r'<br\s*/?>', re.IGNORECASE)
 _CR_RE = re.compile(r'\r')
+
+
+@register.filter(name='descrub')
+def descrub(value):
+    """Strip the CJK section markers seeded into project prose.
+
+    ``scrub_project_markers`` keeps line breaks, so this composes with `nl2para`
+    downstream. SafeString identity is preserved: content that arrives already
+    marked safe stays marked safe (and anything raw stays raw, so the next
+    filter still escapes it) — only the markers disappear.
+    """
+    if not value:
+        return value
+    cleaned = scrub_project_markers(str(value))
+    if isinstance(value, SafeData):
+        return mark_safe(cleaned)
+    return cleaned
 
 
 @register.filter(name='linebreaktospaces')
