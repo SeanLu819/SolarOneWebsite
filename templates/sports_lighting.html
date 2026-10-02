@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{# Hub marketing copy is intentionally English (verbatim SEMrush head keywords for EN SEO); the shared sidebar chrome below stays translated. #}
+{% block title %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblock %}
+{% block meta_description %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblock %}
+{% block og_title %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblock %}
+{% block og_description %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumb_jsonld.html" with section="products" %}
+
+<!-- Sports & Stadium Lighting hub — Tier-1 SEMrush keyword landing page -->
+<section class="page-with-sidebar products-page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+    <div class="sidebar-layout">
+
+      <!-- ===== LEFT SIDEBAR (reused from products page) ===== -->
+      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
+      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
+      <aside class="sidebar-nav">
+        <div class="sidebar-nav-header">{% trans "Product Categories" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for cat in product_categories %}
+          <div class="sidebar-nav-group">
+            <div class="sidebar-nav-parent{% if active_category == cat.key %} active{% endif %}">
+              {{ cat.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for sub in cat.series %}
+              {% if sub.subseries %}
+              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
+                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
+                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
+              </div>
+              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
+                {% for grandchild in sub.subseries %}
+                <a href="{% url 'product_detail' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
+                {% endfor %}
+              </div>
+              {% else %}
+              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
+                {{ sub.label }}
+              </a>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'products' %}" class="sidebar-nav-all{% if not active_series %} active{% endif %}">{% trans "View All Products" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT ===== -->
+      <div class="sidebar-content">
+        <div class="products-banner">
+          <div class="products-banner-content">
+            <span class="products-banner-label">Sports &amp; Stadium Lighting</span>
+            <h1 class="section-title products-banner-title">LED Stadium Lights &amp; Sports Lighting</h1>
+          </div>
+        </div>
+
+        <p class="products-banner-subtitle">
+          SolarOne LED stadium lights and sports lighting solutions deliver uniform, glare-controlled illumination for football pitches, tennis courts, and multi-use venues. Our LED sports lighting range — from high-mast stadium light poles to modular sports floodlights — replaces legacy HID with lower energy use and broadcast-ready uniformity.
+        </p>
+
+        <div class="products-grid">
+          {% for product in products %}
+          <div class="product-card reveal">
+            <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
+            <a href="{% if product.card_link_url %}{{ product.card_link_url }}{% else %}{% url 'product_detail' product.slug %}{% endif %}" style="text-decoration: none; color: inherit;">
+              {% if product.image_url %}
+              <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy" decoding="async"></div>
+              {% endif %}
+            </a>
+            <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
+            <p class="product-card-desc">{{ product.description_t }}</p>
+            <div class="product-card-specs">
+              {% for spec in product.specs|slice:":3" %}
+              <div class="product-spec"><span class="product-spec-value">{{ spec.value }}</span><span class="product-spec-label">{{ spec.label }}</span></div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <p class="products-banner-subtitle" style="margin-top: 40px;">
+          Need a lighting layout for your stadium or sports field? Our engineers deliver DIALux simulations and photometric proposals.
+          <a href="{% url 'contact' %}">Request a quote</a>.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "{{ "LED Stadium Lights & Sports Lighting"|escapejs }}",
+  "itemListElement": [
+    {% for product in products %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.counter }},
+      "item": {
+        "@type": "WebPage",
+        "name": "{{ product.name_t|escapejs }}",
+        "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}",
+        "description": "{{ product.description_t|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}{% endfor %}
+  ]
+}
+</script>
+
+<style nonce="{{ request.csp_nonce }}">
+  /* Sports hub hero — text-only (no banner image dependency). */
+  .products-banner {
+    position: relative;
+    width: 100%;
+    min-height: 120px;
+    margin-bottom: 24px;
+  }
+  .products-banner-content {
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    max-width: 760px;
+  }
+  [data-theme="dark"] .products-banner-content {
+    color: #fff;
+  }
+  [data-theme="light"] .products-banner-content {
+    color: #111;
+  }
+  .products-banner-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 12px;
+  }
+  .products-banner-title {
+    margin-bottom: 0;
+    color: inherit;
+  }
+  .products-banner-subtitle {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 40px;
+    max-width: 820px;
+  }
+</style>
+
+{% endblock %}

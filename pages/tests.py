@@ -2579,7 +2579,7 @@ class N43P0SeoTranslationTests(TestCase):
     """
 
     META_TITLE_EN = 'SolarOne — Precision LED Lighting Systems'
-    HOME_TITLE_EN = 'SolarOne — Professional LED Sports Lighting Solutions Since 2007'
+    HOME_TITLE_EN = 'SolarOne — LED Stadium Lighting Solutions Since 2007'
     HOME_DESC_PREFIX_DE = 'SolarOne entwickelt und fertigt professionelle LED-Sport-'
 
     def test_siteconfig_meta_routed_via_overrides(self):
@@ -2610,7 +2610,7 @@ class N43P0SeoTranslationTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         content = resp.content.decode('utf-8')
         self.assertIn(
-            'SolarOne — Professionelle LED-Sportbeleuchtungslösungen seit 2007',
+            'SolarOne — LED-Stadionbeleuchtungslösungen seit 2007',
             content)
         self.assertIn(self.HOME_DESC_PREFIX_DE, content)
         # The English source must NOT leak into the German page head.

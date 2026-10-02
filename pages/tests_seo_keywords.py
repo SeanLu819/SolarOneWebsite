@@ -158,15 +158,18 @@ class CategoryKeywordSearchDemandTests(TestCase):
     旧值 ``LED Sports Stadium Lighting`` 来自模型 choices 的 'Sports Lighting
     System' 直译，两个高频词都吃不到：SEMrush US（2026-09-29）显示需求落在
     ``stadium lights`` 2,900/mo 与 ``led stadium lights`` 1,000/mo 且 KD 6
-    （本站体积/难度性价比最好的机会）。故重切为 ``LED Stadium Lights``。
+    （本站体积/难度性价比最好的机会）。故重切为 ``LED Stadium Light``。
 
-    这两个用例锁住"按搜索需求而非内部分类名措辞"的决策，防止有人照着
+    2026-09-30 二次收敛（方案 A）：**复数头部词归 /products/sports-lighting/
+    hub 独占**（一词一页），产品详情 title 走单数词族 ``LED Stadium Light``，
+    避免两个页面抢同一查询；描述侧保留 ``stadium light`` 自然提及继续强化
+    相关性。这两个用例锁住"按搜索需求而非内部分类名措辞"的决策，防止有人照着
     ``Product.CATEGORY_CHOICES`` 把它改回内部叫法。
     """
 
     def test_sports_lighting_phrase_uses_the_wording_buyers_search(self):
         kw = CATEGORY_KEYWORD['SPORTS_LIGHTING']
-        self.assertIn('Stadium Lights', kw,
+        self.assertIn('Stadium Light', kw,
                       f'SPORTS_LIGHTING keyword lost the searched phrase: {kw!r}')
         self.assertNotEqual(kw, 'LED Sports Stadium Lighting',
                             'internal-taxonomy phrasing came back')
@@ -180,9 +183,10 @@ class CategoryKeywordSearchDemandTests(TestCase):
             p = _DictProduct(item)
             title = p.seo_title('en')
             self.assertTrue(
-                title.startswith('LED Stadium Lights'),
+                title.startswith('LED Stadium Light'),
                 f"{p.slug} title must lead with the searched phrase: {title!r}")
-            self.assertIn('Stadium Lights', p.seo_description('en'), p.slug)
+            # Case-insensitive: body copy naturally reads "stadium light pole".
+            self.assertIn('stadium light', p.seo_description('en').lower(), p.slug)
 
 
 class SeoTitleLengthTests(TestCase):

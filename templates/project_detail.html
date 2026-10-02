@@ -158,6 +158,22 @@
           </div>
           {% endif %}
 
+          {# Internal keyword-anchor vote; related_landing is None for non-sports venues. #}
+          {% if related_landing %}
+          <div class="related-solutions">
+            <span class="related-solutions-label">{% trans "Related Lighting Solutions" %}</span>
+            <div class="related-solutions-links">
+              {% if related_landing == 'football' %}
+              <a href="{% url 'football_stadium_lights' %}" class="related-solutions-link">{% trans "Football Stadium Lights" %}</a>
+              {% elif related_landing == 'tennis' %}
+              <a href="{% url 'tennis_court_lighting' %}" class="related-solutions-link">{% trans "Tennis Court Lighting" %}</a>
+              {% elif related_landing == 'sports' %}
+              <a href="{% url 'sports_lighting' %}" class="related-solutions-link">{% trans "LED Stadium Lights" %}</a>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+
         </div>
 
         {% else %}
@@ -346,6 +362,48 @@
   .detail-download-btn:hover {
     opacity: 0.88;
     transform: translateY(-1px);
+  }
+
+  /* Related lighting solutions — internal keyword-anchor links */
+  .related-solutions {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .related-solutions-label {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .related-solutions-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+  .related-solutions-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg-soft);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.98rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .related-solutions-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+  @media (max-width: 767px) {
+    .related-solutions-link { width: 100%; justify-content: center; }
   }
 
   /* Carousel — full width */

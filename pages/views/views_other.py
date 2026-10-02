@@ -234,6 +234,9 @@ def sitemap_xml(request):
         static_pages = [
             ('home', '0.9'),
             ('products', '0.9'),
+            ('sports_lighting', '0.8'),
+            ('football_stadium_lights', '0.8'),
+            ('tennis_court_lighting', '0.8'),
             ('projects', '0.9'),
             ('news', '0.7'),
             ('about', '0.7'),

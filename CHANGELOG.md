@@ -2,6 +2,93 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.0 - 2026-10-02
+
+Keyword landing pages for the Semrush sport-lighting cluster (Tier-1 + Tier-2),
+project → landing cross-links, and an automated Vercel deployment cleanup.
+
+### New landing pages
+- `/products/sports-lighting/` — the **LED stadium lights hub**, built on a new
+  shared `views_products._sports_landing()` helper. Absorbs the head terms
+  `stadium lights`, `led stadium lights`, `stadium light`, `led sports lighting`
+  (one term per page, to avoid cannibalisation with product detail titles).
+- `/products/football-stadium-lights/` — football & soccer stadium lighting.
+- `/products/tennis-court-lighting/` — tennis court lighting; copy explicitly
+  covers **both** outdoor (pole + floodlight) and indoor (ceiling / wall mount,
+  same optics).
+- All three routes registered in `pages/urls.py` **before** the `<slug>`
+  catch-all; views exported from `pages/views/__init__.py`; sitemap priority
+  0.8 (`views_other.py`); new paths registered in
+  `scripts/e2e/visual_review.py:DEFAULT_PATHS`.
+
+### Keyword strategy
+- `pages/utils.py` `CATEGORY_KEYWORD['SPORTS_LIGHTING']` → `LED Stadium Light`
+  (singular, no "pole"). Product detail titles therefore read
+  `LED Stadium Light {model} | SolarOne`, leaving the plural head term to the
+  hub. Descriptions re-checked case-insensitively (`stadium light`).
+- Home title shortened/trimmed to
+  `SolarOne — LED Stadium Lighting Solutions Since 2007` (64 → 52 chars, no SERP
+  truncation).
+- `seed_data.json` VSP `seo_description` wording updated to
+  `LED stadium light pole`; `pages/seed_data.py` regenerated from the JSON
+  source of truth.
+- `docs/keyword-inventory.csv` retargeted to the three new URLs.
+
+### Cross-links from project pages
+- `views_projects.SPORT_TYPE_TO_LANDING` maps each project's existing
+  `sport_type` (`FOOTBALL_FIELD`/`SOCCER_FIELD` → football, `TENNIS*`/`TENNIS_COURT`
+  → tennis, `MULTI_SPORT`/`BASEBALL` → hub, `AIRPORT`/`ROADWAY` → none) into
+  `context['related_landing']`; `project_detail.html` renders a
+  "Related Lighting Solutions" block with keyword anchor text. **No model change.**
+- Lets the 22 high-authority project pages pass internal links to the three new
+  landing pages without rewriting product/project copy.
+
+### Fixes
+- 🔴 `pages/views/data_loaders.py`: an **empty DB result no longer populates the
+  shared enrichment cache**. Previously `_get_products_from_db()` cached `[]`
+  for `en|SPORTS_LIGHTING|`, so `_get_products_from_json()` saw a non-`None`
+  cache and returned nothing — the seed fallback was dead and hub pages listed
+  0 products. Same fix applied to `_get_projects_from_db()`. Production
+  (`IS_VERCEL`) does not take the DB path, so it was unaffected.
+- Hub templates: the 5 marketing strings intentionally kept in English
+  (verbatim keyword copy, guarded by `I18nCatalogGuardTests`) and all comments
+  reduced to single-line `{# #}` so `TemplateCommentHygieneTests` passes.
+
+### i18n
+- Five locales' `.po` + compiled `.mo` updated (text append, CRLF preserved,
+  existing entries not reordered) with the new home title and the four project
+  anchor strings (Related Lighting Solutions / Football Stadium Lights /
+  Tennis Court Lighting / LED Stadium Lights, incl. French
+  `Projecteurs de stade de football`).
+
+### Tests
+- `pages/tests_sports_lighting_hub.py` rewritten as a mixin covering **all three**
+  landing pages (200, keyword in title, title ≤ 60 chars, keyword family
+  coverage, product grid, ItemList JSON-LD, sitemap) + route registration —
+  27 cases.
+- `pages/tests_project_related_link.py` — 6 cases (football/tennis/baseball
+  mapping, airport block absent, `/fr/` anchor text, `<a>` structure).
+- Full suite: **379 tests / 0 failures / 3 errors** (3 errors are the pre-existing
+  baseline: `ProductAdminSidebarTreeTests` missing `lookup_opts`, plus the
+  `build.sh` static-index gate).
+
+### Ops
+- `.github/workflows/vercel-cleanup.yml`: **weekly cron (Mon 03:00 UTC) + manual
+  `workflow_dispatch`**. Resolves the team id via `v2/teams`, lists deploys via
+  `v6/deployments`, and deletes **previews older than 7 days** and
+  **production deployments older than 30 days** via `v13/deployments`. The live
+  production deploy is rejected by the API and skipped; the run aborts if a
+  whole page yields zero successful deletes. Secret `VERCEL_TOKEN` configured.
+
+### Notes
+- Version bump to v1.9.0 in `VERSION` **and** `settings.APP_VERSION` (admin
+  header reads the latter).
+- `llm.txt` synced with the three landing-page URLs.
+- Deployment Storage had reached 8.94/10 GB on Vercel; Usage figures lag the
+  deletes by several hours up to 24 h.
+- Pending after deploy: run the cleanup workflow once by hand, request indexing
+  for the three new URLs in GSC, then review rank/query data in 2–4 weeks.
+
 ## v1.6.3 - 2026-09-24
 
 ### P0 前端风格一致性修复（设计审计 P0 三项）

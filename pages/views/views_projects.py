@@ -10,6 +10,27 @@ from .i18n import (
 from .data_loaders import get_projects, get_project_detail
 
 
+# Maps a project's sport_type to a related landing page so the project detail
+# page can vote for the Tier-1/2 SEMrush keyword pages via keyword-rich anchor
+# text. Non-sports venues (AIRPORT, ROADWAY, INFRASTRUCTURE, etc.) map to None
+# so no irrelevant link is injected — those pages rank on venue-name long-tails.
+SPORT_TYPE_TO_LANDING = {
+    'FOOTBALL_FIELD': 'football',
+    'SOCCER_FIELD': 'football',
+    'TENNIS_COURTS': 'tennis',
+    'TENNIS': 'tennis',
+    'MULTI_SPORT': 'sports',
+    'BASEBALL_FIELD': 'sports',
+    'BASKETBALL': 'sports',
+    'ICE_ARENA': 'sports',
+    'VELODROME': 'sports',
+    'AQUATICS_CENTRE': 'sports',
+    'FENCING': 'sports',
+    'KARTING': 'sports',
+    'SKI_AREA': 'sports',
+}
+
+
 def projects(request):
     context = get_common_context()
     lang = get_language()
@@ -66,6 +87,10 @@ def project_detail(request, slug):
         )
         context['active_venue_type_label'] = active_venue_type_label
         context['active_sport_type_label'] = active_sport_type_label
+
+        # Internal anchor-text vote for the Tier-1/2 keyword landing pages.
+        context['related_landing'] = SPORT_TYPE_TO_LANDING.get(
+            getattr(project, 'sport_type', ''))
     else:
         context['active_venue_type'] = ''
         context['active_sport_type'] = ''

@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.8.1
+# Content source of truth: seed_data.json · Site version v1.9.0
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
@@ -76,6 +76,15 @@ roadways.
 `/` home · `/products/` · `/products/<slug>/` · `/projects/` ·
 `/projects/<slug>/` · `/about/` · `/contact/` · `/news/` · `/news/<slug>/` ·
 `/sitemap.xml` (with `<image:image>` entries) · `/robots.txt`
+
+Keyword landing pages — one primary term each (v1.9.0); every project detail
+page links to the matching one through its `sport_type`:
+- `/products/sports-lighting/` — LED stadium lights hub; football, tennis,
+  baseball and indoor arena coverage. Primary terms: "stadium lights",
+  "led stadium lights", "stadium light", "led sports lighting".
+- `/products/football-stadium-lights/` — football and soccer stadium lighting.
+- `/products/tennis-court-lighting/` — tennis court lighting: outdoor poles and
+  indoor ceiling / wall mounts built on the same optics.
 
 English serves with no URL prefix. Other locales use i18n prefixes:
 `/fr/`, `/es/`, `/de/`, `/ru/`, `/ar/` (Arabic is right-to-left).

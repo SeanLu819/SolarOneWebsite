@@ -918,3 +918,18 @@ msgstr "Volver a todas las noticias"
 msgid "More news"
 msgstr "Más noticias"
 
+msgid "SolarOne — LED Stadium Lighting Solutions Since 2007"
+msgstr "SolarOne — Soluciones de iluminación de estadios con LED desde 2007"
+
+# added by related-solutions anchor block
+msgid "Related Lighting Solutions"
+msgstr "Soluciones de iluminación relacionadas"
+
+msgid "Football Stadium Lights"
+msgstr "Luces de estadio de fútbol"
+
+msgid "Tennis Court Lighting"
+msgstr "Iluminación de canchas de tenis"
+
+msgid "LED Stadium Lights"
+msgstr "Luces LED de estadio"

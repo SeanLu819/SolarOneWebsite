@@ -38,7 +38,14 @@ def _get_products_from_db(lang, active_category='', active_series=''):
         for p in products_list:
             _enrich_product(p, lang)
             result.append(p)
-        _set_cached_products(result, lang, active_category, active_series)
+        if result:
+            # Only cache a non-empty DB result. Caching an empty list would poison
+            # the shared enrichment cache and block the seed-JSON fallback in
+            # get_products() when the DB query legitimately returns nothing (e.g.
+            # a freshly created empty database). Falling back to the seed JSON in
+            # that case is the documented behaviour ("database first, seed JSON
+            # fallback when the query ... returns nothing").
+            _set_cached_products(result, lang, active_category, active_series)
         return result
     except Exception:
         logger.warning('DB products query failed, will fall back to seed JSON', exc_info=True)
@@ -121,7 +128,10 @@ def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
         for proj in projects_list:
             _enrich_project(proj, lang)
             result.append(proj)
-        _set_cached_projects(result, lang, active_venue_type, active_sport_type)
+        if result:
+            # Mirror the products loader: do not cache an empty DB result, or it
+            # would block the seed-JSON fallback in get_projects().
+            _set_cached_projects(result, lang, active_venue_type, active_sport_type)
         return result
     except Exception:
         logger.warning('DB projects query failed, will fall back to seed JSON', exc_info=True)

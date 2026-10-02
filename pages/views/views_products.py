@@ -299,6 +299,59 @@ def products(request):
     return render(request, 'products.html', context)
 
 
+def _sports_landing(request, template_name):
+    """Shared loader for the sports keyword landing pages (hub / football /
+    tennis): sidebar + merged SPORTS_LIGHTING & FLOODLIGHT grid. The pages
+    differentiate through their own template copy, titles and URL keywords."""
+    context = get_common_context()
+    lang = get_language()
+
+    product_categories = _get_products_sidebar(lang)
+    context['product_categories'] = product_categories
+    context['active_category'] = ''
+    context['active_series'] = ''
+
+    # Merge the two sports-relevant categories, dedupe by slug. VSP poles come
+    # first (SPORTS_LIGHTING), then the RT floodlights (FLOODLIGHT) — stable,
+    # intentional order so the grid reads "stadium systems → sports floodlights".
+    merged = {}
+    for cat in ('SPORTS_LIGHTING', 'FLOODLIGHT'):
+        for p in get_products(lang, cat):
+            slug = getattr(p, 'slug', '')
+            if slug and slug not in merged:
+                merged[slug] = p
+    context['products'] = list(merged.values())
+
+    return render(request, template_name, context)
+
+
+def sports_lighting(request):
+    """Sports & Stadium Lighting hub — Tier-1 SEMrush keyword landing page.
+
+    Consolidates the four head SEMrush terms (stadium lights 2,900/mo KD18,
+    led stadium lights 1,000/mo KD6, stadium light 720/mo KD12, led sports
+    lighting 390/mo KD15) onto one clean static URL instead of funneling them
+    to the generic /products/ listing (which had no keyword in its title and
+    could not rank for those queries). Showcases the products that actually
+    match: stadium-light poles (VSP, SPORTS_LIGHTING) and the sports
+    floodlights (RT590FL-S / RT390FL / RT220UB / RT420FS-S, FLOODLIGHT).
+    """
+    return _sports_landing(request, 'sports_lighting.html')
+
+
+def football_stadium_lights(request):
+    """Tier-2 landing page for ``football stadium lights`` (480/mo) — the
+    football-intent slice of the sports range: high-mast poles and floodlights
+    for football pitches, with DIALux pitch-layout copy."""
+    return _sports_landing(request, 'football_stadium_lights.html')
+
+
+def tennis_court_lighting(request):
+    """Tier-2 landing page for ``tennis court lighting`` (590/mo) — covers
+    both outdoor and indoor tennis court lighting intents on one page."""
+    return _sports_landing(request, 'tennis_court_lighting.html')
+
+
 def product_detail(request, slug):
     """Unified product page for both series and sub-series.
 
