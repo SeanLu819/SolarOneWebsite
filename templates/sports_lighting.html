@@ -2,11 +2,11 @@
 {% load i18n %}
 {% load static %}
 
-{# Hub marketing copy is intentionally English (verbatim SEMrush head keywords for EN SEO); the shared sidebar chrome below stays translated. #}
-{% block title %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblock %}
-{% block meta_description %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblock %}
-{% block og_title %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblock %}
-{% block og_description %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblock %}
+{# Both the EN verbatim SEMrush head keywords and the five translated variants live in .po/.mo; the shared sidebar chrome below stays translated too. #}
+{% block title %}{% blocktrans %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblocktrans %}{% endblock %}
+{% block meta_description %}{% blocktrans %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblocktrans %}{% endblock %}
+{% block og_title %}{% blocktrans %}LED Stadium Lights & Sports Lighting Solutions | SolarOne{% endblocktrans %}{% endblock %}
+{% block og_description %}{% blocktrans %}SolarOne LED stadium lights & sports lighting solutions: high-mast stadium light poles and modular sports floodlights for football, tennis and multi-use venues.{% endblocktrans %}{% endblock %}
 
 {% block content %}
 {% include "includes/breadcrumb_jsonld.html" with section="products" %}
@@ -59,7 +59,7 @@
         <div class="products-banner">
           <div class="products-banner-content">
             <span class="products-banner-label">Sports &amp; Stadium Lighting</span>
-            <h1 class="section-title products-banner-title">LED Stadium Lights &amp; Sports Lighting</h1>
+            <h1 class="section-title products-banner-title">{% blocktrans %}LED Stadium Lights &amp; Sports Lighting{% endblocktrans %}</h1>
           </div>
         </div>
 

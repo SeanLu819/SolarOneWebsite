@@ -2,11 +2,11 @@
 {% load i18n %}
 {% load static %}
 
-{# Tier-2 tennis landing page — copy is intentionally English (verbatim SEMrush keyword "tennis court lighting", covering both indoor and outdoor intents); the shared sidebar chrome below stays translated. #}
-{% block title %}Tennis Court Lighting — LED Court Lights | SolarOne{% endblock %}
-{% block meta_description %}SolarOne tennis court lighting: LED court lights and floodlights for outdoor and indoor tennis courts — uniform illumination, low glare and broadcast-ready colour for every level of play.{% endblock %}
-{% block og_title %}Tennis Court Lighting — LED Court Lights | SolarOne{% endblock %}
-{% block og_description %}SolarOne tennis court lighting: LED court lights and floodlights for outdoor and indoor tennis courts — uniform illumination, low glare and broadcast-ready colour for every level of play.{% endblock %}
+{# Tier-2 tennis landing page — the EN string is the verbatim SEMrush keyword "tennis court lighting" (both indoor and outdoor intents); the five translated variants live in .po/.mo. #}
+{% block title %}{% blocktrans %}Tennis Court Lighting — LED Court Lights | SolarOne{% endblocktrans %}{% endblock %}
+{% block meta_description %}{% blocktrans %}SolarOne tennis court lighting: LED court lights and floodlights for outdoor and indoor tennis courts — uniform illumination, low glare and broadcast-ready colour for every level of play.{% endblocktrans %}{% endblock %}
+{% block og_title %}{% blocktrans %}Tennis Court Lighting — LED Court Lights | SolarOne{% endblocktrans %}{% endblock %}
+{% block og_description %}{% blocktrans %}SolarOne tennis court lighting: LED court lights and floodlights for outdoor and indoor tennis courts — uniform illumination, low glare and broadcast-ready colour for every level of play.{% endblocktrans %}{% endblock %}
 
 {% block content %}
 {% include "includes/breadcrumb_jsonld.html" with section="products" %}
@@ -59,7 +59,7 @@
         <div class="products-banner">
           <div class="products-banner-content">
             <span class="products-banner-label">Indoor &amp; Outdoor Tennis Lighting</span>
-            <h1 class="section-title products-banner-title">Tennis Court Lighting</h1>
+            <h1 class="section-title products-banner-title">{% blocktrans %}Tennis Court Lighting{% endblocktrans %}</h1>
           </div>
         </div>
 

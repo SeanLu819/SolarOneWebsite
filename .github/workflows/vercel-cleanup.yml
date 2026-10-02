@@ -12,7 +12,14 @@
 # Requires repo secret: VERCEL_TOKEN (Vercel account settings -> Tokens,
 # scope = SolarOne team).
 #
-# Manual run: Actions tab -> "Cleanup old Vercel deployments" -> Run workflow.
+# Manual run: open the workflow directly and it will be indexed once this
+# workflow file lives on the repository DEFAULT branch (GitHub only indexes
+# workflows on the default branch, so on a repo whose default branch is master
+# while development happens on main, neither the Actions sidebar nor this URL
+# shows up until Settings -> Branches -> Default branch points at main).
+#
+#  https://github.com/<owner>/<repo>/actions/workflows/vercel-cleanup.yml
+#  -> green "Run workflow" -> pick main.
 
 name: Cleanup old Vercel deployments
 
