@@ -3295,18 +3295,34 @@ class ProductAdminSidebarTreeTests(SimpleTestCase):
         admin = self.pa.ProductAdmin(Product, django_admin.site)
         self.assertEqual(admin.get_ordering(None), ('order', 'pk'))
 
-    def test_change_list_orders_by_sidebar_rank(self):
-        """ChangeList.get_ordering 在标注过的 queryset 上注入侧栏排序。"""
+    def _make_change_list(self, params, list_display=()):
+        """Build a ``SidebarOrderedChangeList`` skeleton.
+
+        The tests below bypass ``ChangeList.__init__`` (``__new__``) to exercise
+        ``get_ordering`` in isolation, so every attribute Django's implementation
+        reads has to be supplied by hand. ``lookup_opts`` is the easy one to
+        miss: ``_get_deterministic_ordering()`` introspects it, and without it
+        the call dies with AttributeError instead of running the sidebar logic
+        under test.
+        """
         from django.contrib import admin as django_admin
-        from django.db.models import Value
         from pages.models import Product
         from pages.admin.product import SidebarOrderedChangeList
 
         admin = self.pa.ProductAdmin(Product, django_admin.site)
         cl = SidebarOrderedChangeList.__new__(SidebarOrderedChangeList)
-        cl.params = {}
+        cl.params = params
         cl.model_admin = admin
+        cl.model = Product
+        cl.lookup_opts = Product._meta
+        cl.list_display = list_display
+        return cl, Product
 
+    def test_change_list_orders_by_sidebar_rank(self):
+        """ChangeList.get_ordering 在标注过的 queryset 上注入侧栏排序。"""
+        from django.db.models import Value
+
+        cl, Product = self._make_change_list({})
         qs = Product.objects.none().annotate(_sidebar_rank=Value(0))
         ordering = cl.get_ordering(None, qs)
         self.assertEqual(ordering[0], '_sidebar_rank',
@@ -3315,17 +3331,9 @@ class ProductAdminSidebarTreeTests(SimpleTestCase):
 
     def test_change_list_respects_explicit_column_sort(self):
         """用户点击列排序（?o=...）时，侧栏默认顺序让位。"""
-        from django.contrib import admin as django_admin
         from django.db.models import Value
-        from pages.models import Product
-        from pages.admin.product import SidebarOrderedChangeList
 
-        admin = self.pa.ProductAdmin(Product, django_admin.site)
-        cl = SidebarOrderedChangeList.__new__(SidebarOrderedChangeList)
-        cl.params = {'o': '1'}
-        cl.model_admin = admin
-        cl.list_display = ()
-
+        cl, Product = self._make_change_list({'o': '1'})
         qs = Product.objects.none().annotate(_sidebar_rank=Value(0))
         ordering = cl.get_ordering(None, qs)
         self.assertNotIn('_sidebar_rank', ordering)

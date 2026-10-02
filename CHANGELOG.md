@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.4 - 2026-10-02
+
+The suite is green: `manage.py test` now reports **431 tests, 0 failures, 0
+errors**. Two `ProductAdminSidebarTreeTests` cases had errored on every run
+since they were written, which trained everyone to read "2 errors" as the
+baseline and stopped the suite from being a real gate.
+
+- Root cause was in the tests, not the admin: both cases build a
+  `SidebarOrderedChangeList` with `__new__` to exercise `get_ordering` in
+  isolation, but `ChangeList.__init__` is what sets `lookup_opts`, and Django's
+  `_get_deterministic_ordering()` introspects it — so the calls died with
+  AttributeError before reaching the sidebar logic they were meant to cover.
+- Fixed by building the skeleton in one `_make_change_list()` helper that sets
+  every attribute Django reads (`params`, `model_admin`, `model`, `lookup_opts`,
+  `list_display`). One place to keep correct instead of two copies to forget.
+- Verified with a mutation probe: flipping the `_sidebar_rank` injection in
+  `pages/admin/product.py` to `False` turns the case red, so the two tests
+  really assert the sidebar ordering instead of passing vacuously.
+
 ## v1.9.3 - 2026-10-02
 
 CJK section markers stopped leaking into the visible project body copy. v1.9.2

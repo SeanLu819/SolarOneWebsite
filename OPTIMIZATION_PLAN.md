@@ -24,8 +24,9 @@
 | 6 | 三落地页五语本地化 | `c24d186` | 6/6 locale 命中 |
 | 7 | 项目 `<title>` 注入品类词，**22/22 ≤60 字符** | `dbb2886` | 关键词与 `| SolarOne` 永不被切 |
 | 8 | 项目 meta description 压缩，**22/22 ≤160 字符、0 个 `【`** | `e6478d6` | 改前 599–1215 字符 |
+| 9 | 正文/列表卡/JSON-LD 的 `【】` 清洗 | `f92ad74` | 22/22 段落结构不变 |
 
-全量回归：**418 tests / 0 failures / 2 errors**（2 个 error 是预存的 `ProductAdminSidebarTreeTests`，与内容改动无关）。
+全量回归：**431 tests / 0 failures / 0 errors**（v1.9.4 起首次全绿；此前 2 个 `ProductAdminSidebarTreeTests` 常年 error，已修）。
 
 ---
 
@@ -81,6 +82,7 @@
 | # | 事项 | 现状 / 影响 | 建议 |
 |---|---|---|---|
 | ~~B1~~ | ~~正文 `【】` 残留~~ | ✅ **v1.9.3 已修** | 见 §2 |
+| ~~S1~~ | ~~2 个预存 error~~ | ✅ **v1.9.4 已修**，回归首次全绿 | 根因在测试：用 `__new__` 构造 `ChangeList`，漏了 `__init__` 才设置的 `lookup_opts`，而 Django `_get_deterministic_ordering()` 会读它 → 还没跑到被测逻辑就 AttributeError。改成一个 `_make_change_list()` helper 补齐字段；变异探针验证过（侧栏注入改 `False` 后测试确实变红） |
 | B2 | 「500+ projects / 50+ countries」自证矛盾 | `projects.html:6,8` 硬编码 500+，站内可验证 23 条案例 | 改可自证说法（如「精选案例覆盖 50+ 国家」），或补案例页。`home.html` 的 50+ 属营销话术，可保留 |
 | B3 | B 组：5 个纯人名词 slug 改关键词 | `pages/urls.py` **redirect 条目 = 0**，现在改 slug 直接 404 | 先建 301 redirect 表（seed + DB 双路径 + sitemap/llm.txt 同步），再 mv 5 个 `static/images/projects/<slug>/` 目录，并改 `project_detail.html:126` 的硬编码分支。**建议暂缓**，商业意图词贡献≈0 却要付 301 + 图片搬迁 + 模板分支成本 |
 | B4 | 未知产品 slug 软 404 | `views_products.py:397` 有意返回 200，已被 `test_unknown_slug_returns_real_404` 锁住 | 改真 404 须同步改守卫（当前是有意为之） |
