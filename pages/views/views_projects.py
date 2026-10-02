@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.core.paginator import Paginator
 from django.utils.translation import get_language
 from .common import get_common_context
+from pages.redirects import redirect_target_for_project
 from .i18n import (
     _get_projects_sidebar,
     _resolve_active_labels,
@@ -94,5 +95,13 @@ def project_detail(request, slug):
     else:
         context['active_venue_type'] = ''
         context['active_sport_type'] = ''
+
+        # S2: an unresolvable slug may simply be a page that was renamed. Only
+        # consulted on a miss, so a registered redirect can never shadow a live
+        # page. `redirect()` reverses, which keeps the visitor's language
+        # prefix — building the path by hand would drop /fr/ back to English.
+        moved = redirect_target_for_project(slug)
+        if moved:
+            return redirect('project_detail', moved, permanent=True)
 
     return render(request, 'project_detail.html', context)

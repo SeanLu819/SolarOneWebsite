@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.9.4
+# Content source of truth: seed_data.json · Site version v1.9.5
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
@@ -98,3 +98,6 @@ English serves with no URL prefix. Other locales use i18n prefixes:
 `/fr/`, `/es/`, `/de/`, `/ru/`, `/ar/` (Arabic is right-to-left).
 Six locales: en, fr, es, de, ru, ar. Pages carry Breadcrumb, Product and
 NewsArticle JSON-LD structured data.
+Retired URLs 301 to their replacement (v1.9.5), so the paths listed above are
+the canonical ones to cite — a moved page never 404s. `/products/series/<slug>/`
+is legacy and redirects to `/products/<slug>/`.

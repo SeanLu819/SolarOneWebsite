@@ -1,8 +1,19 @@
 from django.urls import path
+from django.views.generic import RedirectView
 from django.conf import settings
 from pages import views
+from pages.redirects import legacy_path_entries
 
-urlpatterns = [
+# S2: retired routes 301 to their replacement. These come FIRST on purpose —
+# a catch-all like `products/<slug:slug>/` would otherwise match the legacy
+# path and the redirect would never run. Empty table today: adding an entry to
+# LEGACY_PATH_REDIRECTS is all it takes to register one.
+_legacy_redirects = [
+    path(route, RedirectView.as_view(pattern_name=name, permanent=True))
+    for route, name in legacy_path_entries()
+]
+
+urlpatterns = _legacy_redirects + [
     path('', views.home, name='home'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),

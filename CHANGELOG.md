@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.5 - 2026-10-02
+
+The site had no redirect mechanism at all: zero entries in `pages/urls.py`,
+no redirect table anywhere. Renaming any slug would have 404'd, which is what
+blocked B3 (keyword renames for five project slugs). This builds the
+mechanism; no redirect is registered yet, because every entry is a decision
+that content actually moved.
+
+- New `pages/redirects.py` is the single source of truth, and deliberately
+  not the DB or `seed_data.json`: production runs stateless off the seed, so
+  a DB table would be invisible there, and a seed table would have to pay the
+  DB/seed double-write every content field already pays.
+- Two slug tables (project/product) are consulted inside the detail views,
+  and only when the requested slug fails to resolve — so registering a
+  redirect can never shadow a page that still exists.
+- A third table retires whole routes. Its value is a URL name, not a path
+  string, so the target is reversed and keeps the visitor's language.
+  (`RedirectView.as_view(kwargs=...)` raises TypeError — `kwargs` is not a
+  class attribute — which is why the target stays a bare `pattern_name`.)
+- Synthesised routes go first in `urlpatterns`; a catch-all like
+  `products/<slug:slug>/` would otherwise swallow the legacy path.
+- Guards: 21 cases in `pages/tests_redirects.py`, covering table validity
+  (self-reference, chains, dangling targets, relative paths), 301 not 302,
+  language preservation, and that live slugs are never redirected. Two
+  mutation probes confirmed the guards fail when the lookups are disabled.
+- Full suite: 452 tests, 0 failures, 0 errors.
+
 ## v1.9.4 - 2026-10-02
 
 The suite is green: `manage.py test` now reports **431 tests, 0 failures, 0

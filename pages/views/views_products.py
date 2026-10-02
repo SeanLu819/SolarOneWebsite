@@ -12,6 +12,7 @@ from .i18n import (
     _resolve_product_sidebar,
 )
 from .data_loaders import get_products, get_product_detail
+from pages.redirects import redirect_target_for_product
 
 
 # ---------------------------------------------------------------------------
@@ -397,6 +398,11 @@ def product_detail(request, slug):
     # "Product Not Found" branch with HTTP 200 (a soft 404): Google indexes
     # unlimited bogus URLs and ranks them as thin content.
     if product is None:
+        # S2: renamed page → 301 before the 404. Keeps the language prefix
+        # (redirect() reverses; a hand-built path would drop /fr/).
+        moved = redirect_target_for_product(slug)
+        if moved:
+            return redirect('product_detail', moved, permanent=True)
         raise Http404(f'No product matches slug {slug!r}')
 
     template = ('product_overview.html'

@@ -84,8 +84,9 @@
 | ~~B1~~ | ~~正文 `【】` 残留~~ | ✅ **v1.9.3 已修** | 见 §2 |
 | ~~S1~~ | ~~2 个预存 error~~ | ✅ **v1.9.4 已修**，回归首次全绿 | 根因在测试：用 `__new__` 构造 `ChangeList`，漏了 `__init__` 才设置的 `lookup_opts`，而 Django `_get_deterministic_ordering()` 会读它 → 还没跑到被测逻辑就 AttributeError。改成一个 `_make_change_list()` helper 补齐字段；变异探针验证过（侧栏注入改 `False` 后测试确实变红） |
 | B2 | 「500+ projects / 50+ countries」自证矛盾 | `projects.html:6,8` 硬编码 500+，站内可验证 23 条案例 | 改可自证说法（如「精选案例覆盖 50+ 国家」），或补案例页。`home.html` 的 50+ 属营销话术，可保留 |
-| B3 | B 组：5 个纯人名词 slug 改关键词 | `pages/urls.py` **redirect 条目 = 0**，现在改 slug 直接 404 | 先建 301 redirect 表（seed + DB 双路径 + sitemap/llm.txt 同步），再 mv 5 个 `static/images/projects/<slug>/` 目录，并改 `project_detail.html:126` 的硬编码分支。**建议暂缓**，商业意图词贡献≈0 却要付 301 + 图片搬迁 + 模板分支成本 |
-| B4 | 未知产品 slug 软 404 | `views_products.py:397` 有意返回 200，已被 `test_unknown_slug_returns_real_404` 锁住 | 改真 404 须同步改守卫（当前是有意为之） |
+| ~~S2~~ | ~~301 redirect 机制缺失~~ | ✅ **v1.9.5 已建** | 新增 `pages/redirects.py`（单一真源，纯 stdlib，不放 seed/DB）：项目/产品 slug 表 + 整条路由退役表。只在 slug 解析失败时才查表，所以登记 redirect 不会遮蔽现存活页；目标走 `reverse()`，语言前缀保留。守卫 21 例 + 两条变异探针 |
+| ~~B4~~ | ~~未知产品 slug 软 404~~ | ✅ **早已是真 404**（2026-10-02 实测 `/products/definitely-not-a-slug/` → 404） | `views_products.py:397` 现为 `raise Http404`，`test_unknown_slug_returns_real_404` 锁住。**此前文档描述过时，已更正**——无需再做 |
+| B3 | B 组：5 个纯人名词 slug 改关键词 | ✅ **前置已解除**（redirect 表现在可用） | 仍建议暂缓：商业意图词贡献≈0，却要付 301 登记（现在只需在 `pages/redirects.py` 加一行）+ mv 5 个 `static/images/projects/<slug>/` 目录 + 改 `project_detail.html:126` 硬编码分支 |
 | B5 | `red-1-karting-beijing` 描述 183 字符 | 22 条项目里唯一 thin | 扩写到 ≥400 字符（配图 + 客户背景 + 交付清单） |
 | B6 | RTL 零隔离 | `/ar/` 卡片拉丁标题双向重排（2026-09 已截图坐实） | `bdi` / `unicode-bidi` 专项，全站性 |
 | B7 | 生产联系表单持久化 | 存 /tmp DB，重部署清空 | 中期迁 Neon / Supabase |
