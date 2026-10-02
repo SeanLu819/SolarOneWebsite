@@ -3809,8 +3809,11 @@ class P3StaticBuildGateTests(SimpleTestCase):
                          '旧的「只告警然后继续」语义必须彻底删除')
 
     def test_build_sh_static_index_step_is_strict_and_fatal(self):
+        # End marker must be a string build.sh really prints: the old marker
+        # 'Creating public/ directory' never existed there, so the guard raised
+        # ValueError (substring not found) instead of checking the contract.
         segment = self._segment(self.build_sh, 'Generating static index',
-                               'Creating public/ directory')
+                               'pages/static_index_data.py generated')
         self.assertIn('--require-manifest', segment,
                       'build.sh 必须以严格模式生成索引（缺清单＝构建失败）')
         self.assertIn('exit 1', segment, '索引生成失败必须中断构建')

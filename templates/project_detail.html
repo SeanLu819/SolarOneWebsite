@@ -5,7 +5,8 @@
 
 {% block title %}{% if project %}{{ project.seo_title_t }}{% else %}{% trans "Project Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if project %}{{ project.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
-{% block og_title %}{% if project %}{{ project.seo_title_t }}{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
+{% comment %}og:title keeps the FULL project name — the <title> above is clamped to <= 60 chars so the keyword survives SERP truncation, but a shared card should not read "Morgan State…".{% endcomment %}
+{% block og_title %}{% if project %}{{ project.title_t }} | SolarOne{% else %}{{ config.meta_title }}{% endif %}{% endblock %}
 {% block og_description %}{% if project %}{{ project.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
 {% block og_type %}<meta property="og:type" content="article">{% endblock %}
 {% block og_image %}{% if project and project.image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ project.image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}

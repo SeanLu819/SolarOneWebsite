@@ -143,6 +143,46 @@ CATEGORY_KEYWORD = {
 #: individual overrides land with B4/C1 content work.
 SLUG_KEYWORD_OVERRIDE = {}
 
+#: Project ``sport_type`` -> SEO keyword phrase (English). All 17 values of
+#: ``Project.SPORT_TYPE_CHOICES`` share the OLD static suffix
+#: ``{title} — SolarOne LED Lighting Project``, i.e. not one of the 22 project
+#: pages carried a single category keyword. The phrase is spliced into the
+#: project <title> so ``/projects/<slug>/`` holds a real commercial-intent
+#: token (``led football stadium lights``, ``led tennis court lights``) instead
+#: of a generic one.
+#:
+#: Word choice is literal, not "natural English": the buyer-facing search
+#: phrases keep the modifier lowercase and the head noun capitalised exactly as
+#: written in the ad copy — ``LED football Stadium Lights``, ``LED tennis Court
+#: Lights``. Do not "correct" the casing; the strings are the contract that
+#: ``pages/tests_project_seo_title.py`` asserts.
+#:
+#: Localisation: non-English locales fall back to the English phrase (same B8/E2
+#: convention already used by ``_seo_keyword``); per-language keyword phrasing
+#: is a later batch, not a silent regression gate.
+PROJECT_CATEGORY_KEYWORD = {
+    'FOOTBALL_FIELD': 'LED football Stadium Lights',
+    'SOCCER_FIELD': 'LED soccer Stadium Lights',
+    'BASEBALL_FIELD': 'LED baseball Field Lights',
+    'TENNIS_COURTS': 'LED tennis Court Lights',
+    'TENNIS': 'LED tennis Court Lights',
+    'SKI_AREA': 'LED Ski Area Lights',
+    'KARTING': 'LED Karting Track Lights',
+    'BASKETBALL': 'LED Basketball Court Lights',
+    'VELODROME': 'LED Velodrome Lights',
+    'MULTI_SPORT': 'LED Multi-Sport Arena Lights',
+    'FENCING': 'LED Fencing Arena Lights',
+    'AQUATICS_CENTRE': 'LED Aquatics Centre Lights',
+    'AIRPORT': 'LED Airport Area Lights',
+    'ICE_ARENA': 'LED Ice Arena Lights',
+    'CITY_EXPRESSWAY': 'LED Roadway Lights',
+    'OTHER': 'LED Lighting',
+}
+
+#: Reciprocal of ``SPORT_TYPE_CHOICES`` — any key outside the 17 above is an
+#: unknown value and gets no keyword.
+DEFAULT_PROJECT_CATEGORY_KEYWORD = 'LED Lighting'
+
 #: Brand token — never translated (project convention: ``SolarOne`` stays).
 _SEO_BRAND = 'SolarOne'
 
@@ -182,6 +222,66 @@ def _seo_keyword(obj, lang='en'):
         return kw
     localized = obj.t('category', lang) if hasattr(obj, 't') else kw
     return localized or kw
+
+
+def project_category_keyword(sport_type, lang='en'):
+    """English SEO keyword phrase for a project's ``sport_type``.
+
+    Mirrors ``_seo_keyword`` for the product side: English gets the mapped
+    phrase, any other locale falls back to it (per-language phrasing is B8/E2).
+    Unknown/blank ``sport_type`` collapses to ``DEFAULT_PROJECT_CATEGORY_KEYWORD``
+    so the formula never emits an empty middle segment.
+    """
+    if lang and lang != 'en':
+        return PROJECT_CATEGORY_KEYWORD.get(sport_type, DEFAULT_PROJECT_CATEGORY_KEYWORD)
+    return PROJECT_CATEGORY_KEYWORD.get(sport_type, DEFAULT_PROJECT_CATEGORY_KEYWORD)
+
+
+#: Hard budget for the English project ``<title>``. Google truncates the tail
+#: of a <title> tag on the SERP (roughly 50–60 characters for Latin script),
+#: so a longer title silently loses the keyword AND the brand. 16 of the 22
+#: seeded project names alone are longer than the whole budget, hence the
+#: length clamp below. Kept as a module constant so the guard test and the
+#: formula can never disagree.
+MAX_SEO_TITLE_LEN = 60
+
+
+def _fit_project_title(title, kw, limit=MAX_SEO_TITLE_LEN):
+    """Shrink ``title`` so ``{title} — {kw} | SolarOne`` fits ``limit`` chars.
+
+    The cut happens on a **word boundary** (never mid-word) and appends an
+    ellipsis, so the readable part stays a real word chain. The keyword and the
+    brand — the parts worth paying for — are never shortened; only the project
+    name gives way, which is safe because the full name is still rendered in
+    the H1, the og:title, the breadcrumb JSON-LD and the body copy.
+
+    Returns ``title`` untouched when it already fits (the common case).
+    """
+    fixed = len(f' — {kw} | {_SEO_BRAND}')
+    avail = limit - fixed - 1  # -1 reserves the ellipsis
+    if avail <= 0:
+        return title[:max(limit - fixed, 0)]
+    if len(title) <= avail:
+        return title
+    cut = title[:avail]
+    if ' ' in cut:
+        cut = cut[:cut.rindex(' ')].rstrip()
+    return f'{cut}…'
+
+
+def build_project_seo_title(title, sport_type='', lang='en'):
+    """Project <title> formula: ``{title} — {品类词} | SolarOne`` (<= 60 chars).
+
+    The keyword sits between the em-dash and the brand, which gives the
+    commercial token a straight path to the front of the SERP line. The literal
+    word ``Project`` (v1.9.1's first pass) was dropped: it cost 9 characters
+    and, on the 16 longer project names, pushed the keyword past the fold.
+    Brand suffix uses the ``| SolarOne`` form already shipped on the keyword
+    landing pages, so project pages and landing pages agree on the separator.
+    """
+    kw = project_category_keyword(sport_type, lang)
+    fitted = _fit_project_title(title, kw)
+    return f'{fitted} — {kw} | {_SEO_BRAND}'
 
 
 def _seo_identifier(obj):

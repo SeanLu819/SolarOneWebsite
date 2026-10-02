@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.1 - 2026-10-02
+
+Project pages carry their category keyword in `<title>` — 22 of 22 project URLs
+used to share one generic suffix (`{title} — SolarOne LED Lighting Project`)
+with no sport keyword at all.
+
+- New `PROJECT_CATEGORY_KEYWORD` map + `project_category_keyword()` /
+  `build_project_seo_title()` in `pages/utils.py` (pure Python, no Django
+  import, shared by the DB and seed paths).
+- `Project.seo_title()` (`pages/models.py`) and its seed mirror
+  `_DictProject.seo_title()` (`pages/views/utils.py`) both render
+  `{title} — {品类词} Project | SolarOne`:
+  - `FOOTBALL_FIELD` → `LED football Stadium Lights`
+  - `TENNIS_COURTS` / `TENNIS` → `LED tennis Court Lights`
+  - the other 14 `sport_type` values get their own phrase; unknown values fall
+    back to `LED Lighting` (never an empty middle segment).
+- Brand separator switched to the `| SolarOne` form already used by the three
+  keyword landing pages, so project and landing titles agree.
+- Length clamp (`MAX_SEO_TITLE_LEN = 60`) — the first pass emitted titles up to
+  99 characters, which Google truncates, cutting the keyword and the brand off
+  the SERP line. `build_project_seo_title()` now drops the word "Project" (9
+  free characters) and, when the title still overflows, clamps the **project
+  name** on a word boundary with an ellipsis. The keyword and the brand are
+  never shortened — the full project name still lives in the H1, the
+  og:title (`project_detail.html` now renders `{{ project.title_t }} | SolarOne`
+  there instead of the clamped title), the breadcrumb JSON-LD and the body.
+  All 22 project titles land in 50–59 characters; guards assert the budget.
+- Non-English locales fall back to the English phrase (same B8/E2 convention as
+  the product side) — per-language keyword phrasing is a later batch.
+- Guards: new `pages/tests_project_seo_title.py` (8 cases, asserts the exact
+  campaign strings byte for byte) plus a fix to the pre-existing
+  `P3StaticBuildGateTests` marker bug (it looked for a `build.sh` echo that
+  never existed, so it raised `ValueError` instead of checking the contract).
+- Full suite: 396 tests, 0 failures, 2 pre-existing `ProductAdminSidebarTreeTests`
+  errors (missing `lookup_opts`, unrelated to content).
+
 ## v1.9.0 - 2026-10-02
 
 Keyword landing pages for the Semrush sport-lighting cluster (Tier-1 + Tier-2),

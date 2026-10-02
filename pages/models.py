@@ -9,7 +9,8 @@ from django.dispatch import receiver
 from django.conf import settings
 from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
-    build_seo_title, build_seo_description, get_seo_override,
+    build_seo_title, build_seo_description, build_project_seo_title,
+    get_seo_override,
 )
 
 
@@ -396,12 +397,19 @@ class Project(models.Model):
         return translate(self, field_name, lang)
 
     def seo_title(self, lang='en'):
-        """Per-page <title> (B3). Explicit ``seo_title`` translation wins; else
-        ``{title} — SolarOne LED Lighting Project`` (preserves current format)."""
+        """Per-page <title> (B3).
+
+        Explicit ``seo_title`` translation wins (the project ``translations``
+        map carries no ``en`` key today, so English always renders the formula
+        below). Otherwise ``{title} — {品类词} Project | SolarOne`` — the
+        category keyword comes from ``project_category_keyword`` (sport_type),
+        so a football project reads ``... — LED football Stadium Lights
+        Project | SolarOne`` instead of the old keyword-free generic suffix.
+        """
         explicit = get_seo_override(self, 'seo_title', lang)
         if explicit:
             return explicit
-        return f'{self.title} — SolarOne LED Lighting Project'
+        return build_project_seo_title(self.title, self.sport_type, lang)
 
     def seo_description(self, lang='en'):
         """Per-page meta description (B3). Explicit wins; else translated description

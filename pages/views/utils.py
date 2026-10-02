@@ -7,7 +7,8 @@ from django.templatetags.static import static
 from pages.static_scan import build_file_set
 from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
-    build_seo_title, build_seo_description, get_seo_override,
+    build_seo_title, build_seo_description, build_project_seo_title,
+    get_seo_override,
 )
 
 logger = logging.getLogger(__name__)
@@ -572,11 +573,16 @@ class _DictProject:
         return translate(self, field_name, lang)
 
     def seo_title(self, lang='en'):
-        """Seed-path mirror of ``pages.models.Project.seo_title``."""
+        """Seed-path mirror of ``pages.models.Project.seo_title``.
+
+        Formula must stay byte-identical to the model: this class backs
+        ``IS_VERCEL`` production (``_load_seed()``), so a drift here would show
+        the old generic title online only.
+        """
         explicit = get_seo_override(self, 'seo_title', lang)
         if explicit:
             return explicit
-        return f'{self.title} — SolarOne LED Lighting Project'
+        return build_project_seo_title(self.title, self.sport_type, lang)
 
     def seo_description(self, lang='en'):
         """Seed-path mirror of ``pages.models.Project.seo_description``."""
