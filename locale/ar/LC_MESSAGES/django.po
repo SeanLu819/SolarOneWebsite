@@ -785,7 +785,7 @@ msgstr "تواصل مع SolarOne — احصل على عرض أسعار للإض�
 msgid "News — SolarOne LED Lighting Updates"
 msgstr "الأخبار — مستجدات إضاءة LED من SolarOne"
 
-msgid "LED Lighting Products — SolarOne Professional Lighting Solutions"
+msgid "LED Lighting Products — SolarOne Professional Lighting"
 msgstr "منتجات الإضاءة LED — حلول إضاءة احترافية من SolarOne"
 
 msgid "LED Lighting Projects — SolarOne Projects Worldwide"

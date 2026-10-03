@@ -819,7 +819,7 @@ msgstr "Свяжитесь с SolarOne — Получите расчёт LED-о�
 msgid "News — SolarOne LED Lighting Updates"
 msgstr "Новости — Обновления светодиодного освещения SolarOne"
 
-msgid "LED Lighting Products — SolarOne Professional Lighting Solutions"
+msgid "LED Lighting Products — SolarOne Professional Lighting"
 msgstr ""
 "Продукция светодиодного освещения — Профессиональные решения освещения "
 "SolarOne"

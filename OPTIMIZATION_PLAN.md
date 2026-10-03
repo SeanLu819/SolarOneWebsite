@@ -109,6 +109,23 @@ v1.9.6 补掉了最后一处已知的 description 预算缺口（全站 58 URL �
 | B3 | B 组：5 个纯人名词 slug 改关键词 | ✅ **前置已解除**（redirect 表现在可用） | 仍建议暂缓：商业意图词贡献≈0，却要付 301 登记（现在只需在 `pages/redirects.py` 加一行）+ mv 5 个 `static/images/projects/<slug>/` 目录 + 改 `project_detail.html:126` 硬编码分支 |
 | B5 | `red-1-karting-beijing` 描述 183 字符 | 22 条项目里唯一 thin | 扩写到 ≥400 字符（配图 + 客户背景 + 交付清单）**——需要你提供事实内容，AI 不能编造客户背景** |
 | B8 | fr/es/de 译文 description 164–209 字符 | 英文已达标，非英语超的是**字符数**不是版面宽度 | **待你决策**：若要压需重写 5 语译文（AI 可执行，但术语与营销措辞需你过目）。ru/ar 不建议动（每字符信息量高） |
+
+### 2026-10-03 下午复审计（58 URL 全扫 + 六语抽样）新发现
+
+**先说已排除的虚警**（测量 bug，非站点问题）：`content="([^"\']*)"` 里的单引号会把
+`Explore SolarOne's range...` 截断成 `Explore SolarOne`（16 字符），一度误报「3 条超短 desc」。
+真实分布是 **107–160 字符，无超短无超长**（v1.9.6 已上线生效）。
+
+| # | 优先级 | 问题 | 证据 |
+|---|---|---|---|
+| ~~C1~~ | ~~产品页非英语 description 没有 clamp~~ | ✅ **v1.9.8 已修** | 新增 `pages.utils.fit_description`（句界优先），`Product.seo_description` + `_DictProduct.seo_description` 双路径同步（另加 `tests_seo_keywords.py` 测试镜像）。实测 24 产品 × 6 语 = 144 条全部 ≤160、英语零变化。**守卫本身是探针逼出来的**：第一版只测 seed 路径，从 `models.py` 删掉 clamp 依然全绿（测试环境渲染走 seed 镜像），补了 DB 路径 + 双路径一致性两条才锁住 |
+| ~~C2~~ | ~~title 超 60：news 80 / products 64~~ | ✅ **v1.9.8 已修** | products 改 `templates/products.html:5,7`（**title 与 og_title 必须成对改**，否则 i18n 覆盖守卫立刻报"缺 gettext 条目"）；news 是**数据不是文案** → 改 `seed_data.json` + `pages/seed_data.py` 两处真源。现 57 / 54 字符 |
+| C3 | P2 | **594/596 张图无 width/height**（CLS 风险） | 全站 596 个 `<img>` 只有 2 个有显式尺寸；`fetchpriority="high"` 仅 26 个 |
+| C4 | P2 | 593/596 张图无 srcset | 三档方案待议（v1.9.x 起已挂账） |
+| C5 | P2 | 项目页非英语 desc 全回退英文 | `/projects/perryville-high-school/` 五语 desc 均 156 字符（项目 `translations` 无 `en` 键 → 恒走公式，见 C1 的对照） |
+
+**已确认 OK、别重复做**：canonical 58/58 ✓、hreflang **7 标签 58/58** ✓、OG + Twitter 全覆盖 ✓、
+无重复 title ✓、h1 全有且 ≤60 ✓、img `alt` 全有 ✓、JSON-LD 17 类 ✓、desc 全 107–160 ✓。
 | B6 | RTL 零隔离 | `/ar/` 卡片拉丁标题双向重排（2026-09 已截图坐实） | `bdi` / `unicode-bidi` 专项，全站性 |
 | B7 | 生产联系表单持久化 | 存 /tmp DB，重部署清空 | 中期迁 Neon / Supabase |
 
@@ -119,7 +136,8 @@ v1.9.6 补掉了最后一处已知的 description 预算缺口（全站 58 URL �
 1. ~~**先 A2**（默认分支切 main）~~ → **已做**：2026-10-03 已 push + 部署上线。
 2. ⚠️ **A2 仍待补做**：默认分支实测仍是 `master`，A5 的 cron 在切到 `main` 之前不会触发。
 3. push v1.9.6（站点级 description）。
-4. 代码侧可继续开工的：**B2**（自证矛盾，纯文案 + 5 语 `.po`）；B5/B8 待你给内容或决策。
+4. 代码侧可继续开工的：**C1**（唯一"逻辑不对称"的真 bug，影响 5 语 × 24 产品）→ 然后 C2；
+   B2 属纯文案 + 5 语 `.po`，可并行；B3/B5/B8 待决策或需你提供内容。
 
 ---
 

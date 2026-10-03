@@ -339,6 +339,25 @@ def _fit_project_description(prose, limit):
     return f'{prose[:limit - 1].rstrip()}…'
 
 
+def fit_description(prose, limit=MAX_SEO_DESCRIPTION_LEN):
+    """Clamp arbitrary prose into the SERP budget on a sentence boundary.
+
+    v1.9.7 shipped the *non-English* product descriptions unclamped: those
+    branches return ``self.t('description', lang)``, which is the raw body copy
+    (168-387 chars in the seed) because most products have no translated
+    ``description`` at all and fall back to the English original. So ``/fr/
+    products/fl6m/`` served 343 characters into a tag Google cuts at ~155,
+    while the same page in English served the 156-char formula.
+
+    The English formula cannot be reused here: it is English prose, and putting
+    it on a /fr/ page would contradict the hreflang signals that page emits.
+    Clamping the translated text keeps the locale's own copy and still fits the
+    snippet. Sentence boundary first, word boundary as the fallback — the same
+    policy ``_fit_project_description`` uses for projects.
+    """
+    return _fit_project_description((prose or '').strip(), limit)
+
+
 def build_project_seo_description(prose, sport_type='', lang='en'):
     """Project meta description: ``{品类词} — {first sentence}`` (<= 160 chars).
 
@@ -406,9 +425,9 @@ def build_seo_description(obj, lang='en'):
     """B5 description formula: unique, 50–160 chars (English baseline).
 
     The identifier is always embedded, guaranteeing uniqueness across the 24
-    product pages even when specs are sparse. Non-English callers fall back to
-    the translated ``description`` at the model-method level, not here. B4/C1
-    will replace these with richer, hand-written per-page prose.
+    product pages even when specs are sparse. Non-English callers get the
+    translated ``description`` clamped by ``fit_description`` at the model
+    level (see the note there); this formula stays English-only on purpose.
     """
     kw = _seo_keyword(obj, lang)
     identifier = _seo_identifier(obj)

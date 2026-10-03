@@ -9,7 +9,7 @@ from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
     build_seo_title, build_seo_description, build_project_seo_title,
     build_project_seo_description, build_project_og_description,
-    get_seo_override,
+    fit_description, get_seo_override,
 )
 
 logger = logging.getLogger(__name__)
@@ -542,7 +542,9 @@ class _DictProduct:
             return explicit
         if lang == 'en':
             return build_seo_description(self, lang)
-        return self.t('description', lang)
+        # Raw body copy is 168-387 chars; the non-English snippet is clamped
+        # instead of shipped whole, or /fr/ pages outrun the SERP budget.
+        return fit_description(self.t('description', lang))
 
     @property
     def jsonld_properties(self):

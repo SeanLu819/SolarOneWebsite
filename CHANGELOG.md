@@ -2,6 +2,52 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.8 - 2026-10-03
+
+A full-site sweep of all 58 sitemap URLs in six locales found two places where
+the SEO budget was still not enforced. Both are closed here, together with the
+guards that keep them closed.
+
+**Non-English product descriptions were never clamped.** ``Product.seo_description``
+returns the translated ``description`` for every locale except English, and in
+the seed most products have no translated description at all, so those branches
+fell back to the English original and shipped 168-387 characters into a 160-char
+tag. ``/fr/products/fl6m/`` served 343 characters while ``/products/fl6m/``
+served the 156-char formula. The project side never had this gap —
+``_DictProject.seo_description`` clamps in every locale.
+
+- New ``pages.utils.fit_description`` clamps on a sentence boundary, reusing the
+  policy ``_fit_project_description`` already gives projects.
+- The English formula is deliberately *not* reused for non-English: it is English
+  prose, and putting it on a /fr/ page would contradict the hreflang that same
+  page emits. Clamping keeps the locale's own copy.
+- Applied in both mirrored paths — ``Product.seo_description`` (DB) and
+  ``_DictProduct.seo_description`` (seed, what ``IS_VERCEL`` runs) — plus the
+  test mirror in ``tests_seo_keywords.py``. Verified: 24 products x 6 locales =
+  144 strings, all within budget, English unchanged.
+- **Two mutation probes caught real blind spots in the new guards**: the first
+  version only exercised the seed path, so deleting the clamp from
+  ``Product.seo_description`` stayed green. The rendered pages in the test
+  environment come from the seed mirror, so a DB-path test had to be added
+  explicitly, along with a direct model-vs-seed equality check.
+
+**Two titles exceeded the 60-character budget.** ``/products/`` carried a 64-char
+literal, and ``news_detail.html`` appends ' — SolarOne News' to the stored
+article title, which put that page at 80. Both now fit (54 and 57). The news
+title is data, not copy — it lives in ``seed_data.json`` and its build artifact
+``pages/seed_data.py``, both of which were edited together. The products title
+was rekeyed in all five locales with the translations carried over.
+
+- Guards: 18 cases in ``pages/tests_product_seo_description_budget.py``, covering
+  the clamp policy, both code paths, the rendered /fr/ pages, every
+  ``{% blocktrans %}`` title, and both seed mirrors with a drift check.
+- The i18n coverage guard in ``pages/tests.py`` earned its keep immediately: it
+  failed on the og:title block that still held the 64-char string because the
+  ``<title>`` beside it had already been shortened. A ``title`/`og_title``
+  pairing test now locks that directly.
+
+Full suite: 493 tests, 0 failures, 0 errors.
+
 ## v1.9.7 - 2026-10-03
 
 Performance and correctness pass driven by a full-site audit. The headline

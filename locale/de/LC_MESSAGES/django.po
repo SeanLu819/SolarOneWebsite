@@ -819,7 +819,7 @@ msgstr ""
 msgid "News — SolarOne LED Lighting Updates"
 msgstr "News — SolarOne LED-Beleuchtungs-Updates"
 
-msgid "LED Lighting Products — SolarOne Professional Lighting Solutions"
+msgid "LED Lighting Products — SolarOne Professional Lighting"
 msgstr ""
 "LED-Beleuchtungsprodukte — Professionelle SolarOne Beleuchtungslösungen"
 

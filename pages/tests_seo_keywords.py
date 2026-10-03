@@ -23,6 +23,7 @@ from pages.utils import (
     SLUG_KEYWORD_OVERRIDE,
     build_seo_description,
     build_seo_title,
+    fit_description,
     get_seo_override,
     translate,
 )
@@ -56,7 +57,7 @@ class _FakeObj:
             return explicit
         if lang == 'en':
             return build_seo_description(self, lang)
-        return self.t('description', lang)
+        return fit_description(self.t('description', lang))
 
 
 class CategoryKeywordMappingTests(TestCase):

@@ -11,7 +11,7 @@ from pages.utils import (
     strip_hash_suffix, translate, jsonld_property_pairs,
     build_seo_title, build_seo_description, build_project_seo_title,
     build_project_seo_description, build_project_og_description,
-    get_seo_override,
+    fit_description, get_seo_override,
 )
 
 
@@ -211,14 +211,20 @@ class Product(models.Model):
         return build_seo_title(self, lang)
 
     def seo_description(self, lang='en'):
-        """Per-page meta description (B3/B5). Explicit wins; English falls back to the
-        formula, non-English to the translated ``description`` (no English regression)."""
+        """Per-page meta description. Explicit wins; English gets the B5 formula,
+        non-English the translated ``description`` clamped to the SERP budget.
+
+        v1.9.8: the non-English branch used to return the raw body copy, so a
+        product with no translated description served 343-387 characters into a
+        160-char tag. ``fit_description`` is what keeps every locale inside the
+        budget without putting English prose on a /fr/ page.
+        """
         explicit = get_seo_override(self, 'seo_description', lang)
         if explicit:
             return explicit
         if lang == 'en':
             return build_seo_description(self, lang)
-        return self.t('description', lang)
+        return fit_description(self.t('description', lang))
 
     @property
     def jsonld_properties(self):
