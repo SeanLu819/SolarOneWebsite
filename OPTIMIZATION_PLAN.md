@@ -1,18 +1,20 @@
-# SolarOne 外贸站 — SEO / GEO 优化状态与待办（v1.9.2）
+# SolarOne 外贸站 — SEO / GEO 优化状态与待办（v1.9.6）
 
-> 最后更新：2026-10-02 · 所有结论均来自本地脚本实测（`seed_data.json` + Django test client 渲染），非主观判断。
-> 代码状态：本地 `main` ahead 3（`c24d186` → `dbb2886` → `e6478d6`），**均未 push**；远端 `main = d378695`。
+> 最后更新：2026-10-03 · 所有结论均来自本地脚本实测 + 线上 `curl` 实测，非主观判断。
+> 代码状态：v1.9.1–v1.9.5 **已 push 并部署上线**（`origin/main = c6157fa`）；v1.9.6 为本地新提交，未 push。
+> ⚠️ **GitHub 默认分支仍是 `master`**（2026-10-03 `git ls-remote --symref` 实测），见 A1。
 
 ---
 
 ## 0. 一句话结论
 
 **代码层面的 SEO 硬伤基本修完，卡点已从"代码"转移到"发布动作 + 内容源清洗"。**
-未完成的 12 项里，8 项只能在你本机/控制台完成，4 项需要改代码（其中 1 项是 P0）。
+v1.9.6 补掉了最后一处已知的 description 预算缺口（全站 58 URL 扫出 5 条站点级超标）。
+未完成项里，多数只能在你本机/控制台完成。
 
 ---
 
-## 1. 已完成（已本地 commit，未上线）
+## 1. 已完成
 
 | # | 项 | 提交 | 实测 |
 |---|---|---|---|
@@ -25,8 +27,26 @@
 | 7 | 项目 `<title>` 注入品类词，**22/22 ≤60 字符** | `dbb2886` | 关键词与 `| SolarOne` 永不被切 |
 | 8 | 项目 meta description 压缩，**22/22 ≤160 字符、0 个 `【`** | `e6478d6` | 改前 599–1215 字符 |
 | 9 | 正文/列表卡/JSON-LD 的 `【】` 清洗 | `f92ad74` | 22/22 段落结构不变 |
+| 10 | 修 2 个常年 error 的 admin 测试，**首次全绿** | `c702975` | 431 → 0/0 |
+| 11 | 301 redirect 机制（`pages/redirects.py`） | `c6157fa` | 452 tests / 0/0 |
+| 12 | **站点级 meta description 压到 ≤160**（v1.9.6） | 待 push | 线上实测超标 5 条 → 现 148–157 |
 
-全量回归：**431 tests / 0 failures / 0 errors**（v1.9.4 起首次全绿；此前 2 个 `ProductAdminSidebarTreeTests` 常年 error，已修）。
+全量回归：**462 tests / 0 failures / 0 errors**。
+
+### v1.9.6 细节：站点级 description（2026-10-03 线上全站扫描发现）
+
+线上 58 个 sitemap URL 全扫，5 条超标：`/` 180、`/products/` 187、`/about/` 179、
+`/products/football-stadium-lights/` 171、`/products/tennis-court-lighting/` 187。
+改成 148–157 字符，砍的全是填充词（`at every level of play` / `field-proven reliability` /
+`worldwide` / `solutions`），商业词一个没丢。
+
+- 🔴 **测长度必须先 `html.unescape`**：Django 把 `'` 渲染成 `&#x27;`，raw HTML 每个撇号多 5 字符。
+  第一遍扫项目页时 5 条"超标"是**误报**（161–164 → 解码后都 ≤160）。
+- 五语 msgid 全部重键、`msgstr` 原样保留；用「改动前后 dump 全部 `.mo` 条目比对」证明零漂移。
+- **非英语故意不压到 160**：Google 按渲染宽度截断，ru/ar 每字符承载信息量远大于拉丁字母，
+  190 字符的俄语比 160 字符的英语占的版面还小。ar 现已自然落在 126–143。
+  如果你仍想压 fr/es/de（164–209），需要授权重写译文——这是独立决策，不夹带。
+
 
 ---
 
@@ -69,8 +89,8 @@
 
 | # | 事项 | 卡点 | 动作 |
 |---|---|---|---|
-| A1 | **push（3 个提交）** | GitHub 认证断，`git push --dry-run` → `could not read Username` | 本机换 SSH remote：`git remote set-url origin git@github.com:SeanLu819/SolarOneWebsite.git` 后 push main |
-| A2 | **默认分支 master → main** | 默认分支目前是 `master`（僵尸旧码），**scheduled workflow 只在默认分支生效** | GitHub → Settings → Branches → Default branch → `main` |
+| ~~A1~~ | ~~push~~ | ✅ **已完成** 2026-10-03，`origin/main = c6157fa`，本地 ahead 0 | 6 个提交全部上线 |
+| A2 | **默认分支 master → main** | 2026-10-03 `git ls-remote --symref` 实测 HEAD 仍指 `refs/heads/master`（`ef45310`）。**scheduled workflow 只在默认分支生效** | GitHub → Settings → Branches → Default branch → `main` |
 | A3 | Vercel 配邮件环境变量 | `settings.py:445-458` 已就绪，但 `CONTACT_NOTIFY_EMAIL` / `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD` 只有 env 有值时才生效 | 未配 → 联系表单仍落 /tmp DB，重部署即丢 |
 | A4 | Cloudflare 放行 AI 爬虫 | CF 新域默认拦截 AI crawler（robots.txt 已写好 6 UA，代码无解） | CF console → AI Crawl Control / Bot 管理手动放行 |
 | A5 | 跑一次 vercel-cleanup + 看存储 | 存储约 8.94/10GB，聚合有延迟 | 直接访问 `/actions/workflows/vercel-cleanup.yml` → Run workflow → 选 main |
@@ -87,30 +107,37 @@
 | ~~S2~~ | ~~301 redirect 机制缺失~~ | ✅ **v1.9.5 已建** | 新增 `pages/redirects.py`（单一真源，纯 stdlib，不放 seed/DB）：项目/产品 slug 表 + 整条路由退役表。只在 slug 解析失败时才查表，所以登记 redirect 不会遮蔽现存活页；目标走 `reverse()`，语言前缀保留。守卫 21 例 + 两条变异探针 |
 | ~~B4~~ | ~~未知产品 slug 软 404~~ | ✅ **早已是真 404**（2026-10-02 实测 `/products/definitely-not-a-slug/` → 404） | `views_products.py:397` 现为 `raise Http404`，`test_unknown_slug_returns_real_404` 锁住。**此前文档描述过时，已更正**——无需再做 |
 | B3 | B 组：5 个纯人名词 slug 改关键词 | ✅ **前置已解除**（redirect 表现在可用） | 仍建议暂缓：商业意图词贡献≈0，却要付 301 登记（现在只需在 `pages/redirects.py` 加一行）+ mv 5 个 `static/images/projects/<slug>/` 目录 + 改 `project_detail.html:126` 硬编码分支 |
-| B5 | `red-1-karting-beijing` 描述 183 字符 | 22 条项目里唯一 thin | 扩写到 ≥400 字符（配图 + 客户背景 + 交付清单） |
+| B5 | `red-1-karting-beijing` 描述 183 字符 | 22 条项目里唯一 thin | 扩写到 ≥400 字符（配图 + 客户背景 + 交付清单）**——需要你提供事实内容，AI 不能编造客户背景** |
+| B8 | fr/es/de 译文 description 164–209 字符 | 英文已达标，非英语超的是**字符数**不是版面宽度 | **待你决策**：若要压需重写 5 语译文（AI 可执行，但术语与营销措辞需你过目）。ru/ar 不建议动（每字符信息量高） |
 | B6 | RTL 零隔离 | `/ar/` 卡片拉丁标题双向重排（2026-09 已截图坐实） | `bdi` / `unicode-bidi` 专项，全站性 |
 | B7 | 生产联系表单持久化 | 存 /tmp DB，重部署清空 | 中期迁 Neon / Supabase |
 
 ---
 
-## 5. 建议执行顺序（明早）
+## 5. 建议执行顺序
 
-1. **先 A2**（默认分支切 main）—— 1 分钟，且必须早于 push，否则 workflow 触发策略可能反复。
-2. **再 A1 push**（三个提交一次性上 Production）。
-3. 上线后逐步 A3–A6。
-4. 代码侧只留 **B1（P0）** 可以现在开工，改完一并 push；B2/B5 属内容，可并行；B3 建议搁置。
+1. ~~**先 A2**（默认分支切 main）~~ → **已做**：2026-10-03 已 push + 部署上线。
+2. ⚠️ **A2 仍待补做**：默认分支实测仍是 `master`，A5 的 cron 在切到 `main` 之前不会触发。
+3. push v1.9.6（站点级 description）。
+4. 代码侧可继续开工的：**B2**（自证矛盾，纯文案 + 5 语 `.po`）；B5/B8 待你给内容或决策。
 
 ---
 
 ## 6. 回归验证清单（上线后）
 
 ```bash
-# 本地
-python manage.py test          # 期望 418+ / 0 failures / 2 预存 errors
+# 本地（注意：线上必须带 www，裸域 308 跳 www）
+python manage.py test          # 期望 462+ / 0 failures / 0 errors
 
 # 线上
-curl -s https://solaronelighting.com/projects/perryville-high-school/ | grep -o "<title>[^<]*"
-curl -s https://solaronelighting.com/sitemap.xml | grep -c "<loc>"
-curl -s https://solaronelighting.com/ | grep -o 'hreflang="[a-z-]*"'
-curl -s https://solaronelighting.com/llms.txt | head -1
+curl -sL https://www.solaronelighting.com/projects/perryville-high-school/ | grep -o "<title>[^<]*"
+curl -sL https://www.solaronelighting.com/sitemap.xml | grep -c "<loc>"
+curl -sL https://www.solaronelighting.com/ | grep -o 'hreflang="[a-z-]*"'
+curl -sL https://www.solaronelighting.com/llms.txt | head -1
+
+# v1.9.6 上线验收：站点级 description 长度（v1.9.6 前超标 5 条）
+curl -sL https://www.solaronelighting.com/            | grep -o 'name="description" content="[^"]*"'
+curl -sL https://www.solaronelighting.com/products/   | grep -o 'name="description" content="[^"]*"'
+curl -sL https://www.solaronelighting.com/about/      | grep -o 'name="description" content="[^"]*"'
+# 期望：149 / 155 / 157（v1.9.6 前是 180 / 187 / 179）
 ```

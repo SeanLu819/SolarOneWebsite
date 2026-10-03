@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.9.5
+# Content source of truth: seed_data.json · Site version v1.9.6
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
@@ -101,3 +101,10 @@ NewsArticle JSON-LD structured data.
 Retired URLs 301 to their replacement (v1.9.5), so the paths listed above are
 the canonical ones to cite — a moved page never 404s. `/products/series/<slug>/`
 is legacy and redirects to `/products/<slug>/`.
+
+Site-level meta descriptions follow the same discipline (v1.9.6): home,
+about, products and the two keyword landing pages were reworded from
+171-187 characters down to 148-157, so no snippet is cut mid-sentence. English
+is the budgeted source; the fr/es/de/ru/ar translations are deliberately kept
+whole rather than clipped to 160, because those scripts carry more meaning
+per character and cutting them would remove facts, not filler.

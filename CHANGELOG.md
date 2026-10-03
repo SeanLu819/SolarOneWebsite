@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.6 - 2026-10-03
+
+v1.9.2 clamped the *project* descriptions, but the hand-written site-level
+ones were never in scope. A production sweep of all 58 sitemap URLs found five
+pages shipping over the 160-character budget — `/` 180, `/products/` 187,
+`/about/` 179, `/products/football-stadium-lights/` 171 and
+`/products/tennis-court-lighting/` 187 — so Google was cutting every one of
+them mid-sentence.
+
+The fix is five reworded English strings, now 148-157 characters. Each drop
+was filler, not fact: "at every level of play", "field-proven reliability",
+"worldwide", "solutions". Every commercial term survived, and
+`test_each_reworded_string_keeps_its_head_term` locks that.
+
+- Root cause was the source strings, not a missing clamp. These five pages are
+  static templates, so a `|truncatechars` filter would have cut mid-thought
+  instead of rewriting the sentence.
+- Changing an English literal inside `{% blocktrans %}` orphans its
+  translations, so all five msgids were rekeyed in fr/es/de/ru/ar with
+  `msgstr` carried over untouched. Verified by dumping every entry from all
+  five `.mo` files before and after: only the five keys changed name, every
+  other value was byte-identical, none lost.
+- Non-English copy is intentionally left whole. Google truncates on rendered
+  width, not character count, and a 190-character Russian description occupies
+  less space than a 160-character English one; clipping translations to 160
+  would delete facts. The Arabic set already lands at 126-143.
+- Guards: 10 cases in `pages/tests_meta_description_budget.py` — every
+  template description literal within budget, meta and og copy identical per
+  template, no CJK marker, English render within budget and equal to source,
+  and all five locales resolving each string to a translation. Four mutation
+  probes confirmed the guards fail when the literals go long, the meta/og pair
+  diverges, the rendered copy drifts, or an msgid is broken.
+- Measuring note: the raw HTML is up to 5 characters per apostrophe longer
+  than what Google shows (`&#x27;`), so an earlier sweep of the project pages
+  reported five false positives. Budget assertions unescape first.
+
 ## v1.9.5 - 2026-10-02
 
 The site had no redirect mechanism at all: zero entries in `pages/urls.py`,
