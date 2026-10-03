@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.10 - 2026-10-04
+
+## Image de-duplication — fix the root cause, then remove the 30 copies
+
+A full re-audit found **no broken images**: every one of the 269 image URLs the
+production (seed) path resolves lands on a real file under `static/`, all 248 DB
+image fields resolve, zero orphans, zero naming problems. What remained was
+2.02 MB of byte-identical duplicate files in 21 groups.
+
+**The root cause was the admin upload path, not the files.** Every save ran
+`shutil.copy2` into a per-slug directory unconditionally
+(`pages/admin/product.py`, four call sites), so the same badge or beam-angle
+chart uploaded for N products became N byte-identical copies — and deleting them
+by hand only works until the next upload. `_static_copy_deduped()` now hashes
+the upload first: if identical content already exists anywhere under
+`static/images/`, the existing path is recorded and nothing is written. The
+hash index is built once per process and trusts only `static/` — never the
+stale `staticfiles/` snapshot. Guarded by `pages/tests_admin_image_dedupe.py`
+(4 cases, including one that fails if the index ever reaches outside the true
+source); mutation probe confirmed two of them go red when dedupe is disabled.
+
+**Then the existing 30 copies were removed** (2.02 MB, 318 → 288 files,
+36.31 → 34.29 MB). Because a deletion is only safe if nothing still points at
+the file, references were resolved with the **real resolver** rather than by
+filename guesswork: 19 seed references were repointed (CRLF preserved) and 18 DB
+rows updated with `.update()` so `post_save` never fired. Before/after snapshots
+of all 275 image slots differ in exactly 4 places — all four are the intended
+repoint; no slot silently changed because of directory enumeration.
+
+Two false starts are worth recording:
+
+* A reference scan that only covered `products` missed `productspagecards`,
+  which store their image as a plain string — `products_page/VSP9M-01.webp`
+  was flagged safe to delete while a card still pointed at it.
+* Matching DB rows by basename reported one row eight times, making eight
+  distinct files look referenced. Resolving each row through
+  `_product_image_url` is the only reliable way to know what it points at.
+
+`static/images/products/ordering/` became empty and was removed — the existing
+"no empty product image directory" guard caught this, which is the guard doing
+its job.
+
+**Verification**: `519 tests / 32 failures`, unchanged from the `515 / 32`
+baseline plus the 4 new cases; duplicate-content groups 0; URL resolution
+failures 0; DB resolution failures 0.
+
+---
+
 ## v1.9.9 - 2026-10-03
 
 ## Production-parity fixes — cert badge paths, build-artifact fidelity, gallery alt

@@ -12,6 +12,7 @@ The most complex ModelAdmin in the project:
 
 Previously lived in ``pages/admin.py`` (1246 lines). Extracted in v1.5.0.
 """
+import hashlib
 import os
 import shutil
 import subprocess
@@ -35,6 +36,82 @@ from pages.models import (
     Product, ProductImage,
     _clean_hashed_filename,
 )
+
+
+_STATIC_IMAGE_HASH_INDEX = None
+_IMAGE_EXTS = ('.webp', '.jpg', '.jpeg', '.png', '.gif', '.avif')
+
+
+def _file_md5(path):
+    h = hashlib.md5()
+    with open(path, 'rb') as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def reset_static_image_hash_index():
+    """Drop the process cache — call after any external change to static/images."""
+    global _STATIC_IMAGE_HASH_INDEX
+    _STATIC_IMAGE_HASH_INDEX = None
+
+
+def _static_image_hash_index():
+    """``md5 -> [static-relative paths]`` for every image under static/images/.
+
+    Built once per process（318 张 / 36 MB，几十毫秒）。`_source/` 原图目录跳过。
+
+    🔴 只认真源 `static/` —— 与 `views.utils._list_static_dir` 同一条铁律：
+    绝不并入 `staticfiles/`（collectstatic 的陈旧快照）。
+    """
+    global _STATIC_IMAGE_HASH_INDEX
+    if _STATIC_IMAGE_HASH_INDEX is not None:
+        return _STATIC_IMAGE_HASH_INDEX
+    index = {}
+    root = os.path.join(settings.BASE_DIR, 'static', 'images')
+    static_root = os.path.join(settings.BASE_DIR, 'static')
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d != '_source']
+        for fn in filenames:
+            if not fn.lower().endswith(_IMAGE_EXTS):
+                continue
+            full = os.path.join(dirpath, fn)
+            rel = os.path.relpath(full, static_root).replace('\\', '/')
+            index.setdefault(_file_md5(full), []).append(rel)
+    _STATIC_IMAGE_HASH_INDEX = index
+    return index
+
+
+def _static_copy_deduped(src, dst_dir, filename):
+    """Copy ``src`` to ``dst_dir/filename`` **unless byte-identical content
+    already lives somewhere under static/images/** — then reuse that path.
+
+    Returns ``(seed_relative_path, reused_existing)``.
+
+    🔴 背景（v1.9.9 实测）：旧实现无条件 `shutil.copy2` 到 per-slug 目录，
+    于是同一张图被 18 个产品各传一次 = 18 份字节相同的副本（认证徽标最夸张，
+    19 份 / 782 KB）。人工删副本没用 —— 后台下次上传立刻反弹。
+    这里在**写入前**按内容哈希查表：命中就只记路径不写盘。
+    """
+    static_root = os.path.join(settings.BASE_DIR, 'static')
+    rel_dir = os.path.relpath(dst_dir, static_root).replace('\\', '/')
+    want = f'{rel_dir}/{filename}'
+
+    digest = _file_md5(src)
+    index = _static_image_hash_index()
+    hits = index.get(digest) or []
+
+    if want in hits:
+        return want, True          # 目标位置已有同一份内容
+    if hits:
+        # 复用既有副本：优先同名（URL 更可预期），其次字典序保证结果稳定
+        same_name = [p for p in hits if os.path.basename(p) == filename]
+        return sorted(same_name or hits)[0], True
+
+    os.makedirs(dst_dir, exist_ok=True)
+    shutil.copy2(src, os.path.join(dst_dir, filename))
+    index.setdefault(digest, []).append(want)
+    return want, False
 
 
 class ProductAdminForm(forms.ModelForm):
@@ -254,10 +331,9 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                 if os.path.exists(src):
                     filename = _clean_hashed_filename(str(field))
                     static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
-                    os.makedirs(static_dir, exist_ok=True)
-                    dst = os.path.join(static_dir, filename)
-                    shutil.copy2(src, dst)
-                    seed_paths[field_name] = f'images/products/{slug}/{filename}'
+                    # 内容相同就直接复用既有文件（见 _static_copy_deduped 的说明）
+                    seed_paths[field_name], _reused = _static_copy_deduped(
+                        src, static_dir, filename)
 
         ordering_field = getattr(obj, 'ordering_image', None)
         if ordering_field and getattr(ordering_field, 'name', ''):
@@ -265,10 +341,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             if os.path.exists(src):
                 filename = _clean_hashed_filename(str(ordering_field))
                 static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', 'ordering')
-                os.makedirs(static_dir, exist_ok=True)
-                dst = os.path.join(static_dir, filename)
-                shutil.copy2(src, dst)
-                seed_paths['ordering_image'] = f'images/products/ordering/{filename}'
+                seed_paths['ordering_image'], _reused = _static_copy_deduped(
+                    src, static_dir, filename)
 
         # Cert image — synced to per-product slug dir for Vercel persistence
         cert_field = getattr(obj, 'cert_image', None)
@@ -277,10 +351,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             if os.path.exists(src):
                 filename = _clean_hashed_filename(str(cert_field))
                 static_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
-                os.makedirs(static_dir, exist_ok=True)
-                dst = os.path.join(static_dir, filename)
-                shutil.copy2(src, dst)
-                seed_paths['cert_image'] = f'images/products/{slug}/{filename}'
+                seed_paths['cert_image'], _reused = _static_copy_deduped(
+                    src, static_dir, filename)
 
         gallery_paths = []
         gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
@@ -288,11 +360,9 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             if img.image and getattr(img.image, 'name', ''):
                 src = os.path.join(media_root, str(img.image))
                 if os.path.exists(src):
-                    os.makedirs(gallery_dir, exist_ok=True)
                     filename = _clean_hashed_filename(str(img.image))
-                    dst = os.path.join(gallery_dir, filename)
-                    shutil.copy2(src, dst)
-                    gallery_paths.append(f'images/products/{slug}/{filename}')
+                    gallery_paths.append(
+                        _static_copy_deduped(src, gallery_dir, filename)[0])
 
         try:
             subprocess.run(
