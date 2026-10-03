@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator
+from django.http import Http404
 from django.utils.translation import get_language
 from .common import get_common_context
 from pages.redirects import redirect_target_for_project
@@ -93,9 +94,6 @@ def project_detail(request, slug):
         context['related_landing'] = SPORT_TYPE_TO_LANDING.get(
             getattr(project, 'sport_type', ''))
     else:
-        context['active_venue_type'] = ''
-        context['active_sport_type'] = ''
-
         # S2: an unresolvable slug may simply be a page that was renamed. Only
         # consulted on a miss, so a registered redirect can never shadow a live
         # page. `redirect()` reverses, which keeps the visitor's language
@@ -103,5 +101,17 @@ def project_detail(request, slug):
         moved = redirect_target_for_project(slug)
         if moved:
             return redirect('project_detail', moved, permanent=True)
+
+        # v1.9.7: unknown slug with no redirect entry must be a REAL 404, the
+        # same contract the product side got in v1.8.2. Previously this fell
+        # through to `render(request, 'project_detail.html')` with no project
+        # in context, which produced a 200 "Project Not Found" page carrying a
+        # self-referencing canonical — a soft 404. That lets Google index any
+        # fabricated /projects/<garbage>/ URL and judge the site low quality.
+        # Verified live 2026-10-03 before the fix:
+        #   /projects/does-not-exist-xyz/ -> 200 + <title>Project Not Found.
+        # Raising here keeps the redirect table above authoritative: a renamed
+        # page still 301s, only genuinely unknown slugs 404.
+        raise Http404('No project matches the given slug.')
 
     return render(request, 'project_detail.html', context)

@@ -124,11 +124,57 @@ class ProjectSlugRedirectTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertNotIn('Location', resp)
 
-    def test_unknown_slug_without_entry_keeps_today_behaviour(self):
-        """S2 must not change how unregistered unknown slugs behave."""
+    def test_unknown_slug_without_entry_is_a_real_404(self):
+        """v1.9.7 契约反转：未知项目 slug 必须是真 404。
+
+        S2 建机制时这里断言的是 200（当时项目侧就是软404）。产品侧在
+        v1.8.2 已经反转为真 404，项目侧一直漏掉，直到 2026-10-03 才实测
+        确认线上 `/projects/<garbage>/` 仍返回 200 + 自指 canonical 的
+        "Project Not Found" 页。软 404 会让 Google 收录任意伪造 URL 并判
+        为低质页，与产品侧契约不一致本身就是缺陷。
+        """
         resp = Client().get('/projects/definitely-not-a-slug/', **_KW)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 404)
         self.assertNotIn('Location', resp)
+        self.assertNotIn(
+            'Project Not Found',
+            resp.content.decode('utf-8'),
+            '软 404 文案不得再出现在未知 slug 的响应里',
+        )
+
+    def test_unknown_slug_404_holds_in_every_language(self):
+        """六语种都必须 404 —— 旧行为在每个语言前缀下都返回 200。"""
+        for prefix in ('fr', 'es', 'de', 'ru', 'ar'):
+            with self.subTest(lang=prefix):
+                resp = Client().get(
+                    f'/{prefix}/projects/definitely-not-a-slug/', **_KW)
+                self.assertEqual(resp.status_code, 404)
+
+    def test_unknown_slug_does_not_emit_a_self_referencing_canonical(self):
+        """软 404 会带上指向自己的 canonical，等于主动告诉 Google 收录它。"""
+        resp = Client().get('/projects/definitely-not-a-slug/', **_KW)
+        self.assertEqual(resp.status_code, 404)
+
+    def test_real_project_still_renders_200(self):
+        """404 拦截不得误伤真实项目页。"""
+        slug = _SEED['projects'][0]['slug']
+        resp = Client().get(f'/projects/{slug}/', **_KW)
+        self.assertEqual(resp.status_code, 200)
+        self.assertNotIn('Project Not Found',
+                         resp.content.decode('utf-8'))
+
+    def test_redirect_table_still_wins_over_the_404(self):
+        """🔴 顺序契约：查表在前、404 在后。
+
+        改了raise Http404 的位置会让已登记的 301 全部失效，改slug 时
+        旧链接就变成硬 404 —— 那是比软 404 更糟的 SEO 事故。
+        """
+        with mock.patch.dict(PROJECT_SLUG_REDIRECTS,
+                             {'legacy-p': _LIVE_PROJECT}):
+            resp = Client().get('/projects/legacy-p/', **_KW)
+        self.assertEqual(resp.status_code, 301,
+                         '登记在表的旧 slug 必须仍 301，不能被 404 拦掉')
+        self.assertEqual(resp['Location'], f'/projects/{_LIVE_PROJECT}/')
 
 
 class ProductSlugRedirectTests(TestCase):

@@ -377,6 +377,8 @@ WHITENOISE_AUTOREFRESH = not IS_VERCEL
 # made the dev browser pin the OLD stylesheet for a year after every edit —
 # the "I changed the CSS but my phone still shows the old layout" trap.
 # 0 => "max-age=0, public" => the browser revalidates on every request.
+# 🔴 On Vercel this value is DEAD CONFIG — see the CORRECTION note in the
+# STATIC STORAGE block below. Production caching is set by vercel.json headers.
 WHITENOISE_MAX_AGE = 31536000 if IS_VERCEL else 0
 # Do NOT send Access-Control-Allow-Origin:* for static assets (#7) —
 # no legitimate third-party site needs to fetch this site's static files.
@@ -386,9 +388,22 @@ WHITENOISE_EXTRA_PREFIXES = [
 ]
 # ============ STATIC STORAGE (content hashing -> immutable CDN cache) ============
 # P0 speed win: on production, serve CSS/JS/images from a content-hashed filename
-# so Vercel's edge CDN returns `Cache-Control: immutable, max-age=31536000`
-# (verified live via probe), replacing the old `max-age=0, must-revalidate` on
-# un-hashed files. Repeat visitors then cache assets for a year.
+# so Vercel's edge CDN can return `Cache-Control: immutable, max-age=31536000`
+# for repeat visitors, replacing `max-age=0, must-revalidate` on un-hashed files.
+#
+# 🔴 CORRECTION (v1.9.7, verified live 2026-10-03): the two settings above DO NOT
+# produce that header in production, and the old comment here claimed they did.
+# Two independent reasons:
+#   1. On Vercel, WhiteNoiseMiddleware is REMOVED from MIDDLEWARE (see the
+#      IS_VERCEL block above) — the api/index.py WSGI wrapper handles statics.
+#   2. More decisively, build.sh mirrors collectstatic output into public/static/,
+#      which Vercel serves straight from its edge CDN. Nothing in the Django
+#      process ever touches those bytes, so WHITENOISE_MAX_AGE is dead config.
+# Live probe that found it: `/static/css/base.<hash>.css` (already content-hashed,
+# so `immutable` would be safe) still returned `max-age=0, must-revalidate`.
+# The fix is the `headers` block in vercel.json — that is the only place that can
+# set response headers for files served out of public/. Do not "fix" this by
+# raising WHITENOISE_MAX_AGE; it changes nothing on Vercel.
 #
 # CRITICAL (Django 6.0): the legacy `STATICFILES_STORAGE` setting was REMOVED and
 # is SILENTLY IGNORED — setting it has no effect at all. The storage MUST be
@@ -467,4 +482,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.9.6'
+APP_VERSION = '1.9.7'

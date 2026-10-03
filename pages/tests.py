@@ -3570,13 +3570,75 @@ class P0StyleConsistencyTests(TestCase):
     def test_every_fonts_css_file_exists_and_is_woff2(self):
         fonts_dir = Path(settings.BASE_DIR) / 'static' / 'fonts'
         urls = re.findall(r'url\(\.\./fonts/([^)]+)\)', self.fonts_css)
-        self.assertGreaterEqual(len(urls), 52,
-                                'fonts.css 声明的 face 数量异常下降')
+        # v1.9.7: 52 -> 43 after removing the 9 unreferenced Space Grotesk
+        # faces (140 KB). The old floor of 52 encoded "we ship Space Grotesk",
+        # which stopped being true in v1.6.3 and only became load-bearing as a
+        # regression tripwire now. The invariant that actually matters is
+        # structural: every url() resolves to a real woff2, and the two families
+        # the render stacks use keep all their weighted faces. Face COUNT is not
+        # the contract — a future subset trim legitimately lowers it, and a
+        # silent weight loss must be caught by the two tests below, not here.
+        self.assertGreaterEqual(
+            len(urls), 43,
+            'fonts.css face 数量异常下降 —— 新增删除须同步确认渲染字重未受影响')
+        self.assertEqual(
+            len(urls), len(set(urls)),
+            '同一字体文件被多个 @font-face 引用：'
+            '每个 (family, weight, unicode-range) 组合需独立文件')
         for fname in urls:
             fpath = fonts_dir / fname
             self.assertTrue(fpath.exists(), f'声明了但文件不存在：{fname}')
             self.assertEqual(fpath.read_bytes()[:4], b'wOF2',
                              f'{fname} 不是合法 woff2')
+
+    def test_no_orphan_woff2_files_on_disk(self):
+        """反向守卫：static/fonts/ 里不得有 fonts.css 未声明的 woff2。
+
+        删 face 时最容易留下孤儿文件 —— 它们仍会被 collectstatic 拷进产物、
+        仍占构建时间与仓库体积，但浏览器永远不会下载，纯纯浪费。
+        """
+        fonts_dir = Path(settings.BASE_DIR) / 'static' / 'fonts'
+        declared = set(re.findall(r'url\(\.\./fonts/([^)]+)\)', self.fonts_css))
+        on_disk = {p.name for p in fonts_dir.glob('*.woff2')}
+        orphans = on_disk - declared
+        self.assertFalse(
+            orphans, f'这些 woff2 不在 fonts.css 里，永远不会被下载：{sorted(orphans)}')
+
+    def test_cyrillic_subset_present_for_the_ru_locale(self):
+        """/ru/ 是六个语种之一，Inter 与 IBM Plex Mono 必须带 cyrillic face。
+
+        font-display:swap 只保证「先显示后备字体再换字」，不保证后备字体有
+        西里尔字形。缺 cyrillic subset 时 /ru/ 会掉字形（显示为豆腐块）。
+        删任何 Inter / Plex Mono face 前必须先过这一关。
+        """
+        for family, marker in (('Inter', 'U+0400-045F'),
+                               ('IBM Plex Mono', 'U+0400-045F')):
+            blocks = self.fonts_css.split('@font-face')
+            declared_weights = set()
+            cyrillic_weights = set()
+            for b in blocks:
+                if f"font-family: '{family}'" not in b:
+                    continue
+                ur = re.search(r'unicode-range:\s*([^;]+);', b)
+                wt = re.search(r'font-weight:\s*(\d+)', b)
+                if not wt:
+                    continue
+                declared_weights.add(int(wt.group(1)))
+                if ur and marker in ur.group(1):
+                    cyrillic_weights.add(int(wt.group(1)))
+            self.assertTrue(
+                cyrillic_weights,
+                f'{family} 缺 cyrillic unicode-range —— /ru/ 会掉字形')
+            # 每个「已声明的字重」都必须有 cyrillic 变体，否则 /ru/ 页面
+            # 的粗体/中粗体标题会掉回系统字体（视觉不均）。
+            # 🔴 不能硬编码期望权重集：IBM Plex Mono 只声明 400/500/600
+            # （base.css 的 mono 栈没有 700），硬写 400-700 会让这条守卫
+            # 永远失败并被后人"修"成放宽断言。基准取自实际声明。
+            self.assertEqual(
+                cyrillic_weights, declared_weights,
+                f'{family} 的 cyrillic subset 字重与声明不一致 —— '
+                f'/ru/ 页面部分字重会掉字形')
+
 
     def test_model_defaults_match_canonical(self):
         from pages.models import SiteConfig

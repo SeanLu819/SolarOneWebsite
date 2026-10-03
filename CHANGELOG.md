@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.7 - 2026-10-03
+
+Performance and correctness pass driven by a full-site audit. The headline
+finding is not an image size: **no static asset on the production site was
+cacheable by the browser**, which costs every visitor a conditional
+revalidation on all 30-odd assets per page.
+
+- Static caching was configured in the wrong layer. `build.sh` mirrors the
+  collectstatic output into `public/static/`, and Vercel serves those bytes
+  straight from its edge CDN, so they never pass through the Django process.
+  `WHITENOISE_MAX_AGE` was therefore dead config, and the code comments
+  claiming hashed files get `immutable, max-age=31536000` were simply wrong. A
+  live probe of the already-hashed `/static/css/base.<hash>.css` returned
+  `Cache-Control: public, max-age=0, must-revalidate`. Fixed by adding the
+  `headers` block to `vercel.json`; the misleading comments in `settings.py`
+  and `build.sh` are corrected in place so this does not get "re-fixed" the
+  wrong way again. A catch-all `source: /(.*)` rule is deliberately NOT used
+  because it can shadow the `/static/` rule and silently undo the year-long
+  cache. HTML keeps `must-revalidate` from Django, which is correct for a
+  six-language site.
+- Unknown project slugs were still soft 404s. `project_detail()` fell through
+  to `render()` with no project in context, producing HTTP 200 with a
+  "Project Not Found" title and a self-referencing canonical - an invitation
+  for Google to index any fabricated `/projects/<garbage>/` URL. The product
+  side was already fixed in v1.8.2; this closes the gap. The redirect table is
+  still consulted first, so renamed pages keep their 301.
+- Re-encoded four VSP9M product renders that were stored at roughly 3x the
+  necessary size (859 KB -> 128 KB, 401 KB -> 65 KB, 2.04 MB -> 0.32 MB
+  total). Filenames, pixel dimensions and the alpha channel are unchanged.
+- Removed 9 Space Grotesk faces (140 KB). They had no render-stack reference
+  since v1.6.3, so they were dead weight in every build. Verified against
+  `base.css`, the inline critical CSS, and `seed_data.json` first.
+- Tooling: `scripts/optimize_images.py` and `scripts/remove_font_family.py`.
+  The optimizer refuses any file whose PSNR falls below 40 dB, which correctly
+  left 26 of 30 candidates untouched - most were already better encoded than
+  any re-encode we could produce.
+
+Notable non-changes, all measured rather than assumed: the remaining 43
+@font-face entries look like duplicates on disk (the four Inter latin weights
+share an md5) but each is a distinct weight gated by `unicode-range`, so the
+browser fetches only what a page's glyphs need - deleting them would drop real
+weights and break Cyrillic coverage on `/ru/`.
+
+
 ## v1.9.6 - 2026-10-03
 
 v1.9.2 clamped the *project* descriptions, but the hand-written site-level

@@ -9,10 +9,15 @@
 # NOTE (verified live 2026-09-12): the catch-all rewrite alone is sufficient —
 # Vercel's edge CDN already serves public/static/* (probe returns
 # `X-Vercel-Cache: HIT`), so NO `handle: filesystem` route is required.
-# Long-term caching comes from the content-hashed filenames emitted by
-# ManifestStaticFilesStorage (hashing only, no gzip — Vercel CDN compresses at
-# the edge; settings.py -> STORAGES): Vercel then serves them
-# `immutable, max-age=31536000` instead of `max-age=0, must-revalidate`.
+#
+# 🔴 CORRECTION (v1.9.7, re-verified live 2026-10-03): the claim below that
+# hashing alone yields `immutable, max-age=31536000` is FALSE. Because these
+# files are served straight out of public/ by the edge CDN, no Django setting
+# can influence their response headers — a live probe of the already-hashed
+# `/static/css/base.<hash>.css` still returned `max-age=0, must-revalidate`.
+# The `headers` block in vercel.json is what actually sets them. Content
+# hashing is still necessary (it is what makes `immutable` safe), but it is
+# not sufficient on its own.
 
 set -e
 set -o pipefail
