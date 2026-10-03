@@ -60,6 +60,53 @@ _SIDEBAR_I18N = {
     'Multi-Sport Arena':{'fr': 'Complexe Multi-Sports', 'es': 'Pista Polideportiva', 'de': 'Mehrzweckhalle', 'ar': 'صالة متعددة الرياضات', 'ru': 'Универсальный спортивный зал'},
     'Airport':          {'fr': 'Aéroport', 'es': 'Aeropuerto', 'de': 'Flughafen', 'ar': 'مطار', 'ru': 'Аэропорт'},
     'Seaport':          {'fr': 'Port Maritime', 'es': 'Puerto', 'de': 'Seehafen', 'ar': 'ميناء بحري', 'ru': 'Морской порт'},
+    # Project collection pages (v1.10.0) — /projects/football/ and
+    # /projects/tennis/. Three strings each: the title (also the H1), the
+    # intro paragraph and the meta description. These are the only dynamic
+    # strings those two pages render, so an entry missing here means the page
+    # serves English under a /fr/ URL — a self-contradicting hreflang signal.
+    'Football Stadium Lighting Projects | SolarOne': {
+        'fr': 'Projets d\'éclairage de stades de football | SolarOne',
+        'es': 'Proyectos de iluminación de estadios de fútbol | SolarOne',
+        'de': 'Projekte für Fußballstadion-Beleuchtung | SolarOne',
+        'ru': 'Проекты освещения футбольных стадионов | SolarOne',
+        'ar': 'مشاريع إضاءة ملاعب كرة القدم | SolarOne',
+    },
+    'Football and soccer field LED lighting projects delivered worldwide — stadiums, high school fields and training pitches.': {
+        'fr': 'Projets d\'éclairage LED pour terrains de football et de soccer dans le monde — stades, terrains scolaires et terrains d\'entraînement.',
+        'es': 'Proyectos de iluminación LED para campos de fútbol en todo el mundo — estadios, campos escolares y campos de entrenamiento.',
+        'de': 'LED-Beleuchtungsprojekte für Fußball- und Soccerfelder weltweit — Stadien, Schulsportanlagen und Trainingsplätze.',
+        'ru': 'Проекты светодиодного освещения футбольных полей по всему миру — стадионы, школьные поля и тренировочные площадки.',
+        'ar': 'مشاريع إضاءة LED لملاعب كرة القدم حول العالم — ملاعب رياضية ومدارس وملاعب تدريب.',
+    },
+    'Real football and soccer field LED lighting projects by SolarOne — stadium, high school and training pitch installations with measured results.': {
+        'fr': 'Vrais projets d\'éclairage LED pour terrains de football et de soccer par SolarOne — stades, terrains scolaires et d\'entraînement, avec résultats mesurés.',
+        'es': 'Proyectos reales de iluminación LED para campos de fútbol de SolarOne — estadios, campos escolares y de entrenamiento, con resultados medidos.',
+        'de': 'Echte LED-Beleuchtungsprojekte für Fußball- und Soccerfelder von SolarOne — Stadien, Schulsportanlagen und Trainingsplätze mit gemessenen Ergebnissen.',
+        'ru': 'Реальные проекты светодиодного освещения футбольных полей от SolarOne — стадионы, школьные и тренировочные площадки с измеренными результатами.',
+        'ar': 'مشاريع حقيقية لإضاءة LED لملاعب كرة القدم من SolarOne — ملاعب رياضية ومدارس وملاعب تدريب بنتائج مقاسة.',
+    },
+    'Tennis Court Lighting Projects | SolarOne': {
+        'fr': 'Projets d\'éclairage de courts de tennis | SolarOne',
+        'es': 'Proyectos de iluminación de canchas de tenis | SolarOne',
+        'de': 'Projekte für Tennisplatz-Beleuchtung | SolarOne',
+        'ru': 'Проекты освещения теннисных кортов | SolarOne',
+        'ar': 'مشاريع إضاءة ملاعب التنس | SolarOne',
+    },
+    'Indoor and outdoor tennis court LED lighting projects delivered worldwide — club, university and competition courts.': {
+        'fr': 'Projets d\'éclairage LED pour courts de tennis en intérieur et extérieur dans le monde — clubs, universités et courts de compétition.',
+        'es': 'Proyectos de iluminación LED para canchas de tenis interiores y exteriores en todo el mundo — clubes, universidades y canchas de competición.',
+        'de': 'LED-Beleuchtungsprojekte für Tennisplätze innen und außen weltweit — Vereine, Universitäten und Wettkampfplätze.',
+        'ru': 'Проекты светодиодного освещения теннисных кортов в помещении и на открытом воздухе по всему миру — клубы, университеты и соревновательные корты.',
+        'ar': 'مشاريع إضاءة LED لملاعب التنس الداخلية والخارجية حول العالم — أندية وجامعات وملاعب منافسات.',
+    },
+    'Real indoor and outdoor tennis court LED lighting projects by SolarOne — club, university and competition courts with measured results.': {
+        'fr': 'Vrais projets d\'éclairage LED pour courts de tennis intérieurs et extérieurs par SolarOne — clubs, universités et courts de compétition, avec résultats mesurés.',
+        'es': 'Proyectos reales de iluminación LED para canchas de tenis de SolarOne — interiores y exteriores, clubes y competiciones, con resultados medidos.',
+        'de': 'Echte LED-Beleuchtungsprojekte für Tennisplätze innen und außen von SolarOne — Vereine, Universitäten und Wettkampfplätze mit gemessenen Ergebnissen.',
+        'ru': 'Реальные проекты светодиодного освещения теннисных кортов от SolarOne — в помещении и на открытом воздухе, с измеренными результатами.',
+        'ar': 'مشاريع حقيقية لإضاءة LED لملاعب التنس الداخلية والخارجية من SolarOne — أندية وجامعات وملاعب منافسات بنتائج مقاسة.',
+    },
     # Products — categories
     'Area and Site':            {'fr': 'Zone et Site', 'es': 'Área y Sitio', 'de': 'Bereich und Standort', 'ar': 'المنطقة والموقع', 'ru': 'Территория и площадка'},
     'Sports Lighting System': {'fr': 'Système d\'Éclairage Sportif', 'es': 'Sistema de Iluminación Deportiva', 'de': 'Sportbeleuchtungssystem', 'ar': 'نظام إضاءة رياضية', 'ru': 'Система спортивного освещения'},

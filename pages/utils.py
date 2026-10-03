@@ -124,7 +124,7 @@ def jsonld_property_pairs(obj):
 #: our best difficulty/volume trade), so the phrase was re-cut to the wording
 #: buyers actually type. The old wording ranked for neither phrase exactly.
 #: 2026-09-30: singular "LED Stadium Light" — the PLURAL head phrase belongs to
-#: the /products/sports-lighting/ hub (one keyword, one page); product-detail
+#: the collection pages (/projects/football/, /projects/tennis/); product-detail
 #: titles take the singular family so the two page types stop bidding on the
 #: same query. Descriptions keep a natural "stadium lights" mention.
 CATEGORY_KEYWORD = {

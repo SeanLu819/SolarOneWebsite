@@ -111,6 +111,23 @@ def _get_product_detail_from_json(slug, lang):
     return None
 
 
+def _sport_filter_values(active_sport_type):
+    """Normalise the sport filter into a list of ``sport_type`` enum values.
+
+    The collection pages (``/projects/football/``, ``/projects/tennis/``) each
+    span *two* enum values — football is ``FOOTBALL_FIELD`` + ``SOCCER_FIELD``,
+    tennis is ``TENNIS_COURTS`` + ``TENNIS`` — because the same sport is split
+    across two keys in the data. ``get_projects`` flattens a multi-value filter
+    into one comma-separated string so the cache key stays hashable; this
+    splits it back apart for the queryset / seed scan.
+    """
+    if not active_sport_type:
+        return []
+    if isinstance(active_sport_type, (list, tuple, set)):
+        return [v for v in active_sport_type if v]
+    return [v for v in str(active_sport_type).split(',') if v]
+
+
 def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
     """Try loading projects from DB. Returns None on failure."""
     if getattr(settings, 'IS_VERCEL', False):
@@ -122,8 +139,9 @@ def _get_projects_from_db(lang, active_venue_type='', active_sport_type=''):
         projects_list = Project.objects.all()
         if active_venue_type:
             projects_list = projects_list.filter(venue_type=active_venue_type)
-        if active_sport_type:
-            projects_list = projects_list.filter(sport_type=active_sport_type)
+        sports = _sport_filter_values(active_sport_type)
+        if sports:
+            projects_list = projects_list.filter(sport_type__in=sports)
         result = []
         for proj in projects_list:
             _enrich_project(proj, lang)
@@ -146,10 +164,11 @@ def _get_projects_from_json(lang, active_venue_type='', active_sport_type=''):
     data = _load_seed()
     items = data.get('projects', [])
     result = []
+    sports = set(_sport_filter_values(active_sport_type))
     for item in items:
         if active_venue_type and item.get('venue_type') != active_venue_type:
             continue
-        if active_sport_type and item.get('sport_type') != active_sport_type:
+        if sports and item.get('sport_type') not in sports:
             continue
         proj = _DictProject(item)
         _enrich_project(proj, lang)
@@ -228,7 +247,9 @@ def get_product_detail(slug, lang):
 def get_projects(lang, active_venue_type=None, active_sport_type=None):
     """Return the project list for the projects page (DB first, JSON fallback)."""
     venue = active_venue_type or ''
-    sport = active_sport_type or ''
+    # Flattened to one string so the cache key stays hashable when a collection
+    # page passes two sport values; _sport_filter_values() splits it back.
+    sport = ','.join(_sport_filter_values(active_sport_type))
     result = _get_projects_from_db(lang, venue, sport)
     if not result:
         result = _get_projects_from_json(lang, venue, sport)

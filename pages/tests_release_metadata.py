@@ -11,10 +11,9 @@ from django.conf import settings
 from django.test import TestCase
 
 REPO_ROOT = settings.BASE_DIR
-SPORT_LANDING_PAGES = (
-    '/products/sports-lighting/',
-    '/products/football-stadium-lights/',
-    '/products/tennis-court-lighting/',
+PROJECT_COLLECTION_PAGES = (
+    '/projects/football/',
+    '/projects/tennis/',
 )
 
 
@@ -37,7 +36,7 @@ class ReleaseMetadataConsistencyTests(TestCase):
     def test_llm_txt_declares_the_same_version(self):
         self.assertIn(f'Site version v{settings.APP_VERSION}', _read('llm.txt'))
 
-    def test_llm_txt_lists_the_sport_landing_pages(self):
+    def test_llm_txt_lists_the_project_collection_pages(self):
         text = _read('llm.txt')
-        for path in SPORT_LANDING_PAGES:
+        for path in PROJECT_COLLECTION_PAGES:
             self.assertIn(path, text)

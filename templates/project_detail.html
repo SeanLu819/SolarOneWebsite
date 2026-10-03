@@ -166,11 +166,11 @@
             <span class="related-solutions-label">{% trans "Related Lighting Solutions" %}</span>
             <div class="related-solutions-links">
               {% if related_landing == 'football' %}
-              <a href="{% url 'football_stadium_lights' %}" class="related-solutions-link">{% trans "Football Stadium Lights" %}</a>
+              <a href="{% url 'projects_football' %}" class="related-solutions-link">{% trans "Football Stadium Lights" %}</a>
               {% elif related_landing == 'tennis' %}
-              <a href="{% url 'tennis_court_lighting' %}" class="related-solutions-link">{% trans "Tennis Court Lighting" %}</a>
+              <a href="{% url 'projects_tennis' %}" class="related-solutions-link">{% trans "Tennis Court Lighting" %}</a>
               {% elif related_landing == 'sports' %}
-              <a href="{% url 'sports_lighting' %}" class="related-solutions-link">{% trans "LED Stadium Lights" %}</a>
+              <a href="{% url 'products' %}" class="related-solutions-link">{% trans "LED Stadium Lights" %}</a>
               {% endif %}
             </div>
           </div>

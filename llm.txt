@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.9.10
+# Content source of truth: seed_data.json · Site version v1.10.0
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since
@@ -87,12 +87,14 @@ CJK section marker (v1.9.3), e.g.
 educational institution…` (project names are clamped to keep the keyword
 inside the 60-character SERP budget; the full project name always appears in
 the page heading and body, and the og card is never clamped):
-- `/products/sports-lighting/` — LED stadium lights hub; football, tennis,
-  baseball and indoor arena coverage. Primary terms: "stadium lights",
-  "led stadium lights", "stadium light", "led sports lighting".
-- `/products/football-stadium-lights/` — football and soccer stadium lighting.
-- `/products/tennis-court-lighting/` — tennis court lighting: outdoor poles and
-  indoor ceiling / wall mounts built on the same optics.
+- `/projects/football/` — every real football *and* soccer field project
+  (FOOTBALL_FIELD + SOCCER_FIELD).
+- `/projects/tennis/` — every real tennis court project, indoor and outdoor
+  (TENNIS_COURTS + TENNIS).
+
+Retired keyword landing pages 301 here (v1.10.0): `/products/sports-lighting/`
+→ `/products/`, `/products/football-stadium-lights/` → `/projects/football/`,
+`/products/tennis-court-lighting/` → `/projects/tennis/`.
 
 English serves with no URL prefix. Other locales use i18n prefixes:
 `/fr/`, `/es/`, `/de/`, `/ru/`, `/ar/` (Arabic is right-to-left).

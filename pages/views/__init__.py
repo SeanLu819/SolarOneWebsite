@@ -1,8 +1,7 @@
-from .views_products import (
-    products, product_detail, product_series, sports_lighting,
-    football_stadium_lights, tennis_court_lighting,
+from .views_products import products, product_detail, product_series
+from .views_projects import (
+    projects, project_detail, projects_football, projects_tennis,
 )
-from .views_projects import projects, project_detail
 from .views_contact import contact
 from .views_other import (
     home, about, news, news_detail, news_feed, robots_txt, sitemap_xml,

@@ -46,9 +46,8 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PATHS = [
     "/",                                    # home
     "/products/",                           # 产品列表
-    "/products/sports-lighting/",           # 体育/场馆照明 hub（Tier-1 关键词落地页）
-    "/products/football-stadium-lights/",   # 足球场照明（Tier-2 关键词落地页）
-    "/products/tennis-court-lighting/",     # 网球场照明（Tier-2，indoor+outdoor）
+    "/projects/football/",               # 足球场照明项目集合（真实案例页，Tier-2）
+    "/projects/tennis/",                 # 网球场照明项目集合（真实案例页，Tier-2）
     "/products/rt400hb/",                   # product_detail.html
     "/products/rgb-rgbw/",                  # product_overview.html（另一套产品模板）
     "/projects/",                           # 项目列表

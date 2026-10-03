@@ -91,8 +91,11 @@ class RedirectTableValidityTests(TestCase):
         self.assertTrue(any('empty url_name' in p for p in problems), problems)
 
     def test_entries_are_ordered_for_reproducible_urls(self):
+        # clear=True: the table is no longer empty (v1.10.0), and patch.dict
+        # merges by default, which would leave the real entries in the list and
+        # make the ordering assertion about five routes instead of two.
         with mock.patch.dict(LEGACY_PATH_REDIRECTS,
-                             {'b/': 'home', 'a/': 'home'}):
+                             {'b/': 'home', 'a/': 'home'}, clear=True):
             self.assertEqual([r for r, _ in legacy_path_entries()], ['a/', 'b/'])
 
 
@@ -207,10 +210,39 @@ class ProductSlugRedirectTests(TestCase):
 
 
 class LegacyRouteWiringTests(TestCase):
-    """An empty table registers nothing; existing routes are untouched."""
+    """Every registered entry must be real; existing routes are untouched.
 
-    def test_no_legacy_routes_are_registered_by_default(self):
-        self.assertEqual([], legacy_path_entries())
+    v1.10.0: the table stopped being empty — the three keyword landing pages
+    were retired and now 301 here. The old assertion (``[] == entries()``) was
+    a placeholder for "no redirects exist yet" and had to be inverted: what
+    matters is not that the table is empty but that every entry in it points at
+    a URL name that actually reverses. A stale entry would otherwise register a
+    route that 500s (or, worse, silently drops the visitor on a wrong page).
+    """
+
+    def test_every_registered_entry_reverses_to_a_real_url(self):
+        from django.urls import reverse, NoReverseMatch
+        for route, name in legacy_path_entries():
+            with self.subTest(route=route):
+                try:
+                    target = reverse(name)
+                except NoReverseMatch:
+                    self.fail('%r targets URL name %r, which does not reverse'
+                              % (route, name))
+                self.assertNotEqual(target, '/' + route,
+                                    '%r redirects to itself' % route)
+
+    def test_retired_landing_pages_are_registered(self):
+        """v1.10.0 contract: the three keyword pages must stay redirected."""
+        registered = dict(legacy_path_entries())
+        self.assertEqual(
+            registered.get('products/sports-lighting/'), 'products')
+        self.assertEqual(
+            registered.get('products/football-stadium-lights/'),
+            'projects_football')
+        self.assertEqual(
+            registered.get('products/tennis-court-lighting/'),
+            'projects_tennis')
 
     def test_ordinary_pages_still_resolve(self):
         for url in ('/', '/projects/', '/products/', '/about/'):

@@ -63,16 +63,6 @@ REWORDED = {
         "flood lighting, high bay, roadway, and area lighting. Precision optics, "
         "modular design."
     ),
-    'football_stadium_lights.html': (
-        "SolarOne football stadium lights: high-mast LED light poles and sports "
-        "floodlights engineered for uniform, glare-controlled football field "
-        "lighting."
-    ),
-    'tennis_court_lighting.html': (
-        "SolarOne tennis court lighting: LED court lights and floodlights for "
-        "outdoor and indoor courts \u2014 uniform illumination, low glare and "
-        "broadcast-ready colour."
-    ),
 }
 
 # URL that renders each reworded template.
@@ -80,8 +70,6 @@ URLS = {
     'home.html': '/',
     'about.html': '/about/',
     'products.html': '/products/',
-    'football_stadium_lights.html': '/products/football-stadium-lights/',
-    'tennis_court_lighting.html': '/products/tennis-court-lighting/',
 }
 
 
@@ -121,7 +109,14 @@ class SiteMetaDescriptionSourceTests(SimpleTestCase):
             set(REWORDED) - names, set(),
             'the five reworded templates no longer expose a description block',
         )
-        self.assertGreaterEqual(len(list(_source_blocks())), 18)
+        self.assertGreaterEqual(len(list(_source_blocks())), 12)
+        # 18 until v1.10.0 retired the three keyword landing pages, whose
+        # templates carried 3 x 2 = 6 of those blocks. 12 is the six remaining
+        # templates with a literal description block. Note the scan only sees a
+        # block whose body is a literal {% blocktrans %} — a conditional wrapper
+        # (or a tag literal written inside a template comment) hides it, which
+        # is why /projects/football/ overrides the head in a child template
+        # instead of adding a branch here.
 
     def test_meta_and_og_copy_are_identical_per_template(self):
         """Guard the half-applied edit that a single Edit call can leave behind."""
@@ -149,8 +144,6 @@ class SiteMetaDescriptionSourceTests(SimpleTestCase):
             'home.html': 'LED sports lighting',
             'about.html': 'LED lighting manufacturer',
             'products.html': 'LED lighting products',
-            'football_stadium_lights.html': 'football stadium lights',
-            'tennis_court_lighting.html': 'tennis court lighting',
         }
         for name, head in heads.items():
             self.assertIn(head, REWORDED[name], name)

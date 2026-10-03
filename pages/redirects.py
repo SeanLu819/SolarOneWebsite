@@ -43,7 +43,22 @@ PROJECT_SLUG_REDIRECTS = {}
 PRODUCT_SLUG_REDIRECTS = {}
 
 #: Old path (no language prefix, no leading slash) → URL name to reverse.
-LEGACY_PATH_REDIRECTS = {}
+#:
+#: The three retired sports keyword landing pages. They were purpose-built for
+#: keywords rather than around real content, so they 301 to pages that carry the
+#: same intent on honest URLs: the football/tennis collections list the actual
+#: projects, and the stadium hub folds back into the catalogue (the VSP product
+#: titles already carry "LED Stadium Light").
+#: Note the targets are *bare URL names* — this table cannot express
+#: ``/projects/?sport=…``, and a filtered URL would be self-defeating anyway:
+#: canonical is built from ``request.path``, which drops the query string, so
+#: every filtered URL canonicalises to /projects/ and the keyword never owns a
+#: distinct indexable URL.
+LEGACY_PATH_REDIRECTS = {
+    'products/sports-lighting/': 'products',
+    'products/football-stadium-lights/': 'projects_football',
+    'products/tennis-court-lighting/': 'projects_tennis',
+}
 
 
 def redirect_target_for_project(slug):

@@ -3962,10 +3962,18 @@ class P3VisualReviewCoverageTests(SimpleTestCase):
     def test_default_paths_cover_every_public_page_view(self):
         """每条公开路由都必须有默认评审路径（新增页面忘了加 → 这条会红）。"""
         from django.urls import resolve
+        from django.utils import translation
 
         from pages.urls import urlpatterns
 
-        covered = {resolve(p).url_name for p in self.module.DEFAULT_PATHS}
+        covered_under_en = set()
+        with translation.override('en'):
+            # i18n_patterns: under any other active language resolve() only
+            # tries the /<code>/ prefixed resolver and raises Resolver404 for an
+            # unprefixed path. The default review paths are the English site.
+            for p in self.module.DEFAULT_PATHS:
+                covered_under_en.add(resolve(p).url_name)
+        covered = covered_under_en
         public = {getattr(p, 'name', None) for p in urlpatterns}
         public = {n for n in public if n} - self.NON_PAGE_ROUTES
         self.assertEqual(
@@ -3984,8 +3992,22 @@ class P3VisualReviewCoverageTests(SimpleTestCase):
     def test_project_detail_default_path_points_at_real_seed_content(self):
         """详情页 slug 必须来自 seed_data.json，否则空库渲染出来是 404。"""
         slugs = {project['slug'] for project in self.seed['projects']}
-        detail_paths = [p for p in self.module.DEFAULT_PATHS
-                        if re.fullmatch(r'/projects/[^/]+/', p)]
+        # Resolve rather than matching on URL shape. /projects/football/ and
+        # /projects/tennis/ (v1.10.0 collections) look exactly like a project
+        # detail page, but they are their own routes — a shape match would fail
+        # them for "slug not in seed", and any future collection page would fail
+        # the same way. url_name is what actually distinguishes them.
+        from django.urls import resolve
+        from django.utils import translation
+        # override('en'): the URL conf is wrapped in i18n_patterns, so resolve()
+        # under any other active language only tries the /<code>/ prefixed
+        # resolver and raises Resolver404 for an unprefixed path.
+        with translation.override('en'):
+            detail_paths = [
+                p for p in self.module.DEFAULT_PATHS
+                if re.fullmatch(r'/projects/[^/]+/', p)
+                and resolve(p).url_name == 'project_detail'
+            ]
         self.assertTrue(detail_paths, '默认路径必须包含一个项目详情页')
         for path in detail_paths:
             slug = path.strip('/').split('/')[1]

@@ -1,0 +1,21 @@
+{% extends "projects.html" %}
+{% load i18n %}
+{% comment %}
+Head-only override for /projects/football/ and /projects/tennis/.
+Everything below <body> is inherited from projects.html — the collection is
+the same page with a fixed sport filter, so there is no second copy of the
+grid to keep in sync.
+
+Why a child template instead of a conditional inside projects.html: the
+description-budget guard reads the source of every template and only
+recognises a description block whose body is a literal translated string.
+Wrapping one in a conditional makes it invisible to that audit — the sweep
+silently lost two blocks until this was split out. Keeping projects.html's
+blocks literal keeps the audit honest; the strings these two pages render are
+runtime values from _SIDEBAR_I18N and are budget-checked in
+pages/tests_project_collections.py instead.
+{% endcomment %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ page_title }}{% endblock %}
+{% block og_description %}{{ page_description }}{% endblock %}

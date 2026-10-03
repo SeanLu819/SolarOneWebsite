@@ -21,12 +21,14 @@ urlpatterns = _legacy_redirects + [
     path('news/feed.xml', views.news_feed, name='news_feed'),
     path('news/<slug:slug>/', views.news_detail, name='news_detail'),
     path('products/', views.products, name='products'),
-    path('products/sports-lighting/', views.sports_lighting, name='sports_lighting'),
-    path('products/football-stadium-lights/', views.football_stadium_lights, name='football_stadium_lights'),
-    path('products/tennis-court-lighting/', views.tennis_court_lighting, name='tennis_court_lighting'),
     path('products/series/<slug:slug>/', views.product_series, name='product_series'),
     path('products/<slug:slug>/', views.product_detail, name='product_detail'),
     path('projects/', views.projects, name='projects'),
+    # Static collection pages MUST precede `projects/<slug:slug>/` — the slug
+    # converter matches "football" too, so placing them after it would hand
+    # /projects/football/ to project_detail() and 404.
+    path('projects/football/', views.projects_football, name='projects_football'),
+    path('projects/tennis/', views.projects_tennis, name='projects_tennis'),
     path('projects/<slug:slug>/', views.project_detail, name='project_detail'),
     path('about/', views.about, name='about'),
     path('privacy/', views.privacy, name='privacy'),

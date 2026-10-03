@@ -8,14 +8,18 @@ from .i18n import (
     _get_projects_sidebar,
     _resolve_active_labels,
     _resolve_project_sidebar,
+    _t,
 )
 from .data_loaders import get_projects, get_project_detail
 
 
-# Maps a project's sport_type to a related landing page so the project detail
-# page can vote for the Tier-1/2 SEMrush keyword pages via keyword-rich anchor
-# text. Non-sports venues (AIRPORT, ROADWAY, INFRASTRUCTURE, etc.) map to None
-# so no irrelevant link is injected — those pages rank on venue-name long-tails.
+# Maps a project's sport_type to the collection page it belongs on, so the
+# project detail page can vote for that keyword page with keyword-rich anchor
+# text. 'football' and 'tennis' resolve to /projects/football/ and
+# /projects/tennis/; everything else resolves to /products/ — non-sports venues
+# (AIRPORT, ROADWAY, INFRASTRUCTURE, …) rank on venue-name long-tails, not on a
+# sport keyword, so they link to the product catalogue instead of being forced
+# into a sports page.
 SPORT_TYPE_TO_LANDING = {
     'FOOTBALL_FIELD': 'football',
     'SOCCER_FIELD': 'football',
@@ -61,6 +65,74 @@ def projects(request):
     context['projects'] = page_obj.object_list
     context['page_obj'] = page_obj
     return render(request, 'projects.html', context)
+
+
+#: Static keyword collection pages: one URL per keyword, listing only projects
+#: that actually exist.
+#:
+#: These exist because the obvious alternative — pointing the keyword at
+#: ``/projects/?venue=OUTDOOR&sport=FOOTBALL_FIELD`` — does not work:
+#:   * the enum splits a single sport across two values, so a one-value filter
+#:     silently drops real projects (``SOCCER_FIELD``, and ``TENNIS`` which is
+#:     INDOOR and therefore excluded by ``venue=OUTDOOR``);
+#:   * ``request.path`` carries no query string, so every filtered URL renders
+#:     ``<link rel="canonical" href="…/projects/">`` — Google collapses them into
+#:     the unfiltered page and the keyword never owns a distinct URL.
+#: A real path fixes both: indexable, self-canonical, and honest about which
+#: projects belong to the keyword.
+PROJECT_COLLECTION_SPORTS = {
+    'football': ('FOOTBALL_FIELD', 'SOCCER_FIELD'),
+    'tennis': ('TENNIS_COURTS', 'TENNIS'),
+}
+
+
+def _projects_collection(request, key, title, intro, description):
+    """Render ``projects.html`` for one fixed group of ``sport_type`` values."""
+    context = get_common_context()
+    lang = get_language()
+
+    context['venue_types'] = _get_projects_sidebar(lang)
+    context['collection_key'] = key
+    context['active_venue_type'] = ''
+    context['active_sport_type'] = ''
+
+    context['page_title'] = title
+    context['page_description'] = description
+    context['page_intro'] = intro
+    # `projects.html` renders the H1 from this label, so the collection page
+    # gets its keyword heading without a second template.
+    context['active_sport_type_label'] = title
+
+    projects_list = get_projects(lang, '', list(PROJECT_COLLECTION_SPORTS[key]))
+    paginator = Paginator(projects_list or [], 10)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    context['projects'] = page_obj.object_list
+    context['page_obj'] = page_obj
+    # A head-only child of projects.html: same grid, own title/description.
+    return render(request, 'projects_collection.html', context)
+
+
+def projects_football(request):
+    """/projects/football/ — every real football *and* soccer field project."""
+    lang = get_language()
+    return _projects_collection(
+        request, 'football',
+        _t('Football Stadium Lighting Projects | SolarOne', lang),
+        _t('Football and soccer field LED lighting projects delivered worldwide — stadiums, high school fields and training pitches.', lang),
+        _t('Real football and soccer field LED lighting projects by SolarOne — stadium, high school and training pitch installations with measured results.', lang),
+    )
+
+
+def projects_tennis(request):
+    """/projects/tennis/ — indoor *and* outdoor tennis court projects."""
+    lang = get_language()
+    return _projects_collection(
+        request, 'tennis',
+        _t('Tennis Court Lighting Projects | SolarOne', lang),
+        _t('Indoor and outdoor tennis court LED lighting projects delivered worldwide — club, university and competition courts.', lang),
+        _t('Real indoor and outdoor tennis court LED lighting projects by SolarOne — club, university and competition courts with measured results.', lang),
+    )
 
 
 def project_detail(request, slug):

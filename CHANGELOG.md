@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.0 - 2026-10-04
+
+## Retire the three keyword landing pages; replace them with real project collections
+
+`/products/sports-lighting/`, `/products/football-stadium-lights/` and
+`/products/tennis-court-lights/` were built *for* keywords rather than around
+content. They are gone, and they 301:
+
+| retired | → |
+|---|---|
+| `/products/sports-lighting/` | `/products/` |
+| `/products/football-stadium-lights/` | `/projects/football/` |
+| `/products/tennis-court-lights/` | `/projects/tennis/` |
+
+The obvious replacement — 301 straight to
+`/projects/?venue=OUTDOOR&sport=FOOTBALL_FIELD` — was measured and rejected for
+three independent reasons:
+
+1. **The enum splits one sport across two values.** Football is
+   `FOOTBALL_FIELD` (3) + `SOCCER_FIELD` (2); tennis is `TENNIS_COURTS` (3,
+   all OUTDOOR) + `TENNIS` (2, **both INDOOR**). A single-value filter drops
+   the only genuine stadium in the portfolio (`yuanshen-sports-centre-stadium`)
+   and both indoor tennis courts — while the retired tennis page's copy
+   promised indoor coverage.
+2. **`request.path` carries no query string**, so every filtered URL renders
+   `<link rel="canonical" href="…/projects/">`. Verified live for four
+   filtered URLs: Google collapses them all into `/projects/`, so the keyword
+   would never own a distinct indexable URL. The filter is a UI affordance,
+   not an SEO surface.
+3. **The redirect table cannot express a query string at all** — its values are
+   bare URL names for `reverse()` — so the redirect was not implementable
+   without first extending the mechanism.
+
+`/projects/football/` and `/projects/tennis/` fix all three: real paths,
+self-referencing canonical, and a merged multi-value filter
+(`data_loaders._sport_filter_values`, DB *and* seed paths) that lists exactly
+the five real projects per sport. Because they are real paths they also inherit
+hreflang and sitemap coverage for free. Static routes are registered **before**
+`projects/<slug:slug>/` — the slug converter matches `football` too, so the
+wrong order would hand the URL to `project_detail()` and 404.
+
+Removed with them: three templates, three views and the shared
+`_sports_landing()` helper, their sitemap entries, `llm.txt` bullets, the
+`visual_review.py` paths, `project_detail.html`'s related-solutions links
+(now pointing at the collections), and two test modules (32 cases) that
+asserted the retired pages. `docs/keyword-inventory.csv` retargets 7 keyword
+rows.
+
+Guarded by `pages/tests_project_collections.py` (12 cases). Three mutation
+probes confirm the guards bite: narrowing either collection to a single enum
+value turns 2 cases red, emptying the redirect table turns 2 red, and dropping
+the sitemap entries turns 1 red. Restored byte-identical (md5 verified).
+
+Titles/intros/descriptions for both collections go through `_t()`, so six new
+`_SIDEBAR_I18N` entries cover fr/es/de/ru/ar — **these translations are new and
+worth a native review**.
+
 ## v1.9.10 - 2026-10-04
 
 ## Image de-duplication — fix the root cause, then remove the 30 copies
