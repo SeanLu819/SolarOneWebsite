@@ -52,14 +52,33 @@ class ProductImagePathResolutionTests(SimpleTestCase):
         self.assertIn('/static/images/products/fl4m/fl4m-01.webp', url)  # ← 实际位置
 
     def test_static_fallback_prefers_db_relative_canonical_path(self):
-        product = SimpleNamespace(
+        """规范化后的 slug 目录真源路径要命中；只存在于陈旧快照的路径不许命中。
+
+        🔴 v1.9.9 修订：原用例用 ``products/vsp/vsp-bar-1.webp``，而
+        ``static/images/products/vsp/`` **整个目录已从真源删除**（只有
+        ``staticfiles/`` 的陈旧 collectstatic 快照里还留着），所以旧实现是靠
+        快照才绿、拼出一个生产同样 404 的 URL。目录枚举/文件集合现在只认
+        ``static/``，因此正向用例换成真源里确实存在的
+        ``images/products/rt410-series/rt410fl-s-01.webp``，断言意图不变；
+        反向用例保留原路径，锁住「陈旧快照不再骗人」这条规则。
+        """
+        real = SimpleNamespace(
+            slug='rt410-series',
+            banner_image=SimpleNamespace(name='products/gallery/rt410fl-s-01.webp'),
+        )
+        url = _strip_static_hash(_product_image_url(real, 'banner_image'))
+        self.assertIn('/static/images/products/rt410-series/rt410fl-s-01.webp', url)
+
+        stale_only = SimpleNamespace(
             slug='rt590fl-s',
             banner_image=SimpleNamespace(name='products/vsp/vsp-bar-1.webp'),
         )
-
-        url = _strip_static_hash(_product_image_url(product, 'banner_image'))
-
-        self.assertIn('/static/images/products/vsp/vsp-bar-1.webp', url)
+        ghost = _strip_static_hash(_product_image_url(stale_only, 'banner_image'))
+        self.assertNotIn(
+            '/static/images/products/vsp/',
+            ghost,
+            '_find_static 又被 staticfiles 陈旧快照骗了，会拼出生产 404 的 URL',
+        )
 
     def test_gallery_legacy_path_prefers_slug_dir_over_stale_static_root_copy(self):
         """2026-09-26 故障回归：DB 里的 legacy 图集路径 products/gallery/x.webp
@@ -4681,7 +4700,23 @@ class NewsImageSyncTests(TestCase):
         article.image = 'news/export_a1b2c3d.jpg'
         article.save()
 
-        row = seed_sync._news_to_dict(article)
+        # 🔴 v1.9.9：seed_sync 现在只认**真源** static/（见
+        # pages.static_scan.source_file_set）；只躺在 STATIC_ROOT 快照里的文件
+        # 一律算不存在，否则 seed 会写出磁盘上并不存在的路径。真实流程里封面
+        # 由 admin 保存拷入 static/images/news/<slug>/，这里手工放一份同样的，
+        # 并清掉 seed_sync 的进程级文件集合缓存，避免受用例执行顺序影响。
+        from pathlib import Path
+        src = Path(self.root) / 'static' / 'images' / 'news' / 'qa-news-sync'
+        src.mkdir(parents=True, exist_ok=True)
+        (src / 'export_a1b2c3d.jpg').write_bytes(b'\x89PNG\r\n\x1a\nQA')
+        seed_sync._static_cache = None
+        seed_sync._static_cache_base = None
+
+        # v1.9.9：seed_sync 只认真源 STATICFILES_DIRS，所以把真源指向临时目录，
+        # 让"导出路径必须落在真源里"这条断言在隔离环境下依然成立。
+        root_static = str(Path(self.root) / 'static')
+        with self.settings(STATICFILES_DIRS=[root_static]):
+            row = seed_sync._news_to_dict(article)
         exported = row['image']
         self.assertTrue(exported.startswith('images/news/'),
                         f'seed 导出的封面不是 static 相对路径：{exported!r}')

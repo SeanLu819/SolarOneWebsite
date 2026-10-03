@@ -210,7 +210,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             # ordering_image / cert_image are ALSO used by the overview template
             # (free-form copy slot + certification badges), so they live here.
             'fields': ('image', 'banner_image', 'ordering_image', 'cert_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。Ordering image 为订购信息示意图（两种模板都显示）。Cert image 为产品认证标识图，留空则使用通用默认认证图。'
+            'description': '上传图片时请参考字段下方的尺寸提示。Ordering image 为订购信息示意图（两种模板都显示）。Cert image 为产品认证标识图（UL / DLC / GS / CE / IP66 标识条）。留空则自动使用这张通用标识图——所有产品共用同一份，请勿逐个产品重复上传。'
         }),
         ('Detail-page images (仅在「产品详细页」显示)', {
             'classes': ('detail-only',),

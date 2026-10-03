@@ -2,9 +2,131 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.9.9 - 2026-10-03
+
+## Production-parity fixes — cert badge paths, build-artifact fidelity, gallery alt
+
+Three defects that all share one root cause: **the local render path and the
+production (seed) path disagree**, and the disagreement is invisible locally.
+
+### The seed build artifact was silently rewriting English copy
+
+`pages/seed_sync.py` generated `pages/seed_data.py` by running three naive
+`str.replace()` calls over `json.dumps()` output — `true`→`True`,
+`false`→`False`, `null`→`None`. Because the replacement was **not
+string-aware**, any occurrence inside copy was rewritten too. This shipped:
+`projects[13].description` renders as `a True "shadowless" effect` on
+production instead of `a true "shadowless" effect`.
+
+Replaced with `_json_to_python_literals()`, a single-pass scanner that tracks
+whether the cursor is inside a JSON string and only rewrites bare literals at
+word boundaries (`json.dumps` never emits `True`, so a bare `true` outside a
+string is always a boolean). Guarded by
+`SeedPythonArtifactFidelityTests` (3 cases) — field-by-field equality between
+the JSON and the generated module, plus two direct probes of the string and
+word-boundary behaviour.
+
+### 21 products pointed their certification badge at a deleted directory
+
+The DB (`pages_product.cert_image`) still held `products/certs/<name>` for 21
+rows after those files were de-duplicated in v1.9.8. The resolver normalises to
+`static/images/products/certs/…`, which no longer exists, so the URL fell back
+to `/media/` — **and `/media/` is excluded from the Vercel bundle**, so every
+one of those badges was a live 404 that local browsing cannot show.
+
+Fixed with `.update()` (never `post_save`, so no seed rewrite): 18 rows cleared
+to `''` (they now render the shared `DEFAULT_CERT_IMAGE`, which exists) and 3
+RGBW rows repointed to `products/rgb-rgbw/<file>`. Media-only resolution went
+from **19 fields to 0**. Guarded by `CertDatabasePathTests` (5 cases), which
+reads the real `db.sqlite3` read-only — the test database is empty in this
+project, so any ORM-backed assertion here would pass vacuously.
+
+### Project gallery alt text lost the real project name (local only)
+
+`pages/views/enrich.py` builds gallery alt text as
+`"{title} — {location} — view N"`, but the DB branch wraps it in
+`img.alt_text or _gallery_alt(...)` while the **seed branch — the one Vercel
+runs — never reads `alt_text` at all**. Three projects (16 images) carried an
+override, and the override was slug-derived:
+
+    prod : 'Bohemia Manor High School — United States — view 1'   ✅
+    local: 'Football Field LED Retrofit — view 1'                 ❌
+
+so the local page dropped both the entity name and the country. The overrides
+were **cleared**, not rewritten — writing new copy would recreate the same
+local/production drift on the next deploy. Guarded by
+`pages/tests_project_gallery_alt.py` (3 cases): the seed-path alt must carry
+the real title and location, and no `ProjectImage.alt_text` may be non-empty
+until `seed_sync` exports it.
+
+⚠️ Writing that guard produced a false positive worth recording: a blacklist
+keyed on `slug.replace('-', ' ').title()` flagged **52 legitimate alt strings**,
+because 11 of 22 project titles are *already* the humanised slug
+(`nanshan-ski-village` → "Nanshan Ski Village"), and because `led` title-cases
+to "Led" while the real bad string said "LED" — so the blacklist both
+over-reported and missed the actual defect. The guard now asserts a positive
+contract (subject segment == title, location present) instead.
+
+**Verification**: full suite `515 tests / 32 failures`, unchanged from the
+`512 / 32` baseline (the 3 new cases pass); mutation probes confirmed each new
+guard fails when its invariant is broken.
+
+---
+
 ## v1.9.8 - 2026-10-03
 
-A full-site sweep of all 58 sitemap URLs in six locales found two places where
+## Image audit — cert badge de-duplication, dead fallback fixed, full-site report
+
+A full-site image audit (337 files / 38.48 MB) produced three tools and two
+code fixes.
+
+**The certification badge fallback pointed at a file that does not exist.**
+`pages/views/enrich.py` fell back to
+`images/products/m-series-flood-light-certifications.webp` whenever a product had
+no `cert_image`. That file is not on disk — verified `404` live on 2026-10-03 —
+so every product with an empty `cert_image` silently rendered **no certification
+badge at all**. The constant is now `DEFAULT_CERT_IMAGE`, pointing at
+`images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp`, which exists.
+The dead literal is additionally banned from executable code by
+`test_no_dead_cert_fallback_literal_remains_in_code`.
+
+**18 byte-identical copies of the same badge.** The UL/DLC/GS/CE/IP66 badge was
+stored separately in 18 product directories (19 files including the RGBW
+interface badge). All 18 products now reference one shared file, and the 19
+redundant copies were removed (782 KB freed, backed up under
+`.workbuddy/backup/cert_dedupe_20261003/`). Three sources were updated in the
+required order — `seed_data.json` (CRLF preserved), the DB via `.update()` so
+`post_save` never fired, then `python -m pages.seed_sync --json` to regenerate
+`pages/seed_data.py`. The root cause is the admin upload path
+(`pages/admin/product.py:283`), which copies each upload into the per-slug
+directory; Django's 8-char hash suffix meant every re-upload minted another
+copy — 19 identical files under `media/products/certs/`.
+
+**Pre-cropping to 16:9 was investigated and rejected.** It looked safe because
+the project carousel uses a fixed `aspect-ratio: 16/9` with `object-fit: cover`,
+but the same files are also rendered by `.project-card-img`
+(`height: 180px` with cover, ≈6.8:1) on the projects list, so cropping to either
+ratio changes what the other slot shows. Re-encoding at identical pixel size
+(`method=6`, quality 86→80, PSNR ≥ 40 dB gate) saved **0 KB across 110 project
+images** — the existing encodes are already efficient. The savings must come from
+exporting new source material at the right ratio, not from re-processing.
+
+**Naming is already compliant — no renames needed.** The first report flagged
+137 images; every one was a false positive from two bad rules (filename vs.
+directory semantics, and "filename duplicates the directory name"). Both were
+removed. All 337 images carry descriptive names such as
+`llq-roadway-1080p-01.webp` and `glare-shield-rt410-bar-03.webp`; zero contain
+CJK characters, spaces, uppercase or hash suffixes.
+
+New read-only tools: `scripts/audit_images.py` (per-file size/dimensions/format/
+md5 plus duplicate grouping and seed references),
+`scripts/audit_img_slots.py` (maps every `<img>` slot to its CSS box),
+`scripts/gen_image_issue_report.py` (writes
+`.workbuddy/preview/image_issue_report.html` with per-image issues and an
+export-spec table). Guards: `pages/tests_cert_images.py` (7 cases), all
+mutation-probed.
+
+## A full-site sweep of all 58 sitemap URLs in six locales found two places where
 the SEO budget was still not enforced. Both are closed here, together with the
 guards that keep them closed.
 

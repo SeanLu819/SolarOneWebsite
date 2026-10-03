@@ -19,6 +19,7 @@ import os
 import sys
 
 from django.db import models
+from pages.static_scan import source_file_set
 from pages.utils import strip_hash_suffix
 
 
@@ -78,7 +79,11 @@ def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
         if _static_file_exists(candidate):
             return candidate
 
-    return f'images/{asset_type}/{slug}/{clean_filename}'
+    # 🔴 v1.9.9：不许再凭空合成路径。旧实现兜底返回
+    # ``images/{asset_type}/{slug}/{clean_filename}`` —— 哪怕这个文件根本不存在
+    # （``staticfiles/`` 里恰好有同名的陈旧副本时就会命中这条兜底）。seed 一旦写入
+    # 幽灵路径，生产就 404；返回空串让渲染层回落到各自视图里真实的兜底图。
+    return ''
 
 
 def _list_static_dir(rel_dir):
@@ -112,10 +117,15 @@ _static_cache_base = None
 
 
 def _static_file_exists(rel_path, base_dir=None):
-    """Check if a file exists in any static directory (cached)."""
+    """Check if a file exists in the **source** static directory (cached).
+
+    🔴 v1.9.9：真源（``static/``）里没有的文件一律算不存在。``STATIC_ROOT``
+    （``staticfiles/``）是上一轮 collectstatic 的快照，不能参与"存在"判定 ——
+    见 ``pages.static_scan.source_file_set`` 的事故说明。
+    """
     global _static_cache, _static_cache_base
     if _static_cache is None or _static_cache_base != base_dir:
-        _static_cache = _build_static_set(base_dir)
+        _static_cache = source_file_set(base_dir)
         _static_cache_base = base_dir
     return rel_path in _static_cache
 
@@ -333,6 +343,72 @@ def _news_to_dict(article):
     }
 
 
+def _json_to_python_literals(seed_data, indent=2):
+    """Serialise ``seed_data`` to Python-literal source, safely.
+
+    Equivalent to ``json.dumps(...)`` followed by replacing the bare words
+    ``true``/``false``/``null`` with ``True``/``False``/``None`` — except the
+    replacement is **structure-aware**, so those words inside string values are
+    left untouched.
+
+    Why this exists (v1.9.9): the naive replace corrupted real copy. Live proof:
+    ``projects[13].description`` contains ``a true "shadowless" effect``; the
+    naive version emitted ``a True "shadowless" effect`` into
+    ``pages/seed_data.py``, and since ``build.sh`` re-runs this generator on
+    every Vercel build and Vercel serves from that artifact (no DB), the typo
+    shipped to production. A description guard on the *other* truth source
+    (seed_data.json) can never catch it — the corruption only exists in the
+    generated artifact.
+
+    Implementation: walk the JSON text produced by ``json.dumps``, tracking
+    whether we are inside a string literal. Inside a string, everything is
+    emitted verbatim (escapes already applied by json.dumps). Outside one, the
+    bare literals are substituted.
+    """
+    text = json.dumps(seed_data, ensure_ascii=False, indent=indent)
+    out = []
+    in_string = False
+    escaped = False
+    i = 0
+    n = len(text)
+    literal_map = {'true': 'True', 'false': 'False', 'null': 'None'}
+    while i < n:
+        ch = text[i]
+        if in_string:
+            out.append(ch)
+            if escaped:
+                escaped = False
+            elif ch == '\\':
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+        matched = False
+        for word, replacement in literal_map.items():
+            # Only substitute whole words, so a key like `"nullable":` or an
+            # identifier-ish substring is never touched.
+            if text.startswith(word, i):
+                before = text[i - 1] if i > 0 else ''
+                after = text[i + len(word)] if i + len(word) < n else ''
+                if not (before.isalnum() or before == '_') and \
+                        not (after.isalnum() or after == '_'):
+                    out.append(replacement)
+                    i += len(word)
+                    matched = True
+                    break
+        if matched:
+            continue
+        out.append(ch)
+        i += 1
+    return ''.join(out)
+
+
 def _write_seed_files(seed_data, base_dir=None, write_json=True):
     """Write seed_data.json and/or pages/seed_data.py from a seed dict.
 
@@ -356,8 +432,20 @@ def _write_seed_files(seed_data, base_dir=None, write_json=True):
             f.write('\n')
 
     # Write Python module (use repr for proper Python booleans)
-    py_data = json.dumps(seed_data, ensure_ascii=False, indent=2)
-    py_data = py_data.replace('true', 'True').replace('false', 'False').replace('null', 'None')
+    #
+    # 🔴 v1.9.9 — 旧的naive 字符串替换会**污染字符串内容**。
+    # `json.dumps` 出来的 JSON 里，`true` / `false` / `null` 既可能是字面量，
+    # 也可能出现在**引号内的文案**里。直接 `.replace('true','True')` 分不清两者。
+    # 线上实证（2026-10-03）：`projects[13].description` 里的
+    # `a true "shadowless" effect` 被改成 `a True "shadowless" effect` ——
+    # seed_data.json 里是 `true`，构建产物 pages/seed_data.py 里变成 `True`，
+    # 而 build.sh 每次 Vercel 构建都跑这段生成器 ⇒ 错别字已经在线上。
+    # 项目详情页那句文案就是从 seed_data.py 读的（Vercel 无 DB）。
+    #
+    # 正解：只替换 JSON **结构位置**上的字面量，遇到字符串就整段跳过。
+    # 用 json.JSONEncoder + 自定义分隔符不可行（引号内也可能有同样字符），
+    # 所以改成自己扫一遍：识别字符串边界，跳过其中内容，只改外面的裸词。
+    py_data = _json_to_python_literals(seed_data, indent=2)
 
     # Insert section header comments above each top-level key so the generated
     # .py (a build artifact, never hand-edited) stays navigable.

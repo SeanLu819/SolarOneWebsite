@@ -124,6 +124,45 @@ v1.9.6 补掉了最后一处已知的 description 预算缺口（全站 58 URL �
 | C4 | P2 | 593/596 张图无 srcset | 三档方案待议（v1.9.x 起已挂账） |
 | C5 | P2 | 项目页非英语 desc 全回退英文 | `/projects/perryville-high-school/` 五语 desc 均 156 字符（项目 `translations` 无 `en` 键 → 恒走公式，见 C1 的对照） |
 
+### 2026-10-03 晚 — 图片问题全面扫描（用户要求先扫描后推送）
+
+**总量**：磁盘 **318 张 / 37.71 MB**（webp 315、非 webp 3、不可读 0）；HEAD 跟踪 337 →
+工作区已删 19（= 磁盘 321，其中 3 张是 gitignore 的 `news/*/_source/*.jpg`）。
+
+| 分类 | 判定 | 结论 |
+|---|---|---|
+| 重复副本（md5 全同） | **21 组 / 2.02 MB** | 最大组 `fl9m-3d-view` 系 4 份 0.52 MB；`beamangle-12183050.webp` 9 份 0.31 MB。都落在活的枚举画廊目录里 → **删副本 = 从那个画廊里少一张图（视觉变化）**，不是纯白捡 |
+| `scripts/audit_images.py` 报「未引用 31 张 / 2.94 MB」 | ❌ **几乎全是假阳性** | 扫描器只查 seed 数组，`hero-main-*` / `logo` / `favicon` / `apple-touch-icon` / `optics-*` / `agent-*` 其实都在模板里 |
+| **真·死图** | ✅ **只有 4 张 / 0.42 MB** | 3 张 `images/news/low-cct-…/_source/W0…jpg`（本就 gitignore，是重导出原图，应保留）+ 1 张 `images/products/ordering/sample-number.webp`（与被引用的 `m-series/sample-number.webp` md5 相同） |
+| 页面级 `<img>` 属性 | 596 个 | **594 无 width/height**（CLS）、**593 无 srcset**、0 缺 alt、26 `fetchpriority="high"` |
+| 工作区已删的 19 张认证图（17× `certifications-…ip66.webp` + 2× `rgbw-interface-…ip66-ik08.webp`） | ✅ **删得安全** | 全站只有 2 条认证图完整路径在 `seed_data.json`（`m-series` + `rgb-rgbw`），另有一处 `pages/views/enrich.py:21 DEFAULT_CERT_IMAGE`；模板里零硬编码。删除只让它们不再渲染，**不产生 404、无视觉回归** |
+
+**判定口径（漏一维就翻车）**：产品/项目画廊是**目录枚举**渲染的
+（`_list_static_dir('images/products/<slug>')`，`pages/views/utils.py:325-339`），
+文本里搜不到 ≠ 死图。只做文本 grep 时死图清单 17 个 / 1.89 MB，补上枚举维度后只剩 4 个 / 0.42 MB。
+
+**未动、待决策**：① C3/C4 属性缺口；② 21 组重复副本是否允许「同图多画廊」；
+③ 真死图的清理由你确认（`ordering/sample-number.webp` 单删即可）。
+
+### 「异常大」图片清单（>200 KB 口径，跟 `scripts/gen_image_issue_report.py` 一致）
+
+**49 张 / 14.81 MB，占全站（37.71 MB）的 39%。**
+
+| 尺寸 | 张数 | 体积 | 处理建议 |
+|---|---|---|---|
+| 1920×1080 | 22 | 6.92 MB | 列表卡渲染框最宽 1248 px → 降到 1280×720，省约 55% |
+| 1280×720 | 15 | 3.57 MB | 已接近上限，只需重压（q 值），不必改尺寸 |
+| **1920×442（4.34:1 横条）** | 5 | 1.27 MB | 比例与 16:9 框不符 → **渲染时裁掉 59%**，应重导出为正经 16:9 或缩到 1280×295 |
+| 1520×856 | 2 | 0.60 MB | VSP9M 系列（v1.9.7 已压一轮，VSP9M-04 仍 360 KB，是全场最重的产品图） |
+| 1920×1078 | 2 | 0.46 MB | hero 位，降 1280 宽即可 |
+| **1217×675** | 1 | **1.54 MB** | ⚠️ **明显异常值** —— 比第 2 名（466 KB）大 3.3 倍，同一相册其它图仅 0.1–0.3 MB，等于漏压了一张，重导出收益最大 |
+| 1920×600（3.20:1） | 1 | 0.24 MB | `fl16m-3d-view`，同样被 16:9 框裁切 |
+| 512×512 | 1 | 0.21 MB | `pwa-icon-512.png`（PWA 图标，不算问题） |
+
+**像素远超显示需求**（>1872 px 宽，渲染框最宽 1248 px）：**47 张 / 10.07 MB**，集中在 10 个项目相册整组（liu-li-bridge、perryville、red-1-karting、garrison-forest、national-olympic-tennis、north-creek、baseball-field、beijing-capital、pickle-n-par、mcintosh），每组 5 张全是 1920×1080。
+
+**优先级**：`bitc-tennis-03.webp`（1.54 MB）→ 1920 系列 22 张统一降 1280×720 → 5 张 1920×442 横条重导出（顺带修 59% 裁切）→ 47 张像素过量批量降规格（预计 10 MB → 4 MB 以内）。
+
 **已确认 OK、别重复做**：canonical 58/58 ✓、hreflang **7 标签 58/58** ✓、OG + Twitter 全覆盖 ✓、
 无重复 title ✓、h1 全有且 ≤60 ✓、img `alt` 全有 ✓、JSON-LD 17 类 ✓、desc 全 107–160 ✓。
 | B6 | RTL 零隔离 | `/ar/` 卡片拉丁标题双向重排（2026-09 已截图坐实） | `bdi` / `unicode-bidi` 专项，全站性 |

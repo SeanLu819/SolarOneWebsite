@@ -5,7 +5,7 @@
       "name": "Mseries GS",
       "slug": "mseries-gs",
       "category": "ACCESSORY",
-      "description": "SolarOne Mseries GS glare shield is engineered for the M Series modular floodlights to cut glare and control light spill in sensitive venues. The adjustable-length shield adapts to diverse application environments - stadiums, facades, and architectural sites - delivering precise, comfortable illumination while protecting neighbors and night skies from stray light.",
+      "description": "Glare shield for M series\r\nWe provide a variety of glare shield lengths to accommodate diverse application environments.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -26,10 +26,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne Mseries GS mounts M Series LED fixtures to poles, walls and towers with tool-free install and rugged aluminum build for sports and site lighting."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
@@ -62,7 +59,7 @@
       "dimension_image": "",
       "beam_angle_image": "",
       "ordering_image": "images/products/m-series/sample-number.webp",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 1,
       "is_active": true,
       "page_layout": "overview",
@@ -92,9 +89,6 @@
           "name": "سلسلة M",
           "category": "معيارية",
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
-        },
-        "en": {
-          "seo_description": "SolarOne M Series modular LED area and site lighting scales 80W to 1280W+ for lots, campuses and yards. Tool-free modules, stable color, low maintenance."
         }
       },
       "gallery": [
@@ -133,7 +127,7 @@
       "dimension_image": "images/products/rt410-series/rt410-3d-view.webp",
       "beam_angle_image": "images/products/rt410-series/beamangle183050100.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 2,
       "is_active": true,
       "page_layout": "detail",
@@ -163,9 +157,6 @@
           "name": "سلسلة RT410",
           "category": "مشاريع إضاءة",
           "description": "أضواء LED احترافية للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. تستبدل مصابيح HID بقدرة 400–1000 واط بأداء بدون وميض بجودة البث."
-        },
-        "en": {
-          "seo_description": "SolarOne RT410 Series (RT410FL-260W) area and site lighting gives 260W of efficient, uniform output for parking, paths and yards. Rugged, low-maintenance."
         }
       },
       "gallery": [
@@ -301,10 +292,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RGB / RGBW LED area and site lighting adds dynamic color, tunable white and DMX control for facades, landscapes and events. Weatherproof, easy program."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
@@ -342,10 +330,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne LED accessories - brackets, drivers, lenses, kits - keep M Series and RT fixtures installed and maintained. Long-life genuine parts."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/accessory/mseries-glare-shield-720p-02.webp",
@@ -361,7 +346,7 @@
       "name": "FL1M",
       "slug": "fl1m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL1M modular area floodlight (FL1M-80W-30K-S) brings scalable, high-efficiency LED site lighting to parks, perimeters, and small sports grounds. Its truly modular 1-module design starts at 80W and snaps into the M Series family, so you can expand output exactly as the project grows - maintenance-free, flicker-free, and built for years of reliable outdoor service.",
+      "description": "FL1M modular floodlight configuration — part of the M Series family.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -372,7 +357,7 @@
       "dimension_image": "images/products/fl1m/fl1m-3d-view.webp",
       "beam_angle_image": "images/products/fl1m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 11,
       "is_active": true,
       "page_layout": "detail",
@@ -382,10 +367,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL1M (FL1M-80W-30K-S) compact LED area luminaire gives 80W of efficient, uniform light for small lots, walkways and perimeters. Slim, tool-free design."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl1m/fl1m-01.webp",
@@ -507,7 +489,7 @@
       "name": "FL4M",
       "slug": "fl4m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL4M modular area floodlight (FL4M-320W-30K-S) delivers 320W of efficient, uniform LED site lighting for medium-sized sports fields, parking areas, and industrial yards. Part of the scalable M Series, it combines into larger configurations and offers tool-free maintenance, robust IP-rated housing, and consistent color temperature for comfortable, broadcast-grade illumination.",
+      "description": "FL4M modular floodlight configuration — part of the M Series family.",
       "power": "320W",
       "efficacy": "130lm/W",
       "output": "40K+ lm",
@@ -518,29 +500,26 @@
       "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
       "beam_angle_image": "images/products/fl4m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 12,
       "is_active": true,
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
         "fr": {
-          "description": "Le projecteur modulaire SolarOne FL4M (FL4M-320W-30K-S) delivre 320 W d'eclairage LED efficace et uniforme pour terrains sportifs de moyenne taille, parkings et cours industrielles. Membre de la famille M Series, il se combine en configurations plus larges, avec entretien sans outil, boitier etanche et temperature de couleur stable pour un eclairage confortable de qualite diffusion."
+          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
         },
         "es": {
-          "description": "El proyector modular SolarOne FL4M (FL4M-320W-30K-S) aporta 320 W de iluminacion LED eficiente y uniforme a campos deportivos medianos, aparcamientos y patios industriales. Parte de la familia M Series, se combina en configuraciones mayores con mantenimiento sin herramientas, carcasa robusta y temperatura de color estable para una luz comoda de calidad broadcast."
+          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
         },
         "de": {
-          "description": "Der modulare Fluter SolarOne FL4M (FL4M-320W-30K-S) liefert 320 W effiziente, gleichmassige LED-Platzbeleuchtung fur mittelgrosse Sportplatze, Parkplatze und Industriehofe. Als Teil der M Series kombiniert er sich zu grosseren Anlagen, mit wartungsarmer Bauweise, robustem Gehause und stabiler Farbtemperatur fur komfortables Licht in Broadcast-Qualitat."
+          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
         },
         "ru": {
-          "description": ""
+          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
         },
         "ar": {
-          "description": ""
-        },
-        "en": {
-          "seo_description": "SolarOne FL4M (FL4M-320W-30K-S) modular LED area lighting gives 320W of uniform output for mid fields, parking and yards with tool-free service."
+          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
         }
       },
       "gallery": [
@@ -663,7 +642,7 @@
       "name": "FL6M",
       "slug": "fl6m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL6M modular area floodlight (FL6M-480W-30K-S) provides 480W of high-output LED lighting for larger sites, training pitches, and logistics yards. As a building block of the M Series modular system, it scales seamlessly with FL1M-FL16M modules, giving engineers precise, energy-efficient coverage with long-life, low-glare performance.",
+      "description": "FL6M modular floodlight configuration — part of the M Series family.",
       "power": "480W",
       "efficacy": "130lm/W",
       "output": "60K+ lm",
@@ -674,7 +653,7 @@
       "dimension_image": "images/products/fl6m/fl6m-ngs-3d-view-540p.webp",
       "beam_angle_image": "images/products/fl6m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 13,
       "is_active": true,
       "page_layout": "detail",
@@ -684,10 +663,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL6M (FL6M-480W-30K-S) high-output LED area lighting gives 480W for large parking, logistics yards and sports perimeters. Modular, low-maintenance."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl6m/fl6m-01.webp",
@@ -809,7 +785,7 @@
       "name": "FL9M",
       "slug": "fl9m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL9M modular area floodlight (FL9M-720W-XXK-S) supplies 630W-class high-efficiency LED illumination for sports complexes, cargo terminals, and wide industrial areas. Its modular M Series architecture lets you compose the exact wattage and beam spread required, with durable, weather-sealed construction and stable 3000-5700K color tuning.",
+      "description": "FL9M modular floodlight configuration — part of the M Series family.",
       "power": "630W",
       "efficacy": "130lm/W",
       "output": "90K+ lm",
@@ -820,7 +796,7 @@
       "dimension_image": "images/products/fl9m/fl9m-ngs-3d-view-540p.webp",
       "beam_angle_image": "images/products/fl9m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 14,
       "is_active": true,
       "page_layout": "detail",
@@ -830,10 +806,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL9M (FL9M-720W) high-power LED area lighting gives 630W for stadium surrounds, freight yards and big sites. Modular build, stable color."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl9m/fl9m-01.webp",
@@ -955,7 +928,7 @@
       "name": "FL12M",
       "slug": "fl12m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL12M modular area floodlight (FL12M-1000W-YYK-H-30) pushes 1000W of powerful, uniform LED light for major stadiums, ports, and large-scale outdoor facilities. Built on the scalable M Series platform, it stacks with sibling modules for virtually unlimited output while keeping glare, maintenance, and energy cost under tight control.",
+      "description": "FL12M modular floodlight configuration — part of the M Series family.",
       "power": "1000W",
       "efficacy": "130lm/W",
       "output": "120K+ lm",
@@ -966,7 +939,7 @@
       "dimension_image": "images/products/fl12m/fl12m-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 15,
       "is_active": true,
       "page_layout": "detail",
@@ -976,10 +949,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL12M (FL12M-1000W) high-output LED area lighting gives 1000W for ports, rail yards and sports complexes. Modular, weatherproof, low-maintenance."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl12m/fl12m-01.webp",
@@ -1101,7 +1071,7 @@
       "name": "FL16M",
       "slug": "fl16m",
       "category": "AREA_SITE",
-      "description": "SolarOne FL16M modular area floodlight (FL16M-1280W-30K-H) is the flagship of the M Series, delivering 1280W of broadcast-grade LED illumination for professional arenas and mega sites. Combine it with FL1M-FL12M modules to size any project precisely, with flicker-free performance, IP66 protection, and a long, low-cost service life.",
+      "description": "FL16M modular floodlight configuration — part of the M Series family.",
       "power": "1280W",
       "efficacy": "130lm/W",
       "output": "160K+ lm",
@@ -1112,7 +1082,7 @@
       "dimension_image": "images/products/fl16m/fl16m-ngs-3d-view-650p.webp",
       "beam_angle_image": "images/products/fl16m/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 16,
       "is_active": true,
       "page_layout": "detail",
@@ -1122,10 +1092,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL16M (FL16M-1280W) flagship LED area luminaire gives 1280W for airports, ports and stadiums. Modular high-mast build, broadcast-grade color."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl16m/fl16m-01.webp",
@@ -1268,10 +1235,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne FL9M-RGBW area luminaire blends white with RGBW effects for facades, events and sports perimeters. DMX control, weatherproof, easy to program."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/fl9m-rgbw/rgbw-9m-r.webp",
@@ -1360,7 +1324,7 @@
       "name": "Glare Shield for RT410",
       "slug": "glare-shield-for-rt410",
       "category": "ACCESSORY",
-      "description": "SolarOne glare shield for the RT410 series controls light spill and glare in venues with strict dark-sky or neighbor-comfort requirements. Available in lengths matched to each application, the shield attaches to RT410 floodlights to direct output precisely where needed - reducing sky glow and trespass while preserving the bright, even light your players and cameras depend on.",
+      "description": "Glare Shield for RT410\r\nWe provide a variety of glare shield lengths to accommodate diverse application environments.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1381,10 +1345,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne glare shield for RT410 cuts up-light and spill, taming glare for homes and roads while keeping lighting effective. Tool-free, durable, code-friendly."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/glare-shield-for-rt410/rt410-glare-shield-01.webp",
@@ -1402,7 +1363,7 @@
       "name": "VSP-XXXXW-9M-YP",
       "slug": "vsp-xxxxw-9m-yp",
       "category": "SPORTS_LIGHTING",
-      "description": "SolarOne VSP-4200W-9M-YP LED stadium light mounts on a 9-meter pole to deliver 4200W of uniform, HDTV-ready illumination for community and semi-pro sports venues. Engineered for football, tennis, and multi-use pitches, it replaces legacy 1000W+ HID fixtures with flicker-free, low-glare light and dramatically lower energy use.",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1413,7 +1374,7 @@
       "dimension_image": "images/products/vsp-xxxxw-9m-yp/ac-en-3d-view.webp",
       "beam_angle_image": "images/products/vsp-xxxxw-9m-yp/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 21,
       "is_active": true,
       "page_layout": "detail",
@@ -1443,9 +1404,6 @@
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-9M-YP"
-        },
-        "en": {
-          "seo_description": "SolarOne VSP-4200W-9M-YP LED stadium light pole gives high-output uniform light for 9m football, tennis and training pitches. Low glare, long life."
         }
       },
       "gallery": [
@@ -1527,7 +1485,7 @@
       "name": "VSP-XXXXW-12M-YP",
       "slug": "vsp-xxxxw-12m-yp",
       "category": "SPORTS_LIGHTING",
-      "description": "SolarOne VSP-4200W-12M-YP LED stadium light is built for a 12-meter pole, projecting 4200W of even, broadcast-quality light across larger football, rugby, and athletics fields. It upgrades aging HID systems to efficient LED with superior uniformity, minimal glare, and maintenance-free operation for years of reliable match-night performance.",
+      "description": "Vision Strobe Protection system for broadcast venues. Eliminates flicker in slow-motion replay with stable, high-frequency drive technology.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1538,7 +1496,7 @@
       "dimension_image": "images/products/vsp-xxxxw-12m-yp/led-en-3d-view.webp",
       "beam_angle_image": "images/products/vsp-xxxxw-12m-yp/beamangle-12183050.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 22,
       "is_active": true,
       "page_layout": "detail",
@@ -1568,9 +1526,6 @@
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-12M-YP"
-        },
-        "en": {
-          "seo_description": "SolarOne VSP-4200W-12M-YP LED stadium light pole gives high-output uniform light for 12m football, rugby and athletics fields. Low glare, long life."
         }
       },
       "gallery": [
@@ -1652,7 +1607,7 @@
       "name": "RT590FL-S",
       "slug": "rt590fl-s",
       "category": "FLOODLIGHT",
-      "description": "SolarOne RT590FL-S (RT590FL-160W) is a compact, high-output LED floodlight for facades, yards, and sports perimeter lighting. Its slim, weather-sealed housing delivers crisp 160W-class illumination with excellent uniformity, while modular mounting options make retrofit and new-build installation fast and flexible.",
+      "description": "RT590FL-S",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1663,7 +1618,7 @@
       "dimension_image": "images/products/rt590fl-s/tr590-3d-view.webp",
       "beam_angle_image": "images/products/rt590fl-s/beamangle-3050120.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 31,
       "is_active": true,
       "page_layout": "detail",
@@ -1673,10 +1628,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT590FL-S (RT590FL-160W) compact LED flood light gives 160W of uniform light for facades, yards, sports and security. Slim, weatherproof, easy-aim."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt590fl-s/rt590fl-s-01.webp",
@@ -1772,7 +1724,7 @@
       "name": "RT390FL-S",
       "slug": "rt390fl",
       "category": "FLOODLIGHT",
-      "description": "SolarOne RT390FL-S (RT390FL-80W) is a small-format LED floodlight engineered for accent, security, and area lighting where space is tight. Delivering efficient 80W-class output in a durable, IP-rated body, it is ideal for building outlines, small courts, and pathways that need reliable, low-glare light around the clock.",
+      "description": "RT390FL-S",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1783,7 +1735,7 @@
       "dimension_image": "images/products/rt390fl/rt390-3d-view.webp",
       "beam_angle_image": "images/products/rt390fl/beamangle-3050120.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 32,
       "is_active": true,
       "page_layout": "detail",
@@ -1793,10 +1745,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT390FL-S (RT390FL-80W) compact LED flood light gives 80W of crisp, uniform light for facades, signage, yards and security. Slim, weatherproof."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt390fl/rt390-01.webp",
@@ -1888,7 +1837,7 @@
       "name": "RT400HB",
       "slug": "rt400hb",
       "category": "HIGHBAY_LOWBAY",
-      "description": "SolarOne RT400HB (RT400HB-130W) high bay light floods warehouses, workshops, and logistics halls with 130W of efficient, glare-free LED illumination. Its robust, dust-tight housing and wide beam spread cut energy bills versus legacy HID while keeping aisles bright and safe for forklifts and staff.",
+      "description": "Typical Applications\r\nHigh school, college , professional stadiums, Large area, Industrial Facilities, Building facades",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1899,7 +1848,7 @@
       "dimension_image": "images/products/rt400hb/rt400hb-3d-view01.webp",
       "beam_angle_image": "images/products/rt400hb/rt400hb-beamangle-254590.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 42,
       "is_active": true,
       "page_layout": "detail",
@@ -1909,10 +1858,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT400HB (RT400HB-130W) high bay LED light gives 130W of uniform, glare-free light for warehouses, factories and gyms. Rugged, low-maintenance."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt400hb/rt400hb-01.webp",
@@ -2000,7 +1946,7 @@
       "name": "RT500HB",
       "slug": "rt500hb",
       "category": "HIGHBAY_LOWBAY",
-      "description": "SolarOne RT500HB (RT500HB-280W) high bay luminaire brings 280W of powerful, uniform LED light to large industrial ceilings and cold-storage areas. Designed for low maintenance and high efficacy, it replaces metal-halide high bays with instant-on, flicker-free illumination that slash operating cost across the facility.",
+      "description": "Typical Applications\r\nHigh school, college, professional stadiums, Large area, Industrial Facilities, Building facades .",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -2011,7 +1957,7 @@
       "dimension_image": "images/products/rt500hb/rt500hb-3d-view.webp",
       "beam_angle_image": "images/products/rt500hb/rt500hb-beamangle-254590.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 43,
       "is_active": true,
       "page_layout": "detail",
@@ -2021,10 +1967,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT500HB (RT500HB-280W) high bay LED luminaire gives 280W of uniform, glare-free light for large warehouses and logistics hubs. Rugged, low-maintenance."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt500hb/hb500-05.webp",
@@ -2116,7 +2059,7 @@
       "name": "RT220UB",
       "slug": "rt220ub",
       "category": "FLOODLIGHT",
-      "description": "SolarOne RT220UB (FL1M-80W) is a versatile 80W-class LED floodlight for building facades, signage, and compact outdoor areas. Its lightweight, sealed enclosure produces even, low-glare light with a long service life, making it a dependable choice for architectural uplift and security lighting alike.",
+      "description": "Building Security ,Packing lots, residential area, display window, advertisement billboard..etc",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -2127,7 +2070,7 @@
       "dimension_image": "images/products/rt220ub/rt220ub-3d-view.webp",
       "beam_angle_image": "images/products/rt220ub/beamangle-120d-1.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 44,
       "is_active": true,
       "page_layout": "detail",
@@ -2137,10 +2080,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT220UB (FL1M-80W) compact LED flood light gives 80W of uniform, weatherproof light for facades, yards, signage and security. Slim, easy-aim."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt220ub/rt220ub-01.webp",
@@ -2232,7 +2172,7 @@
       "name": "RT420FS-S",
       "slug": "rt420fs-s",
       "category": "FLOODLIGHT",
-      "description": "SolarOne RT420FS-S (RT420FS-S100W) slim LED floodlight packs 100W-class output into a low-profile body for wall, pole, and facade mounting. Ideal for perimeter security, car parks, and building accents, it offers weatherproof construction, even spread, and easy aim adjustment for precise, efficient coverage.",
+      "description": "Typical Applications\r\n Building Security ,Packing lots, residential area, display window, advertisement billboard..etc",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -2243,7 +2183,7 @@
       "dimension_image": "images/products/rt420fs-s/rt420fl-3d-view.webp",
       "beam_angle_image": "images/products/rt420fs-s/beamangle-120d-1.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 45,
       "is_active": true,
       "page_layout": "detail",
@@ -2253,10 +2193,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT420FS-S (RT420FS-S100W) LED flood light gives 100W of crisp, uniform light for facades, yards, sports and security. Slim, weatherproof, easy-aim."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt420fs-s/rt420fl-01.webp",
@@ -2369,10 +2306,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT410-RGBW area luminaire blends white with RGBW color for facades, events and sports perimeters. DMX control, weatherproof, easy programming."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt410-rgbw/rgbw-rt410-red.webp",
@@ -2475,7 +2409,7 @@
       "dimension_image": "images/products/rt600sl-t/RT600SL-dimension-1.webp",
       "beam_angle_image": "images/products/rt600sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 51,
       "is_active": true,
       "page_layout": "detail",
@@ -2485,10 +2419,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT600SL-T LED roadway and street light gives efficient, uniform, glare-controlled light for highways, arterials and city streets. Rugged, easy-install."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt600sl-t/RT600SL-T.webp",
@@ -2590,7 +2521,7 @@
       "dimension_image": "images/products/rt820sl-t/rt820-3d-view.webp",
       "beam_angle_image": "images/products/rt820sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
-      "cert_image": "images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp",
+      "cert_image": "",
       "order": 52,
       "is_active": true,
       "page_layout": "detail",
@@ -2600,10 +2531,7 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {},
-        "en": {
-          "seo_description": "SolarOne RT820SL-T roadway and street light gives high-output, uniform, glare-controlled light for highways, arterials and city streets. Rugged, easy-install."
-        }
+        "ar": {}
       },
       "gallery": [
         "images/products/rt820sl-t/rt820-01.webp",
@@ -3054,9 +2982,9 @@
       "slug": "beijing-international-tennis-center",
       "venue_type": "INDOOR",
       "sport_type": "TENNIS",
-      "description": "【Customer Profile】\r\nBuilt in 1973, the Beijing International Club Tennis Hall holds the distinction of being China's first indoor professional tennis venue. To align with modern standards and ensure its continued development, the facility underwent a comprehensive reconstruction on its original site in 2015.\r\n\r\n【Scope of Work】\r\nThe reconstruction project required a one-for-one replacement of the existing 1000W metal halide fixtures. As tennis is a sport with virtually no margin for error, the lighting system had to provide the ultimate visual stage for athletes. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows or hot spots, ensuring that the lighting remains a reliable constant rather than an unpredictable variable during high-speed play.\r\n\r\n【The Solution】\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for every fixture. The new LED lighting system was seamlessly integrated via a one-for-one retrofit plan, outperforming legacy metal halides by delivering exceptional uniformity both in the air and on the court, thereby guaranteeing optimal visual clarity for professional tennis.",
+      "description": "Customer Profile\r\nBuilt in 1973, the Beijing International Club Tennis Hall holds the distinction of being China's first indoor professional tennis venue. To align with modern standards and ensure its continued development, the facility underwent a comprehensive reconstruction on its original site in 2015.\r\n\r\nScope of Work\r\nThe reconstruction project required a one-for-one replacement of the existing 1000W metal halide fixtures. As tennis is a sport with virtually no margin for error, the lighting system had to provide the ultimate visual stage for athletes. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows or hot spots, ensuring that the lighting remains a reliable constant rather than an unpredictable variable during high-speed play.\r\n\r\nThe Solution\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for every fixture. The new LED lighting system was seamlessly integrated via a one-for-one retrofit plan, outperforming legacy metal halides by delivering exceptional uniformity both in the air and on the court, thereby guaranteeing optimal visual clarity for professional tennis.",
       "results": "SolarOne Vision Smart RT410FL‑S160W elevates lighting performance at Beijing International Tennis Club. Delivering 75% uniformity and 50% energy savings, these low‑glare luminaires ensure excellent visual comfort for athletes and coaches. Long‑life LEDs reduce part replacements with virtually no ongoing maintenance.",
-      "image": "images/projects/beijing-international-tennis-center/bitc-tennis-01.webp",
+      "image": "",
       "order": 17,
       "translations": {
         "fr": {},
@@ -3066,10 +2994,10 @@
         "ar": {}
       },
       "gallery": [
-        "images/projects/beijing-international-tennis-center/bitc-tennis-01.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-02.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-03.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-04.webp"
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-01.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-02.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-03.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-04.webp"
       ],
       "pdf_url": "files/beijing_international_tennis_center.pdf"
     },
@@ -3539,7 +3467,7 @@
   "news": [
     {
       "slug": "low-cct-high-cri-high-mast-led-retrofit",
-      "title": "SolarOne FL6M-480W Tianjin Binhai Airport",
+      "title": "SolarOne FL6M-480W Light Up Tianjin Binhai International Airport",
       "category": "Case Studies",
       "summary": "The SolarOne FL6M-480W LED high-mast family replaces the old metal halide apron lighting at Tianjin Binhai International Airport with warm, high-CRI light.",
       "content": "SolarOne FL6M-480W high-mast luminaires have been installed on the apron of Tianjin Binhai International Airport, replacing the site's legacy metal halide system.\r\n\r\nThe FL6M delivers warm white light at a high colour rendering index (CRI), keeping the apron familiar to pilots and ground staff while raising uniformity and making surfaces easier to read after dark.\r\n\r\nSince commissioning the apron lighting has run consistently through dusk and night operations, with even coverage and controlled glare across the whole apron — supporting safe aircraft movement and ground handling.\r\n\r\nSee the FL6M specification sheet for photometrics and mounting options.",

@@ -90,6 +90,46 @@ def _load_seed():
     return _seed_cache
 
 
+def _stale_snapshot_rel_paths():
+    """相对路径中「只存在于 STATIC_ROOT 收集快照、真源 static/ 里没有」的那部分。
+
+    🔴 v1.9.9 — 与 ``_list_static_dir`` 同源的事故（docstring 在那一侧，讲的是
+    目录枚举）：``pages.static_scan.static_dirs()`` 会把 ``STATIC_ROOT`` 和
+    ``STATICFILES_DIRS`` **都**扫进来，所以 ``_find_static()`` 会对一个只躺在
+    陈旧 collectstatic 快照里的文件名返回 ``True``，调用方据此拼出 URL → 浏览器 404。
+    2026-10-03 的现场： ``staticfiles/.../bitc-tennis-01.webp`` 已随旧图删除，
+    但 ``_find_static('images/projects/beijing-international-tennis-center/
+    bitc-tennis-01.webp')`` 依然 HIT。
+
+    构建期索引（``pages.static_index``）**不动** —— Vercel 上函数包里既没有
+    ``static/`` 也没有 ``staticfiles/``，索引是唯一真源，不能按本机快照裁剪。
+    这里只在真源目录存在时做减法，因此生产路径完全不受影响。
+    """
+    try:
+        sources = [str(d) for d in settings.STATICFILES_DIRS if os.path.isdir(d)]
+        root = str(settings.STATIC_ROOT)
+    except Exception:
+        return set()
+    if not sources or not root or not os.path.isdir(root):
+        return set()
+
+    source_rels = set()
+    for base in sources:
+        for _root, _dirs, files in os.walk(base):
+            for name in files:
+                rel = os.path.relpath(os.path.join(_root, name), base).replace('\\', '/')
+                source_rels.add(rel)
+
+    stale = set()
+    for _root, _dirs, files in os.walk(root):
+        for name in files:
+            full = os.path.join(_root, name)
+            rel = os.path.relpath(full, root).replace('\\', '/')
+            if rel not in source_rels:
+                stale.add(rel)
+    return stale
+
+
 def _build_static_file_set():
     """Build a set of all relative static file paths. Cached after first call.
     Eliminates 20-50 filesystem calls per request."""
@@ -101,6 +141,9 @@ def _build_static_file_set():
     # pages.seed_sync). Names-only build-time index first: on Vercel neither
     # STATIC_ROOT nor STATICFILES_DIRS exists inside the function bundle.
     file_set = build_file_set(extra=_index_file_set())
+
+    # 运行时解析只信真源；陈旧 collectstatic 快照里的幽灵名不许混进来。
+    file_set -= _stale_snapshot_rel_paths()
 
     _static_file_set = file_set
     logger.info(f'Built static file cache: {len(file_set)} files')
@@ -151,7 +194,31 @@ def _first_static(candidates):
 
 
 def _list_static_dir(rel_dir):
-    """List files in a static directory with caching. Eliminates repeated os.listdir() calls."""
+    """List files in a static directory with caching. Eliminates repeated os.listdir() calls.
+
+    🔴 v1.9.9 — 目录枚举**只能有一个真源**。
+
+    旧实现把 `static/<dir>` 与 `STATIC_ROOT/<dir>`（collectstatic 产物）*合并*进
+    同一个集合，谁先进集合谁优先。后果（2026-10-03 事故，见
+    `static/images/projects/beijing-international-tennis-center/`）：
+
+    * 用户在后台上传了 4 张新图 → 落到 `static/images/projects/<slug>/`
+      （`bitc-tennis-court-light-720p-0{1..4}.webp`），本地 `ls` 只看得到它们；
+    * 但 `staticfiles/` 里躺着**上一轮 collectstatic 的陈旧快照**，同一个 slug
+      目录下既有旧图 `bitc-tennis-0{1..4}.webp`、也有它们的**哈希副本**
+      `bitc-tennis-01.d5801a84901f.webp`；
+    * 而 `settings.py:72` 让**本地默认 `DEBUG=False`**，`STATIC_ROOT` 分支照常
+      生效 → 陈旧名和真源名被并进同一集合；
+    * `_find_project_cover_path()` 的「精确同名」分支用
+      `strip_hash_suffix(f) == clean_name` 比对，`sorted()` 里
+      `bitc-tennis-01.d5801a84901f.webp` 排在 `bitc-tennis-01.webp` 之前，
+      于是页面 8 个 `<img>` 全指向磁盘上并不存在的哈希名 → **404**，
+      而用户刚传的新图一张都不显示（本地明明有文件）。
+
+    新规则：该目录在 `static/` 里存在 → **只看 `static/`**，陈旧快照彻底不参与；
+    只有 `static/` 根本没有这个目录（生产形态：`vercel.json` 的 `excludeFiles`
+    把 `static/` 与 `staticfiles/` 都排除出函数包）时才回退 `STATIC_ROOT`。
+    """
     if rel_dir in _dir_listing_cache:
         return _dir_listing_cache[rel_dir]
 
@@ -159,11 +226,12 @@ def _list_static_dir(rel_dir):
     dirs_to_check = []
 
     base = os.path.join(settings.BASE_DIR, 'static', rel_dir)
-    dirs_to_check.append(base)
-
-    if not settings.DEBUG:
+    if os.path.isdir(base):
+        dirs_to_check.append(base)
+    elif not settings.DEBUG:
+        # 回退仅在真源目录不存在时成立（生产）/ 目录名变了还没跑 collectstatic。
         static_root = os.path.join(str(settings.STATIC_ROOT), rel_dir)
-        if static_root not in dirs_to_check:
+        if os.path.isdir(static_root):
             dirs_to_check.append(static_root)
 
     for d in dirs_to_check:

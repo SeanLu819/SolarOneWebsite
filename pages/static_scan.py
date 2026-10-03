@@ -50,6 +50,44 @@ def static_dirs(base_dir=None):
     return dirs
 
 
+def source_file_set(base_dir=None):
+    """只扫**真源**目录（STATICFILES_DIRS，即仓库里的 ``static/``）的相对路径集合。
+
+    🔴 v1.9.9 — 与 ``pages.views.utils._list_static_dir`` 同源的规则：
+    ``STATIC_ROOT`` 是 collectstatic 的**上一轮产物**，把它算进"文件存在"的
+    判定，会让旧文件名压过刚上传的新文件。
+
+    2026-10-03 事故现场：``pages/seed_sync._resolve_static_path()`` 为产品认证图
+    生成候选 ``images/products/<slug>/certifications-ul-dlc-...webp``，
+    命中判定被 ``staticfiles/`` 里的陈旧副本喂成 True（真源 ``static/`` 里该文件
+    在 2026-10-03 已被删），于是 seed 里写入 19 条磁盘上并不存在的路径 →
+    产品页认证标识条全 404。
+    """
+    dirs = []
+    try:
+        from django.conf import settings
+        for d in getattr(settings, 'STATICFILES_DIRS', []):
+            d = str(d)
+            if os.path.isdir(d) and d not in dirs:
+                dirs.append(d)
+    except Exception:
+        dirs = []
+    if not dirs:
+        base = base_dir or os.getcwd()
+        for sub in ('static', 'public/static'):
+            d = os.path.join(base, sub)
+            if os.path.isdir(d) and d not in dirs:
+                dirs.append(d)
+
+    file_set = set()
+    for base in dirs:
+        for _root, _dirs, files in os.walk(base):
+            for name in files:
+                rel = os.path.relpath(os.path.join(_root, name), base).replace('\\', '/')
+                file_set.add(rel)
+    return file_set
+
+
 def build_file_set(base_dir=None, extra=()):
     """Return the set of relative static paths found under the static roots.
 

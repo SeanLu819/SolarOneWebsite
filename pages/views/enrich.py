@@ -12,6 +12,14 @@ from .i18n import _PRODUCT_CARD_LABELS, _PRODUCT_CAT_TO_SIDEBAR_LABEL, _t
 
 logger = logging.getLogger(__name__)
 
+# Shared certification badge used when a product has no per-product cert image.
+# v1.9.8: the old fallback pointed at `m-series-flood-light-certifications.webp`,
+# which does not exist on disk (verified 404 live2026-10-03) — so every product
+# with an empty cert_image silently rendered NO badge at all. Keep this pointing
+# at a file that actually exists; `test_cert_fallback_points_at_a_real_file`
+# guards against reintroducing a dead path.
+DEFAULT_CERT_IMAGE = 'images/products/m-series/certifications-ul-dlc-gs-ce-ip66.webp'
+
 _enriched_products_cache = {}
 _enriched_projects_cache = {}
 _enriched_product_detail_cache = {}
@@ -139,9 +147,8 @@ def _enrich_product(product, lang):
         product.ordering_image_url = _product_image_url(product, 'ordering_image')
         cert_url = _product_image_url(product, 'cert_image')
         if not cert_url and product.category != 'ACCESSORY':
-            cert_default = 'images/products/m-series-flood-light-certifications.webp'
-            if _find_static(cert_default):
-                cert_url = static(cert_default)
+            if _find_static(DEFAULT_CERT_IMAGE):
+                cert_url = static(DEFAULT_CERT_IMAGE)
         product.cert_image_url = cert_url
         product.gallery = [
             {
@@ -164,9 +171,8 @@ def _enrich_product(product, lang):
         product.ordering_image_url = _dict_product_image_url(product.ordering_image, slug)
         cert_url = _dict_product_image_url(getattr(product, 'cert_image', ''), slug) if hasattr(product, 'cert_image') else ''
         if not cert_url and getattr(product, 'category', '') != 'ACCESSORY':
-            cert_default = 'images/products/m-series-flood-light-certifications.webp'
-            if _find_static(cert_default):
-                cert_url = static(cert_default)
+            if _find_static(DEFAULT_CERT_IMAGE):
+                cert_url = static(DEFAULT_CERT_IMAGE)
         product.cert_image_url = cert_url
         product.gallery = [
             {'src': _dict_product_image_url(p, slug),

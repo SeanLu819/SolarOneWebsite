@@ -122,3 +122,79 @@ class StaticCacheHeaderGuardTests(TestCase):
                         "apex -> www 的 301 redirect 不能丢。")
         self.assertIn('functions', cfg,
                       "functions.excludeFiles 配置不能丢（否则函数包超 225 MB）。")
+
+
+class SeedPythonArtifactFidelityTests(TestCase):
+    """🔴 v1.9.9 —— `pages/seed_data.py` 必须与 `seed_data.json` **逐字段相等**。
+
+    背景（线上事故）：`_write_seed_files()` 曾用
+    ``py_data.replace('true','True').replace('false','False')...``
+    把 JSON 转成 Python 字面量。`json.dumps` 出来的文本里，`true` 既可能是
+    JSON 语法成分，**也可能出现在引号内的文案里** —— 替换分不清两者。
+    实测 `projects[13].description` 的 `a true "shadowless" effect` 被写成
+    `a True "shadowless" effect`。`seed_data.json` 里是对的，**只有构建产物是错的**，
+    而 `build.sh` 每次 Vercel 构建都跑这段生成器、Vercel 又只读这个产物
+    （无 DB）⇒ 错别字直接上线。
+
+    这类 bug 靠「读 JSON 的内容守卫」永远抓不到：污染只存在于生成物里。
+    唯一有效的判据是**两处真源逐字段比对**。
+    """
+
+    def _load(self, dotted):
+        module_path, attr = dotted.rsplit('.', 1)
+        return getattr(__import__(module_path, fromlist=[attr]), attr)
+
+    def test_seed_json_and_python_artifact_are_field_identical(self):
+        import io
+        import json
+        import os
+
+        from django.conf import settings
+
+        base = str(settings.BASE_DIR)
+        with io.open(os.path.join(base, 'seed_data.json'), encoding='utf-8') as fh:
+            from_json = json.load(fh)
+        try:
+            from_py = self._load('pages.seed_data.SEED_DATA')
+        except Exception as exc:  # pragma: no cover - artifact missing locally
+            self.skipTest('pages/seed_data.py 不可用（构建产物，本地可能未生成）：%s' % exc)
+
+        self.assertEqual(
+            sorted(from_json.keys()), sorted(from_py.keys()),
+            '两处 seed 的顶层键不同：json=%s py=%s'
+            % (sorted(from_json.keys()), sorted(from_py.keys())))
+
+        for key in from_json:
+            self.assertEqual(
+                from_json[key], from_py[key],
+                f'seed_data.json 与 pages/seed_data.py 的 {key!r} 不一致 —— '
+                '生产只读后者，说明构建产物生成逻辑破坏了数据'
+                '（v1.9.9 曾把文案里的 true 替换成 True）')
+
+    def test_generator_preserves_booleans_inside_strings(self):
+        """生成器本身：字符串里的 true/false/null 必须原样保留。"""
+        from pages.seed_sync import _json_to_python_literals as gen
+
+        payload = {
+            'literals': [True, False, None],
+            'copy': 'a true "shadowless" effect, a false alarm, null pointer',
+            'nested': {'nullable': True, 'text': 'truthy falsehood'},
+        }
+        emitted = gen(payload)
+        self.assertIn('"a true \\"shadowless\\" effect, a false alarm, null pointer"',
+                      emitted,
+                      '文案里的 true/false/null 被改写了 —— 生成器把字符串内容'
+                      '和 JSON 字面量混为一谈')
+        self.assertIn('"nullable": True', emitted,
+                      '键名 nullable 不该被替换成 Nullable')
+        # 生成的源码必须能还原成原始对象
+        self.assertEqual(eval(emitted), payload,
+                         '生成的 Python 字面量无法还原原始数据')
+
+    def test_generator_word_boundary_does_not_touch_identifiers(self):
+        from pages.seed_sync import _json_to_python_literals as gen
+
+        emitted = gen({'truthiness': 1, 'nullable_field': 2, 'value': None})
+        self.assertIn('"truthiness": 1', emitted)
+        self.assertIn('"nullable_field": 2', emitted)
+        self.assertIn('"value": None', emitted)
