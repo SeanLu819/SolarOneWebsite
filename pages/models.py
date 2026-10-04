@@ -1209,8 +1209,10 @@ def _sync_news_media_to_static(instance):
     while the production seed exports them as ``images/news/<slug>/...`` paths
     that resolve against ``static/``. Locally that mismatch is invisible (the
     DB path still renders ``/media/...``) but on Vercel every news photo 404s.
-    Mirrors ``sync_product_on_save``: strip the upload hash, then prune files
-    that are referenced by nothing and backed by nothing in media/.
+
+    So this only ever *adds* files -- it mirrors ``sync_product_on_save`` for
+    the copy step and deliberately drops the corresponding prune step. See the
+    note below the loop.
     """
     article = getattr(instance, 'article', None) or instance
     slug = getattr(article, 'slug', None)
@@ -1220,19 +1222,34 @@ def _sync_news_media_to_static(instance):
     static_dir = os.path.join(str(settings.BASE_DIR), 'static', 'images', 'news', slug)
     os.makedirs(static_dir, exist_ok=True)
 
-    current_names = set()
     for fname in _news_photo_names(article):
         clean, src = _resolve_media_image(fname, media_root)
-        current_names.add(clean)
         if not src:
             continue
         try:
             shutil.copy2(src, os.path.join(static_dir, clean))
         except Exception:
             pass
-
-    media_protected = _build_media_protected_set(media_root, 'news')
-    _prune_stale_images(static_dir, current_names, media_protected)
+    # Deliberately NO prune pass here.
+    #
+    # `_prune_stale_images` deletes anything under `static_dir` that the current
+    # run did not list — a model that only makes sense for a directory of build
+    # artifacts. News photos are the opposite here: `static/images/news/<slug>/`
+    # is a **git-tracked source of truth** holding admin uploads, hand-placed
+    # covers and generated charts, and it is re-read by build.sh on every deploy.
+    #
+    # Running that prune on this directory deleted committed files twice in one
+    # session (2026-10-04, v1.10.4) — any save that saw a short reference list
+    # wiped the directory, and the next page load 404'd every photo.
+    #
+    # The cost of not pruning is a leftover file that `scripts/audit_images.py`
+    # reports. The cost of pruning is a deleted source-of-truth image that no
+    # amount of re-running can recreate. A leftover costs nothing; a deletion
+    # is unrecoverable.
+    #
+    # If news ever gets its uploads only through `media/`, this is the place to
+    # add the prune back — together with a guard asserting the protected set is
+    # non-empty.
 
 
 @receiver(post_save, sender=NewsArticle)

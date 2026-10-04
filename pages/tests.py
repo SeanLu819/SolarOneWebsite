@@ -4272,10 +4272,16 @@ class NewsTranslationTests(TestCase):
             _NEWS_ROW_BASE,
             _normalize_news_article,
             _normalize_news_row,
+            NEWS_DERIVED_KEYS,
             NEWS_TRANSLATED_KEYS,
         )
+        # v1.10.4: in-body figures added NEWS_DERIVED_KEYS. Both paths append
+        # them, so the pin has to cover them — otherwise a key used by the
+        # template could exist on one path only and vanish on Vercel.
+        expected = (set(_NEWS_ROW_BASE) | set(NEWS_TRANSLATED_KEYS)
+                    | set(NEWS_DERIVED_KEYS))
         self.assertEqual(
-            set(_NEWS_ROW_BASE) | set(NEWS_TRANSLATED_KEYS),
+            expected,
             set(_normalize_news_article(self._seed_news()).keys()),
             'seed 路径的 key 集变了')
         article = NewsArticle.objects.create(
@@ -4288,7 +4294,7 @@ class NewsTranslationTests(TestCase):
         )
         self.assertEqual(
             set(_normalize_news_row(article).keys()),
-            set(_NEWS_ROW_BASE) | set(NEWS_TRANSLATED_KEYS),
+            expected,
             'DB 路径与 seed 路径的 key 集必须完全一致，否则模板在 Vercel 上会缺字段')
 
     # ---- ③ 缺译文回退英文（不能是空串） ----------------------------------
@@ -4779,17 +4785,48 @@ class NewsImageSyncTests(TestCase):
         self.assertTrue((static_dir / 'orphan.jpg').exists(),
                         '剪枝把 media/ 里仍在用的图删掉了')
 
-    def test_prune_removes_files_referenced_by_nothing(self):
+    def test_news_sync_never_prunes_the_static_directory(self):
+        """`static/images/news/<slug>/` is git-tracked, so the news sync must
+        only ever *add* files.
+
+        v1.10.4: the sync used to call `_prune_stale_images`, which deletes
+        everything the run did not explicitly list. On a directory of build
+        artifacts that is right; on news it deleted committed photos twice in a
+        single session — any save that saw a short reference list wiped the
+        directory and the next page load 404'd every image in the article.
+
+        The prune is gone from the news path. This guard makes it stay gone: if
+        someone re-adds a prune here, it must arrive together with an assertion
+        that the protected set is non-empty.
+        """
+        import ast
+        import inspect
+
         from pages.models import _sync_news_media_to_static
 
+        source = inspect.getsource(_sync_news_media_to_static)
+        # 结构断言而不是 `assertNotIn(source, ...)`：docstring 和循环下方的
+        # 长注释都会**提到**剪枝函数，把它们算作命中会让守卫永远红。
+        # 只有真正被调用才算数。
+        called = [node.func.id for node in ast.walk(ast.parse(source))
+                  if isinstance(node, ast.Call)
+                  and isinstance(node.func, ast.Name)]
+        self.assertNotIn('_prune_stale_images', called,
+                         '新闻同步又把 static 目录拿去剪枝了 —— '
+                         '这个目录是提交进 git 的真源，剪掉就找不回来了')
+
+        self._put_media('news/cover_zz99yy88.jpg')
         article = self._article()
+        article.image = 'news/cover_zz99yy88.jpg'
+        article.save()
+
         static_dir = self._static_dir_for('qa-news-sync')
         static_dir.mkdir(parents=True, exist_ok=True)
-        (static_dir / 'unreferenced.jpg').write_bytes(b'\x89PNG\r\n\x1a\nQA')
+        (static_dir / 'committed.jpg').write_bytes(b'\x89PNG\r\n\x1a\nQA')
 
         _sync_news_media_to_static(article)
-        self.assertFalse((static_dir / 'unreferenced.jpg').exists(),
-                         '无人引用的图没被清掉，static 目录会无限膨胀')
+        self.assertTrue((static_dir / 'committed.jpg').exists(),
+                        '新闻同步删了未引用的图 —— static/ 是真源，不能删')
 
     def test_build_media_protected_set_scans_the_news_subdir(self):
         """The ``subdir`` argument must be honoured, or news photos are not
@@ -4803,25 +4840,44 @@ class NewsImageSyncTests(TestCase):
         self.assertEqual(set(), _build_media_protected_set(str(self.media)))
 
     # ---- ④ receiver 接线 --------------------------------------------------
-    def test_deleting_a_gallery_image_triggers_the_static_sync(self):
+    def test_deleting_a_gallery_image_reruns_the_sync_without_pruning(self):
+        """Deleting a gallery row must re-run the sync, and must not delete
+        anything that is still sitting in the directory.
+
+        v1.10.4: the delete used to be observed *only* through the prune
+        removing an orphan file. With the news prune gone there is nothing left
+        for a "the delete did something" assertion to point at, so this guard
+        observes the re-run through the re-copy instead: plant a placeholder in
+        static/, delete the row, and assert the real bytes came back. The
+        surviving orphan is asserted separately, because that survival is the
+        whole point of the v1.10.4 fix -- `static/images/news/<slug>/` is
+        git-tracked, and pruning it has deleted committed photos twice.
+        """
         from pages.models import NewsImage
 
-        # ``doomed.jpg`` deliberately survives: media/ still backs that file, so
-        # the prune safety net keeps it. What this test proves is that the
-        # delete *re-ran* the sync -- evidenced by the orphan below, which
-        # nothing else would have removed.
-        self._put_media('news/doomed_a1b2c3d.jpg')
-        orphan = self._static_dir_for('qa-news-sync') / 'stale.jpg'
-        orphan.parent.mkdir(parents=True, exist_ok=True)
-        orphan.write_bytes(b'\x89PNG\r\n\x1a\nQA')
-
+        self._put_media('news/still_a1b2c3d.jpg')
         article = self._article()
+        article.image = 'news/still_a1b2c3d.jpg'
+        article.save()
+        # The cover is the reference that has to survive the delete, otherwise
+        # the re-run would have an empty reference list and copy nothing --
+        # which would prove nothing about whether it ran.
         image = NewsImage.objects.create(article=article,
                                          image='news/doomed_a1b2c3d.jpg')
 
+        static_dir = self._static_dir_for('qa-news-sync')
+        static_dir.mkdir(parents=True, exist_ok=True)
+        live = static_dir / 'still.jpg'
+        live.write_bytes(b'PLACEHOLDER')
+        orphan = static_dir / 'stale.jpg'
+        orphan.write_bytes(b'\x89PNG\r\n\x1a\nQA')
+
         image.delete()
-        self.assertFalse(orphan.exists(),
-                         '删除图集图没有触发 static 同步 → 孤儿文件会留在函数包里')
+
+        self.assertEqual(b'\x89PNG\r\n\x1a\nQA', live.read_bytes(),
+                         '删除图集图没有触发 static 同步 → 文件没被重新拷贝')
+        self.assertTrue(orphan.exists(),
+                        '新闻同步删了未引用的图 → static/ 是真源，删了就找不回来了')
 
 
 

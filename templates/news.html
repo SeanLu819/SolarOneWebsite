@@ -40,7 +40,13 @@
       {% for article in articles %}
       <!-- The whole card links to the detail page (industry-standard newsroom
            pattern). Gallery photos render there, not here: list cards show one
-           uniform 16:9 cover so the grid stays level. -->
+           uniform 16:9 cover so the grid stays level.
+
+           v1.10.4: the latest article used to be a `news-card--featured` that
+           spanned two columns with a horizontal layout, so it rendered roughly
+           twice the size of every other card. Editors asked for one card size.
+           The class is kept as a hook (and the Featured pill still shows) but
+           it no longer changes geometry — see .news-grid / .news-card below. -->
       <a class="news-card reveal{% if forloop.first and not news_active_category %} news-card--featured{% endif %}{% if forloop.counter0 >= 9 %} is-hidden{% endif %}"
          href="{% url 'news_detail' article.slug %}">
         <div class="news-card-cover">
@@ -106,12 +112,21 @@
     font-size: 0.72rem; color: var(--ink-mute);
   }
 
-  /* ---- card grid ---- */
+  /* ---- card grid ----
+     v1.10.4 — every card is the same size. `grid-auto-rows: 1fr` makes each
+     grid row exactly as tall as the tallest card in it, and because the cards
+     are grid items in a single-column flow, a short card in row 2 would
+     otherwise stretch to the row height and leave a gap under its text. Pinning
+     the row height plus `height: 100%` on the card makes the whole set uniform.
+     `.news-card-more { margin-top: auto }` then pushes "Read article" to the
+     bottom of every card, so the footers line up across a row. */
   .news-grid {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 1fr; gap: 26px;
   }
   .news-card {
     display: flex; flex-direction: column; overflow: hidden;
+    height: 100%;
     background: var(--bg-soft); border: 1px solid var(--line);
     border-radius: 14px; text-decoration: none; color: inherit;
     transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
@@ -175,14 +190,13 @@
   .news-card-more-arrow { margin-left: 6px; display: inline-block; }
   html[dir="rtl"] .news-card-more-arrow { transform: scaleX(-1); }
 
-  /* Featured: latest article spans two columns with a horizontal layout. */
-  .news-card--featured { grid-column: span 2; flex-direction: row; }
-  .news-card--featured .news-card-cover {
-    flex: 0 0 55%; aspect-ratio: auto; min-height: 300px;
-  }
-  .news-card--featured .news-card-body { padding: 30px; }
-  .news-card--featured .news-card-title { font-size: 26px; margin-bottom: 12px; }
-  .news-card--featured .news-card-summary { -webkit-line-clamp: 4; font-size: 15.5px; }
+  /* Featured: v1.10.4 the latest article is marked with a pill but is NO LONGER
+     a different size. It previously spanned two columns with a side-by-side
+     layout and a 300px-minimum cover, which made it roughly twice the area of
+     every other card. The `span 2` / `flex-direction: row` rules are gone on
+     purpose — do not reintroduce them; the grid must stay one uniform size. */
+  .news-card--featured { border-color: var(--line-strong); }
+  .news-card--featured .news-card-title { font-size: 21px; }
 
   /* ---- load more ---- */
   .news-loadmore { display: flex; justify-content: center; margin-top: 44px; }
@@ -199,10 +213,6 @@
 
   @media (max-width: 1199px) {
     .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .news-card--featured { flex-direction: column; }
-    .news-card--featured .news-card-cover {
-      flex: none; aspect-ratio: 16 / 9; min-height: 0;
-    }
   }
   @media (max-width: 767px) {
     .news-grid { grid-template-columns: 1fr; }

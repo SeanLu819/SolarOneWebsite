@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.4 - 2026-10-04
+
+## Put news figures in the paragraph they illustrate, and one card size
+
+Three changes, all on the news pages.
+
+**Figures now sit inside the article body.** Until now every gallery photo
+rendered in one bento grid above the text, so the market article showed all five
+images before its first sentence. Editors asked for each figure to sit with the
+paragraph it supports.
+
+- New `pages/views/news_body.py` splits the body into blocks and consumes
+  `{{figure:identifier}}` markers that live in the copy itself. The template
+  only loops; it never assembles arrays (project rule).
+- The first figure is `loading="eager"`, the rest lazy.
+- **A broken figure can only ever cost one photo.** An unknown or duplicated
+  marker drops the marker and keeps the paragraph — a typo in the copy must not
+  swallow a paragraph of body text.
+- Images no marker references fall back to `unplaced_images` and still render
+  in the old top grid, so a forgotten marker degrades instead of silently
+  losing a photo.
+
+**Three original charts for the market article.** The three screenshots that
+came with the source report carry the publisher's logo, a page-number marker and
+a domain watermark; reusing them would put a third party's trademark on a
+commercial page. The **numbers** are facts and are free to use, so the charts
+are drawn from the figures the article itself states — nothing appears in a
+chart that does not appear in the copy. Where a curve is interpolated it is
+labelled as such, and no "rest of world" wedge is drawn because no such figure
+is published.
+
+**Every news card is the same size.** The latest article used to be a featured
+card spanning two columns with a horizontal layout — roughly twice the area of
+its neighbours. It keeps its "Featured" pill but no longer changes geometry;
+`grid-auto-rows: 1fr` plus `height: 100%` give all cards one height and
+`margin-top: auto` aligns the "Read article" footers.
+
+### Two real bugs found while verifying
+
+- **News images 404'd locally** (`pages/views/data_loaders.py`). The DB path
+  resolved gallery fields through `field.url`, i.e. `MEDIA_URL` (`/media/…`),
+  while every news photo lives in `static/images/…`. Products and projects
+  were unaffected because they resolve via `_product_image_url` /
+  `_project_image_url`; only news used the storage URL. Now resolved against
+  `static/` first, with the storage URL kept as the fallback for genuine admin
+  uploads that exist only under `MEDIA_ROOT`.
+- **The news media sync could delete committed photos** (`pages/models.py`).
+  `_sync_news_media_to_static` pruned `static/images/news/<slug>/` on every
+  save, and any save that saw a short reference list — a half-imported
+  article, a test creating rows before the gallery was attached — deleted
+  committed files, 404'ing them on the next page load. The prune pass now runs
+  only when the sync actually copied something; `static/` is a tracked source of
+  truth here, not a build artifact.
+
+Guard: new `pages/tests_news_figures.py` (26 tests). All 10 mutations used to
+verify it turn red.
+
 ## v1.10.3 - 2026-10-04
 
 ## Cache HTML at the edge so returning visitors stop re-running Django

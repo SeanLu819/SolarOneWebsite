@@ -42,14 +42,16 @@
       <p class="news-detail-summary">{{ article.summary_t|default:article.summary }}</p>
       {% endif %}
 
-      {% if article.image_url or article.images %}
+      {#v1.10.4: figures render inside the body, beside the paragraph they illustrate. `body_blocks` is built in Python (news_body.py) from `figure:identifier` markers in the copy — never assembled here, per the "no arrays in templates" rule. `unplaced_images` holds photos no marker referenced, so a forgotten marker degrades to the old top grid. #}
+      {# Keyed on the cover too: when every marker resolves, the unplaced list is empty, and gating the grid on it alone would drop the article's cover. #}
+      {% if article.unplaced_images or article.image_url %}
       <div class="news-detail-media">
         {% if article.image_url %}
         <figure class="news-detail-media-cell news-detail-media-cell--large">
           <img src="{{ article.image_url }}" alt="{{ article.title_t|default:article.title }}" loading="eager">
         </figure>
         {% endif %}
-        {% for img in article.images %}
+        {% for img in article.unplaced_images %}
         <figure class="news-detail-media-cell">
           <img src="{{ img.url }}" alt="{{ img.alt|default:article.title }}"
                {% if img.width %}width="{{ img.width }}"{% endif %}
@@ -60,7 +62,21 @@
       </div>
       {% endif %}
 
-      <div class="news-detail-body">{{ article.content_t|default:article.content|linebreaks }}</div>
+      <div class="news-detail-body">
+        {% for block in article.body_blocks %}
+          {% if block.type == 'p' %}
+        <p>{{ block.text }}</p>
+          {% else %}
+        <figure class="news-detail-figure">
+          <img src="{{ block.image.url }}" alt="{{ block.image.alt|default:article.title }}"
+               {% if block.image.width %}width="{{ block.image.width }}"{% endif %}
+               {% if block.image.height %}height="{{ block.image.height }}"{% endif %}
+               {% if block.eager %}loading="eager"{% else %}loading="lazy" decoding="async"{% endif %}>
+          {% if block.image.caption %}<figcaption>{{ block.image.caption }}</figcaption>{% endif %}
+        </figure>
+          {% endif %}
+        {% endfor %}
+      </div>
     </article>
 
     {% if related_articles %}
@@ -143,6 +159,24 @@
   }
   .news-detail-body p { margin-bottom: 12px; }
   .news-detail-body p:last-child { margin-bottom: 0; }
+
+  /*v1.10.4 in-body figures. Full column width (not the 2-col bento cell), so a
+     chart stays readable where it sits with the claim it supports. The generous
+     vertical margin is what makes an inserted photo read as "belongs to this
+     paragraph" rather than "pasted in". */
+  .news-detail-figure {
+    margin: 28px 0;
+  }
+  .news-detail-figure img {
+    display: block; width: 100%; height: auto;
+    border-radius: 10px;
+    background: var(--bg-soft);
+  }
+  .news-detail-figure figcaption {
+    margin-top: 10px;
+    font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em;
+    color: var(--ink-mute);
+  }
 
   .news-related { margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--line); }
   .news-related-heading {

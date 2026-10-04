@@ -4,7 +4,11 @@ from datetime import datetime
 
 from django.conf import settings
 from pages.models import Product, Project, NewsArticle
-from .utils import _load_seed, _DictProduct, _DictProject, _static_url
+from .utils import (
+    _load_seed, _DictProduct, _DictProject,
+    _static_url, _find_static, _normalize_static_rel,
+)
+from .news_body import build_article_body
 from .enrich import (
     _enrich_product, _enrich_project,
     _get_cached_products, _set_cached_products,
@@ -309,8 +313,13 @@ def _normalize_news_image(i):
     The seed / admin shapes differ slightly (``alt`` vs ``alt_text``), so both
     aliases are accepted. ``width``/``height`` stay optional: the template only
     emits them when present (they are a CLS hint, never a resize instruction).
+
+    ``id``/``name`` are kept because ``{{figure:…}}`` markers inside the body
+    bind to them — see ``pages.views.news_body.build_article_body``.
     """
     return {
+        'id': i.get('id') or '',
+        'name': i.get('name') or '',
         'url': _static_url(i.get('image', '') or ''),
         'alt': i.get('alt') or i.get('alt_text') or '',
         'caption': i.get('caption') or '',
@@ -347,7 +356,7 @@ def _normalize_news_article(a, lang='en'):
         for i in (a.get('images') or [])
         if i.get('image')
     ]
-    return _news_translated_row({
+    row = {
         'slug': a.get('slug', ''),
         'title': a.get('title', ''),
         'category': a.get('category', 'Company News'),
@@ -357,7 +366,16 @@ def _normalize_news_article(a, lang='en'):
         'image_url': _static_url(a.get('image', '')),
         'images': images,
         'translations': a.get('translations') or {},
-    }, lang)
+    }
+    row = _news_translated_row(row, lang)
+    # v1.10.4: interleave figures with the paragraphs they illustrate. Built
+    # from the *translated* content so a translated body keeps its own
+    # markers in place.
+    blocks, unused = build_article_body(
+        row.get('content_t') or row['content'], images)
+    row['body_blocks'] = blocks
+    row['unplaced_images'] = [images[i] for i in unused]
+    return row
 
 
 _NEWS_ROW_BASE = (
@@ -372,6 +390,38 @@ _NEWS_ROW_BASE = (
     'translations',
 )
 
+#: Derived keys both paths append *after* the base normalizer, so the key set
+#: of a news row is ``_NEWS_ROW_BASE`` + these + the ``<field>_t`` keys.
+#: v1.10.4 in-body figures (``pages.views.news_body.build_article_body``):
+#: the template renders ``body_blocks`` to interleave photos with paragraphs,
+#: and ``unplaced_images`` carries gallery photos no marker referenced so a
+#: forgotten marker degrades to the top grid instead of losing a photo.
+NEWS_DERIVED_KEYS = ('body_blocks', 'unplaced_images')
+
+
+def _news_db_image_url(field):
+    """Resolve a ``NewsImage.image`` / ``NewsArticle.image`` field to a URL.
+
+    v1.10.4 — this used to be ``field.url``, i.e. Django's storage URL, which is
+    ``MEDIA_URL``-rooted (``/media/…``). Every news photo in this project is
+    actually committed under ``static/images/news/<slug>/``, so locally
+    ``/media/images/news/…`` 404s: the file is in ``static/``, not in
+    ``MEDIA_ROOT``. That is why the news detail page showed broken images while
+    products and projects rendered fine — they resolve through
+    ``_product_image_url`` / ``_project_image_url``, which go via ``_static_url``.
+
+    So: resolve against ``static/`` first (identical to the seed path, which is
+    what production reads), and only fall back to the storage URL when the file
+    genuinely is not in the static tree. The fallback keeps real admin uploads
+    working — those land in ``MEDIA_ROOT`` and exist nowhere under ``static/``.
+    """
+    if not field:
+        return ''
+    resolved = _static_url(field.name)
+    if resolved and _find_static(_normalize_static_rel(field.name)):
+        return resolved
+    return field.url
+
 
 def _normalize_news_row(a, lang='en'):
     """Serialize a ``NewsArticle`` row into the same dict the seed path builds.
@@ -381,9 +431,10 @@ def _normalize_news_row(a, lang='en'):
     as a ``datetime``, ``image_url`` and the ``images`` list. Going through the
     same normalizer is what keeps the two paths from drifting apart.
 
-    The key set is pinned to ``_NEWS_ROW_BASE`` + the ``<field>_t`` keys so a test
-    can assert the two paths stay identical — a silently dropped ``translations``
-    key here would make admin edits vanish on Vercel while looking fine locally.
+    The key set is pinned to ``_NEWS_ROW_BASE`` + ``NEWS_DERIVED_KEYS`` + the
+    ``<field>_t`` keys so a test can assert the two paths stay identical — a
+    silently dropped ``translations`` key here would make admin edits vanish on
+    Vercel while looking fine locally.
     """
     row = {
         'slug': a.slug,
@@ -392,10 +443,13 @@ def _normalize_news_row(a, lang='en'):
         'summary': a.summary or '',
         'content': a.content,
         'published_at': a.published_at,
-        'image_url': a.image.url if a.image else '',
+        'image_url': _news_db_image_url(a.image),
         'images': [
             {
-                'url': im.image.url,
+                # v1.10.4: the PK is what a ``{{figure:…}}`` marker binds to.
+                'id': im.pk,
+                'name': '',
+                'url': _news_db_image_url(im.image),
                 'alt': im.alt_text or '',
                 'caption': im.caption or '',
                 'width': im.width or None,
@@ -405,7 +459,16 @@ def _normalize_news_row(a, lang='en'):
         ],
         'translations': a.translations or {},
     }
-    return _news_translated_row({k: row[k] for k in _NEWS_ROW_BASE}, lang)
+    out = _news_translated_row({k: row[k] for k in _NEWS_ROW_BASE}, lang)
+    # Same interleave as the seed path — see `_normalize_news_article`.
+    # The derived keys are added here, *not* in `_NEWS_ROW_BASE`, so the base
+    # stays the plain serializable row and the pin test can still say "both
+    # hands the template exactly the same keys".
+    blocks, unused = build_article_body(
+        out.get('content_t') or out['content'], out['images'])
+    out['body_blocks'] = blocks
+    out['unplaced_images'] = [out['images'][i] for i in unused]
+    return out
 
 
 def _get_news_from_db(lang='en'):
