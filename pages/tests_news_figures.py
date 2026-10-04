@@ -390,3 +390,85 @@ class NewsCardUniformSizeTests(SimpleTestCase):
         for value in re.findall(r'max-width:\s*(\d+)px', src):
             self.assertIn(value, {'767', '1024', '1199'},
                           f'{value}px 不在 N-31 断点白名单里')
+
+
+class NewsDetailFigureLayoutTests(SimpleTestCase):
+    """v1.10.5 — every figure but the hero renders at half width, centred.
+
+    The first image on the page is the article cover (`.news-detail-media-cell
+    --large`); it keeps its full-bleed grid cell. Everything the body inserts is
+    halved in **both** axes and centred, which is what makes an inserted photo
+    read as an illustration rather than a page-wide banner.
+
+    Like the card guards above this is a *source-level* assertion: a half-width
+    centred image is perfectly valid markup, so nothing else in the suite would
+    notice the rule drift.
+    """
+
+    def _template(self):
+        return (settings.BASE_DIR / 'templates' / 'news_detail.html').read_text(
+            encoding='utf-8')
+
+    def _css(self):
+        """Comments stripped, so prose about a declaration cannot satisfy it."""
+        return re.sub(r'/\*.*?\*/', '', self._template(), flags=re.S)
+
+    def _rule(self, selector):
+        block = re.search(re.escape(selector) + r'\s*\{(.*?)\}',
+                          self._css(), re.S)
+        self.assertIsNotNone(block, f'找不到 {selector} 规则')
+        return block.group(1)
+
+    def test_figures_render_at_half_the_column_width(self):
+        body = self._rule('.news-detail-figure img')
+        self.assertIn('width: 50%', body,
+                      '插图没有缩到半幅宽，正文里的图仍是通栏')
+        self.assertIn('height: auto', body,
+                      '高度被写死就不是"长宽同时减半"了')
+
+    def test_figures_are_centred_in_the_column(self):
+        body = self._rule('.news-detail-figure img')
+        self.assertIn('margin-inline: auto', body,
+                      '图没有水平居中（img 是块级盒，不居中就靠左）')
+
+    def test_both_axes_halve_together(self):
+        """`width: 50%` on its own would letterbox a portrait photo.
+
+        With `height: auto` the browser keeps the intrinsic ratio, so halving
+        the width halves the height as well. If someone pins a height instead of
+        leaving it auto, a chart gets cropped.
+        """
+        body = self._rule('.news-detail-figure img')
+        self.assertIn('height: auto', body, 'height 不是 auto')
+        self.assertNotIn('object-fit: cover', body,
+                         '插图用了 cover 会裁掉图表左右两侧')
+
+    def test_the_first_image_keeps_its_full_width(self):
+        """Only the body figures change size; the cover must stay full-bleed."""
+        hero = self._rule('.news-detail-media-cell img')
+        self.assertIn('width: 100%', hero, '封面被一起缩小了')
+        self.assertIn('object-fit: cover', hero, '封面没有 cover')
+        self.assertNotIn('width: 50%', hero,
+                         '封面规则里出现了半宽，第一张图没被排除掉')
+
+    def test_the_caption_follows_the_image_to_the_centre(self):
+        """A left-aligned caption under a centred photo reads as a bug."""
+        caption = self._rule('.news-detail-figure figcaption')
+        self.assertIn('text-align: center', caption,
+                      '图居中了但图注还在左边，视觉像错位')
+
+    def test_phones_get_the_full_width_back(self):
+        """50% of a ~360px content box is ~180px — a chart label lands at 2px.
+
+        Anchor the assertion inside the 767 block so a `width: 100%` anywhere
+        else in the sheet cannot satisfy it.
+        """
+        css = self._css()
+        blocks = re.findall(r'@media\s*\(max-width:\s*767px\)\s*\{(.*?)\n  \}',
+                            css, re.S)
+        self.assertTrue(blocks, '找不到 767px 断点块')
+        phone = ' '.join(blocks)
+        self.assertIn('.news-detail-figure img', phone,
+                      '767px 块里没有给插图恢复通栏')
+        self.assertIn('width: 100%', phone,
+                      '767px 块里没有把插图恢复成通栏')

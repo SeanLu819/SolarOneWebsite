@@ -1453,3 +1453,28 @@ local admin preview only.
 
 ### Notes
 - Version bump to `v1.2.1`.
+
+## v1.10.5 - 2026-10-04
+
+## Every news figure but the hero now renders at half width, centred
+
+The market article's five in-body images were spanning the full 1216px content
+column, which reads as a banner rather than an illustration. They now render at
+half the column width and are centred, so the body text and the supporting image
+share one visual column.
+
+- `.news-detail-figure img` → `width: 50%; height: auto; margin-inline: auto`.
+  `height: auto` is what makes this halve **both** axes: the browser keeps the
+  intrinsic ratio instead of letterboxing a portrait photo.
+- The article's first image (`.news-detail-media-cell--large`, the cover) is
+  untouched — it keeps `width: 100%` and `object-fit: cover`.
+- `figcaption` is centred with the image; a left-aligned caption under a centred
+  photo reads as a misalignment bug.
+- Below the phone breakpoint (`max-width: 767px`) the figure gets its full width
+  back: 50% of a ~360px content box is ~180px, which puts a chart label at 2-3px.
+
+Guard: `NewsDetailFigureLayoutTests` (6 cases) in `pages/tests_news_figures.py`.
+Mutation probe 7/7 red (half-width reverted, centring removed, height pinned,
+`object-fit` added, hero also halved, caption uncentred, 767 override removed).
+Full regression 562 tests / 32 failures / 1 skipped — the 32 are the pre-existing
+content backlog, no new ones.

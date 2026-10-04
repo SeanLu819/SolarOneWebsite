@@ -160,20 +160,27 @@
   .news-detail-body p { margin-bottom: 12px; }
   .news-detail-body p:last-child { margin-bottom: 0; }
 
-  /*v1.10.4 in-body figures. Full column width (not the 2-col bento cell), so a
-     chart stays readable where it sits with the claim it supports. The generous
-     vertical margin is what makes an inserted photo read as "belongs to this
-     paragraph" rather than "pasted in". */
+  /*v1.10.4 in-body figures. Full column width for the first paragraph of body
+     flow (not the 2-col bento cell), so a chart sits with the claim it supports.
+
+     v1.10.5: every in-body figure renders at half the column width, centred.
+     `height: auto` keeps the intrinsic aspect ratio, so halving the width
+     halves the height as well -- the image shrinks in both axes at once.
+     The hero (`.news-detail-media-cell--large`) is the page's first image and
+     keeps its full-bleed treatment; it is a separate rule and untouched here.
+     The caption is centred with the image, otherwise a left-aligned caption
+     under a centred photo reads as a misalignment bug. */
   .news-detail-figure {
     margin: 28px 0;
   }
   .news-detail-figure img {
-    display: block; width: 100%; height: auto;
+    display: block; width: 50%; height: auto;
+    margin-inline: auto;
     border-radius: 10px;
     background: var(--bg-soft);
   }
   .news-detail-figure figcaption {
-    margin-top: 10px;
+    margin-top: 10px; text-align: center;
     font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.04em;
     color: var(--ink-mute);
   }
@@ -214,6 +221,9 @@
     .news-detail-media { grid-template-columns: 1fr; grid-template-rows: auto; max-height: none; }
     .news-detail-media-cell--large { grid-row: auto; aspect-ratio: 16 / 9; }
     .news-detail-media-cell { aspect-ratio: 16 / 9; }
+    /* Half of a ~360px content box is ~180px: a chart label would land at
+       2-3px. Below the phone breakpoint the figure gets its width back. */
+    .news-detail-figure img { width: 100%; }
   }
 </style>
 
