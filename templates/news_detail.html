@@ -163,18 +163,21 @@
   /*v1.10.4 in-body figures. Full column width for the first paragraph of body
      flow (not the 2-col bento cell), so a chart sits with the claim it supports.
 
-     v1.10.5: every in-body figure renders at half the column width, centred.
-     `height: auto` keeps the intrinsic aspect ratio, so halving the width
-     halves the height as well -- the image shrinks in both axes at once.
-     The hero (`.news-detail-media-cell--large`) is the page's first image and
-     keeps its full-bleed treatment; it is a separate rule and untouched here.
-     The caption is centred with the image, otherwise a left-aligned caption
-     under a centred photo reads as a misalignment bug. */
+     v1.10.8: 60% instead of 50% (editor asked for "about 120% of what it is
+     now"). The charts are drawn on a 1639px canvas with 8-13px type, so at 50%
+     of a 1216px column the labels landed at 3-5px and were unreadable. 60% is
+     what a reader can actually read while still reading as an illustration
+     rather than a full-bleed banner. `height: auto` keeps the intrinsic aspect
+     ratio, so both axes scale together. The hero
+     (`.news-detail-media-cell--large`) is the page's first image and keeps its
+     full-bleed cell — a separate rule, untouched here. The caption is centred
+     with the image, otherwise a left-aligned caption under a centred photo
+     reads as a misalignment bug. */
   .news-detail-figure {
     margin: 28px 0;
   }
   .news-detail-figure img {
-    display: block; width: 50%; height: auto;
+    display: block; width: 60%; height: auto;
     margin-inline: auto;
     border-radius: 10px;
     background: var(--bg-soft);

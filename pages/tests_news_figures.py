@@ -14,9 +14,14 @@ page just quietly drifts" way, which is why both are pinned:
 
 2. **One card size on /news/.** The latest article used to be a featured card
    spanning two columns with a horizontal layout — roughly twice the area of
-   every other card. The class survives as a styling hook, so nothing in the
+   every other article. The class survives as a styling hook, so nothing in the
    template would complain if the geometry came back; only a source-level
    assertion catches it.
+
+3. **A card cover that exists** (v1.10.8). An article with no cover of its own
+   fell through to a grey gradient block, which an editor reported as "the
+   cover is not visible". The card now borrows the first gallery image, in the
+   same order as `social_image_url`, so card / og:image / JSON-LD agree.
 
 Run: ``E:/Python/python3/python.exe manage.py test pages.tests_news_figures``
 """
@@ -407,17 +412,29 @@ class NewsCardUniformSizeTests(SimpleTestCase):
 
 
 class NewsDetailFigureLayoutTests(SimpleTestCase):
-    """v1.10.5 — every figure but the hero renders at half width, centred.
+    """v1.10.5 / v1.10.8 — body figures render at a fixed share of the column,
+    centred.
 
     The first image on the page is the article cover (`.news-detail-media-cell
     --large`); it keeps its full-bleed grid cell. Everything the body inserts is
-    halved in **both** axes and centred, which is what makes an inserted photo
-    read as an illustration rather than a page-wide banner.
+    scaled down and centred, which is what makes an inserted photo read as an
+    illustration rather than a page-wide banner.
 
-    Like the card guards above this is a *source-level* assertion: a half-width
-    centred image is perfectly valid markup, so nothing else in the suite would
-    notice the rule drift.
+    v1.10.5 shipped 50%. The editor then asked for ~120% of that on the strength
+    of the three market charts, whose 1639px originals put their 8–13px labels
+    at 3.0–4.8px once squeezed into 608px. 60% (≈730px of the 1216px content
+    box) lifts those labels to ≈3.6–5.8px. Still small — the real fix is to
+    re-render the charts at their display size — but it is the size that was
+    asked for, so the number is pinned here rather than left to drift.
+
+    Like the card guards above this is a *source-level* assertion: a
+    centre-scaled image is perfectly valid markup, so nothing else in the suite
+    would notice the rule drift.
     """
+
+    #: v1.10.8 — 50% × 1.2. Keep in sync with `.news-detail-figure img` in
+    #: `templates/news_detail.html`.
+    EXPECTED_FIGURE_WIDTH = 'width: 60%'
 
     def _template(self):
         return (settings.BASE_DIR / 'templates' / 'news_detail.html').read_text(
@@ -433,23 +450,23 @@ class NewsDetailFigureLayoutTests(SimpleTestCase):
         self.assertIsNotNone(block, f'找不到 {selector} 规则')
         return block.group(1)
 
-    def test_figures_render_at_half_the_column_width(self):
+    def test_figures_render_at_the_expected_share_of_the_column(self):
         body = self._rule('.news-detail-figure img')
-        self.assertIn('width: 50%', body,
-                      '插图没有缩到半幅宽，正文里的图仍是通栏')
+        self.assertIn(self.EXPECTED_FIGURE_WIDTH, body,
+                      '插图宽度不是约定的 60%，正文里的图尺寸漂了')
         self.assertIn('height: auto', body,
-                      '高度被写死就不是"长宽同时减半"了')
+                      '高度被写死就不是"长宽同比缩放"了')
 
     def test_figures_are_centred_in_the_column(self):
         body = self._rule('.news-detail-figure img')
         self.assertIn('margin-inline: auto', body,
                       '图没有水平居中（img 是块级盒，不居中就靠左）')
 
-    def test_both_axes_halve_together(self):
-        """`width: 50%` on its own would letterbox a portrait photo.
+    def test_both_axes_scale_together(self):
+        """A percentage width on its own would letterbox a portrait photo.
 
-        With `height: auto` the browser keeps the intrinsic ratio, so halving
-        the width halves the height as well. If someone pins a height instead of
+        With `height: auto` the browser keeps the intrinsic ratio, so scaling the
+        width scales the height as well. If someone pins a height instead of
         leaving it auto, a chart gets cropped.
         """
         body = self._rule('.news-detail-figure img')
@@ -462,8 +479,8 @@ class NewsDetailFigureLayoutTests(SimpleTestCase):
         hero = self._rule('.news-detail-media-cell img')
         self.assertIn('width: 100%', hero, '封面被一起缩小了')
         self.assertIn('object-fit: cover', hero, '封面没有 cover')
-        self.assertNotIn('width: 50%', hero,
-                         '封面规则里出现了半宽，第一张图没被排除掉')
+        self.assertNotIn(self.EXPECTED_FIGURE_WIDTH, hero,
+                         '封面规则里出现了插图宽度，第一张图没被排除掉')
 
     def test_the_caption_follows_the_image_to_the_centre(self):
         """A left-aligned caption under a centred photo reads as a bug."""
@@ -472,7 +489,7 @@ class NewsDetailFigureLayoutTests(SimpleTestCase):
                       '图居中了但图注还在左边，视觉像错位')
 
     def test_phones_get_the_full_width_back(self):
-        """50% of a ~360px content box is ~180px — a chart label lands at 2px.
+        """60% of a ~360px content box is ~216px — a chart label lands at 1px.
 
         Anchor the assertion inside the 767 block so a `width: 100%` anywhere
         else in the sheet cannot satisfy it.
@@ -574,3 +591,189 @@ class NewsSocialImageTests(NewsDetailFigureRenderTests):
             self.assertTrue(
                 value.startswith('/static/'),
                 f'{row["slug"]}: social_image_url 不是 static 下的真实图片：{value!r}')
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# v1.10.8 — a /news/ card without a cover borrows the article's first figure
+# ═════════════════════════════════════════════════════════════════════════
+class NewsCardCoverFallbackTests(TestCase):
+    """v1.10.8, raised by an editor: "the cover of *Global LED Market to Triple
+    by 2034* is not visible."
+
+    What was actually on screen was not a broken image — it was
+    `.news-card-cover-fallback`, a grey gradient block, because v1.10.6 removed
+    that article's cover and the card only ever looked at `article.image_url`.
+    The card rendered, the HTTP status was 200, and nothing in the suite failed.
+
+    So the guard is on the rendered list page: for an article that has gallery
+    images, the cover box must contain a real `<img>` pointing at one of them,
+    and the gradient placeholder must be reserved for articles that have no
+    picture at all.
+    """
+
+    GALLERY = ART  # the market article: no cover, three charts
+
+    @classmethod
+    def setUpTestData(cls):
+        from django.utils.timezone import now
+        from pages.models import NewsArticle, NewsImage
+        from pages.views.data_loaders import _load_seed
+
+        seed = _load_seed()
+        market = next(a for a in seed['news'] if a['slug'] == cls.GALLERY)
+        cls.market = NewsArticle.objects.create(
+            slug=market['slug'],
+            title=market['title'],
+            summary=market['summary'],
+            content=market['content'],
+            category=market.get('category') or 'Company News',
+            image=market['image'],
+            published_at=now(),
+            is_published=True,
+            translations=market.get('translations') or {},
+        )
+        for image in market['images']:
+            NewsImage.objects.create(
+                article=cls.market, image=image['image'],
+                alt_text=image.get('alt') or '',
+                caption=image.get('caption') or '',
+                order=image.get('order') or 1,
+                width=image.get('width'), height=image.get('height'),
+            )
+
+        # A second article that *does* have a cover of its own, so the guard
+        # also proves the fallback does not hijack a healthy cover.
+        cls.covered = NewsArticle.objects.create(
+            slug='covered-article',
+            title='An article with a cover',
+            summary='Cover regression fixture.',
+            content='<p>Body copy.</p>',
+            category='Company News',
+            image='images/news/global-led-lighting-market-2034/'
+                  'chart-by-segment-2026.webp',
+            published_at=now(),
+            is_published=True,
+            translations={},
+        )
+
+    def _cards(self):
+        """Return `{slug: cover_html}` for every card on /news/.
+
+        Two things about the real markup, both learned by dumping it:
+
+        - the card is an `<a>` *wrapping* the cover, so matching only
+          `<div class="news-card-cover">…</div>` loses the href that says which
+          article a cover belongs to — grab the anchor first, slice the cover
+          out of it;
+        - the template wraps attributes across lines, so `href` is preceded by
+          a newline. `\\s*` around the attribute boundary is not optional.
+        """
+        resp = self.client.get('/news/', HTTP_HOST='localhost')
+        self.assertEqual(200, resp.status_code)
+        html = resp.content.decode('utf-8')
+        cards = {}
+        for href, inner in re.findall(
+                r'<a class="news-card[^"]*"\s*href="([^"]+)"\s*>(.*?)</a>',
+                html, re.S):
+            slug = href.rstrip('/').rsplit('/', 1)[-1]
+            cover = re.search(
+                r'<div class="news-card-cover">(.*?)</div>\s*'
+                r'<div class="news-card-body">', inner, re.S)
+            self.assertIsNotNone(cover, f'{slug}: 卡片没有封面容器')
+            cards[slug] = cover.group(1)
+        self.assertTrue(cards, '列表页没有渲染任何卡片')
+        return cards
+
+    def _card_for(self, slug):
+        cards = self._cards()
+        self.assertIn(slug, cards, f'列表页里找不到 {slug} 的卡片')
+        return cards[slug]
+
+    def test_the_coverless_article_still_shows_a_picture(self):
+        card = self._card_for(self.GALLERY)
+        self.assertIn('<img', card,
+                      '无封面文章的卡片仍是占位块——这就是"封面不可见"')
+        self.assertNotIn('news-card-cover-fallback', card,
+                         '有图集却仍渲染渐变占位块')
+
+    def test_the_borrowed_cover_is_one_of_the_article_figures(self):
+        from pages.views.data_loaders import _get_news_from_db
+        row = next(r for r in _get_news_from_db('en') if r['slug'] == self.GALLERY)
+        self.assertEqual('', row['image_url'],
+                         '这篇已经不该有封面了（否则本组守卫的前提失效）')
+        gallery = [i['url'] for i in row['images']]
+        self.assertTrue(gallery, '这篇不该一张图都没有')
+        src = re.search(r'<img src="([^"]+)"', self._card_for(self.GALLERY))
+        self.assertIsNotNone(src, '卡片封面里没有 img 标签')
+        self.assertIn(src.group(1), gallery,
+                      f'卡片封面用的不是本文的图集图：{src.group(1)!r}')
+
+    def test_an_article_with_its_own_cover_keeps_it(self):
+        card = self._card_for(self.covered.slug)
+        src = re.search(r'<img src="([^"]+)"', card)
+        self.assertIsNotNone(src, '有封面的文章没有渲染封面图')
+        self.assertIn('chart-by-segment-2026.webp', src.group(1),
+                      '回落逻辑把文章自己的封面顶掉了')
+        self.assertNotIn('news-card-cover-fallback', card,
+                         '有封面却仍渲染渐变占位块')
+
+    def test_the_placeholder_is_reserved_for_articles_with_no_picture(self):
+        """The gradient block must stay reachable, or a pictureless article
+        would render an empty 16:9 box instead."""
+        from django.utils.timezone import now
+        from pages.models import NewsArticle
+        NewsArticle.objects.create(
+            slug='no-pictures-at-all',
+            title='No images whatsoever',
+            summary='Placeholder regression fixture.',
+            content='<p>Body copy.</p>',
+            category='Company News',
+            image='',
+            published_at=now(),
+            is_published=True,
+            translations={},
+        )
+        card = self._card_for('no-pictures-at-all')
+        self.assertNotIn('<img', card, '无图文章不该凭空造出 img')
+        self.assertIn('news-card-cover-fallback', card,
+                      '无图文章没有回落到渐变占位块')
+
+    def test_the_template_falls_back_before_rendering_the_placeholder(self):
+        """Source-level pin for the branch order.
+
+        `{% firstof article.image_url article.images.0.url %}` only falls back
+        while `article.image_url` is empty; reversing the two arguments, or
+        testing the gallery first, quietly changes which picture a card shows
+        without any test noticing.
+        """
+        src = (settings.BASE_DIR / 'templates' / 'news.html').read_text(
+            encoding='utf-8')
+        block = re.search(
+            r'\{% if article\.image_url or article\.images\.0\.url %\}'
+            r'(.*?)\{% else %\}', src, re.S)
+        self.assertIsNotNone(block, '卡片封面没有"有图就渲染 img"的分支')
+        firstof = re.search(r'\{% firstof ([^%]+) %\}', block.group(1))
+        self.assertIsNotNone(firstof, '分支里没有 firstof')
+        self.assertEqual(
+            'article.image_url article.images.0.url',
+            ' '.join(firstof.group(1).split()),
+            '回落顺序变了：自有封面必须优先于图集首图')
+
+    def test_the_card_shows_the_same_file_as_og_and_structured_data(self):
+        """One picture, three places: card / og:image / NewsArticle `image`.
+
+        The template computes the fallback itself (`firstof`) while the other two
+        read the derived `social_image_url`. Those are two implementations of one
+        rule, so they can drift — and a crawler that sees a different preview
+        image than the page is exactly the kind of quiet mismatch nothing else
+        reports. Compare the card's *path* against the derived value, since the
+        template emits it relative and JSON-LD absolutises it.
+        """
+        from pages.views.data_loaders import _get_news_from_db
+        row = next(r for r in _get_news_from_db('en') if r['slug'] == self.GALLERY)
+        src = re.search(r'<img src="([^"]+)"', self._card_for(self.GALLERY))
+        self.assertIsNotNone(src, '卡片封面里没有 img 标签')
+        self.assertEqual(
+            row['social_image_url'], src.group(1),
+            '卡片封面与 social_image_url 不是同一张图：'
+            'og:image / JSON-LD 会指向另一张')

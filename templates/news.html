@@ -50,8 +50,9 @@
       <a class="news-card reveal{% if forloop.first and not news_active_category %} news-card--featured{% endif %}{% if forloop.counter0 >= 9 %} is-hidden{% endif %}"
          href="{% url 'news_detail' article.slug %}">
         <div class="news-card-cover">
-          {% if article.image_url %}
-          <img src="{{ article.image_url }}"
+          {#v1.10.8: an article may have no cover of its own (the market article carries charts only). The gradient placeholder read as "this card has no picture" — an editor flagged it as an invisible cover. Fall back to the first gallery image, which is a real illustration of the article. Same fallback order as `social_image_url` in data_loaders, so the card, og:image and JSON-LD all show the same picture. #}
+          {% if article.image_url or article.images.0.url %}
+          <img src="{% firstof article.image_url article.images.0.url %}"
                alt="{{ article.title_t|default:article.title }}"
                {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
           {% else %}

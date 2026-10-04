@@ -1454,6 +1454,36 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.8 - 2026-10-04
+
+## Larger charts, and a visible cover on the market article
+
+Follow-up to v1.10.6, from an editor's review of the market article page.
+
+**The three charts are 20% larger.** v1.10.5 set inserted figures to 50% of the
+content column. The content box measures 1216px, so 50% meant 608px, and the
+charts' 8-13px labels landed at an effective 3.0-4.8px. They are now 60%
+(~730px, a 44.5% scale of the 1639px originals), lifting those labels to
+~3.6-5.8px. `height: auto` is unchanged, so both axes still scale together and
+the `object-fit` guard that protects the chart edges still holds. Phones
+(<=767px) keep their full width.
+
+**The card cover is no longer an empty grey block.** v1.10.6 removed this
+article's cover, and `/news/` only ever looked at `article.image_url` -- so the
+card fell through to `.news-card-cover-fallback`, a grey gradient. Nothing
+errored and the page returned 200; an editor simply saw no picture. A card now
+falls back to the article's first gallery image, in the same order as
+`social_image_url`, so the card, `og:image` and the `NewsArticle` block all
+show one file. An article with a cover of its own still uses it, and the
+gradient stays reserved for articles that genuinely have no picture.
+
+**The three photographs are gone** (completed from v1.10.6): the market article
+now carries only its three charts.
+
+Guards: `NewsDetailFigureLayoutTests` re-pinned to 60% and
+`NewsCardCoverFallbackTests` added (5 tests, including a source-level pin on the
+fallback order). A 10-mutation probe turns every one of them red.
+
 ## v1.10.5 - 2026-10-04
 
 ## Every news figure but the hero now renders at half width, centred
