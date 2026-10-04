@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.3 - 2026-10-04
+
+## Cache HTML at the edge so returning visitors stop re-running Django
+
+Measured on production before this change: every HTML response came back
+`Cache-Control: public, max-age=0, must-revalidate` with `Age: 0` and
+`X-Vercel-Cache: MISS`. That is Vercel's default for a Serverless Function
+response, and it means **every page view executed Django** — a visitor
+reloading the page they were already reading paid full TTFB again.
+
+`pages/edge_cache.py` attaches `Vercel-CDN-Cache-Control:
+public, s-maxage=300, stale-while-revalidate=86400` to public HTML. The
+edge-only header name is deliberate: Vercel's proxy consumes it and never
+forwards it, so the browser keeps revalidating (a deploy is visible
+immediately, content never goes stale for a visitor) while the edge stops
+invoking Django.
+
+### Why this could not go in vercel.json
+
+The `headers` block is the only other place that can set these headers, and two
+documented facts rule it out:
+
+* `source` "matches each incoming pathname (**excluding querystring**)", so no
+  rule can distinguish `/news/` from `/news/?category=Case+Studies` — and those
+  are genuinely different documents (confirmed by md5: the bodies differ).
+* `missing` requires one concrete `key` with no wildcard, so "has no query
+  string at all" is not expressible.
+
+A catch-all rule would have cached one category's filtered news page under
+`/news/` and served it to every visitor.
+
+### What is deliberately not cached
+
+* `/contact/` — it renders `{% csrf_token %}`. Replaying a cached copy hands
+  the next visitor a token bound to someone else's cookie and their form POST
+  fails with 403.
+* `/news/feed.xml` — startswith the cacheable `/news/` prefix, so it needed an
+  **exact-match** exclusion list rather than a prefix one. Caching it would
+  hold a newly published article back from every RSS subscriber.
+* `/admin/`, `/__diag__/`, anything with a query string, anything carrying
+  `Set-Cookie`, and every non-200 status (a cached 301 would freeze the
+  apex→www target into the edge forever).
+* `/static/` — already served with a one-year `immutable` rule from
+  vercel.json.
+
+Language needs no exclusion: `i18n_patterns` puts it in the path, and
+production confirms `Accept-Language` does not change the response.
+
+### On the test that mattered
+
+The first implementation had 15 direct-call tests green while **every real
+request carried no header at all**. `IS_VERCEL` is read from the `VERCEL` env
+var at settings-import time and Django freezes the middleware chain then, so
+`override_settings` cannot install a middleware the non-Vercel branch skipped —
+the feature was silently inert.
+
+`tests_edge_cache.EdgeCacheOnVercelSubprocessTests` re-imports the settings
+module in a child process with `VERCEL=1` and asserts against live responses.
+That test is what caught the `/news/feed.xml` gap above.
+
+The four policy lists were mutation-probed: dropping the `/contact/` exclusion,
+dropping the query-string check, switching to plain `Cache-Control`, and
+emptying the exact-match list each turn the suite red. All files were restored
+byte-identically afterwards.
+
 ## v1.10.2 - 2026-10-04
 
 ## First industry-reporting article, and a `Industry Insights` news category

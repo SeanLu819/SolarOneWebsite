@@ -190,6 +190,11 @@ MIDDLEWARE = [
 if not IS_VERCEL:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     MIDDLEWARE.append('pages.middleware.VisitorTrackingMiddleware')
+else:
+    # v1.10.3: edge caching for HTML. Must sit LAST so it sees the final
+    # response (after sessions/CSRF had their chance to add Set-Cookie) and
+    # can veto caching. It is a no-op unless EDGE_CACHE_ENABLED (below).
+    MIDDLEWARE.append('pages.edge_cache.EdgeCacheHeaderMiddleware')
 
 ROOT_URLCONF = 'solarone.urls'
 
@@ -380,6 +385,23 @@ WHITENOISE_AUTOREFRESH = not IS_VERCEL
 # 🔴 On Vercel this value is DEAD CONFIG — see the CORRECTION note in the
 # STATIC STORAGE block below. Production caching is set by vercel.json headers.
 WHITENOISE_MAX_AGE = 31536000 if IS_VERCEL else 0
+# ============ EDGE CACHE (HTML) ============
+# 🔴 v1.10.3: production serves EVERY HTML response as
+# `max-age=0, must-revalidate` with `X-Vercel-Cache: MISS` (measured
+# 2026-10-04), i.e. every page view re-runs Django even for a returning
+# visitor. `pages.edge_cache.EdgeCacheHeaderMiddleware` attaches
+# `Vercel-CDN-Cache-Control` (edge-only: the browser keeps revalidating, so a
+# deploy shows up immediately and content never goes stale for a visitor).
+#
+# 🔴 This CANNOT live in vercel.json. Vercel's `headers.source` "matches each
+# incoming pathname (excluding querystring)" and `missing` needs a concrete key
+# with no wildcard — so a rule cannot distinguish `/news/` from
+# `/news/?category=…`, which are different documents (verified by md5). A
+# catch-all would serve one category's filtered page to everyone.
+#
+# Kept off locally: a cached local response would hide code changes during
+# runserver, and the sqlite-backed VisitorTrackingMiddleware writes per GET.
+EDGE_CACHE_ENABLED = IS_VERCEL
 # Do NOT send Access-Control-Allow-Origin:* for static assets (#7) —
 # no legitimate third-party site needs to fetch this site's static files.
 WHITENOISE_ALLOW_ALL_ORIGINS = False
@@ -482,4 +504,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.10.2'
+APP_VERSION = '1.10.3'
