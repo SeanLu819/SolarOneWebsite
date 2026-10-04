@@ -93,7 +93,7 @@ Python serverless 冷/热启动 + Django 渲染 + seed 读取。生产零 DB（`
 | # | 动作 | 改哪里 | 预期 | 风险 | 验证 |
 |---|---|---|---|---|---|
 | P0-1 | HTML 加边缘缓存：**不带 query 的 GET 响应**加 `Cache-Control: public, s-maxage=300, stale-while-revalidate=86400` | 新增一个尾部中间件给 `HttpResponse` 打头（**必须排除带 query 的 URL** —— `/projects/?sport=X` 这类筛选 URL 一旦被缓存会把不同筛选串味） | TTFB 570 → **~380ms** | seed 更新后最长 5 分钟才生效（可接受）；部署新版本时 Vercel 自动失效旧缓存 | `curl -sI` 看 `X-Vercel-Cache: HIT` / `age>0` |
-| P0-2 | 固定函数区域 | Vercel → Project Settings → **Functions → Region** → 固定 `iad1`（iadr1）或 `sin1`（看主市场；现有项目以欧美为主，建议 iad1） | 亚太访客再省 **80–150ms** | 改区域会短暂重建函数 | 连测 3 次看 `x-vercel-id` 是否只剩一个区域前缀 |
+| P0-2 | 固定函数区域 —— **2026-10-04 修订：先不动，等 P0-1 上完再评估** | 原计划 Vercel → Settings → **Functions → Region** 固定 `iad1`；主市场定后改 | 原预期亚太访客省 80–150ms | 改区域会短暂重建函数；且区域是**全局取舍**（详见 §8c） | 连测 3 次看 `x-vercel-id` 是否只剩一个区域前缀 |
 
 ### P1 — 两周内，锦上添花
 
@@ -187,6 +187,74 @@ x-vercel-id: cdg1::iad1::2026-10-04T01:40:42Z
 | 中国（对照） | `sin1` → `iad1` | ~330–360 ms | ~560–590 ms（实测） |
 
 > 这些是**量级估算，不是实测**。做优化决策前的基准请用方法 A 或 B 取真数。
+
+## 8c. 主市场与区域选择（2026-10-04 结论）
+
+主市场定为 **欧美均衡、亚太少量**。这条结论直接推翻了原先「立刻固定 region 到 iad1」的 P0-2。
+
+**为什么区域是全局取舍，而不是「设了就都快」**
+
+Vercel Hobby **没有智能路由**（Pro 才有）。函数区域只能选一个，于是：
+
+| 选 `iad1`（美东） | 选 `fra1`（法兰克福） |
+|---|---|
+| ✅ 美国访客边缘=函数同区，最快 | ✅ 欧洲访客边缘=函数同区，最快 |
+| ❌ 欧洲访客 `cdg1/lhr1 → iad1`，跨大西洋 | ❌ 美国访客 `iad1 → fra1`，跨大西洋 |
+| ❌ 亚太访客 `sin1 → iad1`，横穿太平洋 | ❌ 亚太同理更远 |
+
+三种客户里，**无论选哪个都会牺牲一种**。而亚太只占少量 → 为它选 `sin1` 不划算；但「欧美均衡」意味着
+**必须牺牲一半欧美客户**，只为了优化本来就不慢的那 80–150ms。这个交易不划算。
+
+**那跨区回源怎么办？靠 P0-1（HTML 边缘缓存）绕过去 —— 这才是正解**
+
+`x-vercel-id: cdg1::iad1` 里那个「跨区回源」只发生在**缓存未命中**时。一旦 HTML 带上了
+`s-maxage=300, stale-while-revalidate=86400`：
+
+- 巴黎访客 → `cdg1` 边缘直接命中并返回 HTML → **根本不碰 `iad1` 函数**
+- 跨大西洋那段只在缓存过期（最长 5 分钟）后的少数请求里发生
+
+也就是说 **P0-1 做成之后，函数区域的敏感度大幅下降**，P0-2 从「必须做」变成「锦上添花」。
+
+**顺序结论**
+
+1. 先做 **P0-1**（HTML 边缘缓存，排除带 query 的 URL）
+2. 用 CF Worker 探针（§8b 方法 B 追加）或 GitHub Actions（§8b 方法 A）取美/欧真数
+3. 真数出来后，如果欧美仍有明显落差，再考虑把 region 固定到访客占比更高的一侧
+
+## 8d. Cloudflare Worker 探针（免费、永久可复测）
+
+代码：`scripts/e2e/cloudflare_perf_probe_worker.js`
+
+**为什么它能测到「当地速度」**：Worker 跑在 Cloudflare 边缘，有人从哪个国家点开链接，它就在哪个
+colo 执行、并从那儿去抓你的站点 —— 测出来的时间天然包含那个国家的真实往返成本。
+
+**部署（不用装 wrangler，网页就能完成）**
+
+1. Cloudflare Dashboard → **Workers and Pages** → Create → Deploy Worker
+2. 名字填 `perf-probe` → 把文件里的内容整份粘进在线编辑器
+3. **Save and Deploy**（免费版够用，每天 10 万请求，这个探针一天跑几十次）
+
+**使用**
+
+```
+https://perf-probe.<你的workers子域>.workers.dev/?url=https://www.solaronelighting.com/&runs=5
+```
+
+把这条链接**发给美国 / 欧洲的同事或客户点一下**，他那边不用装任何东西。返回 JSON 示例字段：
+
+| 字段 | 含义 |
+|---|---|
+| `probeEdge` | 实际执行探测的 CF colo（如 `CDG` / `LHR` / `IAD` / `SIN`）—— 这个数字说明测的是哪 |
+| `visitorCountry` / `visitorCity` | 点链接的人所在位置（和 probeEdge 会一致，除非对方在出差） |
+| `medianTtfbMs` | **从这里到站点拿到响应头的中位耗时**（核心指标） |
+| `samples` | 每次样本，能看出抖动 |
+| `lastResponseHeaders.serverTiming` | Vercel 给的 `upstream;dur=…`，即边缘→函数耗时 |
+| `lastResponseHeaders.vercelCache` / `age` | 是 HIT 还是 MISS —— **直接验证 P0-1 有没有生效** |
+
+**两个已知边界（别误会这个探针的能力）**
+
+- Workers **不暴露分段计时**（拿不到独立的 DNS / TCP / TLS 毫秒数）。要看分段，用 §8b 方法 A 在海外机器上跑 `perf_probe.py`。
+- 白名单里只放了站点自身域名，防止这个 Worker 被当成开放代理消耗你的免费配额。换域名要改 `ALLOWED_HOSTS`。
 
 ## 9. 复测节奏
 
