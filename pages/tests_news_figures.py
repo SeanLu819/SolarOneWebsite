@@ -777,3 +777,142 @@ class NewsCardCoverFallbackTests(TestCase):
             row['social_image_url'], src.group(1),
             '卡片封面与 social_image_url 不是同一张图：'
             'og:image / JSON-LD 会指向另一张')
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# v1.10.9 — the HKTEX 2026 article: cover geometry and SERP budgets
+# ═════════════════════════════════════════════════════════════════════════
+HKTEX = 'hk-outdoor-tech-light-expo-2026'
+
+
+class NewsCoverGeometryTests(SimpleTestCase):
+    """v1.10.9 — a cover must survive the 16:9 crop both surfaces apply.
+
+    The HKTEX cover is a 1470x240 strip (6.13:1) carrying the show wordmark, the
+    dates and the venue on one line. Both news surfaces put the cover in a 16:9
+    box with `object-fit: cover`, so the raw strip would be scaled to fill the
+    height and ~71% of its width cropped away -- the wordmark and the dates
+    would be gone and the page would still return 200.
+
+    So the file itself is matted to 16:9. That is a property of the asset, which
+    no template assertion can see, and a later re-export would silently undo it
+    -- hence reading the real pixel dimensions here.
+    """
+
+    RATIO = 16 / 9
+    #: How much of the canvas height the matted strip may occupy. The source is
+    #: 6.13:1, so at full canvas width it fills 1/6.13 ≈ 16%; 45% leaves room for
+    #: a re-export that is less wide without silently cropping the content.
+    MAX_HEIGHT_SHARE = 0.45
+
+    def _cover_path(self):
+        from pages.views.data_loaders import _load_seed
+        article = next(a for a in _load_seed()['news'] if a['slug'] == HKTEX)
+        return settings.BASE_DIR / 'static' / article['image']
+
+    def _webp_size(self, path):
+        """Read VP8/VP8L/VP8X dimensions without a decoder dependency."""
+        data = path.read_bytes()
+        self.assertEqual(data[:4], b'RIFF', '不是 RIFF/WebP 容器')
+        self.assertEqual(data[8:12], b'WEBP', 'RIFF 容器不是 WebP')
+        fourcc = data[12:16]
+        if fourcc == b'VP8 ':
+            # Lossy: 3-byte frame tag, 3-byte sync code, then 14-bit w/h.
+            off = 26
+            w = int.from_bytes(data[off:off + 2], 'little') & 0x3FFF
+            h = int.from_bytes(data[off + 2:off + 4], 'little') & 0x3FFF
+            return w, h
+        if fourcc == b'VP8L':
+            bits = int.from_bytes(data[21:25], 'little')
+            return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+        if fourcc == b'VP8X':
+            w = int.from_bytes(data[24:27], 'little') + 1
+            h = int.from_bytes(data[27:30], 'little') + 1
+            return w, h
+        self.fail(f'未处理的 WebP 编码: {fourcc!r}')
+
+    def test_the_cover_file_exists(self):
+        self.assertTrue(self._cover_path().exists(),
+                        f'封面文件不存在: {self._cover_path()}')
+
+    def test_the_cover_is_already_sixteen_by_nine(self):
+        w, h = self._webp_size(self._cover_path())
+        ratio = w / h
+        self.assertAlmostEqual(
+            self.RATIO, ratio, delta=0.02,
+            msg=f'封面 {w}x{h}（{ratio:.3f}）不是 16:9（{self.RATIO:.3f}）——'
+                '16:9 容器 + object-fit:cover 会把它裁掉两侧')
+
+    def test_the_cover_is_wide_enough_to_stay_legible(self):
+        """A 16:9 canvas small enough to fit on the card still has to be sharp."""
+        w, h = self._webp_size(self._cover_path())
+        self.assertGreaterEqual(
+            w, 1200, f'封面只有 {w}px 宽，卡片上会发虚')
+        self.assertLessEqual(
+            h * self.RATIO, w, '画布宽高关系异常')
+
+
+class NewsArticleSeoBudgetTests(SimpleTestCase):
+    """v1.10.9 — the HKTEX article must not push the site over its SERP budgets.
+
+    Two numbers, both enforced elsewhere for other templates:
+    `<title>` = ``{title} — SolarOne News`` must stay at 60 characters or fewer
+    (`SiteTitleBudgetTests`, which already fails on the 80-char Tianjin title, so
+    a new article going over would add a *second* failure to a debt we are trying
+    to shrink), and the summary is rendered through `|truncatechars:160` --
+    anything past 160 is markup the SERP never shows.
+    """
+
+    SUFFIX = ' — SolarOne News'
+    MAX_TITLE = 60
+    MAX_SUMMARY = 160
+
+    def _article(self):
+        from pages.views.data_loaders import _load_seed
+        return next(a for a in _load_seed()['news'] if a['slug'] == HKTEX)
+
+    def test_the_rendered_title_fits_the_budget(self):
+        title = self._article()['title']
+        total = len(title) + len(self.SUFFIX)
+        self.assertLessEqual(
+            total, self.MAX_TITLE,
+            f'news <title> 渲染 {total} 字符，超预算: {title!r}')
+
+    def test_the_summary_survives_truncation(self):
+        summary = self._article()['summary']
+        self.assertLessEqual(
+            len(summary), self.MAX_SUMMARY,
+            f'summary {len(summary)} 字符，模板 truncatechars:160 会截掉尾巴')
+
+    def test_both_seed_mirrors_carry_the_same_article(self):
+        """`_load_seed()` prefers the build artifact, so a JSON-only edit never
+        reaches production and an artifact-only edit is lost on the next build."""
+        import json
+        path = settings.BASE_DIR / 'seed_data.json'
+        js = next(a for a in json.loads(path.read_text(encoding='utf-8'))['news']
+                  if a['slug'] == HKTEX)
+        art = self._article()
+        for field in ('title', 'summary', 'content', 'image', 'published_at'):
+            with self.subTest(field=field):
+                self.assertEqual(
+                    js[field], art[field],
+                    f'seed_data.json 与 pages/seed_data.py 的 {field} 不一致')
+
+    def test_the_article_publishes_in_the_five_other_languages_as_empty(self):
+        """Base fields stay English; the five translations start empty and fall
+        back rather than rendering a blank. An accidental non-empty value here
+        would be an unreviewed translation shipping to five locales."""
+        for lang, value in (self._article().get('translations') or {}).items():
+            with self.subTest(lang=lang):
+                self.assertEqual(
+                    {}, value, f'{lang} 译文非空但未复核：{value!r}')
+
+    def test_the_body_carries_no_figure_markers_it_cannot_resolve(self):
+        """The article ships a cover and no gallery, so any marker left in the
+        copy would render a dropped marker or, worse, a half-empty figure."""
+        article = self._article()
+        self.assertEqual([], article.get('images'),
+                         '这篇应当只有封面、没有图集')
+        self.assertNotIn(
+            'figure:', article['content'],
+            '正文里残留 figure 标记，但没有图集可对应')

@@ -1454,6 +1454,41 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.9 - 2026-10-04
+
+## HKTEX 2026: the Outdoor and Tech Light Expo article
+
+A third news article, covering the HKTDC Outdoor and Tech Light Expo
+(26-29 October 2026, AsiaWorld-Expo, Hong Kong).
+
+**The cover is matted into 16:9, not dropped in as-is.** The supplied HKTEX
+banner is a 1470x240 strip -- 6.13:1 -- carrying the show wordmark, the Chinese
+and English names, the dates and the venue on a single line. Both news surfaces
+put a cover in a 16:9 box with `object-fit: cover`, so the raw strip would have
+been scaled to fill the height and roughly 71% of its width cropped away: the
+wordmark and the dates would simply not appear, and the page would still return
+200. The file is therefore flattened onto white and centred in a 1600x900
+canvas, so the whole strip survives the crop.
+
+**Copy kept short, and inside the SERP budgets.** The body is four paragraphs
+(208 words): what and when, what is shown, what the last edition drew, how to
+attend. Every figure is quoted from the official show page -- 25,000 m2, 448
+exhibitors, 18,169 visitors, the 770-respondent survey (67% expect growth, 1%
+expect decline) and the four segment shares -- and nothing is invented. The
+title is 43 characters, so `<title>` renders 59 including the ` -- SolarOne
+News` suffix, under the 60-character budget; the summary is 153, under the 160
+that `|truncatechars:160` allows.
+
+Guards: `NewsCoverGeometryTests` and `NewsArticleSeoBudgetTests` (8 tests).
+The geometry guard reads the real WebP header and asserts 16:9 plus a minimum
+width, because a cover's aspect ratio is a property of the asset that no
+template assertion can see. A 12-mutation probe -- including re-exporting the
+cover at 6.13:1 and at 4:3, and drifting the build artifact away from the JSON
+-- turns all of them red.
+
+The five non-English translations start empty, as with every other article;
+`translate()` falls back to the English base rather than rendering a blank.
+
 ## v1.10.8 - 2026-10-04
 
 ## Larger charts, and a visible cover on the market article
