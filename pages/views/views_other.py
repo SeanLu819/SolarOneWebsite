@@ -314,6 +314,13 @@ def news_feed(request):
     # Fixed canonical origin (#17) — same choice as sitemap_xml.
     origin = settings.CANONICAL_ORIGIN
     news = [a for a in (data.get('news') or []) if a.get('is_published', True)]
+    # v1.10.2: sort newest-first explicitly, same reason and same key as
+    # ``_get_news_from_json`` — RSS readers show the first item as the newest,
+    # so "first == newest" must be a property of this function, not of the
+    # seed file's physical layout (which seed_sync happens to write in
+    # ``NewsArticle.Meta.ordering`` order). ISO-8601 strings with a shared
+    # format sort chronologically.
+    news.sort(key=lambda a: a.get('published_at') or '', reverse=True)
 
     items = []
     for art in news:

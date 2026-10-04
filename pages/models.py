@@ -244,6 +244,12 @@ class NewsArticle(models.Model):
         ('Company News', 'Company News'),
         ('Product News', 'Product News'),
         ('Case Studies', 'Case Studies'),
+        # v1.10.2: market/industry reporting is neither company nor product
+        # news. Without its own bucket such an article would be filed under
+        # "Case Studies" and the /news/ sidebar chips would mislabel it.
+        # Choices-only change: no schema effect, and build.sh only runs
+        # `migrate` when a real external DB is configured.
+        ('Industry Insights', 'Industry Insights'),
     ]
 
     title = models.CharField(max_length=300)

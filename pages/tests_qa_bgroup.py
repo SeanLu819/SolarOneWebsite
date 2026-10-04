@@ -23,6 +23,7 @@ import os
 import re
 import subprocess
 import email.utils
+from datetime import datetime
 from unittest import mock
 
 import xml.etree.ElementTree as ET
@@ -282,7 +283,24 @@ class NewsFeedQaVerificationTests(TestCase):
         pub = root.find('channel').find('item').find('pubDate').text
         dt = email.utils.parsedate_to_datetime(pub)  # must not raise
         self.assertIsNotNone(dt)
-        self.assertEqual((dt.year, dt.month, dt.day), (2026, 9, 25))
+        # v1.10.2: this used to assert the literal (2026, 9, 25) — the date of
+        # the single article the feed held at the time. Any new article broke
+        # it. The real invariant is "the first item is the newest published
+        # article"; ``_get_news_from_json`` now sorts newest-first itself
+        # instead of inheriting the seed file's physical order.
+        from pages.views.data_loaders import _load_seed
+        published = [a for a in (_load_seed().get('news') or [])
+                     if a.get('is_published', True)]
+        self.assertTrue(published, 'seed 里没有已发布新闻，守卫失去意义')
+        newest = max(published, key=lambda a: a.get('published_at') or '')
+        # ``datetime.fromisoformat`` (not ``parsedate_to_datetime``) — the seed
+        # stores ISO-8601, the feed emits RFC-822. Both sides must land on the
+        # same calendar day.
+        expected = datetime.fromisoformat(newest['published_at'])
+        self.assertEqual((dt.year, dt.month, dt.day),
+                         (expected.year, expected.month, expected.day),
+                         'feed 第一条不是最新一篇（%r vs %r）'
+                         % (pub, newest['published_at']))
         # Valid RFC-822 UTC timezone token: either the literal ``GMT`` emitted
         # by email.utils.format_datetime(usegmt=True) or the ``+0000`` form.
         self.assertTrue(

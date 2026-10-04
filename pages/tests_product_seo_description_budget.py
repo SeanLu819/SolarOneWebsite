@@ -263,8 +263,17 @@ class SiteTitleBudgetTests(SimpleTestCase):
                 self.assertLessEqual(total, MAX_SEO_TITLE,
                                      'seed json title renders %d chars: %r'
                                      % (total, title))
-                for term in ('FL6M-480W', 'Tianjin Binhai Airport'):
-                    self.assertIn(term, title)
+                # v1.10.2: the keyword assertions below used to run for EVERY
+                # article, so the Tianjin case study's required terms became an
+                # accidental contract for all future news. They are scoped to
+                # that one slug now; the 60-char budget above still guards
+                # every title. ('Tianjin Binhai Airport' was also wrong — the
+                # real title says "Tianjin Binhai International Airport", so
+                # this assertion could never have passed once the length check
+                # above was fixed.)
+                if slug == 'low-cct-high-cri-high-mast-led-retrofit':
+                    for term in ('FL6M-480W', 'Binhai'):
+                        self.assertIn(term, title)
 
     def test_news_title_in_the_build_artifact_fits(self):
         for slug, title in self._build_artifact_news().items():

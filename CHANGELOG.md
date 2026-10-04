@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.2 - 2026-10-04
+
+## First industry-reporting article, and a `Industry Insights` news category
+
+Added `global-led-lighting-market-2034` — an independent summary of a
+third-party LED-lighting market report (Fortune Business Insights), rewritten
+rather than republished: five short body paragraphs plus an explicit source
+statement naming the original publisher. Its figures (2025 USD 109.11 bn →
+2034 USD 336.90 bn, 13.40% CAGR, Asia-Pacific 54.40% share) come from that
+report; the page states it is a summary and links readers to the source, which
+is the only honest option when the underlying text is someone else's.
+
+* `pages/models.py` — new `NEWS_CATEGORIES` choice `Industry Insights`.
+  Market reporting is neither a company nor a product announcement, so
+  lumping it into `Company News` would have mislabelled the entry in the
+  list-page chips and the article badge. Choices-only: no schema effect, and
+  `build.sh` only runs `migrate` when a real external DB is configured.
+* `pages/views/i18n.py` — its label in fr/es/de/ru/ar. Without this the chip
+  falls back to English on five of six language versions.
+* `static/images/news/global-led-lighting-market-2034/` — 3 new 1280×720 WebP
+  illustrations (cover + 2 gallery photos).
+
+Three guards had been written against the *single* article the site carried,
+so publishing a second one turned them red. All three now derive their
+expectations from the seed instead of hardcoding a count, a date or a
+keyword — the actual lesson being that such a guard tests the fixture, not the
+behaviour:
+
+* `pages/tests_qa_bgroup.py` — the RSS `pubDate` check compared against a
+  literal `(2026, 9, 25)`; it now compares against the seed's own newest
+  `published_at`.
+* `pages/tests.py` — the list-page cover count was `assertEqual(1, ...)`; it is
+  now "one cover per published article".
+* `pages/tests_product_seo_description_budget.py` — the keyword assertion
+  demanded `FL6M-480W` and the literal string `Tianjin Binhai Airport` (which
+  never matched the real title `Tianjin Binhai International Airport`) on
+  *every* article; it is now scoped to the one slug it was written about.
+
+`pages/views/views_other.py` — `news_feed()` now sorts newest-first itself.
+It previously relied on the seed file's physical order, which only happened to
+be correct because `seed_sync` writes it in `Meta.ordering` order; RSS readers
+present the first item as the newest, so that is now a property of the
+function rather than of the file layout (`_get_news_from_json` got the same
+treatment).
+
+Both reworked guards were mutation-probed: reversing the feed sort and
+inflating the expected cover count each turn the suite red, and both files
+were restored byte-identically afterwards.
+
 ## v1.10.1 - 2026-10-04
 
 ## Stop downloading the two hidden hero slides on every homepage view

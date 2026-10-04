@@ -2314,8 +2314,9 @@ class DataDrivenTranslationTests(SimpleTestCase):
         'pages/views/common.py': 8,   # _t(config.hero_title / …_subtitle / meta_title / meta_description 等 8 个字段)
         'pages/views/enrich.py': 1,   # _t(card_label) —— 取自两个映射字典
         # _t(cat, lang) x2（news 视图的 chips 数据 + 卡片分类徽章）+ x2（
-        # news_detail 视图的详情页分类标签 + related 卡片徽章）。取值只有
-        # NewsArticle.NEWS_CATEGORIES 的 3 个 choice，现已在 _SIDEBAR_I18N 里
+        # news_detail 视图的详情页分类标签 + related 卡片徽章)。取值只有
+        # NewsArticle.NEWS_CATEGORIES 的 choice（v1.10.2 起 4 个：Company/
+        # Product/Case Studies + Industry Insights），现已在 _SIDEBAR_I18N 里
         # 补齐 fr/es/de/ru/ar 五语；将来新增分类必须同步补字典，否则该语种静默
         # 回退英文。
         'pages/views/views_other.py': 4,
@@ -4571,7 +4572,18 @@ class NewsChipsAndCopyTests(TestCase):
         resp = self.client.get('/news/')
         self.assertEqual(resp.status_code, 200)
         html = resp.content.decode('utf-8')
-        self.assertEqual(1, html.count('class="news-card-cover"'))
+        # v1.10.2: was assertEqual(1, ...) — that silently assumed the feed
+        # holds exactly one article, so the second article broke it. What this
+        # test is really about is "one cover per card, and gallery photos must
+        # NOT leak onto the list page" (v1.6.3 moved them to the detail page).
+        from pages.views.data_loaders import _load_seed as _seed_loader
+        published = [a for a in (_seed_loader().get('news') or [])
+                     if a.get('is_published', True)]
+        self.assertEqual(len(published),
+                         html.count('class="news-card-cover"'),
+                         '列表页每篇已发布文章应恰好一个封面')
+        self.assertNotIn('tianjin-binhai-high-mast-retrofit-head-work.webp', html,
+                         '图集图不应出现在列表页（v1.6.3 起只在详情页）')
         # v1.8.2: the seed images were converted to WebP; the old `.jpg`
         # assertion could never match again.
         self.assertIn('tianjin-binhai-high-mast-retrofit-hero.webp', html)

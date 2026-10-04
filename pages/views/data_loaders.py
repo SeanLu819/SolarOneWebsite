@@ -423,13 +423,19 @@ def _get_news_from_db(lang='en'):
 
 
 def _get_news_from_json(lang='en'):
-    """Load published news articles from the committed seed JSON."""
+    """Load published news articles from the committed seed JSON.
+
+    v1.10.2: sorted newest-first explicitly. The order used to come straight
+    from the JSON file, which only happened to be correct because ``seed_sync``
+    writes it in ``NewsArticle.Meta.ordering`` (``-published_at``) order. That
+    is a file-layout dependency, and a hand-edited seed would silently reverse
+    the news list and the RSS feed. ISO-8601 strings sort chronologically as
+    long as they share a format, which ``seed_sync`` guarantees.
+    """
     seed_news = _load_seed().get('news', []) or []
-    return [
-        _normalize_news_article(a, lang)
-        for a in seed_news
-        if a.get('is_published', True)
-    ]
+    published = [a for a in seed_news if a.get('is_published', True)]
+    published.sort(key=lambda a: a.get('published_at') or '', reverse=True)
+    return [_normalize_news_article(a, lang) for a in published]
 
 
 def get_news(lang):
