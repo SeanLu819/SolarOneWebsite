@@ -1454,6 +1454,94 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.13 - 2026-10-04
+
+## The title block reserves two lines, so all three cards read the same
+
+v1.10.12 removed the "Featured" marker and unified the card *geometry*. It did not
+unify how each card's text *sets*, and the editor's follow-up — "check whether the
+three cards' title and body font and size are consistent" — found the answer was
+yes on type, no on block height.
+
+### What the audit measured
+
+The first pass estimated line counts from character counts. This one is measured:
+`static/fonts/inter-latin-600.woff2` is loaded and the real advance widths are
+read out of `hmtx`, then a greedy line-break is run against the 342px content box
+(`(1280 − 64 − 52) / 3 − 2 − 44`). Character counts would have said a 64-character
+title is "about two lines"; the metrics say which two.
+
+| # | category | title | measured | lines |
+|---|----------|-------|----------|-------|
+| 0 | Industry Insights | Global LED Market to Triple by 2034 | 320.1px (93.6%) | **1** |
+| 1 | Exhibition Information | Outdoor and Tech Light Expo 2026, Hong Kong | 314.8 + 99.3px | 2 |
+| 2 | Case Studies | SolarOne FL6M-480W Light Up Tianjin Binhai International Airport | 341.5 + 233.0px | 2 |
+
+Type itself is a single source with zero per-card overrides: title Inter 600
+19px/1.30, summary Inter 400 14.5px/1.60, meta and footer IBM Plex Mono. v1.10.12's
+`test_no_per_card_modifier_class_exists` already bans any `news-card--*` selector,
+so nothing can restyle an individual card.
+
+But the title *block* was 1 / 2 / 2 lines. Card 0's title box is 24.7px shorter
+than its neighbours', which reads as dead air between its summary and "Read
+article" — the same class of complaint as the Featured pill, one level down.
+
+### The change
+
+Pure CSS, no copy touched, all six languages inherit it:
+
+```css
+.news-card-title   { min-height: 49.4px; min-height: 2lh; }
+.news-card-summary { min-height: 69.6px; min-height: 3lh; }
+```
+
+`2lh` tracks the `line-height` above it, so changing the type no longer
+desynchronises the floor; the px value is a fallback for engines without the `lh`
+unit. The summary gets the same treatment — all three clamp at three lines today,
+but a future one-line standfirst would otherwise become the odd card.
+
+### Guards (3 new, 71 → 74 in `tests_news_figures`)
+
+| test | pins |
+|------|------|
+| `test_title_block_reserves_two_lines` | `min-height: 2lh` inside the `.news-card-title` rule, and that the clamp is still 2 |
+| `test_summary_block_reserves_three_lines` | `min-height: 3lh` and clamp still 3 |
+| `test_the_reserved_heights_match_the_type_metrics` | the px fallback equals font-size × line-height × clamp |
+
+All three read the single rule block via a `_rule()` helper, so a `min-height`
+declared on some unrelated selector cannot satisfy them.
+
+**The metric guard caught a hole in itself.** Its first version compared the
+declared `min-height` against a hardcoded `49.4`. Raising the title to 22px left
+both sides reading 49.4 and the test stayed green while the floor no longer
+matched the type sitting on it — the docstring claimed it would fail, and it would
+not. A mutation probe caught it: the guard now parses `font-size`, `line-height`
+and `-webkit-line-clamp` out of the stylesheet and does the arithmetic itself.
+
+### Verification
+
+- `pages.tests_news_figures` **74 tests, all green** (was 71).
+- **Mutation probe 7/7 red**: dropping the floor · `2lh`→`1lh` · removing only the
+  px fallback · title 19px→22px · title clamp 2→3 · summary floor `3lh`→`2lh` ·
+  summary clamp 3→2. File restored byte-for-byte, md5 `e67d781d…` before and after.
+- **Rendered proof against the running preview, six languages**: cards 3,
+  title blocks 49.40px, summary blocks 69.60px, `featured` markers 0, identical
+  in en/fr/es/de/ru/ar. Served declarations confirmed as
+  `min-height: 49.4px then 2lh` and `min-height: 69.6px then 3lh`.
+- `tests_news_figures` + `tests_qa_bgroup` **88 tests, all green**.
+
+### Notes
+
+- The full suite was not run to completion: `pages.tests.RuntimeSchemaBootstrapTests`
+  takes 30.8s on its own (it shells out to `migrate`) and the run had been hanging
+  past 20 minutes, twice. That cost predates this change; the news and QA groups
+  that cover it were run instead.
+- Standalone Django `Client()` scripts hang in this workspace — the preview server
+  holds the sqlite write lock and `VisitorTrackingMiddleware` writes on every
+  front-end GET. Hit the running server with `curl` instead.
+- `DEBUG` is False locally, so templates are cached: `runserver --noreload` must be
+  restarted by hand before a rendered check sees a template edit.
+
 ## v1.10.12 - 2026-10-04
 
 ## Three identical cards on /news/

@@ -487,6 +487,79 @@ class NewsCardUniformSizeTests(SimpleTestCase):
             self.assertIn(value, {'767', '1024', '1199'},
                           f'{value}px 不在 N-31 断点白名单里')
 
+    # ── v1.10.13: the title block reserves the same number of lines for every
+    #    card, so a short title no longer leaves a hole above the summary.
+    # ──────────────────────────────────────────────────────────────────────
+    def _rule(self, selector):
+        """The declaration block for `selector`, comments already stripped.
+
+        Scoped to the single rule on purpose. `assertIn('2lh', css)` would also
+        be satisfied if some unrelated selector ever declared it.
+        """
+        css = self._css()
+        block = re.search(
+            re.escape(selector) + r'\s*\{(.*?)\}', css, re.S)
+        self.assertIsNotNone(block, f'找不到 {selector} 规则')
+        return block.group(1)
+
+    def test_title_block_reserves_two_lines(self):
+        """A one-line title must occupy the same height as a two-line one.
+
+        Measured against the real Inter metrics at the 342px content box:
+        "Global LED Market to Triple by 2034" sets at 320.1px and breaks once,
+        the other two titles need two lines. Without a floor the first card's
+        title block is 24.7px shorter and the card reads as the odd one out —
+        the exact complaint that took three grid regressions to pin down.
+
+        The px value is only a fallback for engines without `lh`; `2lh` is what
+        actually applies and it must be present so the floor follows any future
+        change of font-size or line-height.
+        """
+        block = self._rule('.news-card-title')
+        self.assertIn('min-height: 2lh', block,
+                      '标题块没有预留两行高度，短标题会比邻位矮一行')
+        self.assertIn('-webkit-line-clamp: 2', block,
+                      '标题 clamp 行数变了，行高下限必须同步')
+
+    def test_summary_block_reserves_three_lines(self):
+        block = self._rule('.news-card-summary')
+        self.assertIn('min-height: 3lh', block,
+                      '摘要块没有预留三行高度，将来出现单行摘要就会错位')
+        self.assertIn('-webkit-line-clamp: 3', block,
+                      '摘要 clamp 行数变了，行高下限必须同步')
+
+    def test_the_reserved_heights_match_the_type_metrics(self):
+        """The px fallback must equal font-size x line-height x clamp.
+
+        Every operand is parsed out of the stylesheet rather than hardcoded.
+        That distinction is the whole test: a first version compared the
+        declared `min-height` against a literal `49.4`, which means bumping the
+        title to 22px left both sides reading 49.4 and the test stayed green
+        while the floor no longer matched the type sitting on it. A mutation
+        probe caught exactly that. Parse the metrics, then do the arithmetic.
+        """
+        for selector in ('.news-card-title', '.news-card-summary'):
+            block = self._rule(selector)
+
+            size = re.search(r'font-size:\s*([\d.]+)px', block)
+            leading = re.search(r'line-height:\s*([\d.]+)', block)
+            clamp = re.search(r'-webkit-line-clamp:\s*(\d+)', block)
+            found = re.search(r'min-height:\s*([\d.]+)px', block)
+            for pattern, what in ((size, 'font-size'), (leading, 'line-height'),
+                                  (clamp, '-webkit-line-clamp'),
+                                  (found, 'min-height 兜底值')):
+                self.assertIsNotNone(
+                    pattern, f'{selector} 规则里找不到 {what}')
+
+            want = (float(size.group(1)) * float(leading.group(1))
+                    * int(clamp.group(1)))
+            got = float(found.group(1))
+            self.assertAlmostEqual(
+                got, want, delta=0.05,
+                msg=(f'{selector} 的 min-height 兜底 {got}px 与排版不符：'
+                     f'{size.group(1)}px x {leading.group(1)} '
+                     f'x {clamp.group(1)} = {want}px'))
+
 
 class NewsDetailFigureLayoutTests(SimpleTestCase):
     """v1.10.5 / v1.10.8 — body figures render at a fixed share of the column,

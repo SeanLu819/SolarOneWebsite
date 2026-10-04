@@ -170,16 +170,29 @@
   }
   .news-card-category { color: var(--accent); font-weight: 600; }
   .news-card-date { color: var(--ink-mute); }
+  /* v1.10.13 — reserve two lines for the title whether it uses one or two.
+     Measured against the real Inter hmtx advance widths at the 342px content
+     box: "Global LED Market to Triple by 2034" sets solid at 320.1px on one
+     line, the other two titles need two. Without a floor the first card's
+     title block is 24.7px shorter than its neighbours', which shows up as dead
+     air between its summary and "Read article". `2lh` tracks the line-height
+     above, so changing the type no longer desynchronises the floor; the px
+     fallback covers browsers without the `lh` unit. */
   .news-card-title {
     font-family: var(--ff-display); font-size: 19px; font-weight: 600;
     color: var(--ink); letter-spacing: -0.01em; line-height: 1.3;
     margin-bottom: 10px;
+    min-height: 49.4px; min-height: 2lh;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  /* Same floor for the summary. All three happen to clamp at three lines
+     today; a future one-line standfirst would otherwise be the card that
+     looks wrong. */
   .news-card-summary {
     font-size: 14.5px; line-height: 1.6; color: var(--ink-mute);
     margin-bottom: 4px;
+    min-height: 69.6px; min-height: 3lh;
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
     overflow: hidden;
   }
