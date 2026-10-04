@@ -3470,25 +3470,8 @@
       "title": "Global LED Market to Triple by 2034",
       "category": "Industry Insights",
       "summary": "Global LED lighting market put at USD 109.11 billion in 2025, forecast to reach USD 336.90 billion by 2034 at a 13.40% CAGR, led by Asia Pacific at 54.4%.",
-      "content": "Fortune Business Insights puts the global LED lighting market at USD 109.11 billion in 2025 and forecasts it at USD 336.90 billion by 2034, a compound annual growth rate of 13.40% across 2026-2034. That is close to three times the 2025 market, and the report expects tighter efficiency rules, retrofit programmes and smart controls to keep the curve steep. {{figure:chart-global-market-size.webp}}\n\nAsia Pacific is the largest region by revenue and also the fastest growing. It accounted for USD 59.35 billion, or 54.40% of the 2025 market, against USD 23.45 billion (21.50%) for North America and USD 17.03 billion (15.60%) for Europe. On the 2026 forecast the United States leads at USD 18.37 billion, followed by China at USD 16.37 billion and Japan at USD 14.64 billion. {{figure:chart-by-region-2025.webp}}\n\nThe type split is led by SMD LEDs at 21.49% of 2026 revenue, valued for compact size and even, consistent output on street and public-space lighting. OLEDs are the fastest-growing type, pulled by high contrast, deep blacks and fast response - the combination that sports venues and display users ask for. By application, illumination and lighting held 42.68%, ahead of display and signage as the fastest-growing application. By industry, consumer electronics led with 35.64% on LCD backlighting, VR and OLED demand, while automotive is forecast to grow fastest as DRLs and vehicle lighting move to LED. {{figure:chart-by-segment-2026.webp}} {{figure:led-lighting-market-2034-smd-leds.webp}}\n\nWhat still decides the pace is money. Upfront purchase and installation costs sit above those of CFL lighting, which can slow uptake for suburban buyers and municipal projects. Against that, LED lifetimes of 25,000 hours or more, mercury-free construction and falling component prices keep working in favour, and AI plus smart sensors have moved from novelty to standard practice - occupancy dimming, daylight harvesting and predictive maintenance are now cited as ordinary specification items. {{figure:led-lighting-market-2034-street-lighting.webp}}\n\nFor anyone planning a stadium, roadway or industrial upgrade, the practical read is that LED has stopped being a premium decision and become a replacement decision: the case rests on energy and maintenance savings over a decade rather than on the fixture price alone.\n\nSource: Fortune Business Insights, LED Lighting Market Size, Share And Growth Report, 2034 (report FBI106832, last updated 14 September 2026). This article is an independent summary of the figures the publisher publishes on that page; the regional breakdown adds up to the stated 2025 market total.",
-      "image": "images/news/global-led-lighting-market-2034/led-lighting-market-2034-hero.webp",
+      "content": "Fortune Business Insights puts the global LED lighting market at USD 109.11 billion in 2025 and forecasts it at USD 336.90 billion by 2034, a compound annual growth rate of 13.40% across 2026-2034. That is close to three times the 2025 market, and the report expects tighter efficiency rules, retrofit programmes and smart controls to keep the curve steep. {{figure:chart-global-market-size.webp}}\n\nAsia Pacific is the largest region by revenue and also the fastest growing. It accounted for USD 59.35 billion, or 54.40% of the 2025 market, against USD 23.45 billion (21.50%) for North America and USD 17.03 billion (15.60%) for Europe. On the 2026 forecast the United States leads at USD 18.37 billion, followed by China at USD 16.37 billion and Japan at USD 14.64 billion. {{figure:chart-by-region-2025.webp}}\n\nThe type split is led by SMD LEDs at 21.49% of 2026 revenue, valued for compact size and even, consistent output on street and public-space lighting. OLEDs are the fastest-growing type, pulled by high contrast, deep blacks and fast response - the combination that sports venues and display users ask for. By application, illumination and lighting held 42.68%, ahead of display and signage as the fastest-growing application. By industry, consumer electronics led with 35.64% on LCD backlighting, VR and OLED demand, while automotive is forecast to grow fastest as DRLs and vehicle lighting move to LED. {{figure:chart-by-segment-2026.webp}}\n\nWhat still decides the pace is money. Upfront purchase and installation costs sit above those of CFL lighting, which can slow uptake for suburban buyers and municipal projects. Against that, LED lifetimes of 25,000 hours or more, mercury-free construction and falling component prices keep working in favour, and AI plus smart sensors have moved from novelty to standard practice - occupancy dimming, daylight harvesting and predictive maintenance are now cited as ordinary specification items.\n\nFor anyone planning a stadium, roadway or industrial upgrade, the practical read is that LED has stopped being a premium decision and become a replacement decision: the case rests on energy and maintenance savings over a decade rather than on the fixture price alone.\n\nSource: Fortune Business Insights, LED Lighting Market Size, Share And Growth Report, 2034 (report FBI106832, last updated 14 September 2026). This article is an independent summary of the figures the publisher publishes on that page; the regional breakdown adds up to the stated 2025 market total.",
       "images": [
-        {
-          "image": "images/news/global-led-lighting-market-2034/led-lighting-market-2034-smd-leds.webp",
-          "alt": "Close-up of high-power LED chips mounted on an aluminium heat-sink substrate",
-          "caption": "SMD LEDs are the largest single type segment in the report",
-          "order": 1,
-          "width": 1280,
-          "height": 720
-        },
-        {
-          "image": "images/news/global-led-lighting-market-2034/led-lighting-market-2034-street-lighting.webp",
-          "alt": "Night view of a city boulevard lit by modern LED street lighting",
-          "caption": "Municipal retrofit programmes are one of the cited demand drivers",
-          "order": 2,
-          "width": 1280,
-          "height": 720
-        },
         {
           "image": "images/news/global-led-lighting-market-2034/chart-global-market-size.webp",
           "alt": "SolarOne chart of the global LED lighting market, rising from USD 109.11 billion in 2025 to a forecast USD 336.90 billion in 2034, with the path between the two compounded at the reported 13.40% CAGR. The 2025 and 2034 values are the figures the report states; the years between them follow that CAGR.",
@@ -3522,7 +3505,8 @@
         "de": {},
         "ru": {},
         "ar": {}
-      }
+      },
+      "image": ""
     },
     {
       "slug": "low-cct-high-cri-high-mast-led-retrofit",

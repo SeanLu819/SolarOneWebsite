@@ -142,7 +142,7 @@ ART = 'global-led-lighting-market-2034'
 
 
 class NewsInBodyFigureTests(TestCase):
-    """The shipped market article must actually interleave its five figures."""
+    """The shipped market article must actually interleave every figure it carries."""
 
     @classmethod
     def setUpTestData(cls):
@@ -293,6 +293,13 @@ class NewsDetailFigureRenderTests(NewsInBodyFigureTests):
     """
 
     def test_figures_render_inside_the_body_not_above_it(self):
+        """Derived from the article, never hard-coded to a count.
+
+        v1.10.4 shipped this with `5` / `4` written into the assertion, which
+        broke the moment the article lost three photos (v1.10.6). The count the
+        page should show *is* the gallery length, so read it from there:
+        hard-coding it only converts a content edit into a test edit.
+        """
         resp = self.client.get(f'/news/{ART}/', HTTP_HOST='localhost')
         self.assertEqual(200, resp.status_code)
         html = resp.content.decode('utf-8')
@@ -304,26 +311,32 @@ class NewsDetailFigureRenderTests(NewsInBodyFigureTests):
                       '正文里没有 figure —— 图仍被渲染在正文上方')
         self.assertNotIn('{{figure:', html,
                          'marker 泄漏到页面上了')
-        # Every gallery photo must sit in the body. The top grid keeps the
-        # cover only (it is the article's own image, and the og:image), so it
-        # must not still hold any *gallery* photo.
-        top = re.search(
-            r'<div class="news-detail-media">(.*?)</div>', html, re.S)
-        self.assertIsNotNone(top, '顶部封面网格没渲染 —— 封面图丢失')
-        self.assertNotIn('news-detail-media-cell', top.group(1).replace(
-            'news-detail-media-cell news-detail-media-cell--large', ''),
-            '顶部网格里还留着图集照片，说明有图没落进正文')
+
+        expected = len(self.row.images.all())
+        self.assertGreater(expected, 0, '这篇已经没有图集了，守卫失去意义')
         self.assertEqual(
-            5, inner.count('class="news-detail-figure"'),
-            '正文内的图数量不对')
+            expected, inner.count('class="news-detail-figure"'),
+            '正文内的图数量与图集条目数不一致')
         # Text and figures must interleave, not figure-after-figure.
         # Counted with `re.S` because the <figure> open tag spans several lines
         # (each conditional attribute gets its own line), so a `.` without it
         # cannot cross the tag.
         preceded = len(re.findall(r'</p>\s*<figure', inner, re.S))
         self.assertEqual(
-            4, preceded,
-            f'只有 {preceded}/5 张图紧跟在段落之后，正文没有真正交错')
+            expected, preceded,
+            f'只有 {preceded}/{expected} 张图紧跟在段落之后，正文没有真正交错')
+        # The top grid is the cover's, and only renders while a cover exists.
+        # v1.10.6: this article's three photographs were removed, so it has no
+        # cover -- an empty 16:9 shell would be worse than no grid at all.
+        top = re.search(
+            r'<div class="news-detail-media">(.*?)</div>', html, re.S)
+        if top:
+            self.assertIn('news-detail-media-cell--large', top.group(1),
+                          '顶部网格渲染了却没有封面')
+            rest = top.group(1).replace(
+                'news-detail-media-cell news-detail-media-cell--large', '')
+            self.assertNotIn('<figure class="news-detail-media-cell"', rest,
+                             '顶部网格里混进了图集照片，说明有图没落进正文')
         # And the first figure must not be a bare stack at the very top: the
         # market-size paragraph is what introduces it.
         self.assertNotRegex(

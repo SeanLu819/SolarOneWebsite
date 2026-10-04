@@ -1478,3 +1478,27 @@ Mutation probe 7/7 red (half-width reverted, centring removed, height pinned,
 `object-fit` added, hero also halved, caption uncentred, 767 override removed).
 Full regression 562 tests / 32 failures / 1 skipped — the 32 are the pre-existing
 content backlog, no new ones.
+
+## v1.10.6 - 2026-10-04
+
+## The market article keeps only its three charts
+
+Editor removed the three stock photographs from `global-led-lighting-market-2034`
+and wants the article to carry nothing but the three generated bar charts: the
+market-size chart, the regional split for 2025 and the segment split for 2026.
+
+- Dropped the cover (`led-lighting-market-2034-hero.webp`) and the two in-body
+  photos (`-smd-leds`, `-street-lighting`) — from the gallery list, from the
+  body copy's `{{figure:…}}` markers, and from the article's cover field.
+- The article now has **no cover**, so the top media grid renders nothing at
+  all rather than an empty 16:9 shell; the page opens straight into the first
+  paragraph and its chart.
+- The key stays in `seed_data.json` as `''` rather than being dropped: the test
+  fixture indexes `article['image']`, and a DB→JSON export of an empty cover
+  writes `''` anyway — so deleting it makes the two shapes disagree.
+- `/news/` still shows a cover slot for this article; it now renders the existing
+  `.news-card-cover-fallback` placeholder block.
+
+Guard: `NewsDetailFigureRenderTests` no longer hard-codes `5`/`4` — the expected
+figure count is read from the article's own gallery, so the next content edit
+does not turn into a test edit.
