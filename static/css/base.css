@@ -716,6 +716,12 @@
   .hero-slide.active {
     opacity: 1;
   }
+  /* v1.10.1: base.html 的轮播会在切帧时给 <img> 赋 src（首屏预算），
+     data-src 阶段元素还没有图片源，visibility:hidden 保证 alt 文本/破损
+     图标不会在淡入前露头。与 opacity:0 叠加只是双保险。 */
+  .hero-slide:not(.active) {
+    visibility: hidden;
+  }
   [data-theme="light"] .hero-slide {
     filter: brightness(0.95);
   }

@@ -505,9 +505,29 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     let current = 0;
     const interval = 5000; // 5s per slide
 
+    // v1.10.1: slides 2..n ship as data-src only. A position:absolute + inset:0
+    // <img> is always inside the viewport, so native loading="lazy" never fired
+    // for them — expensive full-bleed JPEGs loaded on every home-page view.
+    // The <picture><source data-srcset> MUST be filled before <img src> is set,
+    // otherwise the mobile portrait crop is skipped (the img would already have
+    // resolved its own srcset).
+    function ensureLoaded(slide) {
+      if (slide.dataset.loaded) return;
+      slide.dataset.loaded = '1';
+      const picture = slide.parentElement;
+      if (picture) {
+        picture.querySelectorAll('source[data-srcset]').forEach(function (s) {
+          s.setAttribute('srcset', s.dataset.srcset);
+        });
+      }
+      if (slide.dataset.srcset) slide.setAttribute('srcset', slide.dataset.srcset);
+      if (slide.dataset.src) slide.setAttribute('src', slide.dataset.src);
+    }
+
     function next() {
       slides[current].classList.remove('active');
       current = (current + 1) % slides.length;
+      ensureLoaded(slides[current]);
       slides[current].classList.add('active');
     }
 
@@ -516,6 +536,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     // "Reduce Motion" on — a WCAG 1.1.1 failure caused by the N-8 fix itself.
     // Reduced-motion only suppresses the cross-fade; see the CSS media query.
     setInterval(next, interval);
+
+    // Warm the NEXT frame while the browser is idle, so the 1.2s cross-fade is
+    // never played over an empty <img>. Still off the first-screen budget:
+    // this fires after LCP, not during it.
+    const warm = function () { ensureLoaded(slides[(current + 1) % slides.length]); };
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(warm, { timeout: 3000 });
+    } else {
+      setTimeout(warm, 1200);
+    }
   })();
 </script>
 

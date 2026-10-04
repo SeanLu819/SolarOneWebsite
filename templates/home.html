@@ -21,7 +21,10 @@
         可见内容从改造前的约 27% 提升到接近 100%。
       · >=768px 走原有 16:9 横版，桌面/平板观感不变。
       · 首图不加 loading="lazy"（LCP 图片），并标记 fetchpriority=high；
-        第 2/3 张保持 lazy。
+      · 第 2/3 张走 data-src / data-srcset（延迟到轮播接近时才由 base.html 的
+        轮播脚赋值），首屏不再下载那两张全屏图（原 541.9KB → 74.9KB）。
+        注意：.hero-slide 是 position:absolute + inset:0，永远在视口内，
+        loading="lazy" 对它们无效 —— 所以才改用 data-src 而非只加 lazy。
       · 不再写 width/height：.hero-slide 是 position:absolute + inset:0，
         尺寸完全由 CSS 决定，写死的属性反而会给出错误的宽高比提示。
 
@@ -36,18 +39,18 @@
              alt="LED sports stadium lighting" class="hero-slide active" fetchpriority="high" decoding="async">
       </picture>
       <picture>
-        <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-2-portrait.webp' %}" type="image/webp">
-        <img src="{% static 'images/hero-main-2.webp' %}"
-             srcset="{% static 'images/hero-main-2-1280.webp' %} 1280w, {% static 'images/hero-main-2.webp' %} 1920w"
+        <source media="(max-width: 767px)" data-srcset="{% static 'images/hero-main-2-portrait.webp' %}" type="image/webp">
+        <img data-src="{% static 'images/hero-main-2.webp' %}"
+             data-srcset="{% static 'images/hero-main-2-1280.webp' %} 1280w, {% static 'images/hero-main-2.webp' %} 1920w"
              sizes="(min-width: 1200px) 1920px, 1280px"
-             alt="Football field LED lighting" class="hero-slide" loading="lazy" decoding="async">
+             alt="Football field LED lighting" class="hero-slide" decoding="async">
       </picture>
       <picture>
-        <source media="(max-width: 767px)" srcset="{% static 'images/hero-main-3-portrait.webp' %}" type="image/webp">
-        <img src="{% static 'images/hero-main-3.webp' %}"
-             srcset="{% static 'images/hero-main-3-1280.webp' %} 1280w, {% static 'images/hero-main-3.webp' %} 1920w"
+        <source media="(max-width: 767px)" data-srcset="{% static 'images/hero-main-3-portrait.webp' %}" type="image/webp">
+        <img data-src="{% static 'images/hero-main-3.webp' %}"
+             data-srcset="{% static 'images/hero-main-3-1280.webp' %} 1280w, {% static 'images/hero-main-3.webp' %} 1920w"
              sizes="(min-width: 1200px) 1920px, 1280px"
-             alt="Industrial LED high bay lighting" class="hero-slide" loading="lazy" decoding="async">
+             alt="Industrial LED high bay lighting" class="hero-slide" decoding="async">
       </picture>
     </div>
   </div>

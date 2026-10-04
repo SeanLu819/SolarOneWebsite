@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.1 - 2026-10-04
+
+## Stop downloading the two hidden hero slides on every homepage view
+
+`.hero-slide` is `position:absolute; inset:0` — permanently inside the viewport —
+so the `loading="lazy"` attribute that slides 2 and 3 carried had **no effect**.
+Chrome fetched all three full-bleed images on every homepage view. Measured
+weight of the two invisible slides: 467 KB, i.e. 86% of the 541.9 KB first-screen
+image budget (measurements in `docs/home-image-size-analysis.md`).
+
+* `templates/home.html` — slides 2 and 3 now ship `data-src` / `data-srcset`,
+  the `<picture><source>` portrait variant included: leaving that one eager
+  would still pull the mobile crop on load.
+* `templates/base.html` — the carousel fills the deferred attributes through
+  `ensureLoaded()`, always `<source>` before `<img src>` (otherwise the mobile
+  3:4 crop is skipped), and warms the next frame inside `requestIdleCallback`
+  so the 1.2s cross-fade never plays over an empty `<img>`.
+* `static/css/base.css` — `.hero-slide:not(.active) { visibility: hidden }` so
+  a not-yet-filled frame cannot flash its alt text.
+
+Slide 1 keeps a real `src` plus `fetchpriority="high"` (it is the LCP image),
+and with JavaScript disabled the homepage looks exactly as it did before.
+First-screen image weight drops from 541.9 KB to 74.9 KB.
+
+Guarded by `pages/tests_static_assets.py::HeroDeferredSlideLoadingTests` (5
+cases). Each case was mutation-probed: restoring a bare `src`, dropping
+`setAttribute('src')`, or removing the `:not(.active)` rule turns the suite red.
+The runtime behaviour was additionally verified in jsdom (13 assertions, 4
+scenarios: no-JS, `setTimeout` fallback, `requestIdleCallback`, exact URLs).
+
 ## v1.10.0 - 2026-10-04
 
 ## Retire the three keyword landing pages; replace them with real project collections

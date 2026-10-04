@@ -15,6 +15,7 @@ hero 首图。回退文件名必须与实际磁盘文件**逐字符一致**—�
 ``StaticDirListingSourceOfTruthTests``。
 """
 import os
+import re
 
 from pathlib import Path
 
@@ -152,3 +153,88 @@ class StaticDirListingSourceOfTruthTests(TestCase):
             utils._find_static(new),
             '减法误伤了真源文件（真源存在却被判 MISS）',
         )
+
+
+class HeroDeferredSlideLoadingTests(TestCase):
+    """首页 hero 第 2/3 张必须走 data-src 延迟加载（v1.10.1）。
+
+    ``.hero-slide`` 是 ``position:absolute; inset:0`` —— 元素永远在视口内，
+    只靠 ``opacity:0`` 隐藏。于是 ``loading="lazy"`` 对它们**完全无效**：
+    首屏一次就下载三张全屏图（实测 541.9KB，其中 86% 首屏不可见）。
+    本组守卫把「第 2/3 张不得有裸 src」和「轮播必须真的补上 src」焊死，
+    防止有人手滑把 src 写回去把 lazy 的谎圆上。
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        # -*- coding: utf-8 无关；模板里是 ASCII 属性名 + 中文字典常量
+        cls.home = Path(settings.BASE_DIR, 'templates', 'home.html'
+                        ).read_text(encoding='utf-8')
+        cls.base = Path(settings.BASE_DIR, 'templates', 'base.html'
+                        ).read_text(encoding='utf-8')
+        cls.css = Path(settings.BASE_DIR, 'static', 'css', 'base.css'
+                       ).read_text(encoding='utf-8')
+
+    def _pictures(self):
+        return re.findall(r'<picture>.*?</picture>', self.home, re.DOTALL)
+
+    def _attrs(self, snippet):
+        return (re.findall(r'<source[^>]*>', snippet) or [''])[0], \
+            (re.findall(r'<img[^>]*>', snippet) or [''])[0]
+
+    @staticmethod
+    def _has_real_attr(pattern, text):
+        """``\\s`` 前缀必须保留：``data-src="`` 里含子串 ``src="``，
+        裸 assertNotIn 会把每个延迟属性都误判成裸属性。"""
+        return re.search(pattern, text) is not None
+
+    def test_home_hero_has_three_pictures(self):
+        self.assertEqual(len(self._pictures()), 3,
+                         'hero 图片结构变了，本组用例需复核')
+
+    def test_slide_one_keeps_a_real_src_for_the_lcp_image(self):
+        # 首图是 LCP：不能延迟，否则无 JS 时首屏空白
+        _, img = self._attrs(self._pictures()[0])
+        self.assertTrue(self._has_real_attr(r'\ssrc="', img),
+                        '首图不再是静态 src，无 JS 时首屏会空白')
+        self.assertIn('hero-slide active', img, '首图丢了 active 类')
+        self.assertIn('fetchpriority="high"', img, '首图丢了 fetchpriority')
+
+    def test_slides_two_and_three_are_deferred(self):
+        for idx, pic in enumerate(self._pictures()[1:], start=2):
+            source, img = self._attrs(pic)
+            # 真实 src/srcset 会让浏览器立刻下载；\s 前缀保证只命中裸属性，
+            # 不被 data-src= / data-srcset= 骗到
+            self.assertFalse(self._has_real_attr(r'\ssrc="', img),
+                             f'hero-{idx} 又写了裸 src，首屏预算白省')
+            self.assertFalse(self._has_real_attr(r'\ssrcset="', img),
+                             f'hero-{idx} 又写了裸 srcset，首屏预算白省')
+            self.assertIn('data-src=', img,
+                          f'hero-{idx} 没有 data-src，轮播无从取值')
+            self.assertIn('data-srcset=', img,
+                          f'hero-{idx} 缺 data-srcset（桌面分档会退化成 1920w）')
+            # 竖版 <source> 同样是下载入口，漏延迟 = 手机端仍然一进页面就下载
+            self.assertIn('data-srcset=', source,
+                          f'hero-{idx} 的竖版 <source> 未改为 data-srcset')
+            self.assertFalse(self._has_real_attr(r'\ssrcset="', source),
+                             f'hero-{idx} 的竖版 <source> 仍在立即下载')
+            # 旧的失效写法不许复活
+            self.assertNotIn('loading="lazy"', img,
+                             f'hero-{idx} 的 loading=lazy 对 absolute 元素无效，'
+                             f'应改 data-src')
+
+    def test_carousel_restores_src_before_it_hides_the_slide(self):
+        js = self.base
+        self.assertIn('function ensureLoaded', js, '轮播不再补 src')
+        self.assertIn("setAttribute('src'", js, 'ensureLoaded 没给 img 赋值')
+        # 顺序铁律：<source> 的竖版 srcset 必须先就位，否则手机端跳过 3:4 裁剪
+        self.assertLess(
+            js.find("source[data-srcset]"), js.find("setAttribute('src'"),
+            '轮播先给 <img> 赋 src 再补 <source>，手机端会跳过竖版裁剪',
+        )
+        self.assertIn('requestIdleCallback', js,
+                      '缺少下一帧预热，切帧时会淡入一张空图')
+
+    def test_hidden_inactive_slides_cannot_flash_alt_text(self):
+        self.assertIn('.hero-slide:not(.active)', self.css,
+                      '缺 visibility 兜底，未加载帧可能露出 alt 文本')

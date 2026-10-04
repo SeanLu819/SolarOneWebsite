@@ -40,7 +40,13 @@ home-preview 两张按显示宽度重编码的模拟（DPR1，608px）：
 
 ## 3. 发现与建议
 
-### 🔴 建议 1（收益最大，且不降任何分辨率）：首屏只下载第 1 张 hero
+### ✅ 建议 1（收益最大，且不降任何分辨率）：首屏只下载第 1 张 hero — **v1.10.1 已实施**
+
+> **实施记录（v1.10.1, 2026-10-04）**：按下方方案落地，另加两处原文没写的必要修正 ——
+> ① 竖版 `<source>` 也必须退成 `data-srcset`（否则手机端照样一进页面就下载 portrait 图）；
+> ② 轮播脚本在 `requestIdleCallback` 里**预热下一帧**，否则 5s 后切帧会淡入一张空图。
+> 守卫 `pages/tests_static_assets.py::HeroDeferredSlideLoadingTests`（5 例，全部做过变异探针）。
+> 线上验证：待 push 后用 `scripts/e2e/perf_probe.py` + Chrome DevTools 复核首屏请求数。
 
 **问题**：`home.html:43/50` 的 hero-2 / hero-3 虽然写了 `loading="lazy"`，但 `.hero-slide` 是
 `position:absolute; inset:0` 的**全屏元素** —— 它们始终在视口内（只是 `opacity:0`），
