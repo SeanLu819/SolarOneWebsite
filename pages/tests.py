@@ -3763,12 +3763,25 @@ class P2SectionLabelTests(SimpleTestCase):
         self.assertIn('object-fit: cover', self.news_detail)
 
     def test_list_card_covers_render_the_uniform_16x9_contract(self):
-        """列表卡片封面统一 16:9 —— 改版后 object-fit: cover 是故意的。"""
+        """列表卡片封面统一 16:9，且用 `contain` 完整展示、不裁切。
+
+        契约在 v1.10.11 被反转。原先是 `cover`：HKTEX 2026 香港展封面换成了
+        一张自带白边的图（16:9 画布里嵌 3.167:1 字标条，左右各留 89/95px）。
+        `cover` 会把画布缩放到填满卡片再裁掉约 5.6% —— 也就是把编辑刚加的
+        白边又裁没了，正是「恢复到完全展示出来」这条投诉的根因。
+        白边是**文件的一部分**，所以只有 `contain` 才能保证整张图可见。
+
+        详情页 bento 网格的 `cover` 是 v1.6.4 的刻意设计（见上一个用例），
+        容器 599x337.8 对 1.778 素材本就裁不到东西，两者不冲突。
+        """
         html = self.news
         self.assertIn(
             'aspect-ratio: 16 / 9', html,
             '列表卡片必须统一 16:9 封面（网格版式契约）')
-        self.assertIn('object-fit: cover', html)
+        self.assertIn('object-fit: contain', html)
+        self.assertNotIn(
+            'object-fit: cover', html,
+            '列表页不得再有 cover —— 自带白边的封面会被裁掉左右留白')
         # 反空洞：封面规则与卡片标记都得真实存在
         self.assertIn('.news-card-cover img', html)
         self.assertIn('class="news-card-cover"', html)

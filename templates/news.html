@@ -42,12 +42,15 @@
            pattern). Gallery photos render there, not here: list cards show one
            uniform 16:9 cover so the grid stays level.
 
-           v1.10.4: the latest article used to be a `news-card--featured` that
-           spanned two columns with a horizontal layout, so it rendered roughly
-           twice the size of every other card. Editors asked for one card size.
-           The class is kept as a hook (and the Featured pill still shows) but
-           it no longer changes geometry — see .news-grid / .news-card below. -->
-      <a class="news-card reveal{% if forloop.first and not news_active_category %} news-card--featured{% endif %}{% if forloop.counter0 >= 9 %} is-hidden{% endif %}"
+           v1.10.12: the latest article is no longer marked in any way. The
+           `news-card--featured` class is gone entirely — it once spanned two
+           columns (v1.10.4) and later carried a "Featured" pill, a 21px title
+           and a stronger border (through v1.10.11). All three made one card
+           read differently from its neighbours; the editor asked for "remove
+           Featured, make all three cards identical". The newest article is
+           distinguished by its date only. Do not reintroduce the class: a
+           per-card modifier is exactly what keeps re-breaking this grid. -->
+      <a class="news-card reveal{% if forloop.counter0 >= 9 %} is-hidden{% endif %}"
          href="{% url 'news_detail' article.slug %}">
         <div class="news-card-cover">
           {#v1.10.8: an article may have no cover of its own (the market article carries charts only). The gradient placeholder read as "this card has no picture" — an editor flagged it as an invisible cover. Fall back to the first gallery image, which is a real illustration of the article. Same fallback order as `social_image_url` in data_loaders, so the card, og:image and JSON-LD all show the same picture. #}
@@ -60,9 +63,6 @@
           {% endif %}
         </div>
         <div class="news-card-body">
-          {% if forloop.first and not news_active_category %}
-          <span class="news-card-flag">{% trans "Featured" %}</span>
-          {% endif %}
           <div class="news-card-meta">
             <span class="news-card-category">{{ article.category_label|default:article.category }}</span>
             <span class="news-card-date">{{ article.published_at|date:"Y-m-d" }}</span>
@@ -143,8 +143,15 @@
   .news-card-cover {
     aspect-ratio: 16 / 9; overflow: hidden; background: var(--bg-raised);
   }
+  /* v1.10.11: `contain`, not `cover`. The HKTEX cover is a 3.167:1 wordmark
+     strip inside a 16:9 canvas that already carries its own white border
+     (89/95px per side). `cover` would scale it to fill and slice ~5.6% off
+     each side -- the editor's complaint: "restore it to fully visible,
+     shrink it so the card shows the whole picture". `contain` shows every
+     pixel and letterboxes on the container background. Covers of the exact
+     container ratio (the other two articles) are unaffected. */
   .news-card-cover img {
-    display: block; width: 100%; height: 100%; object-fit: cover;
+    display: block; width: 100%; height: 100%; object-fit: contain;
     transition: transform 0.5s;
   }
   .news-card:hover .news-card-cover img { transform: scale(1.04); }
@@ -155,13 +162,6 @@
   .news-card-body {
     display: flex; flex-direction: column; flex: 1;
     padding: 20px 22px 24px;
-  }
-  .news-card-flag {
-    align-self: flex-start;
-    font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--accent);
-    background: var(--accent-soft); border: 1px solid var(--accent-glow);
-    border-radius: 99px; padding: 3px 10px; margin-bottom: 12px;
   }
   .news-card-meta {
     display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
@@ -191,13 +191,16 @@
   .news-card-more-arrow { margin-left: 6px; display: inline-block; }
   html[dir="rtl"] .news-card-more-arrow { transform: scaleX(-1); }
 
-  /* Featured: v1.10.4 the latest article is marked with a pill but is NO LONGER
-     a different size. It previously spanned two columns with a side-by-side
-     layout and a 300px-minimum cover, which made it roughly twice the area of
-     every other card. The `span 2` / `flex-direction: row` rules are gone on
-     purpose — do not reintroduce them; the grid must stay one uniform size. */
-  .news-card--featured { border-color: var(--line-strong); }
-  .news-card--featured .news-card-title { font-size: 21px; }
+  /* Featured: gone in v1.10.12. The latest article used to be marked with a
+     "Featured" pill, a 21px title and a stronger border while sharing the
+     others' geometry. The editor's report: "remove Featured, make all three
+     cards identical." The pill, the larger type and the border emphasis are
+     all removed — the newest article is now marked only by its date.
+
+     What must NOT come back, for the same reason as before: `grid-column:
+     span 2`, `flex-direction: row`, a `.news-card-cover` override and
+     `min-height: 300px`. Those made the card twice the area of its
+     neighbours; `NewsCardUniformSizeTests` guards all four. */
 
   /* ---- load more ---- */
   .news-loadmore { display: flex; justify-content: center; margin-top: 44px; }

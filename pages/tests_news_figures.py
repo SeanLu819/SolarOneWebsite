@@ -385,13 +385,82 @@ class NewsCardUniformSizeTests(SimpleTestCase):
         """
         return re.sub(r'/\*.*?\*/', '', self._template(), flags=re.S)
 
-    def test_featured_card_does_not_change_geometry(self):
+    def _markup(self):
+        """The template with every comment removed, CSS and Django alike.
+
+        Three comment syntaxes live in this file: HTML `<!-- -->`, the Django
+        `{# #}` single-line form, and CSS `/* */`. A guard that scans raw
+        source eventually collides with the prose explaining the very rule it
+        enforces — the notes that record *why* something was removed must name
+        it. Stripping comments makes `assertNotIn` mean "no executable code
+        does this" instead of "no human being ever wrote these words".
+        """
         src = self._template()
+        src = re.sub(r'<!--.*?-->', '', src, flags=re.S)   # HTML comments
+        src = re.sub(r'{#.*?#}', '', src, flags=re.S)      # Django {# #}
+        return re.sub(r'/\*.*?\*/', '', src, flags=re.S)   # CSS comments
+
+    def test_featured_card_does_not_change_geometry(self):
+        css = self._css()
         # The regression, stated as the exact rules that must not come back.
-        self.assertNotIn('grid-column: span 2', src)
-        self.assertNotIn('.news-card--featured { flex-direction: row', src)
-        self.assertNotIn('.news-card--featured .news-card-cover {', src)
-        self.assertNotIn('min-height: 300px', src)
+        # Asserted against comment-stripped CSS: the prose in `news.html`
+        # still names `span 2` and `flex-direction: row` while explaining that
+        # they are gone, and a whole-file scan would be satisfied by that prose
+        # (or tripped by it) instead of by the stylesheet.
+        self.assertNotIn('grid-column: span 2', css)
+        self.assertNotIn('.news-card--featured { flex-direction: row', css)
+        self.assertNotIn('.news-card--featured .news-card-cover {', css)
+        self.assertNotIn('min-height: 300px', css)
+
+    def test_no_card_is_marked_as_featured(self):
+        """v1.10.12 — the latest article carries no marker at all.
+
+        v1.10.4 kept the card geometrically uniform but left the "Featured"
+        pill, a 21px title and a stronger border, so one card in three still
+        read differently. Uniform *geometry* is not uniform *appearance*, and
+        the geometry guards above could not see any of it: a pill and a font
+        size are perfectly valid CSS.
+
+        Asserted negatively in three places on purpose — the markup, the
+        stylesheet and the class attribute — because each one alone can be
+        satisfied while the card still looks different:
+          * markup only  -> a `.news-card-flag` rule with no element
+          * CSS only     -> a pill that renders on nobody
+          * class only   -> `--featured` re-gaining a rule later
+
+        Every check runs against comment-stripped / tag-stripped text. The
+        explanatory comments in `news.html` necessarily spell out "Featured"
+        and `news-card--featured` to record why they are gone; scanning the
+        raw file would make this guard contradict its own documentation.
+        """
+        css = self._css()
+        markup = self._markup()
+
+        self.assertNotIn('{% trans "Featured" %}', markup,
+                         'Featured 徽标已移除，模板里不该再有它的 trans 调用')
+        self.assertNotIn('.news-card-flag', css,
+                         '.news-card-flag 样式已成死代码（无元素可挂）')
+        self.assertNotIn('news-card--featured', markup,
+                         'news-card--featured 已整体移除，别只删样式留 class')
+        self.assertNotIn('.news-card-title { font-size: 21px; }', css,
+                         'Featured 卡曾用 21px 标题，三张卡片必须同字号')
+
+    def test_no_per_card_modifier_class_exists(self):
+        """No selector may target an individual card by position.
+
+        This is the general form of the rule above. Each regression so far
+        arrived the same way — a `forloop.first` branch adding a class, and a
+        rule styling it — so the guard is on the *mechanism*: any
+        `news-card--*` modifier in the stylesheet is a card that is about to
+        stop matching its neighbours. State modifiers are legitimate in
+        principle, so the ban is on the stylesheet, where a modifier can only
+        exist in order to change how a card looks.
+        """
+        modifiers = set(re.findall(r'\.news-card--([a-z0-9-]+)', self._css()))
+        self.assertEqual(
+            modifiers, set(),
+            f'发现按位置区分卡片的修饰类 {sorted(modifiers)} —— '
+            '三张卡片必须完全一致，最新文章只靠日期区分')
 
     def test_grid_pins_a_uniform_row_height(self):
         css = self._css()
@@ -1055,24 +1124,42 @@ class NewsCategoryTaxonomyTests(SimpleTestCase):
 
 
 class NewsCoverCentringTests(SimpleTestCase):
-    """v1.10.10 — the cover must sit centred, and this is a pixel question.
+    """v1.10.10 / v1.10.11 — the cover must sit centred, and this is a pixel
+    question.
 
-    v1.10.9 scaled the whole 1470px screenshot and pasted it at x=0. The file's
-    alpha channel only covers x=2..775, so 695px -- 47% of the canvas -- was
-    transparent, and that transparent block was baked into the WebP as a white
-    slab on the right. An editor saw "the picture is too far left, there is a
-    lot of empty space on the right".
+    Two editors' complaints in a row, opposite in shape:
 
-    Geometry assertions cannot see that: the canvas *was* a clean 1600x900 and
-    `NewsCoverGeometryTests` stayed green. Only inked-pixel measurement catches
-    it, so this reads the decoded image rather than the file header.
+    * v1.10.9 scaled the whole 1470px screenshot and pasted it at x=0. The file's
+      alpha channel only covers x=2..775, so 695px -- 47% of the canvas -- was
+      transparent, and that transparent block was baked into the WebP as a
+      white slab on the right: "the picture is too far left, there is a lot of
+      empty space on the right".
+    * v1.10.11 took that literally and matted the strip to the *full* canvas
+      width, so the artwork touched both edges and read as cramped: "there is
+      white space on the left and right, it fills the frame too much" ->
+      "shrink it so the card shows the whole picture".
+
+    Geometry assertions cannot see either fault: in both cases the canvas *was*
+    a clean 1600x900 and `NewsCoverGeometryTests` stayed green. Only inked-pixel
+    measurement catches them, so this reads the decoded image, not the header.
+
+    The contract is therefore a *band*, not an edge: symmetric side margins,
+    large enough to read as deliberate padding, small enough that the wordmark
+    still fills the card. Both bounds are measured off the shipped file
+    (89px / 95px, i.e. 5.6% / 5.9% per side) with headroom in both directions.
     """
 
     #: Anything this close to white counts as bare canvas.
     BLANK = 250
-    #: Tolerance for antialiasing and lossy ringing at the content edge (the
-    #: measured cover sits at L=0 / R=1, i.e. off by one column).
-    MARGIN_TOLERANCE_PX = 4
+    #: Measured side margin on the shipped cover is 89px / 95px of 1600.
+    #: The floor keeps the padding deliberate; the ceiling keeps the 3.167:1
+    #: wordmark from shrinking into a stamp (the old file was 0px, the editor
+    #: asked for roughly 5%).
+    MIN_SIDE_MARGIN_PX = 40
+    MAX_SIDE_MARGIN_PX = 160
+    #: Symmetry tolerance. Lanczos ringing on the light edge measures 89 vs 95,
+    #: so 0.5% of the canvas (8px at 1600) rather than a hard pixel count.
+    SYMMETRY_TOLERANCE_FRACTION = 0.005
 
     def _cover(self):
         from pages.views.data_loaders import _load_seed
@@ -1100,20 +1187,25 @@ class NewsCoverCentringTests(SimpleTestCase):
         left, right, _top, _bottom, w, _h = self._content_box()
         left_margin, right_margin = left, w - 1 - right
         self.assertLessEqual(
-            abs(left_margin - right_margin), self.MARGIN_TOLERANCE_PX,
+            abs(left_margin - right_margin),
+            w * self.SYMMETRY_TOLERANCE_FRACTION,
             f'封面左右留白不对称：左 {left_margin}px / 右 {right_margin}px'
             '（v1.10.9 的故障模式：整图左对齐 + 右侧 47% 透明区）')
 
-    def test_the_content_actually_spans_the_canvas(self):
-        """Symmetry alone is satisfiable by a centred postage stamp. The cover
-        is a wide wordmark strip; it has to use the width it is given."""
+    def test_the_content_has_deliberate_side_margins(self):
+        """v1.10.11 reversed v1.10.10's "must span the canvas" rule: the editor
+        asked for breathing room at both sides. Asserted as a band so neither a
+        cropped edge-to-edge strip nor a shrunken stamp can pass."""
         left, right, _top, _bottom, w, _h = self._content_box()
-        self.assertLessEqual(
-            left, self.MARGIN_TOLERANCE_PX,
-            f'封面左侧空出 {left}px，横幅没有铺满画幅')
-        self.assertLessEqual(
-            w - 1 - right, self.MARGIN_TOLERANCE_PX,
-            f'封面右侧空出 {w - 1 - right}px，横幅没有铺满画幅')
+        for name, margin in (('left', left), ('right', w - 1 - right)):
+            with self.subTest(side=name):
+                self.assertGreaterEqual(
+                    margin, self.MIN_SIDE_MARGIN_PX,
+                    f'封面{name}边几乎贴边（{margin}px），没有留出呼吸空间')
+                self.assertLessEqual(
+                    margin, self.MAX_SIDE_MARGIN_PX,
+                    f'封面{name}边留白过大（{margin}px），'
+                    '横幅被缩得太小，在卡片上会看不清')
 
     def test_the_content_is_centred_vertically_too(self):
         """Same reason vertically: the strip is matted into 16:9, and a strip
@@ -1121,6 +1213,25 @@ class NewsCoverCentringTests(SimpleTestCase):
         _left, _right, top, bottom, _w, h = self._content_box()
         top_margin, bottom_margin = top, h - 1 - bottom
         self.assertLessEqual(
-            abs(top_margin - bottom_margin), self.MARGIN_TOLERANCE_PX + 6,
+            abs(top_margin - bottom_margin), h * 0.02,
             f'封面上下留白不对称：上 {top_margin}px / 下 {bottom_margin}px')
+
+    def test_the_card_does_not_crop_the_cover(self):
+        """The asset now carries its own white padding, so `object-fit: cover`
+        would still slice ~5.6% off each side -- the padding is part of the
+        file. Only `contain` satisfies "show the whole picture", and a CSS
+        assertion is the only thing that can see it.
+        """
+        src = (settings.BASE_DIR / 'templates' / 'news.html').read_text(
+            encoding='utf-8')
+        block = re.search(
+            r'\.news-card-cover img\s*\{(?P<body>[^}]*)\}', src)
+        self.assertIsNotNone(block, '.news-card-cover img 规则不见了')
+        body = block.group('body')
+        fit = re.search(r'object-fit:\s*(\w+)', body)
+        self.assertIsNotNone(fit, 'object-fit 声明不见了')
+        self.assertEqual(
+            'contain', fit.group(1),
+            f'卡片封面用 object-fit: {fit.group(1)} —— 会把素材自带的白边也裁掉，'
+            '与「完整展示、缩小到卡片能完整显示」的要求相反')
 

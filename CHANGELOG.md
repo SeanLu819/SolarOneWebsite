@@ -1454,6 +1454,193 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.12 - 2026-10-04
+
+## Three identical cards on /news/
+
+The editor's report, with the offending card circled: *"remove Featured, make
+all three cards identical."*
+
+**The whole marker is gone**, not just the pill. Through v1.10.11 the newest
+article was distinguished three ways at once:
+
+| what | where | removed |
+|---|---|---|
+| "Featured" pill | `<span class="news-card-flag">` in the card body | yes |
+| 21px title (others 19px) | `.news-card--featured .news-card-title` | yes |
+| stronger border | `.news-card--featured { border-color }` | yes |
+| the `news-card--featured` class itself | the `<a class="news-card …">` | yes |
+
+The class went last and deliberately. It carried no styling of its own by then,
+but leaving it would invite the next person to attach some — and every previous
+regression of this grid arrived by exactly that route: a `forloop.first` branch
+adding a class, then a rule styling it. The newest article is now marked by its
+date and nothing else.
+
+**v1.10.4 already claimed to have solved this one.** It did, geometrically:
+`grid-auto-rows: 1fr` plus `height: 100%` made every card the same size, and
+the four `span 2` / `flex-direction: row` / `min-height: 300px` guards have
+been green ever since. Uniform *geometry* is not uniform *appearance*, though,
+and a pill, a font size and a border colour are all perfectly valid CSS — no
+geometry assertion could ever have seen them. The screenshot above is the
+proof: three cards, identical boxes, one of them shouting.
+
+### Two new guards, and why they are shaped the way they are
+
+`test_no_card_is_marked_as_featured` asserts the absence of the pill in the
+markup, the `.news-card-flag` rule in the stylesheet, the class in the markup
+and the 21px title in the stylesheet — four checks rather than one, because
+each alone can be satisfied while the card still looks different (a style rule
+with no element, a pill that renders on nobody, a class that later regains a
+rule).
+
+`test_no_per_card_modifier_class_exists` is the general form: **no
+`.news-card--*` selector may exist in the stylesheet at all.** A modifier class
+in CSS can only exist in order to change how a card looks, and "all cards
+identical" is exactly the property being defended. This is the first guard in
+the suite to ban a *mechanism* rather than an instance, because the mechanism
+is what has now failed three times.
+
+Both were validated by mutation: re-adding the pill, re-adding the 21px rule
+and inventing a fresh `news-card--latest` modifier each turn a guard red, with
+the file restored byte-identically afterwards.
+
+### One trap worth recording
+
+The first version of these guards scanned the raw template and failed
+immediately — on the *comments*. `news.html` now carries a paragraph explaining
+that "Featured" and `news-card--featured` are gone, and `assertNotIn` cannot
+tell documentation from code. Fixed by adding `_markup()`, which strips all
+three comment syntaxes the file uses (HTML `<!-- -->`, Django `{# #}`, CSS
+`/* */`) before scanning. `test_featured_card_does_not_change_geometry` had the
+same latent bug in `min-height: 300px`, which its own comment mentions; it now
+reads comment-stripped CSS too.
+
+## v1.10.11 - 2026-10-04
+
+## The HKTEX cover shows the whole picture
+
+v1.10.10 over-corrected. Having measured the 47% transparent slab on the right
+and centred the strip edge to edge, the artwork touched both sides of the
+canvas and read as cramped. The editor's report: *"there is white space on the
+left and right, it fills the frame too much"*, then *"restore it to fully
+visible, shrink it so the card shows the whole picture."*
+
+**A new asset, uploaded through the admin.** The replacement
+`asiaworld-expo-2026.webp` is a proper 16:9 matte the editor generated
+themselves -- and unlike the previous file it carries its own white border
+(52px per side at 880x495, symmetric) with the complete wordmark, "EPLUS"
+included. The older `hktex-2026-banner.webp` was a screenshot cropped mid-letter.
+It is deleted: zero references remained in seed, templates, code or git.
+
+Installed at 1600x900 rather than at its native 880x495. Two reasons: the card
+renders 386px wide, so 880px is only 2.3x that, and
+`NewsCoverGeometryTests` requires >= 1200px. The upscale costs nothing real --
+every pixel it adds is white padding, not detail.
+
+**`object-fit: contain` on the card, not `cover`.** Chosen because it is the
+only value that keeps holding when the box ratio and the image ratio disagree.
+See "what the object-fit change does and does not do" below for the measured
+reasoning -- the short version is that with a 16:9 asset in a 16:9 box the two
+values are indistinguishable, and `contain` is kept as the contract that cannot
+regress.
+
+The detail page's bento media grid keeps `cover`. That grid's `cover` is a
+deliberate v1.6.4 decision (it keeps the whole block on one desktop screen),
+and for this article it changes nothing measurable: the container renders
+599x337.8 (1.773) against a 1.778 asset.
+
+### What the object-fit change does and does not do
+
+The first draft of this entry claimed `cover` "would slice ~5.6% off each
+side". That was wrong, and the geometry says so plainly. `.news-card-cover` is
+`aspect-ratio: 16 / 9` and the shipped asset is 1600x900, so the two ratios are
+identical and there is nothing to slice:
+
+| box (16:9) | `cover` scale | `contain` scale | source painted | side cut |
+|---|---|---|---|---|
+| 386 x 217.1 | 0.2412 | 0.2412 | 1600x900 of 1600x900 | 0 / 0 |
+| 420 x 236.2 | 0.2625 | 0.2625 | 1600x900 of 1600x900 | 0 / 0 |
+| 460 x 258.8 | 0.2875 | 0.2875 | 1600x900 of 1600x900 | 0 / 0 |
+
+The hover zoom (`transform: scale(1.04)`) does not separate them either: a
+transform scales the already-painted element, and under `cover` that means
+scaling a window that was never cropped, so the wordmark strip stays at 100%
+either way.
+
+**So the visible fix was the new asset, not the CSS.** The white border now
+lives inside the file, which means it is painted content and survives any fit
+mode. What `contain` buys is durability: the moment the box ratio differs, the
+two diverge, and only `contain` keeps the whole picture. Measured on the other
+two articles in the same grid:
+
+| asset | ratio | `cover` | `contain` |
+|---|---|---|---|
+| `chart-global-market-size.webp` | 1.8625 | loses 4.5% of width (37px per side) | loses 0% |
+| `tianjin-...-hero.webp` (before the editor's crop) | 1.5289 | fills, crops top/bottom | letterboxes 16.3% |
+| hypothetical 4:3 slot | 1.3333 | loses 15.3% of width | loses 0% |
+
+`contain` is therefore the right default for a card whose cover height is fixed
+by the grid, and it cannot put the editor's border back. The honest summary is
+that this entry hardens the contract; the picture became complete in the file.
+
+### The contract was reversed, so the guard was rewritten
+
+v1.10.10 shipped `test_the_content_actually_spans_the_canvas`, which asserted
+side margins of 4px or less. The new requirement is the opposite, so that test
+is replaced by `test_the_content_has_deliberate_side_margins` -- a **band**
+(40px to 160px per side) rather than an edge, so neither a cropped edge-to-edge
+strip nor a shrunken stamp can pass. Symmetry is asserted at 0.5% of the canvas
+rather than a hard pixel count, because Lanczos ringing on the light edge
+measures 89 vs 95 on a source whose margins are exactly 52/52.
+
+A fifth guard, `test_the_card_does_not_crop_the_cover`, pins
+`object-fit: contain` in `news.html`. No pixel assertion can see this: the
+asset is perfect and `cover` would still crop its padding.
+
+69 tests in `pages.tests_news_figures`. A 4-mutation probe turns all of them
+red -- asset reverted to edge-to-edge, asset shrunk to a stamp, CSS put back to
+`cover`, and `seed_data.json` edited without rebuilding the artifact.
+
+Two findings worth recording:
+
+- **An admin upload rewrites `static/` from `media/`.** The editor's file landed
+  at `media/news/asiaworld-expo-2026.webp` (880x350, the pre-matte version) and
+  was synced into `static/images/news/<slug>/` on save. Editing the file in
+  `static/` alone is not durable; the sync is authoritative.
+- **`git add` matters more here.** The new file was untracked (`??`), so a probe
+  restoring "the original bytes" restores the un-upscaled 880x495 and the
+  baseline goes red for a reason that has nothing to do with the guard. Stage
+  the asset *before* probing so the probe's baseline is the delivery state.
+- **A probe without `try/finally` will leave the mutation in place.** The first
+  run of the cover probe reported `PROBE FAIL` *and* left `news.html` holding
+  `object-fit: cover` and `aspect-ratio: 4 / 3`, because the mutations were
+  applied in a plain loop. Restored by a byte-exact script -- **not**
+  `git checkout`, which would have taken the real v1.10.11 edit with it. Every
+  probe in this repo now restores in `finally` from an in-memory copy of the
+  original bytes.
+- **`seed_sync` does not touch image files.** When a working-tree change
+  appeared on an unrelated cover, the first suspicion fell on the sync run.
+  Two consecutive `seed_sync --json` runs left both the md5 and the mtime
+  untouched, which cleared it. Worth knowing before blaming the tool.
+
+### The Tianjin cover was re-cropped in the admin, and the sync handled it
+
+`static/images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-hero.webp`
+changed from 581x380 (1.5289) to 581x327 (1.7768) during this work, with no
+script of mine touching it: the editor uploaded a new 16:9 crop through the
+admin at 17:54, which landed at
+`media/news/tianjin-binhai-high-mast-retrofit-hero_0TYXO67.webp` (Django's
+random upload suffix) and was synced into `static/` under the **canonical
+name**, byte-identical (both md5 `f2d70acf2385…`).
+
+That last part is the reason no seed change is needed: `seed_data.json` points
+at the canonical `images/news/<slug>/…` name, and the sync wrote the new bytes
+to exactly that name. Had it kept the upload suffix, production would still be
+serving the old 1.5289 crop while local renders the new one -- the classic
+two-paths-drift failure. The change is committed here rather than reverted,
+because it is the editor's intent.
+
 ## v1.10.10 - 2026-10-04
 
 ## Exhibition Information, and a cover that is actually centred
