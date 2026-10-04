@@ -7,6 +7,31 @@
 {% block og_title %}{% blocktrans %}News — SolarOne LED Lighting Updates{% endblocktrans %}{% endblock %}
 {% block og_description %}{% blocktrans %}Latest news, product launches, and insights from SolarOne. Stay updated on LED lighting innovations and the latest industry developments.{% endblocktrans %}{% endblock %}
 
+{# v1.10.14: the listing page advertised a social card with no picture.
+   SiteConfig.og_image is empty, so base.html's site-wide og_image block
+   rendered nothing here -- while the page still declared
+   `twitter:card=summary_large_image`, i.e. it asked for a large image and
+   supplied none. Facebook / WhatsApp / Telegram / Slack then share a bare text
+   card. Every other index (home, products, about, contact, the landing pages)
+   already overrides that block, which is why only /news/ was affected.
+
+   The picture is the newest article's `social_image_url` -- the same derived
+   field the detail page and the card grid use, so the cover, og:image and the
+   JSON-LD NewsArticle.image can never point at three different files. That
+   field already falls back to the first gallery image for an article with no
+   cover (v1.10.7), which is why reading articles.0 is safe.
+
+   block.super keeps the site default as the second choice: if the feed is
+   filtered down to articles with no image at all, or is ever empty, the page
+   degrades to whatever config.og_image holds rather than to nothing. Same shape
+   as news_detail.html, deliberately -- do not invent a third variant.
+
+   NOTE: write these tag names without their delimiters in this comment. Django
+   parses tags inside comments too, and spelling one out raises
+   TemplateSyntaxError. #}
+{% block og_image %}{% if articles.0.social_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ articles.0.social_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block twitter_image %}{% if articles.0.social_image_url %}<meta name="twitter:image" content="{{ canonical_origin }}{{ articles.0.social_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+
 {% block content %}
 
 <section class="news-page" style="padding: 100px 0 80px;">

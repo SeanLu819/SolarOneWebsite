@@ -743,6 +743,156 @@ class NewsSocialImageTests(NewsDetailFigureRenderTests):
                 f'{row["slug"]}: social_image_url 不是 static 下的真实图片：{value!r}')
 
 
+class NewsListingSocialImageTests(TestCase):
+    """v1.10.14 — /news/ advertised a social card with no picture in it.
+
+    Found by reading the production page, not by a failing test: every existing
+    guard here renders `/news/<slug>/`, so the *listing* was never fetched. Its
+    `og:image` came from `base.html`'s site-wide default, which renders nothing
+    because `SiteConfig.og_image` is empty — while the page still declared
+    `twitter:card=summary_large_image`. A page that asks for a large image and
+    supplies none shares as bare text on Facebook, WhatsApp, Telegram and Slack.
+
+    The listing now points at the newest article's `social_image_url`, the same
+    derived field the card grid and the detail page use, so the cover, the
+    `og:image` and the JSON-LD `NewsArticle.image` cannot drift apart. These
+    guards assert the rendered value; a syntax-only check cannot see a missing
+    meta tag, because a missing tag parses fine.
+    """
+
+    ORIGIN = 'https://www.solaronelighting.com'
+
+    @classmethod
+    def setUpTestData(cls):
+        """Materialise news rows in the test DB.
+
+        The test database starts empty and the listing reads the DB path when
+        `IS_VERCEL` is false, so without this `articles` is `[]` and the
+        template correctly falls through to `block.super` — which renders
+        nothing, because `SiteConfig.og_image` is empty. The guards would then
+        fail on the fixture rather than on the code.
+
+        Built from the seed, same as `NewsInBodyFigureTests`, so "the two paths
+        agree" compares one content serialised two ways. The cover article is
+        also the one with no cover, which exercises the gallery fallback rather
+        than the easy path.
+        """
+        from django.utils.timezone import now
+        from pages.models import NewsArticle, NewsImage
+        from pages.views.data_loaders import _load_seed
+
+        seed = _load_seed()
+        article = next(a for a in seed['news'] if a['slug'] == ART)
+        cls.row = NewsArticle.objects.create(
+            slug=ART,
+            title=article['title'],
+            summary=article['summary'],
+            content=article['content'],
+            category=article.get('category') or 'Exhibition Information',
+            image=article['image'],
+            published_at=now(),
+            is_published=True,
+            translations=article.get('translations') or {},
+        )
+        for image in article['images']:
+            NewsImage.objects.create(
+                article=cls.row, image=image['image'],
+                alt_text=image.get('alt') or '',
+                caption=image.get('caption') or '',
+                order=image.get('order') or 1,
+                width=image.get('width'), height=image.get('height'),
+            )
+
+    def _listing(self, url='/news/'):
+        resp = self.client.get(url, HTTP_HOST='localhost')
+        self.assertEqual(200, resp.status_code)
+        return resp.content.decode('utf-8')
+
+    def _meta(self, html, prop):
+        found = re.search(
+            r'<meta property="%s" content="([^"]+)"' % re.escape(prop), html)
+        return found.group(1) if found else ''
+
+    def test_the_listing_advertises_an_image(self):
+        image = self._meta(self._listing(), 'og:image')
+        self.assertTrue(
+            image,
+            '/news/ 没有 og:image，但页面声明了 twitter:card=summary_large_image'
+            ' —— 分享出去只有文字，没有预览图')
+        self.assertNotEqual(
+            self.ORIGIN, image,
+            f'og:image 退化成了裸域名：{image!r}（消费者会判为无效）')
+        self.assertRegex(
+            image, r'^https://www\.solaronelighting\.com/static/.+\.(webp|png|jpg)$',
+            f'og:image 不是站点下的真实图片文件：{image!r}')
+
+    def test_twitter_image_is_emitted_too(self):
+        """X/Twitter reads `twitter:image`; `base.html` documents that the
+        other twitter:* tags are deliberately absent so they cannot shadow the
+        OG values. The image hint is the exception it carves out."""
+        html = self._listing()
+        image = re.search(r'<meta name="twitter:image" content="([^"]+)"', html)
+        self.assertIsNotNone(image, '/news/ 没有 twitter:image')
+        self.assertEqual(
+            self._meta(html, 'og:image'), image.group(1),
+            'twitter:image 与 og:image 不一致，两处应指向同一张图')
+
+    def test_it_is_the_same_picture_the_first_card_shows(self):
+        """One picture in three places: card / og:image / JSON-LD.
+
+        If the listing advertises a different file from the one the visitor
+        sees first, the share preview and the landing page disagree.
+        """
+        html = self._listing()
+        og = self._meta(html, 'og:image')
+        card = re.search(r'<div class="news-card-cover">\s*<img src="([^"]+)"',
+                         html)
+        self.assertIsNotNone(card, '列表页第一张卡没有封面 img，找不到对照')
+        first = card.group(1)
+        if first.startswith('/'):
+            first = self.ORIGIN + first
+        self.assertEqual(
+            og, first,
+            'og:image 与首张卡片封面不是同一张图，分享出去会跟页面看到的不一样')
+
+    def test_a_category_filter_still_advertises_an_image(self):
+        """`?category=` narrows `articles`, so `articles.0` changes.
+
+        The filter is a first-class feature (the chips render it), and a
+        filtered page is the one most likely to be shared from a campaign. It
+        must still carry a picture.
+        """
+        html = self._listing('/news/?category=Industry+Insights')
+        image = self._meta(html, 'og:image')
+        self.assertTrue(image, '按分类筛选后的 /news/ 没有 og:image')
+        self.assertNotEqual(self.ORIGIN, image,
+                            f'筛选后 og:image 退化成裸域名：{image!r}')
+
+    def test_the_template_keeps_the_site_default_as_a_fallback(self):
+        """Source-level: the override must not become the only source.
+
+        `block.super` is what makes an empty feed, or a feed of articles that
+        have no image at all, degrade to the site default instead of to nothing.
+        Losing it would reintroduce the same missing-meta-tag failure through a
+        different route, and every assertion above would still pass on the
+        happy path.
+        """
+        src = (settings.BASE_DIR / 'templates' / 'news.html').read_text(
+            encoding='utf-8')
+        for block in ('og_image', 'twitter_image'):
+            rule = re.search(
+                r'\{% block ' + block + r' %\}(.*?)\{% endblock %\}', src, re.S)
+            self.assertIsNotNone(rule, f'news.html 没有覆盖 {block} block')
+            self.assertIn(
+                'block.super', rule.group(1),
+                f'{block} 覆盖里没有保留 {{% block.super %}}，'
+                '空列表或全无图时会连站点默认图一起丢掉')
+            self.assertIn(
+                'social_image_url', rule.group(1),
+                f'{block} 覆盖没有用 social_image_url —— '
+                '应与卡片封面、详情页 og:image、JSON-LD 同源')
+
+
 # ═════════════════════════════════════════════════════════════════════════
 # v1.10.8 — a /news/ card without a cover borrows the article's first figure
 # ═════════════════════════════════════════════════════════════════════════

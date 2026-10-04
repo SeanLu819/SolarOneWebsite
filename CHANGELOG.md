@@ -1454,6 +1454,98 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.14 - 2026-10-04
+
+## The news listing advertises a social card with a picture in it
+
+Found by reading the production page after the v1.10.13 push — not by a failing
+test, because no guard ever fetched the *listing*.
+
+### The gap
+
+`/news/` emitted no `og:image` and no `twitter:image`, while still declaring
+`<meta name="twitter:card" content="summary_large_image">`. A page that asks for
+a large image and supplies none shares as bare text on Facebook, WhatsApp,
+Telegram and Slack.
+
+Root cause: `SiteConfig.og_image` is empty (`seed_data.json`), so `base.html`'s
+site-wide `{% block og_image %}` renders nothing. Every other index — home,
+products, about, contact, the landing pages, and every article detail page —
+already overrides that block. Only the listing did not, which is why the impact
+measured as exactly one page.
+
+### The change
+
+`templates/news.html`, following `news_detail.html` rather than inventing a
+third shape:
+
+```django
+{% block og_image %}{% if articles.0.social_image_url %}...{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block twitter_image %}{% if articles.0.social_image_url %}...{% else %}{{ block.super }}{% endif %}{% endblock %}
+```
+
+Two details that are load-bearing:
+
+- **`social_image_url`, not `image_url`.** The newest article
+  (`global-led-lighting-market-2034`) has an *empty* `image` field and falls
+  back to its first gallery chart. Reading `image_url` here would render
+  nothing at all — the same class of bug as v1.10.7, one level up. Verified:
+  the served `og:image` is `chart-global-market-size.webp`, which comes from
+  `images[0]`.
+- **`block.super` retained.** With an empty feed, or a feed of articles that
+  have no image at all, the page degrades to the site default rather than to
+  nothing. A guard asserts the fallback is still there, because every other
+  assertion passes on the happy path without it.
+
+### Guards (5 new, 74 → 79 in `tests_news_figures`)
+
+| test | pins |
+|------|------|
+| `test_the_listing_advertises_an_image` | a real `og:image`, not absent, not a bare origin |
+| `test_twitter_image_is_emitted_too` | `twitter:image` present and equal to `og:image` |
+| `test_it_is_the_same_picture_the_first_card_shows` | the advertised file is the first card's cover |
+| `test_a_category_filter_still_advertises_an_image` | `?category=` pages too — the chips render them, and a filtered page is the one most likely to be shared from a campaign |
+| `test_the_template_keeps_the_site_default_as_a_fallback` | `block.super` still in both blocks, and both still use `social_image_url` |
+
+All assert rendered *values*, not syntax: a missing meta tag parses fine, which
+is exactly how this shipped.
+
+**Mutation probe 5/5 red**: deleting the `og_image` override (reproducing the
+production bug) · deleting the `twitter:image` override · dropping `block.super`
+· pointing `og:image` at the bare origin · swapping `social_image_url` for
+`image_url` (which renders nothing for the newest article). `news.html`
+restored byte-for-byte, md5 `3b758e80…` before and after.
+
+### Verification
+
+- `pages.tests_news_figures` **79 tests, all green** (was 74)
+- **Rendered proof, six languages**, plus the category-filtered page: every one
+  emits `og:image`, `twitter:image` and a first card, all three agreeing
+- `tests_news_figures` + `tests_release_metadata`: 83 tests, all green
+
+### Notes
+
+- The template comment spells the tag names **without their delimiters**.
+  Django parses tags inside comments, so writing `{% block og_image %}` in prose
+  raises `TemplateSyntaxError: 'block' tag with name 'og_image' appears more
+  than once` — hit on the first attempt.
+- The new guards need `setUpTestData`: the test DB starts empty and the listing
+  reads the DB path when `IS_VERCEL` is false, so without a fixture `articles`
+  is `[]` and the template correctly falls through to `block.super` — the guards
+  would fail on the fixture, not on the code.
+
+### Carried in the same commit (editor's admin save, not part of this fix)
+
+- `yuanshen-sports-centre-stadium`: the five `shys-soccer-*.webp` files were
+  removed in the admin, and the sync carried it through consistently — `image`
+  emptied, `gallery` emptied, references dropped from `seed_data.json`. Nothing
+  dangles: `ImageSitemapAndAltTests` (11) and `StatelessProductionTests` (5)
+  pass with the files gone.
+- Product pk 27 renamed `Mseries GS` → `Glare Shield for M series`.
+- The `【Customer Profile】` brackets in the Yuanshen description came out as
+  `[Customer Profile]` — that is the `descrub` filter from v1.9.3 rewriting the
+  body on save, not a new edit.
+
 ## v1.10.13 - 2026-10-04
 
 ## The title block reserves two lines, so all three cards read the same
