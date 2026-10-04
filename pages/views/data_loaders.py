@@ -307,6 +307,28 @@ def _news_translated_row(row, lang):
     return out
 
 
+def _news_social_image(row):
+    """The image a social card / ``NewsArticle`` block should advertise.
+
+    The cover is the natural pick, but an article does not have to have one:
+    v1.10.6 stripped the three photographs from the market article and left
+    only charts, and the template's old ``{{ article.image_url }}`` then rendered
+    ``"image": "https://www.solaronelighting.com"`` in the JSON-LD (a bare
+    origin -- consumers reject it) while ``og:image`` disappeared entirely,
+    because the site-wide fallback is empty too. Both failures are silent.
+
+    So: cover first, then the first gallery image, then nothing. Returning ''
+    is a legitimate state -- the caller decides whether to omit the key or the
+    whole meta tag, and a guard asserts the two agree.
+    """
+    if row.get('image_url'):
+        return row['image_url']
+    for image in row.get('images') or []:
+        if image.get('url'):
+            return image['url']
+    return ''
+
+
 def _normalize_news_image(i):
     """Normalize one seed ``news[].images[]`` entry to a template dict.
 
@@ -375,6 +397,7 @@ def _normalize_news_article(a, lang='en'):
         row.get('content_t') or row['content'], images)
     row['body_blocks'] = blocks
     row['unplaced_images'] = [images[i] for i in unused]
+    row['social_image_url'] = _news_social_image(row)
     return row
 
 
@@ -396,7 +419,10 @@ _NEWS_ROW_BASE = (
 #: the template renders ``body_blocks`` to interleave photos with paragraphs,
 #: and ``unplaced_images`` carries gallery photos no marker referenced so a
 #: forgotten marker degrades to the top grid instead of losing a photo.
-NEWS_DERIVED_KEYS = ('body_blocks', 'unplaced_images')
+#: v1.10.7 ``social_image_url``: the cover *or* the first gallery image, so an
+#: article with no cover still advertises a real image in ``og:image`` and in
+#: the ``NewsArticle`` block instead of a bare origin.
+NEWS_DERIVED_KEYS = ('body_blocks', 'unplaced_images', 'social_image_url')
 
 
 def _news_db_image_url(field):
@@ -468,6 +494,7 @@ def _normalize_news_row(a, lang='en'):
         out.get('content_t') or out['content'], out['images'])
     out['body_blocks'] = blocks
     out['unplaced_images'] = [out['images'][i] for i in unused]
+    out['social_image_url'] = _news_social_image(out)
     return out
 
 

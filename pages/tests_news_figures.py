@@ -21,6 +21,7 @@ page just quietly drifts" way, which is why both are pinned:
 Run: ``E:/Python/python3/python.exe manage.py test pages.tests_news_figures``
 """
 
+import json
 import re
 
 from django.conf import settings
@@ -485,3 +486,91 @@ class NewsDetailFigureLayoutTests(SimpleTestCase):
                       '767px 块里没有给插图恢复通栏')
         self.assertIn('width: 100%', phone,
                       '767px 块里没有把插图恢复成通栏')
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# v1.10.7 — social card / JSON-LD image survives an article without a cover
+# ═════════════════════════════════════════════════════════════════════════
+class NewsSocialImageTests(NewsDetailFigureRenderTests):
+    """v1.10.7 regression, found by actually reading the rendered page.
+
+    v1.10.6 removed the market article's cover. The template advertised
+    `{{ article.image_url }}`, so the ``NewsArticle`` block degraded to
+    ``"image": "https://www.solaronelighting.com"`` — a bare origin, which
+    consumers reject — and ``og:image`` disappeared entirely, because the
+    site-wide fallback in ``base.html`` is empty too. Neither showed up as an
+    error: the page still returned 200 and the JSON still parsed, which is
+    exactly why `JsonLdValidityTests` (parsability only) let it through.
+
+    These guards assert the *value*, not the syntax.
+    """
+
+    ORIGIN = 'https://www.solaronelighting.com'
+
+    def _detail(self):
+        resp = self.client.get(f'/news/{ART}/', HTTP_HOST='localhost')
+        self.assertEqual(200, resp.status_code)
+        return resp.content.decode('utf-8')
+
+    def _article_jsonld(self, html):
+        for raw in re.findall(
+                r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
+                html, re.S | re.I):
+            obj = json.loads(raw)
+            if obj.get('@type') == 'NewsArticle':
+                return obj
+        self.fail('页面里没有 NewsArticle 结构化数据块')
+
+    def test_the_article_block_advertises_a_real_image(self):
+        obj = self._article_jsonld(self._detail())
+        image = obj.get('image')
+        self.assertTrue(image, 'NewsArticle 块没有 image —— 分享出去没有预览图')
+        self.assertNotEqual(
+            self.ORIGIN, image,
+            f'JSON-LD 的 image 退化成了裸域名：{image!r}（消费者会判为无效）')
+        self.assertRegex(
+            image, r'^https://www\.solaronelighting\.com/static/.+\.(webp|png|jpg)$',
+            f'JSON-LD 的 image 不是站点下的真实图片文件：{image!r}')
+
+    def test_og_image_points_at_the_same_file(self):
+        """A card image and structured data that disagree confuse crawlers."""
+        html = self._detail()
+        obj = self._article_jsonld(html)
+        meta = re.search(r'<meta property="og:image" content="([^"]+)"', html)
+        self.assertIsNotNone(meta, '页面没有 og:image（分享/抓取都没有预览图）')
+        self.assertEqual(
+            obj['image'], meta.group(1),
+            'og:image 与 JSON-LD image 不一致，两处应指向同一张图')
+
+    def test_social_image_falls_back_to_the_first_gallery_entry(self):
+        from pages.views.data_loaders import _get_news_from_json
+        row = next(r for r in _get_news_from_json('en') if r['slug'] == ART)
+        self.assertEqual('', row['image_url'],
+                         '这篇已经不该有封面了（否则本组守卫的前提失效）')
+        self.assertTrue(row['images'], '这篇不该一张图都没有')
+        self.assertEqual(
+            row['images'][0]['url'], row['social_image_url'],
+            '没有封面时 social_image_url 应回落到第一张图集图')
+
+    def test_both_paths_derive_the_same_social_image(self):
+        db, seed = self._db_row(), self._seed_row()
+        self.assertEqual(
+            db['social_image_url'], seed['social_image_url'],
+            'DB 路径与 seed 路径的 social_image_url 不一致')
+
+    def test_every_seeded_article_advertises_something(self):
+        """No article may end up advertising a bare origin, whichever path.
+
+        An article with no images at all is allowed to have an empty value --
+        the template then omits the JSON key instead of emitting a broken URL.
+        """
+        from pages.views.data_loaders import _get_news_from_json
+        for row in _get_news_from_json('en'):
+            value = row.get('social_image_url', '')
+            if not row['image_url'] and not row['images']:
+                self.assertEqual('', value,
+                                 f'{row["slug"]}: 无图文章应留空，而不是编一个值')
+                continue
+            self.assertTrue(
+                value.startswith('/static/'),
+                f'{row["slug"]}: social_image_url 不是 static 下的真实图片：{value!r}')

@@ -7,7 +7,7 @@
 {% block og_title %}{{ article.title_t|default:article.title }} — SolarOne News{% endblock %}
 {% block og_description %}{{ article.summary_t|default:article.summary|truncatechars:160 }}{% endblock %}
 {% block og_type %}<meta property="og:type" content="article">{% endblock %}
-{% block og_image %}{% if article.image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ article.image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block og_image %}{% if article.social_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ article.social_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -20,9 +20,9 @@
   "headline": "{{ article.title_t|default:article.title|escapejs }}",
   "description": "{{ article.summary_t|default:article.summary|escapejs }}",
   "datePublished": "{{ article.published_at|date:'c' }}",
-  "image": "{{ canonical_origin }}{{ article.image_url }}",
   "url": "{{ canonical_origin }}{% url 'news_detail' article.slug %}",
-  "publisher": {"@type": "Organization", "name": "SolarOne"}
+  "publisher": {"@type": "Organization", "name": "SolarOne"}{% if article.social_image_url %},
+  "image": "{{ canonical_origin }}{{ article.social_image_url }}"{% endif %}
 }
 </script>
 

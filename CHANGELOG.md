@@ -1502,3 +1502,27 @@ market-size chart, the regional split for 2025 and the segment split for 2026.
 Guard: `NewsDetailFigureRenderTests` no longer hard-codes `5`/`4` — the expected
 figure count is read from the article's own gallery, so the next content edit
 does not turn into a test edit.
+
+## v1.10.7 - 2026-10-04
+
+## A coverless article no longer advertises a bare origin
+
+Found by reading the rendered page after v1.10.6 removed the market article's
+cover — not by a failing test, because nothing failed.
+
+- `NewsArticle` JSON-LD rendered `"image": "https://www.solaronelighting.com"`
+  (a bare origin; consumers reject it) and `og:image` disappeared from the page
+  entirely, because the site-wide fallback in `base.html` is empty too. Sharing
+  the article produced a preview with no image at all.
+- New derived key `social_image_url` (`_news_social_image()`): the cover if
+  there is one, otherwise the **first gallery image**, otherwise `''`. Added to
+  both the DB and the seed path and pinned in `NEWS_DERIVED_KEYS`.
+- The JSON-LD `image` key is now conditional and moved last in the object, so an
+  article with no images at all omits the key instead of emitting a broken URL.
+- `og:image` reads the same value, so the card and the structured data can never
+  disagree.
+
+Guard: `NewsSocialImageTests` (5 cases) asserts the *value*, not the syntax —
+`JsonLdValidityTests` only checks that the block parses, which is exactly why
+this slipped through. Articles that still have a cover are unaffected.
+Mutation probe 6/6 red; full regression 574 tests / 32 failures / 1 skipped.
