@@ -1,0 +1,46 @@
+# Speed probe from a US-east runner.
+#
+# Why this exists
+# ---------------
+# The dev machine sits in Asia, so `perf_probe.py` run locally measures the
+# Asia -> singapore edge path, which has nothing to do with how a US customer
+# experiences the site. GitHub-hosted runners are located in Washington DC
+# (AWS us-east-1), so this job produces a *US East* baseline for free, with no
+# third-party service and no signed-up testing tool.
+#
+# What it does NOT cover: the European path. A GitHub runner still egresses
+# from the US, so for Europe either run the script on a European host/VPS,
+# ask a contact in Europe to open the site (F12 -> Network -> read
+# `x-vercel-id`), or use a lab service with an EU location.
+#
+# The probe exits non-zero when a median TTFB exceeds 800 ms, so a budget can
+# be enforced later without changing anything here.
+
+name: Speed probe (US East)
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 12:00 UTC = 20:00 Beijing; pick a slot that does not overlap the
+    # vercel-cleanup cron (03:00 UTC on Mondays) to avoid runner contention.
+    - cron: "0 12 * * *"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Measure TTFB / total from a US East runner
+        run: python scripts/e2e/perf_probe.py --repeats 5
+
+      - name: Report which edge and function region served the request
+        run: |
+          curl -sI --compressed https://www.solaronelighting.com/ \
+            | grep -iE '^(x-vercel-id|x-vercel-cache|cache-control)'
