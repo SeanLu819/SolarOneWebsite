@@ -23,6 +23,14 @@ page just quietly drifts" way, which is why both are pinned:
    cover is not visible". The card now borrows the first gallery image, in the
    same order as `social_image_url`, so card / og:image / JSON-LD agree.
 
+4. **The category rename and the centred cover** (v1.10.10).
+   ``NewsCategoryTaxonomyTests`` pins that ``Company News`` ->
+   ``Exhibition Information`` landed on all five surfaces that hold the literal
+   (choices / ``_SIDEBAR_I18N`` / seed rows / view fallbacks / seed default) --
+   every one of which degrades silently. ``NewsCoverCentringTests`` measures the
+   cover's inked pixels, because the v1.10.9 cover was a geometrically perfect
+   16:9 canvas with 47% of its width baked in as white space.
+
 Run: ``E:/Python/python3/python.exe manage.py test pages.tests_news_figures``
 """
 
@@ -170,7 +178,7 @@ class NewsInBodyFigureTests(TestCase):
             title=article['title'],
             summary=article['summary'],
             content=article['content'],
-            category=article.get('category') or 'Company News',
+            category=article.get('category') or 'Exhibition Information',
             image=article['image'],
             published_at=now(),
             is_published=True,
@@ -626,7 +634,7 @@ class NewsCardCoverFallbackTests(TestCase):
             title=market['title'],
             summary=market['summary'],
             content=market['content'],
-            category=market.get('category') or 'Company News',
+            category=market.get('category') or 'Exhibition Information',
             image=market['image'],
             published_at=now(),
             is_published=True,
@@ -648,7 +656,7 @@ class NewsCardCoverFallbackTests(TestCase):
             title='An article with a cover',
             summary='Cover regression fixture.',
             content='<p>Body copy.</p>',
-            category='Company News',
+            category='Exhibition Information',
             image='images/news/global-led-lighting-market-2034/'
                   'chart-by-segment-2026.webp',
             published_at=now(),
@@ -727,7 +735,7 @@ class NewsCardCoverFallbackTests(TestCase):
             title='No images whatsoever',
             summary='Placeholder regression fixture.',
             content='<p>Body copy.</p>',
-            category='Company News',
+            category='Exhibition Information',
             image='',
             published_at=now(),
             is_published=True,
@@ -916,3 +924,203 @@ class NewsArticleSeoBudgetTests(SimpleTestCase):
         self.assertNotIn(
             'figure:', article['content'],
             '正文里残留 figure 标记，但没有图集可对应')
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# v1.10.10 — 'Company News' -> 'Exhibition Information', and a centred cover
+# ═════════════════════════════════════════════════════════════════════════
+class NewsCategoryTaxonomyTests(SimpleTestCase):
+    """v1.10.10 — the category rename has to land on every surface at once.
+
+    Renaming a `choices` entry looks like a one-line change but the literal
+    lives in five independent places, and every one of them fails *silently*:
+
+    | where | what breaks if it is missed |
+    |---|---|
+    | `NewsArticle.NEWS_CATEGORIES` | admin dropdown offers a value the feed does not use |
+    | `_SIDEBAR_I18N` | chip shows the bare English key in all five locales |
+    | seed rows (`category`) | article filed under a key absent from `choices` |
+    | `_t()` fallbacks in the views | an article with no `category` key renders an untranslated chip |
+    | `data_loaders` seed default | same, one layer down |
+
+    The old name is asserted *absent* from the source, because the one failure
+    mode a positive assertion cannot catch is a half-finished rename: `choices`
+    updated, `_SIDEBAR_I18N` forgotten -> the chip degrades to English in fr/es/
+    de/ru/ar with no error anywhere.
+    """
+
+    RENAMED_FROM = 'Company News'
+    #: The exact set the editors asked for: case studies, industry news and
+    #: exhibition information. Pinned so a stray bucket cannot reappear.
+    EXPECTED = {
+        'Exhibition Information',
+        'Product News',
+        'Case Studies',
+        'Industry Insights',
+    }
+
+    def _choices(self):
+        from pages.models import NewsArticle
+        return {key for key, _label in NewsArticle.NEWS_CATEGORIES}
+
+    def _source_files(self):
+        return [
+            settings.BASE_DIR / 'pages' / 'models.py',
+            settings.BASE_DIR / 'pages' / 'views' / 'i18n.py',
+            settings.BASE_DIR / 'pages' / 'views' / 'views_other.py',
+            settings.BASE_DIR / 'pages' / 'views' / 'data_loaders.py',
+            settings.BASE_DIR / 'seed_data.json',
+        ]
+
+    def test_the_choices_are_exactly_the_agreed_taxonomy(self):
+        self.assertEqual(self.EXPECTED, self._choices())
+
+    def test_the_field_default_is_a_valid_choice(self):
+        """`default` feeds the admin's "add article" form. A default outside
+        `choices` renders a select whose value matches no option."""
+        from pages.models import NewsArticle
+        default = NewsArticle._meta.get_field('category').default
+        self.assertIn(
+            default, self._choices(),
+            f'category default {default!r} 不在 NEWS_CATEGORIES 里')
+
+    def test_every_choice_has_a_translation_in_all_five_locales(self):
+        """`_t()` falls back to the English key when a locale is missing, so an
+        incomplete entry ships a half-English chip row with nothing logged."""
+        from pages.views.i18n import _SIDEBAR_I18N
+        for key in sorted(self._choices()):
+            with self.subTest(category=key):
+                entry = _SIDEBAR_I18N.get(key)
+                self.assertIsNotNone(
+                    entry, f'_SIDEBAR_I18N 缺 {key!r}，五个语种都会退回英文')
+                for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                    value = entry.get(lang)
+                    self.assertTrue(
+                        value and value.strip(),
+                        f'{key!r} 的 {lang} 译文为空')
+                    self.assertNotEqual(
+                        key, value,
+                        f'{key!r} 的 {lang} 译文等于英文原文，等于没翻')
+
+    def test_the_old_name_is_gone_from_every_surface(self):
+        """The half-rename guard: `choices` says one thing, something else says
+        another, and the only symptom is an English chip in five locales."""
+        for path in self._source_files():
+            with self.subTest(path=path.name):
+                src = path.read_text(encoding='utf-8')
+                # Prose in a comment may legitimately name the old value while
+                # explaining the rename; only executable lines are pinned.
+                code = '\n'.join(
+                    line for line in src.splitlines()
+                    if not line.lstrip().startswith('#'))
+                self.assertNotIn(
+                    self.RENAMED_FROM, code,
+                    f'{path.name} 仍带旧分类名（半程改名：chips 会退回英文）')
+
+    def test_every_seeded_article_uses_a_declared_category(self):
+        """Seed rows are the production source of truth; a value outside
+        `choices` renders as a chip that `?category=` filtering can never
+        match, so the article shows up in "All News" and in no bucket."""
+        from pages.views.data_loaders import _load_seed
+        allowed = self._choices()
+        for article in _load_seed()['news']:
+            with self.subTest(slug=article['slug']):
+                category = article.get('category')
+                self.assertIn(
+                    category, allowed,
+                    f'{article["slug"]} 的 category={category!r} 不在 NEWS_CATEGORIES')
+
+    def test_the_hktex_article_is_filed_under_the_renamed_category(self):
+        """The rename exists for this article -- it is the exhibition notice
+        that was being labelled corporate news."""
+        from pages.views.data_loaders import _load_seed
+        article = next(a for a in _load_seed()['news'] if a['slug'] == HKTEX)
+        self.assertEqual('Exhibition Information', article.get('category'))
+
+    def test_both_seed_mirrors_agree_on_the_category(self):
+        """`_load_seed()` prefers `pages/seed_data.py` over `seed_data.json`, so
+        a JSON-only edit never reaches production while local renders look right.
+        This is the exact failure that produced two false-green probe rounds in
+        v1.10.9."""
+        import json
+        path = settings.BASE_DIR / 'seed_data.json'
+        from_js = next(a for a in json.loads(path.read_text(encoding='utf-8'))['news']
+                       if a['slug'] == HKTEX)
+        from pages.views.data_loaders import _load_seed
+        artifact = next(a for a in _load_seed()['news'] if a['slug'] == HKTEX)
+        self.assertEqual(
+            from_js['category'], artifact['category'],
+            'seed_data.json 与 pages/seed_data.py 的 category 不一致——'
+            '本地看 JSON 对，线上读构建产物不对')
+
+
+class NewsCoverCentringTests(SimpleTestCase):
+    """v1.10.10 — the cover must sit centred, and this is a pixel question.
+
+    v1.10.9 scaled the whole 1470px screenshot and pasted it at x=0. The file's
+    alpha channel only covers x=2..775, so 695px -- 47% of the canvas -- was
+    transparent, and that transparent block was baked into the WebP as a white
+    slab on the right. An editor saw "the picture is too far left, there is a
+    lot of empty space on the right".
+
+    Geometry assertions cannot see that: the canvas *was* a clean 1600x900 and
+    `NewsCoverGeometryTests` stayed green. Only inked-pixel measurement catches
+    it, so this reads the decoded image rather than the file header.
+    """
+
+    #: Anything this close to white counts as bare canvas.
+    BLANK = 250
+    #: Tolerance for antialiasing and lossy ringing at the content edge (the
+    #: measured cover sits at L=0 / R=1, i.e. off by one column).
+    MARGIN_TOLERANCE_PX = 4
+
+    def _cover(self):
+        from pages.views.data_loaders import _load_seed
+        article = next(a for a in _load_seed()['news'] if a['slug'] == HKTEX)
+        return settings.BASE_DIR / 'static' / article['image']
+
+    def _content_box(self):
+        """(left, right, top, bottom) inked pixel bounds, inclusive."""
+        from PIL import Image
+        with Image.open(self._cover()) as im:
+            rgb = im.convert('RGB')
+            w, h = rgb.size
+            px = rgb.load()
+
+            def inked(px_, limit):
+                return min(px_) < limit
+
+            cols = [x for x in range(w)
+                    if any(inked(px[x, y], self.BLANK) for y in range(h))]
+            rows = [y for y in range(h)
+                    if any(inked(px[x, y], self.BLANK) for x in range(w))]
+            return cols[0], cols[-1], rows[0], rows[-1], w, h
+
+    def test_the_content_is_centred_horizontally(self):
+        left, right, _top, _bottom, w, _h = self._content_box()
+        left_margin, right_margin = left, w - 1 - right
+        self.assertLessEqual(
+            abs(left_margin - right_margin), self.MARGIN_TOLERANCE_PX,
+            f'封面左右留白不对称：左 {left_margin}px / 右 {right_margin}px'
+            '（v1.10.9 的故障模式：整图左对齐 + 右侧 47% 透明区）')
+
+    def test_the_content_actually_spans_the_canvas(self):
+        """Symmetry alone is satisfiable by a centred postage stamp. The cover
+        is a wide wordmark strip; it has to use the width it is given."""
+        left, right, _top, _bottom, w, _h = self._content_box()
+        self.assertLessEqual(
+            left, self.MARGIN_TOLERANCE_PX,
+            f'封面左侧空出 {left}px，横幅没有铺满画幅')
+        self.assertLessEqual(
+            w - 1 - right, self.MARGIN_TOLERANCE_PX,
+            f'封面右侧空出 {w - 1 - right}px，横幅没有铺满画幅')
+
+    def test_the_content_is_centred_vertically_too(self):
+        """Same reason vertically: the strip is matted into 16:9, and a strip
+        pinned to the top reads as a layout bug rather than a matte."""
+        _left, _right, top, bottom, _w, h = self._content_box()
+        top_margin, bottom_margin = top, h - 1 - bottom
+        self.assertLessEqual(
+            abs(top_margin - bottom_margin), self.MARGIN_TOLERANCE_PX + 6,
+            f'封面上下留白不对称：上 {top_margin}px / 下 {bottom_margin}px')
+

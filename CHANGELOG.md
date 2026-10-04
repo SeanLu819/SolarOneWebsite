@@ -1454,6 +1454,71 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.10 - 2026-10-04
+
+## Exhibition Information, and a cover that is actually centred
+
+Two corrections to v1.10.9, both reported by an editor looking at the HKTEX
+article on the live preview.
+
+### "Company News" is now "Exhibition Information"
+
+The category was named after the publisher rather than the content, so a trade
+show notice read as corporate PR. `Case Studies` and `Industry Insights` keep
+their names; `Product News` stays available for release notes.
+
+The rename is one literal in five independent places, and **every one of them
+fails silently** — no exception, no log line, just a wrong label:
+
+| where | symptom if missed |
+|---|---|
+| `NewsArticle.NEWS_CATEGORIES` | admin offers a value the feed never uses |
+| `_SIDEBAR_I18N` | the chip shows the bare English key in all five locales |
+| the seed row | the article is filed under a key absent from `choices`, so `?category=` can never match it |
+| the `_t()` fallbacks in `views_other` | an article with no `category` key renders an untranslated chip |
+| the seed default in `data_loaders` | same, one layer down |
+
+All five are updated, in the local DB via `QuerySet.update()` (not `save()`,
+which fires `post_save` → `seed_sync` in its default DB → JSON direction and
+would rewrite `seed_data.json` from the database) and in `seed_data.json` as a
+byte-exact single replacement so the file's CRLF endings stay intact. The build
+artifact `pages/seed_data.py` is regenerated with
+`python -m pages.seed_sync --json` — production reads that file first, so a
+JSON-only edit would leave the live site unchanged while local renders looked
+correct.
+
+Translations use trade-fair vocabulary, not corporate-PR vocabulary: fr
+*salon*, es *feria*, de *Messe* (= trade fair, not *Ausstellung*, which also
+means an in-store display), ru *выставка*.
+
+### The cover is cropped to its content, then centred
+
+v1.10.9 scaled the whole 1470px screenshot and pasted it at `x=0`. The file's
+alpha channel only covers `x=2..775` — **695px, 47% of the canvas, was pure
+transparency** — and that transparent block was flattened into the WebP as a
+white slab down the right-hand side. Hence "the picture is too far left, there
+is a lot of empty space on the right".
+
+The fix crops to `alpha.getbbox()` first (773x240, 3.221:1 — what the eye
+actually reads as the image), scales that to the full 1600px canvas width and
+centres it in the 1600x900 frame. Measured result: left/right margins 0/1px,
+top/bottom 199/200px.
+
+**Geometry assertions could not have caught this.** The broken cover was a
+clean 1600x900 and `NewsCoverGeometryTests` stayed green — the defect was in
+the pixels, not the dimensions. So the new guard decodes the image and measures
+the inked content box, with a symmetric-centring check as well as a
+spans-the-canvas check (a centred postage stamp satisfies the first but not the
+second).
+
+Guards: `NewsCategoryTaxonomyTests` (7 tests) and `NewsCoverCentringTests` (3).
+The taxonomy guard asserts the old name is *absent* from executable lines in all
+five files — the one failure a positive assertion cannot catch is a half-finished
+rename, which degrades to English chips in five locales and nothing else. A
+4-mutation probe (drop one locale's translation, edit only the JSON without
+rebuilding the artifact, misspell a `choices` key, re-whiteout the cover's right
+side) turns all of them red.
+
 ## v1.10.9 - 2026-10-04
 
 ## HKTEX 2026: the Outdoor and Tech Light Expo article

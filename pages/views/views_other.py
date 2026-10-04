@@ -46,7 +46,7 @@ def news(request):
     # so the earlier `{% trans cat.name %}` silently rendered an empty label.
     counts = {}
     for a in articles:
-        cat = a.get('category') or 'Company News'
+        cat = a.get('category') or 'Exhibition Information'
         counts[cat] = counts.get(cat, 0) + 1
         # Per-article badge label. `get_news()` builds fresh dicts per request
         # (there is no news-level cache), so writing the key here is safe.
@@ -68,7 +68,7 @@ def news(request):
     if requested:
         articles = [
             a for a in articles
-            if (a.get('category') or 'Company News') == requested
+            if (a.get('category') or 'Exhibition Information') == requested
         ]
     context['articles'] = articles
     context['news_active_category'] = requested
@@ -87,13 +87,13 @@ def news_detail(request, slug):
     context['article'] = article
 
     # Sidebar-style category labels come from `_t()` — see news() above.
-    cat = article.get('category') or 'Company News'
+    cat = article.get('category') or 'Exhibition Information'
     context['category_label'] = _t(cat, lang)
 
     # "More news": the latest other articles, same shape as the list cards.
     related = [a for a in get_news(lang) if a.get('slug') != slug]
     for a in related:
-        a['category_label'] = _t(a.get('category') or 'Company News', lang)
+        a['category_label'] = _t(a.get('category') or 'Exhibition Information', lang)
     context['related_articles'] = related[:3]
     return render(request, 'news_detail.html', context)
 

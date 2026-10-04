@@ -381,7 +381,7 @@ def _normalize_news_article(a, lang='en'):
     row = {
         'slug': a.get('slug', ''),
         'title': a.get('title', ''),
-        'category': a.get('category', 'Company News'),
+        'category': a.get('category') or 'Exhibition Information',
         'summary': a.get('summary', ''),
         'content': a.get('content', ''),
         'published_at': published_at,

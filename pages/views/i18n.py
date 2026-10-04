@@ -150,7 +150,11 @@ _SIDEBAR_I18N = {
     # News — article categories. `NewsArticle.NEWS_CATEGORIES` values, rendered
     # into the news sidebar. They used to be missing here, so `/news/` fell back
     # to English in all five non-English locales.
-    'Company News': {'fr': 'Nouvelles de l\'Entreprise', 'es': 'Noticias de la Empresa', 'de': 'Unternehmensnachrichten', 'ar': 'أخبار الشركة', 'ru': 'Корпоративные новости'},
+    # v1.10.10: renamed from 'Company News' (see NewsArticle.NEWS_CATEGORIES).
+    # Trade-fair vocabulary, not corporate PR: fr/es use the standard trade
+    # show word (salon / feria), de uses "Messe" (= trade fair, not
+    # "Ausstellung" which also means an in-store display), ru "выставка".
+    'Exhibition Information': {'fr': 'Informations sur les Salons', 'es': 'Información de Feria', 'de': 'Messeinformationen', 'ar': 'معلومات المعارض', 'ru': 'Информация о выставках'},
     'Product News':  {'fr': 'Nouvelles Produits', 'es': 'Noticias de Productos', 'de': 'Produktneuheiten', 'ar': 'أخبار المنتجات', 'ru': 'Новости продукции'},
     'Case Studies': {'fr': 'Études de Cas', 'es': 'Estudios de Caso', 'de': 'Fallstudien', 'ar': 'دراسات الحالة', 'ru': 'Кейсы'},
     # Keep this list in lockstep with `NewsArticle.NEWS_CATEGORIES` — a

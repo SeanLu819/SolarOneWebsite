@@ -240,8 +240,16 @@ class Product(models.Model):
 
 
 class NewsArticle(models.Model):
+    # v1.10.10: 'Company News' -> 'Exhibition Information'. The bucket was
+    # named after the publisher rather than the content, so every trade-show
+    # / exhibition announcement filed under it read as corporate PR. Renaming
+    # is choices-only: no schema effect (max_length is unchanged, and the DB
+    # column stores the raw string), and build.sh only runs `migrate` when a
+    # real external DB is configured. Rows already in the DB keep their old
+    # literal until they are re-saved -- `pages/management/commands/` has no
+    # backfill, and production reads seed_data.json anyway.
     NEWS_CATEGORIES = [
-        ('Company News', 'Company News'),
+        ('Exhibition Information', 'Exhibition Information'),
         ('Product News', 'Product News'),
         ('Case Studies', 'Case Studies'),
         # v1.10.2: market/industry reporting is neither company nor product
@@ -257,7 +265,7 @@ class NewsArticle(models.Model):
     category = models.CharField(
         max_length=50,
         choices=NEWS_CATEGORIES,
-        default='Company News',
+        default='Exhibition Information',
     )
     summary = models.TextField(blank=True)
     content = models.TextField()

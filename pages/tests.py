@@ -4429,7 +4429,7 @@ class NewsChipsAndCopyTests(TestCase):
     ALL_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
     CJK_RE = re.compile(r'[　-〿一-鿿！-｠]')
 
-    def _row(self, slug, category='Company News'):
+    def _row(self, slug, category='Exhibition Information'):
         return {
             'slug': slug,
             'title': f'QA EN title {slug}',
@@ -4453,7 +4453,7 @@ class NewsChipsAndCopyTests(TestCase):
         path = '/news/' if lang == 'en' else f'/{lang}/news/'
         if seed_news is None:
             seed_news = [
-                self._row('qa-co', 'Company News'),
+                self._row('qa-co', 'Exhibition Information'),
                 self._row('qa-pn', 'Product News'),
                 self._row('qa-cs', 'Case Studies'),
             ]
@@ -4488,16 +4488,16 @@ class NewsChipsAndCopyTests(TestCase):
     # ---- ② 分类名在每个语种都本地化 ---------------------------------------
     def test_chip_labels_are_localised_in_every_language(self):
         expected = {
-            'fr': 'Nouvelles de l\'Entreprise',   # Company News
-            'es': 'Noticias de la Empresa',
-            'de': 'Unternehmensnachrichten',
-            'ar': 'أخبار الشركة',
-            'ru': 'Корпоративные новости',
+            'fr': 'Informations sur les Salons',   # Exhibition Information
+            'es': 'Información de Feria',
+            'de': 'Messeinformationen',
+            'ar': 'معلومات المعارض',
+            'ru': 'Информация о выставках',
         }
         html = self._render('en')
         labels = [html_unescape(entry[2].strip()) for entry in self._chips(html)]
         self.assertIn('All News', labels, '英文页丢了 All News 聚合 chip')
-        self.assertIn('Company News', labels, '英文 chips 丢了分类')
+        self.assertIn('Exhibition Information', labels, '英文 chips 丢了分类')
         self.assertIn('Product News', labels)
         self.assertIn('Case Studies', labels)
         for lang, want in expected.items():
@@ -4506,7 +4506,7 @@ class NewsChipsAndCopyTests(TestCase):
             self.assertIn(want, labels,
                           f'{lang} chips 没有本地化分类名（_SIDEBAR_I18N 缺条目或视图没走 _t）')
             self.assertNotIn(
-                'Company News', labels,
+                'Exhibition Information', labels,
                 f'{lang} chips 仍在显示英文原文')
 
     # ---- ③ 分类链接真的会筛选 --------------------------------------------
@@ -4616,7 +4616,7 @@ class NewsDetailPageTests(TestCase):
     别人的文章。
     """
 
-    def _row(self, slug, title=None, category='Company News'):
+    def _row(self, slug, title=None, category='Exhibition Information'):
         return {
             'slug': slug,
             'title': title or f'QA EN title {slug}',
