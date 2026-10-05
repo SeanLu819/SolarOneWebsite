@@ -6,6 +6,7 @@ from pages.models import Product, Project
 from .utils import (
     _find_static, _static_url, _dict_product_image_url, _product_image_url,
     _project_image_url, _project_gallery_urls, _find_project_cover_path,
+    _db_product_cover_url, _db_project_cover_url,
     _DictProduct, _DictProject,
 )
 from .i18n import _PRODUCT_CARD_LABELS, _PRODUCT_CAT_TO_SIDEBAR_LABEL, _t
@@ -75,16 +76,36 @@ def _set_cached_project_detail(project, slug, lang):
 
 
 def invalidate_enrichment_cache():
-    """Clear all enrichment caches. Call when seed data changes."""
+    """Clear all enrichment caches. Call when seed data changes.
+
+    🔴 v1.10.15 — 这一段以前是**空操作**。原实现写着：
+
+        from .utils import _dir_listing_cache, _static_file_set
+        _dir_listing_cache = {}      # ← 局部重绑定
+        _static_file_set = None      # ← 局部重绑定
+
+    `from ... import` 只把名字绑到函数局部作用域，随后的赋值新建局部对象，
+    `utils` 里真正的字典/变量分毫未动（上面四个 `_enriched_*_cache` 有
+    `global` 声明，所以那四个是真清了 —— 不对称正是它长期没被发现的原因）。
+
+    后果只在**长驻进程**里显现，测试永远看不见（每个测试进程缓存都是空的）：
+    admin 上传图片写进 `static/` 后，`models.sync_project_on_save` 调到这里，
+    目录列表缓存原封不动 → 早于上传那次请求缓存的空集继续命中 →
+    `_find_project_gallery_files()` 返回 `[]` →
+    `_find_project_cover_path()` 一路降到 `images/projects/gallery` 兜底 →
+    页面渲染出 collectstatic 快照里的路径 → 404（2026-10-04 源深体育场现场）。
+
+    现在统一走 `utils.clear_static_caches()`：状态的所有者自己清，且是
+    `.clear()` 原地清，不是重新绑定。
+    """
     global _enriched_products_cache, _enriched_projects_cache
     global _enriched_product_detail_cache, _enriched_project_detail_cache
-    from .utils import _dir_listing_cache, _static_file_set
+    from .utils import clear_static_caches
     _enriched_products_cache = {}
     _enriched_projects_cache = {}
     _enriched_product_detail_cache = {}
     _enriched_project_detail_cache = {}
-    _dir_listing_cache = {}
-    _static_file_set = None
+    clear_static_caches()
 
 
 def _build_specs(obj):
@@ -140,7 +161,7 @@ def _enrich_product(product, lang):
         product.specs = _build_specs(product)
 
     if isinstance(product, Product):
-        product.image_url = _product_image_url(product, 'image')
+        product.image_url = _db_product_cover_url(product)
         product.banner_image_url = _product_image_url(product, 'banner_image')
         product.dimension_image_url = _product_image_url(product, 'dimension_image')
         product.beam_angle_image_url = _product_image_url(product, 'beam_angle_image')
@@ -218,7 +239,7 @@ def _enrich_project(project, lang):
     project.has_compare_images = slug in _COMPARE_IMAGE_SLUGS
 
     if isinstance(project, Project):
-        project.image_url = _project_image_url(project.image, slug)
+        project.image_url = _db_project_cover_url(project)
         pdf_static = getattr(project, 'pdf_static', '') or ''
         if pdf_static:
             project.pdf_url = static(pdf_static)

@@ -2,6 +2,7 @@ import os
 import json
 import logging
 from pathlib import Path
+from types import SimpleNamespace
 from django.conf import settings
 from django.templatetags.static import static
 from pages.static_scan import build_file_set
@@ -25,6 +26,35 @@ _static_file_set = None
 _dir_listing_cache = {}
 _PRODUCT_DIR_IMAGE_CACHE = {}
 _static_index = None
+_stale_snapshot_cache = None
+
+
+def clear_static_caches():
+    """Drop every process-level static lookup cache. Owner of the state, so the
+    dicts are mutated in place rather than rebound.
+
+    🔴 v1.10.15 — this function exists because ``enrich.invalidate_enrichment_cache()``
+    tried to do this job with ``_dir_listing_cache = {}`` after a local
+    ``from .utils import _dir_listing_cache``. That rebound a *local* name and
+    left ``utils``' dict populated, so admin saves never invalidated anything.
+    The failure was invisible in tests (each test process starts with empty
+    caches) and only showed up in a long-running dev server: upload images via
+    the admin, and the freshly written files stayed invisible because the
+    directory listing for their slug was cached as empty before the upload.
+
+    ``.clear()`` rather than rebinding to ``{}`` matters — a caller that grabbed
+    a reference (or a test that seeded a probe key) must see the flush.
+
+    ``_stale_snapshot_cache`` is included for the same reason: the stale-name
+    subtraction reads whatever is on disk at build time, so it has to be
+    recomputed after files move.
+    """
+    global _static_file_set, _static_index, _stale_snapshot_cache
+    _dir_listing_cache.clear()
+    _PRODUCT_DIR_IMAGE_CACHE.clear()
+    _static_file_set = None
+    _static_index = None
+    _stale_snapshot_cache = None
 
 
 def _load_static_index():
@@ -104,14 +134,23 @@ def _stale_snapshot_rel_paths():
     构建期索引（``pages.static_index``）**不动** —— Vercel 上函数包里既没有
     ``static/`` 也没有 ``staticfiles/``，索引是唯一真源，不能按本机快照裁剪。
     这里只在真源目录存在时做减法，因此生产路径完全不受影响。
+
+    🔴 v1.10.15 — 结果按进程缓存（此前每个调用都重走两棵树，而
+    ``_build_static_file_set`` 每请求调它一次）。用
+    ``clear_static_caches()`` 失效：磁盘上的文件集合变了，减法结果也得重算。
     """
+    global _stale_snapshot_cache
+    if _stale_snapshot_cache is not None:
+        return _stale_snapshot_cache
     try:
         sources = [str(d) for d in settings.STATICFILES_DIRS if os.path.isdir(d)]
         root = str(settings.STATIC_ROOT)
     except Exception:
-        return set()
+        _stale_snapshot_cache = set()
+        return _stale_snapshot_cache
     if not sources or not root or not os.path.isdir(root):
-        return set()
+        _stale_snapshot_cache = set()
+        return _stale_snapshot_cache
 
     source_rels = set()
     for base in sources:
@@ -127,6 +166,7 @@ def _stale_snapshot_rel_paths():
             rel = os.path.relpath(full, root).replace('\\', '/')
             if rel not in source_rels:
                 stale.add(rel)
+    _stale_snapshot_cache = stale
     return stale
 
 
@@ -218,6 +258,31 @@ def _list_static_dir(rel_dir):
     新规则：该目录在 `static/` 里存在 → **只看 `static/`**，陈旧快照彻底不参与；
     只有 `static/` 根本没有这个目录（生产形态：`vercel.json` 的 `excludeFiles`
     把 `static/` 与 `staticfiles/` 都排除出函数包）时才回退 `STATIC_ROOT`。
+
+    🔴 v1.10.15 — 回退来的名字仍要过一遍「陈旧快照减法」，与
+    ``_build_static_file_set()`` 对齐。那边早就减了（v1.9.9），这边一直没减，
+    于是同一个「只有一个真源」的原则在两个枚举入口上表现不一致，
+    后果是 2026-10-04 的源深体育场事故：
+
+    * 用户在 admin 重新上传 5 张图 → 正确落到
+      `static/images/projects/yuanshen-sports-centre-stadium/`，磁盘上确实有；
+    * `static/images/projects/gallery` **不存在**，但
+      `staticfiles/images/projects/gallery`（旧 collectstatic 快照）里有同名
+      `shys-soccer-0{1..5}.webp` —— 源深最早就是按 `gallery/` 传的；
+    * 本地 `DEBUG=False` ⇒ `elif not settings.DEBUG` 分支生效，
+      于是「回退目录」命中，5 张图被解析成
+      `/static/images/projects/gallery/shys-soccer-0N.webp`；
+    * 该路径只存在于 collectstatic 快照、dev server 不服务 ⇒ 页面 5 张图全 404，
+      而用户刚传的文件一张都没被引用。
+
+    减法在生产是空操作：`STATICFILES_DIRS` 与 `STATIC_ROOT` 都不在函数包里，
+    `_stale_snapshot_rel_paths()` 直接返回空集，构建期索引原样保留。
+
+    减法**无条件**剔除，不需要按 `static/` 的存在性豁免：走到这里要么是生产形态
+    （`stale` 为空集，不裁剪任何东西），要么 `static/<rel>` 目录压根不存在（否则
+    上面 `if os.path.isdir(base)` 已命中，`STATIC_ROOT` 分支不会执行）。而
+    `_stale_snapshot_rel_paths()` 的定义就是「`STATIC_ROOT` 里有、真源 `static/`
+    里没有」—— 在这个分支下它与「快照里的名字」完全重合，豁免条件永远为假。
     """
     if rel_dir in _dir_listing_cache:
         return _dir_listing_cache[rel_dir]
@@ -238,6 +303,11 @@ def _list_static_dir(rel_dir):
         if os.path.isdir(d):
             for f in os.listdir(d):
                 results.add(f)
+
+    # 只在真源 static/ 里没有同名文件时才把回退带来的名字剔掉 —— 与
+    # _build_static_file_set() 的减法同源，避免两条枚举路径给出不同答案。
+    prefix = rel_dir.rstrip('/') + '/'
+    results = {f for f in results if prefix + f not in _stale_snapshot_rel_paths()}
 
     _dir_listing_cache[rel_dir] = results
     return results
@@ -523,6 +593,58 @@ def _project_image_url(field, project_slug: str = ''):
         return field.url
     except Exception:
         return ''
+
+
+def _db_product_cover_url(product):
+    """Cover URL for a DB ``Product``: cover_image (FK) -> image -> first gallery.
+
+    Mirrors the seed-path resolver (`_dict_product_image_url` fed with the
+    cover_image path) so the two paths agree. Reusing a gallery image as the
+    cover means no separate file is served — the URL points at the already-
+    committed carousel asset.
+    """
+    slug = getattr(product, 'slug', '')
+    cover = getattr(product, 'cover_image', None)
+    if cover and getattr(cover, 'image', None):
+        u = _product_image_url(SimpleNamespace(slug=slug, image=cover.image), 'image')
+        if u:
+            return u
+    if getattr(product, 'image', None) and getattr(product.image, 'name', ''):
+        u = _product_image_url(product, 'image')
+        if u:
+            return u
+    for img in product.images.all():
+        f = getattr(img, 'image', None)
+        if f and getattr(f, 'name', ''):
+            u = _product_image_url(SimpleNamespace(slug=slug, image=f), 'image')
+            if u:
+                return u
+    return ''
+
+
+def _db_project_cover_url(project):
+    """Cover URL for a DB ``Project``: cover_image (FK) -> image -> first gallery.
+
+    See ``_db_product_cover_url`` for the rationale; same contract as the seed
+    path's ``_find_project_cover_path`` (which already falls back to gallery[0]).
+    """
+    slug = getattr(project, 'slug', '')
+    cover = getattr(project, 'cover_image', None)
+    if cover and getattr(cover, 'image', None):
+        u = _project_image_url(cover.image, slug)
+        if u:
+            return u
+    if getattr(project, 'image', None) and getattr(project.image, 'name', ''):
+        u = _project_image_url(project.image, slug)
+        if u:
+            return u
+    for img in project.images.all():
+        f = getattr(img, 'image', None)
+        if f and getattr(f, 'name', ''):
+            u = _project_image_url(f, slug)
+            if u:
+                return u
+    return ''
 
 
 def _project_gallery_urls(project):

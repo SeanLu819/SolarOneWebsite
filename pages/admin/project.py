@@ -44,6 +44,16 @@ class ProjectAdminForm(forms.ModelForm):
             'translations': TranslationsWidget(attrs={'rows': 10}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 封面下拉只列出本项目已上传的轮播图，避免跨项目误选。
+        instance = kwargs.get('instance')
+        if instance and instance.pk:
+            self.fields['cover_image'].queryset = ProjectImage.objects.filter(
+                project=instance).order_by('order', 'pk')
+        else:
+            self.fields['cover_image'].queryset = ProjectImage.objects.none()
+
 
 @admin.register(Project)
 class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
@@ -60,8 +70,8 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'fields': (('title', 'slug'), ('venue_type', 'sport_type'), 'location', 'order')
         }),
         ('Images', {
-            'fields': ('image',),
-            'description': '主图。轮播图片请在下方 "Project images" 区域添加。'
+            'fields': ('image', 'cover_image'),
+            'description': '「封面图（从轮播图选择）」可直接复用下方 Project images 中的某一张当卡片/详情主图，<b>不额外占空间</b>；选中后上方「主图」可留空。两张都填时以封面选择为准；主图也空时详情页/列表页自动取第一张轮播图。轮播图片请在下方 "Project images" 区域添加。'
         }),
         ('Content', {
             # Put description and results each on their own row so they stack vertically

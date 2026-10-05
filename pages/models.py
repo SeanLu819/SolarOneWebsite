@@ -100,7 +100,16 @@ class Product(models.Model):
     image = models.ImageField(
         upload_to='products/',
         blank=True,
-        help_text='产品卡片/详情主图。建议 1280×720 像素（16:9，最小 640×360）。'
+        help_text='产品卡片/详情主图（独立上传）。若已在下方「Product images」中选了某张轮播图当封面，这里留空即可，避免重复保存同一张图。'
+    )
+    cover_image = models.ForeignKey(
+        'ProductImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cover_for_product',
+        verbose_name='封面图（从轮播图选择）',
+        help_text='从已上传的轮播图里选一张作为封面/卡片主图。选中后前端直接复用该轮播图文件，不额外占用空间；留空则使用上方「主图」字段。'
     )
     banner_image = models.ImageField(
         upload_to='products/banners/',
@@ -388,7 +397,16 @@ class Project(models.Model):
     image = models.ImageField(
         upload_to='projects/',
         blank=True,
-        help_text='项目详情页主图。建议 1920×1080 像素（16:9，Retina 屏适配，最小 1280×720）。'
+        help_text='项目详情页主图（独立上传）。若已在下方「Project images」中选了某张轮播图当封面，这里留空即可，避免重复保存同一张图。'
+    )
+    cover_image = models.ForeignKey(
+        'ProjectImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='cover_for_project',
+        verbose_name='封面图（从轮播图选择）',
+        help_text='从已上传的轮播图里选一张作为封面/卡片主图。选中后前端直接复用该轮播图文件，不额外占用空间；留空则使用上方「主图」字段，主图也空时自动取第一张轮播图。'
     )
     pdf_file = models.FileField(
         upload_to=project_pdf_upload_path,

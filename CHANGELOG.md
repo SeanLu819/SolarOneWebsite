@@ -1454,6 +1454,91 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.15 - 2026-10-05
+
+## Pick the cover from the carousel, and stop saving the same photo twice
+
+### What the audit actually found
+
+Every project and product cover was measured against its own carousel, and the
+static tree was walked file by file. The result contradicted the assumption that
+started the request:
+
+- **Production was never storing the photo twice.** 20 of 22 projects and 22 of
+  24 products have a cover whose filename is already in the carousel. Because
+  `sync_*_on_save` strips the upload hash via `_clean_hashed_filename`, cover and
+  carousel entry land on **the same physical file** — one copy, one HTTP request.
+  Page weight was never the problem.
+- **The duplication lived in `media/`,** where the same photo had genuinely been
+  uploaded twice under two different hashes. `media/` is gitignored and Vercel
+  does not serve it, so it costs upload bandwidth and a "changed it in two
+  places" maintenance burden, not disk or latency on the live site.
+
+So the honest answer to "is the homepage image stored twice?" is *no on the live
+site, yes in the admin* — and the missing piece was never storage, it was UX:
+there was no way to say "use that carousel shot as the cover".
+
+### The mechanism
+
+New nullable `cover_image` FK — `Project → ProjectImage`,
+`Product → ProductImage`, `on_delete=SET_NULL` (migration
+`0031_add_cover_image`). Resolution order is now **`cover_image` → `image` →
+first gallery image**, so:
+
+- Selecting a carousel shot as the cover makes the front end reuse **that very
+  file**. No second static asset is created — the saving is avoided by
+  construction, not by cleanup.
+- The standalone `image` field stays for the two products whose cover is
+  genuinely not in the gallery (`m-series`, `rt410-series`); its `help_text` now
+  says it may be left empty.
+
+The admin dropdown is scoped to the object's own carousel
+(`cover_image.queryset = ProductImage.objects.filter(product=instance)`), so it
+cannot offer another product's photo, and it is empty on the create form where
+no carousel exists yet.
+
+Wired on **both** paths, per the project's dual-path rule: `views/utils.py`
+(`_db_project_cover_url` / `_db_product_cover_url`) for the DB, `seed_sync.py`
+for the export, which writes the selected gallery path into `image` so Vercel
+resolves it with no extra file.
+
+**No existing data was touched.** All 46 covers keep their current file; the new
+columns are empty (0/24 products, 0/22 projects) and verified so.
+
+### Two bugs found and fixed along the way
+
+**A cache invalidation that did nothing.** `clear_static_caches()` was called
+with no arguments on a function that requires a `kind` parameter — the call
+raised `TypeError` inside a `try`, so the cache was never actually cleared after
+an admin save. Editors were seeing stale galleries until the process restarted.
+
+**A missing subtraction in the static-listing fallback.** `_list_static_dir`'s
+fallback branch decremented the wrong counter, so a directory with no match
+returned a plausible-looking wrong answer instead of an empty list.
+
+### One project was shipping a single-photo carousel
+
+`save_model` runs **before** `save_formset`, and `_sync_seed_files()` hangs off
+`save_model` — so at export time the freshly uploaded `ProjectImage` rows were
+not in the database yet. For six of the seven re-photographed projects the export
+happened to be correct; **`yingdong-natatorium` was not**: its seed carried 1
+gallery entry while the database and the static tree both held 5. Production runs
+on zero DB rows and reads the seed, so that page would have shown one photo.
+
+Found by diffing DB against seed across all 22 projects, not by reading a page.
+Re-exported from the database; the only change in the whole file is that one
+gallery, `1 → 5`. Now verified: DB and seed agree for every project and product.
+
+Guard: `CoverImageFromGalleryTests` (3 cases) asserts the cover resolves to the
+*gallery* file and that a selected `cover_image` beats a separate `image` — the
+duplicate-storage case, which is the whole point. Mutation probe red on
+mutation, green after restore, byte-identical.
+
+Note for the next editor: the export ordering above is a **latent** trap. A
+project re-uploaded without any other field edit can still be exported with a
+stale gallery. Re-run the DB→JSON export after bulk image work and diff the
+result.
+
 ## v1.10.14 - 2026-10-04
 
 ## The news listing advertises a social card with a picture in it

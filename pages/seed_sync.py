@@ -220,6 +220,14 @@ def _product_to_dict(product):
 
     gallery = _product_gallery_paths(product)
 
+    # 封面优先用「从轮播图选中的封面」(cover_image)：它本就是轮播图之一，
+    # 写进 image 即复用同一静态文件，生产 seed 路径零新增文件。
+    cover = getattr(product, 'cover_image', None)
+    cover_img = getattr(cover, 'image', None) if cover else None
+    if cover_img and getattr(cover_img, 'name', ''):
+        resolved_images['image'] = _resolve_static_path(
+            cover_img.name, slug, 'products', field_name='image')
+
     return {
         'pk': product.pk,
         'name': product.name,
@@ -288,7 +296,9 @@ def _project_to_dict(project):
     """Convert a Project model instance to a seed dict with ALL fields."""
     slug = project.slug
 
-    img = getattr(project, 'image', None)
+    cover = getattr(project, 'cover_image', None)
+    cover_img = getattr(cover, 'image', None) if cover else None
+    img = cover_img if (cover_img and getattr(cover_img, 'name', '')) else getattr(project, 'image', None)
     image_path = ''
     if img and getattr(img, 'name', ''):
         image_path = _resolve_static_path(img.name, slug, 'projects')

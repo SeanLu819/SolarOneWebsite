@@ -128,6 +128,16 @@ class ProductAdminForm(forms.ModelForm):
             'translations': TranslationsWidget(attrs={'rows': '2'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 封面下拉只列出本产品已上传的轮播图，避免跨产品误选。
+        instance = kwargs.get('instance')
+        if instance and instance.pk:
+            self.fields['cover_image'].queryset = ProductImage.objects.filter(
+                product=instance).order_by('order', 'pk')
+        else:
+            self.fields['cover_image'].queryset = ProductImage.objects.none()
+
 
 def _sidebar_rank_map():
     """slug -> (rank, breadcrumb labels) mirroring the PUBLIC products sidebar.
@@ -286,8 +296,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Images', {
             # ordering_image / cert_image are ALSO used by the overview template
             # (free-form copy slot + certification badges), so they live here.
-            'fields': ('image', 'banner_image', 'ordering_image', 'cert_image'),
-            'description': '上传图片时请参考字段下方的尺寸提示。Ordering image 为订购信息示意图（两种模板都显示）。Cert image 为产品认证标识图（UL / DLC / GS / CE / IP66 标识条）。留空则自动使用这张通用标识图——所有产品共用同一份，请勿逐个产品重复上传。'
+            'fields': ('image', 'cover_image', 'banner_image', 'ordering_image', 'cert_image'),
+            'description': '「封面图（从轮播图选择）」可直接复用下方 Product images 中的某一张当卡片/详情主图，<b>不额外占空间</b>；选中后上方「主图」可留空。两张都填时以封面选择为准。Ordering image 为订购信息示意图（两种模板都显示）。Cert image 为产品认证标识图（UL / DLC / GS / CE / IP66 标识条）。留空则自动使用这张通用标识图——所有产品共用同一份，请勿逐个产品重复上传。'
         }),
         ('Detail-page images (仅在「产品详细页」显示)', {
             'classes': ('detail-only',),
