@@ -93,6 +93,16 @@ fi
 echo "=== [build.sh] Regenerating seed_data.py from seed_data.json ==="
 python -m pages.seed_sync --json 2>&1
 
+# 1.5b. Stamp the deploy date for sitemap <lastmod>.
+# Vercel's serverless checkout rewrites file mtimes — a live probe showed all 59
+# <lastmod> values collapsed to a stale 2018 date, so the sitemap can no longer
+# rely on os.path.getmtime(). Write the build date into a git-ignored build
+# artifact (same pattern as pages/seed_data.py); views_other._site_last_modified()
+# prefers it and falls back to the seed mtime locally, where the file is absent.
+echo "=== [build.sh] Stamping build date for sitemap lastmod ==="
+printf "SITE_LAST_MODIFIED = '%s'\n" "$(date -u +%Y-%m-%d)" > pages/build_meta.py
+cat pages/build_meta.py
+
 # 1.6. Prepare the Vercel CDN root (public/) and point collectstatic AT it.
 # On Vercel the build output directory is `public/` (vercel.json outputDirectory),
 # and static assets are served straight from the edge CDN at /static/*. So we

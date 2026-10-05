@@ -5,7 +5,7 @@ from .views_projects import (
 from .views_contact import contact
 from .views_other import (
     home, about, news, news_detail, news_feed, robots_txt, sitemap_xml,
-    privacy, terms, diagnostic,
+    privacy, terms, diagnostic, indexnow_key,
 )
 from .enrich import invalidate_enrichment_cache
 from .utils import (

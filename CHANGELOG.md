@@ -1454,6 +1454,56 @@ local admin preview only.
 ### Notes
 - Version bump to `v1.2.1`.
 
+## v1.10.16 - 2026-10-06
+
+## Three fixes that were costing indexing and rich results
+
+A full read-only audit of SEO / GEO / speed (findings written up in
+`docs/seo-speed-optimization-plan-2026-10.md`) turned up three defects that
+were silently costing reach. All three are fixed here; all three were verified
+against production with curl before and after.
+
+### 1. Every sitemap `<lastmod>` said `2018-10-20`
+
+All 59 URLs carried the same stale date. The code was right — it read
+`os.path.getmtime(seed_data.json)` — but Vercel's serverless checkout rewrites
+file mtimes, so on production that call returned a value from the repository's
+first commit. Locally the same code returned `2026-10-05`. Google was being
+told the whole site had not changed in eight years.
+
+`build.sh` now stamps the deploy date into a git-ignored build artifact
+(`pages/build_meta.py`, the same pattern already used for `pages/seed_data.py`),
+and `_site_last_modified()` prefers it, falling back to the seed mtime where
+the artifact is absent (i.e. local dev).
+
+### 2. Project JSON-LD `image` was a relative path
+
+`/projects/<slug>/` emitted `"image": "/static/images/..."` while the product,
+news and overview templates all emitted a fully-qualified URL. A relative image
+URL is invalid structured data, so **22 projects x 6 languages = 132 pages**
+were losing their rich-result image and any AI citation that needs a resolvable
+image URL. One-line fix in `templates/project_detail.html`.
+
+### 3. IndexNow was entirely missing
+
+Bing, Yandex, Seznam and Naver support IndexNow — push a URL, get crawled
+within minutes instead of waiting for the crawl schedule. The site had no key
+and no key file, so every push would have been rejected.
+
+- `settings.INDEXNOW_KEY` (32-hex) plus `INDEXNOW_KEY_FILE`
+- `indexnow_key` view serving the key as `text/plain` at `/<key>.txt`
+- `scripts/indexnow_ping.py` — dry-run by default, `--live` to push
+  (354 URLs = 59 pages x 6 languages)
+
+## What the audit cleared (no change needed)
+
+Measured, not assumed: HTML is 13.7–20.1 KB after Brotli, TTFB 0.45–0.66 s,
+edge cache HIT is stable, canonical / hreflang / RTL / OG / real-404 / no-noindex
+are all correct, and every page has exactly one H1. CSS was suspected of being
+render-blocking at 86.7 KB but is 21.9 KB on the wire and already preloaded.
+The remaining speed work is entirely images — 295 files / 34.7 MB, no `srcset`
+outside the homepage hero. That is tracked as batch C, not done here.
+
 ## v1.10.15 - 2026-10-05
 
 ## Pick the cover from the carousel, and stop saving the same photo twice

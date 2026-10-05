@@ -17,6 +17,10 @@ urlpatterns = _legacy_redirects + [
     path('', views.home, name='home'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('sitemap.xml', views.sitemap_xml, name='sitemap_xml'),
+    # IndexNow key file (Bing/Yandex). The route name is derived from the key so
+    # rotating the key auto-rotates the URL; no slug route can shadow it because
+    # it sits at the site root with a .txt suffix.
+    path(settings.INDEXNOW_KEY_FILE, views.indexnow_key, name='indexnow_key'),
     path('news/', views.news, name='news'),
     path('news/feed.xml', views.news_feed, name='news_feed'),
     path('news/<slug:slug>/', views.news_detail, name='news_detail'),

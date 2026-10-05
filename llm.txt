@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.10.15
+# Content source of truth: seed_data.json · Site version v1.10.16
 
 ## Who
 SolarOne — Beijing-based manufacturer of high-power LED lighting systems since

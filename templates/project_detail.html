@@ -512,7 +512,7 @@
   "@type": "Article",
   "headline": "{{ project.title_t|escapejs }}",
   "description": "{{ project.description_t|default:''|descrub|escapejs }}",
-  "image": "{{ project.image_url|default:'' }}",
+  "image": "{{ canonical_origin }}{{ project.image_url|default:'' }}",
   "url": "{{ canonical_origin }}{{ request.path }}",
   "publisher": {
     "@type": "Organization",

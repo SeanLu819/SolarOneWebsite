@@ -81,6 +81,13 @@ CANONICAL_ORIGIN = os.environ.get(
     'CANONICAL_ORIGIN', 'https://www.solaronelighting.com'
 ).rstrip('/')
 
+# ============ IndexNow (Bing / Yandex 主动推送) ============
+# The key file MUST be served at https://<host>/<key>.txt and its body MUST be
+# exactly the key (8-128 hex chars, a-f 0-9). Changing the key means the old
+# file URL stops validating — keep it stable unless rotating deliberately.
+INDEXNOW_KEY = os.environ.get('INDEXNOW_KEY', 'b662d773724397c2d6eb02109bac5e48')
+INDEXNOW_KEY_FILE = '%s.txt' % INDEXNOW_KEY
+
 # ============ WEB ANALYTICS (M2 / SEO P1c) ============
 # GA4 Measurement ID (e.g. 'G-XXXXXXXXXX'). Empty = analytics disabled (no
 # third-party request is made). Set via env (Vercel: GA4_MEASUREMENT_ID).
@@ -504,4 +511,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.10.15'
+APP_VERSION = '1.10.16'

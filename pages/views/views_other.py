@@ -102,6 +102,41 @@ def robots_txt(request):
     return render(request, 'robots.txt', content_type='text/plain')
 
 
+def _site_last_modified():
+    """Date string for sitemap ``<lastmod>``.
+
+    Vercel's serverless checkout rewrites file mtimes, so on production
+    ``os.path.getmtime()`` on seed_data.json returned a stale 2018 date for
+    every URL. build.sh therefore stamps an explicit build date into the
+    git-ignored build artifact ``pages/build_meta.py`` (same pattern as
+    ``pages/seed_data.py``). Locally that file does not exist, so fall back
+    to the seed snapshot mtime.
+    """
+    try:
+        from pages.build_meta import SITE_LAST_MODIFIED
+    except Exception:
+        SITE_LAST_MODIFIED = ''
+    if SITE_LAST_MODIFIED:
+        return SITE_LAST_MODIFIED
+    try:
+        return datetime.fromtimestamp(os.path.getmtime(
+            os.path.join(str(settings.BASE_DIR), 'seed_data.json')
+        )).date().isoformat()
+    except Exception:
+        return ''
+
+def indexnow_key(request):
+    """Serve the IndexNow key file (Bing / Yandex push protocol).
+
+    IndexNow requires ``https://<host>/<key>.txt`` to return the key as plain
+    text. Without it, Bing can only discover new URLs by crawling on its own
+    schedule; with it we can push changed URLs the moment we deploy.
+    """
+    key = getattr(settings, 'INDEXNOW_KEY', '')
+    if not key:
+        raise Http404
+    return HttpResponse(key, content_type='text/plain; charset=utf-8')
+
 def sitemap_xml(request):
     """Multi-language sitemap.
 
@@ -223,12 +258,7 @@ def sitemap_xml(request):
     # snapshot, so a per-URL timestamp is unavailable. Use the seed snapshot's
     # own mtime — stable across requests within a deploy (Google distrusts a
     # lastmod that changes on every fetch) and honest as "content published".
-    try:
-        _lastmod = datetime.fromtimestamp(os.path.getmtime(
-            os.path.join(str(settings.BASE_DIR), 'seed_data.json')
-        )).date().isoformat()
-    except Exception:
-        _lastmod = ''
+    _lastmod = _site_last_modified()
 
     with override('en'):
         static_pages = [
