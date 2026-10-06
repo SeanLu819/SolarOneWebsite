@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from .common import get_common_context
 from .data_loaders import get_news, get_news_detail, get_product_detail, get_project_detail
+from .related_links import related_items_for_news
 from .i18n import _t
 from .data_loaders import get_news, get_product_detail, get_project_detail
 from .utils import _load_seed
@@ -95,6 +96,12 @@ def news_detail(request, slug):
     for a in related:
         a['category_label'] = _t(a.get('category') or 'Exhibition Information', lang)
     context['related_articles'] = related[:3]
+    # B2: only link products/projects explicitly named in the article
+    # (keyword match) so we never invent a weak generic cross-link.
+    rel_products, rel_projects = related_items_for_news(article, lang)
+    context['related_products'] = rel_products
+    context['related_projects'] = rel_projects
+
     return render(request, 'news_detail.html', context)
 
 

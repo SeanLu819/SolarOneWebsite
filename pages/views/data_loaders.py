@@ -566,8 +566,68 @@ def get_news_detail(slug, lang='en'):
             .get()
         )
     except NewsArticle.DoesNotExist:
-        return None
+        article = None
     except Exception:
         logger.warning('DB news detail query failed', exc_info=True)
+        article = None
+    if article is not None:
+        return _normalize_news_row(article, lang)
+    # Fall back to seed JSON (local dev with empty DB, or DB hiccup) so the
+    # detail page still renders - mirrors get_products / get_projects.
+    for a in _load_seed().get('news', []) or []:
+        if a.get('slug') == slug and a.get('is_published', True):
+            return _normalize_news_article(a, lang)
+    return None
+
+
+def get_all_products(lang):
+    """All products including sub-series, for news keyword cross-linking.
+
+    ``get_products`` hides sub-series (``parent_slug`` set) from the catalogue
+    grid, but a news article can name a sub-series model number (e.g.
+    ``FL6M-480W`` -> the product page ``/products/fl6m/``), so the news matcher
+    must be able to see them. DB first, seed-JSON fallback; the cache key
+    ``'_all'`` is intentionally distinct from the empty category used by
+    ``get_products`` so the two result sets never alias each other.
+    """
+    if getattr(settings, 'IS_VERCEL', False):
+        return _get_all_products_from_json(lang)
+    result = _get_all_products_from_db(lang)
+    if not result:
+        result = _get_all_products_from_json(lang)
+    return result
+
+
+def _get_all_products_from_db(lang):
+    cached = _get_cached_products(lang, '_all', '')
+    if cached is not None:
+        return cached
+    try:
+        products_list = Product.objects.filter(is_active=True).order_by('order')
+        result = []
+        for p in products_list:
+            _enrich_product(p, lang)
+            result.append(p)
+        if result:
+            _set_cached_products(result, lang, '_all', '')
+        return result
+    except Exception:
+        logger.warning('DB all-products query failed, will fall back to seed JSON', exc_info=True)
         return None
-    return _normalize_news_row(article, lang)
+
+
+def _get_all_products_from_json(lang):
+    cached = _get_cached_products(lang, '_all', '')
+    if cached is not None:
+        return cached
+    data = _load_seed()
+    result = []
+    for item in data.get('products', []):
+        if not item.get('is_active', True):
+            continue
+        p = _DictProduct(item)
+        _enrich_product(p, lang)
+        result.append(p)
+    result.sort(key=lambda p: getattr(p, 'order', 0) or 0)
+    _set_cached_products(result, lang, '_all', '')
+    return result

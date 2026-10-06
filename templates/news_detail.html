@@ -103,6 +103,26 @@
     </div>
     {% endif %}
 
+    {% if related_products or related_projects %}
+    <div class="news-related news-related--cross">
+      <h2 class="news-related-heading">{% trans "Related Products &amp; Projects" %}</h2>
+      <div class="news-related-grid">
+        {% for p in related_products %}
+        <a class="news-related-card" href="{% url 'product_detail' p.slug %}">
+          {% if p.image_url %}<div class="news-related-cover"><img src="{{ p.image_url }}" alt="{{ p.name_t }}" loading="lazy"></div>{% endif %}
+          <div class="news-related-body"><div class="news-related-meta"><span class="news-related-cat">{% trans "Product" %}</span></div><h3><bdi>{{ p.name_t }}</bdi></h3></div>
+        </a>
+        {% endfor %}
+        {% for pj in related_projects %}
+        <a class="news-related-card" href="{% url 'project_detail' pj.slug %}">
+          {% if pj.image_url %}<div class="news-related-cover"><img src="{{ pj.image_url }}" alt="{{ pj.title_t }}" loading="lazy"></div>{% endif %}
+          <div class="news-related-body"><div class="news-related-meta"><span class="news-related-cat">{% trans "Project" %}</span></div><h3><bdi>{{ pj.title_t }}</bdi></h3></div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </section>
 

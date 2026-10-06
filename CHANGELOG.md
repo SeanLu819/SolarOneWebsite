@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.17 - 2026-10-06
+
+## SEO/GEO batch B (P1): cross-linking, AI crawlers, structured data, banner
+
+- **B1** `robots.txt`: allow 10 more AI answer-engine crawlers (meta-externalagent,
+  CCBot, Bytespider, Amazonbot, Claude-User, ChatGPT-User, DuckAssistBot, YouBot,
+  Omgilibot, Diffbot) so they can read the whole site (courtesy signal; the real
+  edge blocker is Cloudflare AI Crawl Control).
+- **B2** Break the product / project / news content islands: project detail pages
+  now link related products, product detail pages link application-case projects,
+  and news articles link products/projects explicitly named in the copy. Deterministic
+  category↔sport/venue bridge, works on both DB and seed paths.
+- **B3** Project `Article` JSON-LD now carries `author` (Organization) and
+  `dateModified` (build date). `datePublished` is intentionally omitted — seed
+  projects carry no publication date; add a `published_at` field if real dates wanted.
+- **B4** `products.html`: the light-theme hero banner is deferred via `data-src` and
+  only fetched when the visitor is on the light theme, saving ~90 KB per dark visitor.
+
 ## v1.10.4 - 2026-10-04
 
 ## Put news figures in the paragraph they illustrate, and one card size

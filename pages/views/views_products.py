@@ -12,6 +12,7 @@ from .i18n import (
     _resolve_product_sidebar,
 )
 from .data_loaders import get_products, get_product_detail
+from .related_links import related_projects_for_product
 from pages.redirects import redirect_target_for_product
 
 
@@ -340,6 +341,10 @@ def product_detail(request, slug):
             build_product_faq_jsonld(PRODUCT_FAQ),
             ensure_ascii=False,
         )
+        # B2: cross-link to projects whose sport/venue type matches
+        # this product's category (breaks the content islands).
+        context['related_projects'] = related_projects_for_product(product, lang)
+
 
     # Unknown slug → real 404. Previously this rendered product_detail.html's
     # "Product Not Found" branch with HTTP 200 (a soft 404): Google indexes

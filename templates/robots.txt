@@ -39,6 +39,37 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
+# --- B1 (2026-10): additional AI answer-engine crawlers (SEO/GEO) ---
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
 Sitemap: {{ canonical_origin }}/sitemap.xml
 
 # AI summary (llm.txt convention): machine-readable overview of this site.

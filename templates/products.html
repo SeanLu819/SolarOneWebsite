@@ -64,7 +64,30 @@
           可见文本（v1.5.2 曾因此泄漏，且该文本在流内会撑高 banner 容器）。
           {% endcomment %}
           <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark" fetchpriority="high" decoding="async">
-          <img src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" decoding="async">
+          {# B4 (SEO/GEO speed): the light-theme banner is only fetched when the
+          visitor is actually on the light theme. Dark is the default/server
+          theme, so its banner loads eagerly; the light one is deferred via
+          data-src and promoted by a tiny html.js-gated script below — this
+          avoids downloading ~90 KB for every dark-theme visitor. #}
+          <img data-src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" loading="lazy" decoding="async">
+          <script nonce="{{ request.csp_nonce }}">
+            (function () {
+              var root = document.documentElement;
+              function syncBanner() {
+                var light = document.querySelector('.products-banner-light');
+                if (!light) return;
+                if (root.getAttribute('data-theme') === 'light') {
+                  if (!light.getAttribute('src') && light.getAttribute('data-src')) {
+                    light.setAttribute('src', light.getAttribute('data-src'));
+                  }
+                }
+              }
+              syncBanner();
+              if (window.MutationObserver) {
+                new MutationObserver(syncBanner).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+              }
+            })();
+          </script>
           <div class="products-banner-overlay"></div>
           <div class="products-banner-content">
             <span class="products-banner-label">{% trans "LED Lighting Products" %}</span>

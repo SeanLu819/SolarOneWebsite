@@ -11,6 +11,8 @@ from .i18n import (
     _t,
 )
 from .data_loaders import get_projects, get_project_detail
+from .related_links import related_products_for_project
+from datetime import date
 
 
 # Maps a project's sport_type to the collection page it belongs on, so the
@@ -165,6 +167,21 @@ def project_detail(request, slug):
         # Internal anchor-text vote for the Tier-1/2 keyword landing pages.
         context['related_landing'] = SPORT_TYPE_TO_LANDING.get(
             getattr(project, 'sport_type', ''))
+
+        # B2: cross-link to products whose category matches this
+        # project's sport/venue type (breaks the content islands).
+        context['related_products'] = related_products_for_project(project, lang)
+        # B3: Article JSON-LD dateModified. Seed projects carry no
+        # publication date, so datePublished is intentionally omitted.
+        try:
+            from pages.build_meta import SITE_LAST_MODIFIED
+            _lmod = SITE_LAST_MODIFIED or ''
+        except Exception:
+            _lmod = ''
+        if not _lmod:
+            _lmod = date.today().isoformat()
+        context['project_date_modified'] = _lmod
+
     else:
         # S2: an unresolvable slug may simply be a page that was renamed. Only
         # consulted on a miss, so a registered redirect can never shadow a live
