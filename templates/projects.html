@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load text_filters %}
+{% load image_tags %}
 
 {% block title %}{% blocktrans %}LED Lighting Projects — SolarOne Projects Worldwide{% endblocktrans %}{% endblock %}
 {% block meta_description %}{% blocktrans %}Browse SolarOne's portfolio of 500+ LED lighting projects across 50+ countries. Sports venues, airports, seaports, and industrial facilities worldwide.{% endblocktrans %}{% endblock %}
@@ -66,7 +67,7 @@
           <a href="{% url 'project_detail' project.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
             <div class="project-card-img">
               {% if project.image_url %}
-              <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy" decoding="async">
+              <img src="{{ project.image_url }}" srcset="{{ project.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ project.title }}" loading="lazy" decoding="async">
               {% else %}
               <div class="project-card-img-placeholder stadium">
                 <span class="field-label">{% trans "Project Image" %}</span>
@@ -83,6 +84,18 @@
           </a>
           {% endfor %}
         </div>
+
+        {% comment %}
+        v1.10.23 (P4-A): a venue visitor is exactly the person looking for the
+        stadium lighting term, so the grid hands them off to it. Gated on
+        ``collection_key`` so it appears only on the two sport collections and
+        not on the general index, where it would be a fifth thing to scroll past.
+        {% endcomment %}
+        {% if collection_key %}
+        <p style="margin-top: 36px;">
+          <a href="{% url 'stadium_lighting' %}" style="color: var(--accent);">{% trans "Which luminaire do these venues use?" %} &rarr;</a>
+        </p>
+        {% endif %}
 
         {% if page_obj.has_other_pages %}
         <div class="pagination-wrap" style="display: flex; justify-content: center; gap: 8px; margin-top: 40px; align-items: center;">

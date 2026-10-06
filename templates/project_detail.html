@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load text_filters %}
+{% load image_tags %}
 
 {% block title %}{% if project %}{{ project.seo_title_t }}{% else %}{% trans "Project Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if project %}{{ project.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
@@ -64,7 +65,7 @@
             <div class="ps-carousel-track">
               {% for img in gallery %}
               <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
+                <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %}>
                 </div>
                 {% endfor %}
               </div>
@@ -88,7 +89,7 @@
             </div>
 
           {% elif project.image_url %}
-          <img src="{{ project.image_url }}" alt="{{ project.title_t }}" class="detail-single-img" loading="lazy">
+          <img src="{{ project.image_url }}" srcset="{{ project.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ project.title_t }}" class="detail-single-img">
           {% else %}
           <div class="detail-image-placeholder">
             <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Project Image" %}</span>

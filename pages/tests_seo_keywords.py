@@ -18,8 +18,10 @@ import re
 
 from django.test import Client, TestCase
 
+from pages.models import Product
 from pages.utils import (
     CATEGORY_KEYWORD,
+    CATEGORY_KEYWORD_I18N,
     SLUG_KEYWORD_OVERRIDE,
     build_seo_description,
     build_seo_title,
@@ -78,13 +80,31 @@ class CategoryKeywordMappingTests(TestCase):
 
 class ProductSeoTitleKeywordTests(TestCase):
     def test_all_product_titles_contain_category_keyword(self):
+        """Every title carries a keyword — the slug one if there is one.
+
+        🔴 v1.10.20 (P2-A) — this used to assert the *category* phrase is
+        always present, which made a per-slug override impossible by
+        construction: eleven products share ``AREA_SITE``, so the M Series
+        modules (which the repository's own copy calls floodlights) were all
+        opening with ``LED Area & Site Lighting`` and bidding against each
+        other. The contract is now "a keyword is present", not "this specific
+        keyword is present" — the phrase a page leads with is a per-slug copy
+        decision recorded in ``SLUG_KEYWORD_OVERRIDE``.
+        """
         seed = _load_seed()
         for item in seed['products']:
             p = _DictProduct(item)
             title = p.seo_title('en')
-            kw = CATEGORY_KEYWORD.get(p.category, '')
-            self.assertTrue(kw, f'{p.slug} category {p.category!r} has no keyword')
-            self.assertIn(kw, title, f'{p.slug} title missing category keyword: {title!r}')
+            override = SLUG_KEYWORD_OVERRIDE.get(p.slug, '')
+            category_kw = CATEGORY_KEYWORD.get(p.category, '')
+            expected = override or category_kw
+            self.assertTrue(
+                expected,
+                f'{p.slug}: category {p.category!r} has neither a slug '
+                f'override nor a category keyword')
+            self.assertIn(
+                expected, title,
+                f'{p.slug} title missing its keyword {expected!r}: {title!r}')
             self.assertIn('| SolarOne', title)
 
     def test_title_formula_appends_power_only_when_absent_from_identifier(self):
@@ -105,12 +125,84 @@ class ProductSeoTitleKeywordTests(TestCase):
 
 
 class ProductSeoTitleLocalizedTests(TestCase):
-    def test_non_english_title_uses_localized_keyword(self):
-        p = _DictProduct({
-            'slug': 'a', 'name': 'Alpha', 'category': 'FLOODLIGHT',
-            'model_number': 'A-1', 'translations': {'fr': {'category': 'Projecteurs LED'}},
-        })
-        self.assertIn('Projecteurs LED', p.seo_title('fr'))
+    """P2-B: the non-English keyword comes from ``CATEGORY_KEYWORD_I18N``.
+
+    🔴 v1.10.20 — this used to assert the keyword is read from the product's
+    ``translations[lang]['category']``. That is the chain that put the raw enum
+    ``AREA_SITE`` into 100 non-English titles: ``translate()`` falls back to the
+    English value when a translation is missing, and the English value of
+    ``category`` is the stored enum. The wording now comes from
+    ``CATEGORY_KEYWORD_I18N`` — the same label the site already shows in the
+    sidebar and on the cards, in every locale.
+    """
+
+    def test_non_english_title_uses_the_category_i18n_map(self):
+        for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+            for category, phrases in CATEGORY_KEYWORD_I18N.items():
+                with self.subTest(lang=lang, category=category):
+                    p = _DictProduct({
+                        'slug': 'a', 'name': 'Alpha', 'category': category,
+                        'model_number': 'A-1',
+                    })
+                    self.assertIn(phrases[lang], p.seo_title(lang))
+
+    def test_i18n_map_covers_every_category_in_use(self):
+        """A category missing from the map would silently fall back to English.
+
+        Asserted rather than assumed: the fallback is *safe* (English beats an
+        enum) but it is still a regression of the localisation this batch
+        exists to deliver, so it has to be loud.
+        """
+        used = {p.get('category', '') for p in _load_seed()['products']}
+        missing = sorted(used - set(CATEGORY_KEYWORD_I18N))
+        self.assertEqual(
+            missing, [],
+            'categories with no localised SEO keyword — their non-English '
+            'titles will fall back to the English phrase: %r' % (missing,))
+
+    def test_i18n_map_matches_the_sidebar_wording(self):
+        """The title, the sidebar and the cards must say the same thing.
+
+        The map reuses the site's existing category labels rather than new
+        copy. That is only a virtue while it stays true, and a reviewer who
+        later swaps in proper search phrases should update this deliberately.
+        """
+        from pages.views.i18n import _SIDEBAR_I18N
+
+        expected = {
+            'AREA_SITE': 'Area and Site',
+            'SPORTS_LIGHTING': 'Sports Lighting System',
+            'FLOODLIGHT': 'Flood Lighting',
+            'HIGHBAY_LOWBAY': 'Highbay & Low Bay',
+            'ROADWAY': 'Roadway',
+            'ACCESSORY': 'Accessory',
+        }
+        for category, label in expected.items():
+            sidebar = _SIDEBAR_I18N[label]
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                with self.subTest(category=category, lang=lang):
+                    self.assertEqual(
+                        CATEGORY_KEYWORD_I18N[category][lang], sidebar[lang],
+                        'CATEGORY_KEYWORD_I18N and the sidebar label have '
+                        'drifted apart for %s/%s' % (category, lang))
+
+    def test_no_locale_ever_emits_the_stored_enum(self):
+        """The regression this batch exists to prevent, asserted end to end.
+
+        Checked against the real seed data rather than a synthetic product, so
+        a category that is only used by one page cannot slip through.
+        """
+        enums = {c for c, _ in Product.CATEGORY_CHOICES}
+        for item in _load_seed()['products']:
+            p = _DictProduct(item)
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                with self.subTest(slug=p.slug, lang=lang):
+                    title = p.seo_title(lang)
+                    for enum in enums:
+                        self.assertNotIn(
+                            enum, title,
+                            '%s/%s title leaks the stored enum %r: %r'
+                            % (p.slug, lang, enum, title))
 
 
 class MetaDescriptionUniquenessTests(TestCase):

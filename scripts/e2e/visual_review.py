@@ -46,6 +46,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PATHS = [
     "/",                                    # home
     "/products/",                           # 产品列表
+    "/stadium-lighting/",                                 # 体育泛词落地页 v1.10.23 P4-A
     "/projects/football/",               # 足球场照明项目集合（真实案例页，Tier-2）
     "/projects/tennis/",                 # 网球场照明项目集合（真实案例页，Tier-2）
     "/products/rt400hb/",                   # product_detail.html

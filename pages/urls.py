@@ -25,6 +25,12 @@ urlpatterns = _legacy_redirects + [
     path('news/feed.xml', views.news_feed, name='news_feed'),
     path('news/<slug:slug>/', views.news_detail, name='news_detail'),
     path('products/', views.products, name='products'),
+    # v1.10.23 (P4-A): the generic stadium-lighting term. Registered before
+    # ``products/<slug:slug>/``? Not strictly necessary — the path has
+    # no ``products/`` prefix — but it MUST sit before nothing and
+    # AFTER ``products/series/...``. Kept next to the product routes so the
+    # reason it exists is visible to whoever next reorders this list.
+    path('stadium-lighting/', views.stadium_lighting, name='stadium_lighting'),
     path('products/series/<slug:slug>/', views.product_series, name='product_series'),
     path('products/<slug:slug>/', views.product_detail, name='product_detail'),
     path('projects/', views.projects, name='projects'),

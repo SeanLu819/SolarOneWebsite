@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load text_filters %}
+{% load image_tags %}
 
 {% block title %}{% if product %}{{ product.seo_title_t }}{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if product %}{{ product.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
@@ -65,17 +66,28 @@
         {% if banner_image %}
         <div class="series-hero">
           {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
-          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg" fetchpriority="high" decoding="async">
+          {% comment %} v1.10.22 (P3-C): the hero background sits behind the H1 with text
+             over it, so its alt names the product for a crawler instead of
+             describing an image nobody sees. {% endcomment %}
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" class="series-hero-bg" fetchpriority="high" decoding="async">
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{{ banner_label }}</span>
-            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi></h1>
+            {% comment %} v1.10.20: wattage joins the H1. A bare "FL6M" told a crawler
+               nothing; "FL6M 480W" carries the model AND the commercial
+               spec buyers actually search. The wattage is a number, so it
+               needs no translation and is safe in all six locales. The
+               category phrase stays in the hero label above and in the
+               <title> — it is English-only until CATEGORY_KEYWORD_I18N
+               lands (P2-B), and injecting it here would put English words
+               on a /fr/ page. {% endcomment %}
+            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
           </div>
         </div>
         {% else %}
         <div class="detail-hero">
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi></h1>
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_display }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
         </div>
         {% endif %}
 
@@ -86,9 +98,9 @@
             <div class="ps-carousel" id="psCarousel" data-interval="3000">
               <div class="ps-carousel-track">
                 {% for img in gallery %}
-                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
-                </div>
+              <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
+                <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+              </div>
                 {% endfor %}
               </div>
 
@@ -112,7 +124,7 @@
 
             {% elif product.image_url %}
             {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
-            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" fetchpriority="high" decoding="async">
+            <img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" fetchpriority="high" decoding="async">
             {% else %}
             <div class="detail-image-placeholder">
               <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
@@ -138,7 +150,9 @@
             <!-- Certification badges -->
             {% if product.cert_image_url %}
             <div class="detail-cert-image">
-              <img src="{{ product.cert_image_url }}" alt="{% trans 'Product Certifications' %}" loading="lazy">
+              {% comment %} v1.10.22 (P3-C): was the bare trans string, so the same alt
+                 appeared on all 24 product pages. {% endcomment %}
+              <img src="{{ product.cert_image_url }}" alt="{% blocktrans with name=product.name_t %}UL, DLC, GS, CE and IP66 certifications for {{ name }}{% endblocktrans %}" loading="lazy">
             </div>
             {% endif %}
           </div>
@@ -146,13 +160,13 @@
 
         <div class="detail-dimension">
           {% if product.beam_angle_image_url %}
-          <span class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</span>
-          <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }} — {% trans 'beam angle' %}" loading="lazy">
+          <h2 class="detail-beam-angle-label">{% trans "Beam Angle Type:" %}</h2>
+          <img class="detail-beam-angle-img" src="{{ product.beam_angle_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'beam angle' %}" loading="lazy">
           {% endif %}
 
-          <span class="detail-dimension-label">{% trans "Dimensions:" %}</span>
+          <h2 class="detail-dimension-label">{% trans "Dimensions:" %}</h2>
           {% if product.dimension_image_url %}
-          <img class="detail-dimension-img" src="{{ product.dimension_image_url }}" alt="{{ product.name_t }} — {% trans 'dimensions' %}" loading="lazy">
+          <img class="detail-dimension-img" src="{{ product.dimension_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'dimensions' %}" loading="lazy">
           {% else %}
           <div class="detail-dimension-placeholder">
             <span class="detail-placeholder">{% trans "Dimensions" %}</span>
@@ -162,7 +176,7 @@
 
         {% if product.energy_data %}
         <div class="detail-energy-data">
-          <span class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</span>
+          <h2 class="detail-energy-label">{% trans "ENERGY AND PERFORMANCE DATA:" %}</h2>
           <div class="detail-energy-table-wrap">
             <table class="detail-energy-table">
               <tbody>
@@ -180,13 +194,13 @@
 
         {% if product.model_number or product.ordering_image_url or product.ordering_cols %}
         <div class="detail-ordering">
-          <span class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</span>
+          <h2 class="detail-ordering-label">{% trans "ORDERING INFORMATION:" %}</h2>
           {% if product.model_number %}
           <p class="detail-ordering-model">{% trans "Model Number:" %} <bdi>{{ product.model_number }}</bdi></p>
           {% endif %}
           {% if product.ordering_image_url %}
           <div class="detail-ordering-image">
-            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
+            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
           </div>
           {% endif %}
           {% if product.ordering_cols %}
@@ -347,6 +361,15 @@
     margin-bottom: 10px;
     text-shadow: 0 1px 8px rgba(0,0,0,0.8);
   }
+  /* v1.10.20: the wattage run inside the H1 reads as a spec, not as part of
+     the model name — lighter weight and colour, sized off the H1. */
+  .section-title-power {
+    font-weight: 400;
+    color: var(--ink-mute);
+    font-size: 0.62em;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
   .series-hero-content .section-title {
     color: #fff;
     margin: 0;
@@ -374,6 +397,17 @@
     margin-top: 48px;
     padding-top: 32px;
     border-top: 1px solid var(--line);
+  }
+  /* v1.10.20: the four section labels became real <h2>s so search engines
+     can see the section structure. A bare h2 carries UA default margin
+     and bold weight, which would change the visual rhythm of the page,
+     so normalise it back to exactly what the <span> rendered as. */
+  .detail-beam-angle-label,
+  .detail-dimension-label,
+  .detail-energy-label,
+  .detail-ordering-label {
+    margin: 0;
+    font-weight: normal;
   }
   .detail-beam-angle-label {
     display: block;

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load image_tags %}
 
 {% block title %}{% blocktrans %}News — SolarOne LED Lighting Updates{% endblocktrans %}{% endblock %}
 {% block meta_description %}{% blocktrans %}Latest news, product launches, and insights from SolarOne. Stay updated on LED lighting innovations and the latest industry developments.{% endblocktrans %}{% endblock %}
@@ -80,7 +81,9 @@
         <div class="news-card-cover">
           {#v1.10.8: an article may have no cover of its own (the market article carries charts only). The gradient placeholder read as "this card has no picture" — an editor flagged it as an invisible cover. Fall back to the first gallery image, which is a real illustration of the article. Same fallback order as `social_image_url` in data_loaders, so the card, og:image and JSON-LD all show the same picture. #}
           {% if article.image_url or article.images.0.url %}
-          <img src="{% firstof article.image_url article.images.0.url %}"
+          {# v1.10.18: `firstof ... as cover` (not `with` + `default`) on purpose — `article.images` is an empty list for chart-only articles, and `default` would raise VariableDoesNotExist there, while `firstof` skips unresolvable vars silently. That leniency is the whole point of the fallback. #}
+          {% firstof article.image_url article.images.0.url as cover %}
+          <img src="{{ cover }}" srcset="{{ cover|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
                alt="{{ article.title_t|default:article.title }}"
                {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
           {% else %}

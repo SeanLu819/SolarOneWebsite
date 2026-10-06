@@ -17,7 +17,7 @@ from pages.redirects import redirect_target_for_product
 
 
 # ---------------------------------------------------------------------------
-# Product FAQ (B3, SEO/GEO 2026-09)
+# Product FAQ (B3, SEO/GEO 2026-09; per-category split v1.10.20)
 #
 # Six high-value Q&A based strictly on confirmed product facts already in the
 # repository (seed data / copy). These are CONSTANTS authored by us — never
@@ -26,33 +26,37 @@ from pages.redirects import redirect_target_for_product
 # whole blob is built in Python with ``json.dumps``, not concatenated in the
 # template, so there is no trailing-comma / escapejs foot-gun).
 #
+# WHY PER CATEGORY (2026-10-06 audit)
+# ----------------------------------
+# The single six-entry list shipped identical text on all 24 product pages.
+# Measured on /products/fl6m/: the FAQ block was 3721 of 3947 body words —
+# **94.3% of the page** — and the same six questions were asked of a 40 W
+# floodlight, a 1280 W stadium array and a glare shield. Google sees 24 pages
+# competing for the same long-tail questions with the same answer.
+#
+# So the questions are now chosen by what the buyer actually needs to know for
+# THAT product type. Cross-cutting facts that are true everywhere (efficacy,
+# L70, IP66, surge, temperature) are kept in every set so no page loses them;
+# only the type-specific entries rotate.
+#
 # NOTE: we deliberately do NOT invent business FAQs (MOQ, lead time, warranty
 # years, certification numbers) — that data is absent from the repo. Add those
 # only once the business supplies the real numbers.
 #
-# SAFETY CONSTRAINT (do not relax): PRODUCT_FAQ is injected via
-# ``{{ product_faq_json|safe }}`` with NO escaping. Keep it a list of literal
-# string constants authored by us. Never interpolate user input, form fields,
+# SAFETY CONSTRAINT (do not relax): every entry below is injected via
+# ``{{ product_faq_json|safe }}`` with NO escaping. Keep them literal string
+# constants authored by us. Never interpolate user input, form fields,
 # or any external/untrusted data into this blob — that would open an XSS /
-# JSON-LD injection vector. The qa tests assert none of the 6 entries contain
-# a ``</script>`` sequence precisely to guard this invariant.
+# JSON-LD injection vector. The qa tests assert no entry contains a
+# ``</script>`` sequence precisely to guard this invariant.
 # ---------------------------------------------------------------------------
-PRODUCT_FAQ = [
-    {
-        'question': 'Are SolarOne stadium lights flicker-free for broadcast?',
-        'answer': (
-            'Yes. Our VSP high-frequency drivers eliminate flicker, so footage '
-            'stays clean even in super-slow-motion broadcast replays.'
-        ),
-    },
-    {
-        'question': 'Do you provide DIALux photometric studies?',
-        'answer': (
-            'Yes. Our engineering team delivers a full photometric proposal — '
-            'layout, illuminance and uniformity — within 48 hours of receiving '
-            'your venue drawing.'
-        ),
-    },
+
+#: Keyed view of the shared entries. Pinned by key (not index) because the
+#: accessory set cherry-picks one of them.
+#: Facts that hold for every SolarOne luminaire, drawn from the seed energy
+#: tables (IP Rating / Surge / Operating Temperature / L70 rows) and the
+#: ordering tables (System Wattage). Kept verbatim in all four sets.
+_SHARED_FAQ = [
     {
         'question': 'What is the luminous efficacy and rated lifespan?',
         'answer': (
@@ -67,23 +71,185 @@ PRODUCT_FAQ = [
         ),
     },
     {
-        'question': (
-            'How much energy can we save versus existing HID / metal-halide '
-            'lighting?'
+        'question': 'Do you provide DIALux photometric studies?',
+        'answer': (
+            'Yes. Our engineering team delivers a full photometric proposal — '
+            'layout, illuminance and uniformity — within 48 hours of receiving '
+            'your venue drawing.'
         ),
+    },
+]
+
+_SHARED_FAQ_BY_KEY = {entry['question']: entry for entry in _SHARED_FAQ}
+
+#: Arena / stadium / broadcast venues: flicker, lux levels, HDTV, the VSP drive.
+_SPORTS_FAQ = [
+    {
+        'question': 'Are SolarOne stadium lights flicker-free for broadcast?',
+        'answer': (
+            'Yes. Our VSP high-frequency drivers eliminate flicker, so footage '
+            'stays clean even in super-slow-motion broadcast replays.'
+        ),
+    },
+    {
+        'question': 'Do the luminaires meet sports federation playing standards?',
+        'answer': (
+            'The RT410 series is Olympic-grade and HDTV-ready, replacing '
+            '400–1000 W HID at 20–50 ft mounting heights at a fraction of the '
+            'running cost. Every order ships with a photometric layout matched '
+            'to your venue drawing.'
+        ),
+    },
+    {
+        'question': 'Are the M Series modules field-replaceable?',
+        'answer': (
+            'Yes. The M Series is modular from 80 W to 1280 W, with '
+            'field-replaceable modules that keep maintenance downtime short.'
+        ),
+    },
+]
+
+#: Area, site and general-purpose floodlighting: retrofit economics, mounting,
+#: which beam angle to pick.
+_FLOOD_FAQ = [
+    {
+        'question': 'How much energy can we save versus existing HID / metal-halide lighting?',
         'answer': (
             'Retrofits typically cut energy use by 50% or more while improving '
             'uniformity.'
         ),
     },
     {
-        'question': 'Are the luminaires modular and field-serviceable?',
+        'question': 'Which beam angle should I choose for my application?',
         'answer': (
-            'The M Series is modular from 80 W to 1280 W, with '
-            'field-replaceable modules that keep maintenance downtime short.'
+            'Narrow 30–50° beams concentrate light for tall facades and signage, '
+            'while 100–120° options cover yards, loading lots and perimeter '
+            'poles. Each ordering code lists the available angles for that '
+            'series.'
+        ),
+    },
+    {
+        'question': 'What mounting options are available?',
+        'answer': (
+            'U = hang-mount bracket and L = sitting-mount bracket, both '
+            'available across the floodlight range. Finish and dimming '
+            'options (1.0-10V, DMX, DALI, Zigbee) are listed in the ordering '
+            'table.'
         ),
     },
 ]
+
+#: High-bay / low-bay and roadway: lumen-per-watt at height, pole heights,
+#: road photometric criteria.
+_HIGHBAY_ROADWAY_FAQ = [
+    {
+        'question': 'What mounting height are these luminaires designed for?',
+        'answer': (
+            'The high-bay and low-bay series cover the 30–90° beam family used '
+            'from warehouses and sports halls up to high-bay applications, and '
+            'the roadway series ships with an asymmetric 70° × 140° '
+            'distribution for street lighting.'
+        ),
+    },
+    {
+        'question': 'Can you match an existing installation footprint?',
+        'answer': (
+            'Yes — send us the existing photometric report or IES file and we '
+            'will confirm whether the same mounting positions and aiming '
+            'angles work, or supply a replacement layout.'
+        ),
+    },
+    {
+        'question': 'How do I order the right configuration?',
+        'answer': (
+            'Every ordering code follows the same pattern: series name, system '
+            'wattage, CCT, input voltage, beam angle, finish, dimming and '
+            'bracket. The ordering table on this page lists every option for '
+            'this model.'
+        ),
+    },
+]
+
+#: Glare shields and other accessories: fit, purpose, what they do to the
+#: photometric result.
+_ACCESSORY_FAQ = [
+    {
+        'question': 'What does a glare shield actually do?',
+        'answer': (
+            'A glare shield cuts the light spilling above the horizontal, '
+            'directing more of the output toward the ground or the playing '
+            'surface. That reduces skyglow and improves contrast for drivers, '
+            'players and neighbours.'
+        ),
+    },
+    {
+        'question': 'Will a glare shield fit my existing fixtures?',
+        'answer': (
+            'We supply shield lengths for the M Series and the RT410. Send the '
+            'fixture model and mounting height and we will confirm the '
+            'matching shield before you order.'
+        ),
+    },
+    {
+        'question': 'Does a shield change the host luminaire ratings?',
+        'answer': (
+            'No. A shield is a mechanical accessory: it changes where the '
+            'light goes, not the electrical rating. IP66 ingress protection, '
+            '10 kV surge protection and the L70 lifetime of the host fixture '
+            'are all unchanged.'
+        ),
+    },
+    {
+        'question': 'Can you check a shield against our installation drawing?',
+        'answer': (
+            'Yes — send the fixture model, the pole or facade mounting '
+            'height, and the site drawing. Our engineers confirm the shield '
+            'length and the resulting aiming angle before you order.'
+        ),
+    },
+    {
+        'question': 'What efficacy and lifetime does the host fixture keep?',
+        'answer': (
+            'The host luminaires are rated up to 130 lm/W with an L70 lifetime '
+            'exceeding 100,000 hours at 25 °C. A shield changes where the '
+            'light goes, not how much the fixture produces.'
+        ),
+    },
+]
+
+#: ``Product.category`` -> the FAQ set that page shows. Every category present
+#: in the seed data must appear here; ``pages/tests_product_data_integrity.py``
+#: asserts the mapping stays complete.
+PRODUCT_FAQ_BY_CATEGORY = {
+    'SPORTS_LIGHTING': _SHARED_FAQ + _SPORTS_FAQ,
+    'AREA_SITE': _SHARED_FAQ + _FLOOD_FAQ,
+    'FLOODLIGHT': _SHARED_FAQ + _FLOOD_FAQ,
+    'HIGHBAY_LOWBAY': _SHARED_FAQ + _HIGHBAY_ROADWAY_FAQ,
+    'ROADWAY': _SHARED_FAQ + _HIGHBAY_ROADWAY_FAQ,
+    # Accessories skip the DIALux and HID-saving entries (a glare shield is
+    # neither a luminaire nor a retrofit), but keep the efficacy/lifetime
+    # answer — buyers ask it of the host fixture. Spelled out by
+    # name rather than sliced, so reordering _SHARED_FAQ cannot silently
+    # change which entries an accessory page shows.
+    'ACCESSORY': [_SHARED_FAQ_BY_KEY[
+        'What is the luminous efficacy and rated lifespan?']] + _ACCESSORY_FAQ,
+}
+
+#: Back-compat alias: the flood set is the most representative one and is
+#: what ``tests_qa_bgroup`` imports. New code should call
+#: :func:`product_faq_for` instead.
+PRODUCT_FAQ = PRODUCT_FAQ_BY_CATEGORY['AREA_SITE']
+
+
+def product_faq_for(product):
+    """Return the FAQ list for ``product`` — 6 entries, chosen by category.
+
+    Falls back to the shared-only core if a category ever arrives that is not
+    in the map, so a new ``CATEGORY_CHOICES`` value degrades to fewer
+    questions rather than an empty section or a KeyError.
+    """
+    category = getattr(product, 'category', '') or ''
+    return PRODUCT_FAQ_BY_CATEGORY.get(category) or _SHARED_FAQ
 
 
 def build_product_faq_jsonld(faq_list):
@@ -301,6 +467,23 @@ def products(request):
     return render(request, 'products.html', context)
 
 
+def _series_children(parent_slug, lang):
+    """The sub-models of one series, enriched and ordered as the data is.
+
+    Reads ``parent_slug`` from the *seed/DB* rows rather than the sidebar
+    tree, so the list can never disagree with what ``get_products`` hides.
+    Returns ``[]`` for a leaf — the template then renders nothing.
+    """
+    if not parent_slug:
+        return []
+    from .data_loaders import get_all_products
+
+    children = [p for p in (get_all_products(lang) or [])
+                 if getattr(p, 'parent_slug', '') == parent_slug]
+    children.sort(key=lambda p: p.slug)
+    return children
+
+
 def product_detail(request, slug):
     """Unified product page for both series and sub-series.
 
@@ -330,20 +513,34 @@ def product_detail(request, slug):
     if product:
         context['product'] = product
         context['banner_image'] = product.banner_image_url
-        context['banner_label'] = product.category_t
+        context['banner_label'] = product.category_display
         context['gallery'] = product.gallery
         context['is_variant'] = bool(product.parent_slug)
         context['parent_slug'] = parent_slug or product.parent_slug
         # B3: product FAQ (FAQPage JSON-LD + visible section). Built in Python
         # and injected as one safe blob — never concatenated in the template.
-        context['product_faq'] = PRODUCT_FAQ
+        # v1.10.20: the set is chosen per product category instead of one
+        # shared list — see the block comment above PRODUCT_FAQ_BY_CATEGORY.
+        faq = product_faq_for(product)
+        context['product_faq'] = faq
         context['product_faq_json'] = json.dumps(
-            build_product_faq_jsonld(PRODUCT_FAQ),
+            build_product_faq_jsonld(faq),
             ensure_ascii=False,
         )
         # B2: cross-link to projects whose sport/venue type matches
         # this product's category (breaks the content islands).
         context['related_projects'] = related_projects_for_product(product, lang)
+
+        # v1.10.23 (P4-B): the sub-model selector's data.
+        #
+        # The filter sidebar already links every sub-model, so this is NOT
+        # about reachability — the first version of this comment
+        # claimed the hub was a dead end, which was a measurement error (the
+        # scan stripped <nav>, and the series navigation is a <nav>). What
+        # the selector adds is the wattage and the per-module search phrase
+        # in the content area, where a buyer is actually looking. Empty list
+        # for a leaf product, so the template needs no category knowledge.
+        context['series_children'] = _series_children(slug, lang)
 
 
     # Unknown slug → real 404. Previously this rendered product_detail.html's

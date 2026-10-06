@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load image_tags %}
 
 {% block title %}{{ article.title_t|default:article.title }} — SolarOne News{% endblock %}
 {% block meta_description %}{{ article.summary_t|default:article.summary|truncatechars:160 }}{% endblock %}
@@ -48,12 +49,13 @@
       <div class="news-detail-media">
         {% if article.image_url %}
         <figure class="news-detail-media-cell news-detail-media-cell--large">
-          <img src="{{ article.image_url }}" alt="{{ article.title_t|default:article.title }}" loading="eager">
+          <img src="{{ article.image_url }}" srcset="{{ article.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ article.title_t|default:article.title }}" loading="eager">
         </figure>
         {% endif %}
         {% for img in article.unplaced_images %}
         <figure class="news-detail-media-cell">
-          <img src="{{ img.url }}" alt="{{ img.alt|default:article.title }}"
+          <img src="{{ img.url }}" srcset="{{ img.url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+               alt="{{ img.alt|default:article.title }}"
                {% if img.width %}width="{{ img.width }}"{% endif %}
                {% if img.height %}height="{{ img.height }}"{% endif %}
                loading="lazy" decoding="async">
@@ -87,7 +89,7 @@
         <a class="news-related-card" href="{% url 'news_detail' a.slug %}">
           {% if a.image_url %}
           <div class="news-related-cover">
-            <img src="{{ a.image_url }}" alt="{{ a.title_t|default:a.title }}" loading="lazy">
+            <img src="{{ a.image_url }}" srcset="{{ a.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ a.title_t|default:a.title }}" loading="lazy">
           </div>
           {% endif %}
           <div class="news-related-body">
@@ -109,13 +111,13 @@
       <div class="news-related-grid">
         {% for p in related_products %}
         <a class="news-related-card" href="{% url 'product_detail' p.slug %}">
-          {% if p.image_url %}<div class="news-related-cover"><img src="{{ p.image_url }}" alt="{{ p.name_t }}" loading="lazy"></div>{% endif %}
+          {% if p.image_url %}<div class="news-related-cover"><img src="{{ p.image_url }}" srcset="{{ p.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ p.name_t }}" loading="lazy"></div>{% endif %}
           <div class="news-related-body"><div class="news-related-meta"><span class="news-related-cat">{% trans "Product" %}</span></div><h3><bdi>{{ p.name_t }}</bdi></h3></div>
         </a>
         {% endfor %}
         {% for pj in related_projects %}
         <a class="news-related-card" href="{% url 'project_detail' pj.slug %}">
-          {% if pj.image_url %}<div class="news-related-cover"><img src="{{ pj.image_url }}" alt="{{ pj.title_t }}" loading="lazy"></div>{% endif %}
+          {% if pj.image_url %}<div class="news-related-cover"><img src="{{ pj.image_url }}" srcset="{{ pj.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ pj.title_t }}" loading="lazy"></div>{% endif %}
           <div class="news-related-body"><div class="news-related-meta"><span class="news-related-cat">{% trans "Project" %}</span></div><h3><bdi>{{ pj.title_t }}</bdi></h3></div>
         </a>
         {% endfor %}

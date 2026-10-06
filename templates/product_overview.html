@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load text_filters %}
+{% load image_tags %}
 
 {% block title %}{% if product %}{{ product.seo_title_t }}{% else %}{% trans "Product Not Found" %} — SolarOne{% endif %}{% endblock %}
 {% block meta_description %}{% if product %}{{ product.seo_description_t }}{% else %}{{ config.meta_description }}{% endif %}{% endblock %}
@@ -69,17 +70,19 @@
         {% if banner_image %}
         <div class="series-hero">
           {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
-          <img src="{{ banner_image }}" alt="{{ product.name_t }}" class="series-hero-bg" fetchpriority="high" decoding="async">
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" class="series-hero-bg" fetchpriority="high" decoding="async">
           <div class="series-hero-overlay"></div>
           <div class="series-hero-content">
             <span class="series-hero-label">{{ banner_label }}</span>
-            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi></h1>
+            {% comment %} v1.10.20: same H1 treatment as product_detail.html — wattage
+               appended as a lighter run. See the long note there. {% endcomment %}
+            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
           </div>
         </div>
         {% else %}
         <div class="detail-hero">
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_t }}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi></h1>
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_display }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
         </div>
         {% endif %}
 
@@ -91,7 +94,7 @@
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
+                  <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                 </div>
                 {% endfor %}
               </div>
@@ -116,7 +119,7 @@
 
             {% elif product.image_url %}
             {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
-            <img src="{{ product.image_url }}" alt="{{ product.name_t }}" fetchpriority="high" decoding="async">
+            <img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" fetchpriority="high" decoding="async">
             {% else %}
             <div class="detail-image-placeholder">
               <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
@@ -142,7 +145,9 @@
             <!-- Certification badges -->
             {% if product.cert_image_url %}
             <div class="detail-cert-image">
-              <img src="{{ product.cert_image_url }}" alt="{% trans 'Product Certifications' %}" loading="lazy">
+              {% comment %} v1.10.22 (P3-C): keep in sync with product_detail.html —
+                 the cert alt must name the product, not just the generic label. {% endcomment %}
+              <img src="{{ product.cert_image_url }}" alt="{% blocktrans with name=product.name_t %}UL, DLC, GS, CE and IP66 certifications for {{ name }}{% endblocktrans %}" loading="lazy">
             </div>
             {% endif %}
           </div>
@@ -157,7 +162,7 @@
         <div class="detail-ordering">
           {% if product.ordering_image_url %}
           <div class="detail-ordering-image">
-            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
+            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
           </div>
           {% endif %}
           {% if product.ordering_cols %}
@@ -165,6 +170,30 @@
             {% for lines in product.ordering_cols %}{% for line in lines %}<p>{{ line }}</p>{% endfor %}{% endfor %}
           </div>
           {% endif %}
+        </div>
+        {% endif %}
+
+        {% comment %}
+        v1.10.23 (P4-B) — the sub-model selector. The filter sidebar
+        already links every sub-model; this puts them in the content area
+        with the wattage and the keyword phrase each child page bids on, so
+        the hub carries the per-module search terms as well as the links.
+        Renders nothing for a leaf product.
+        {% endcomment %}
+        {% if series_children %}
+        <div class="detail-series-children">
+          <h2 class="detail-series-children-title">{% trans "Models in this series" %}</h2>
+          <div class="detail-series-children-grid">
+            {% for child in series_children %}
+            <a href="{% url 'product_detail' child.slug %}" class="series-child">
+              {% if child.image_url %}
+              <img src="{{ child.image_url }}" srcset="{{ child.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 25vw" alt="{{ child.name_t }}{% if child.seo_keyword_t %} — {{ child.seo_keyword_t }}{% endif %}" loading="lazy" decoding="async">
+              {% endif %}
+              <span class="series-child-name"><bdi>{{ child.name_t }}</bdi></span>
+              {% if child.power %}<span class="series-child-power">{{ child.power }}</span>{% endif %}
+            </a>
+            {% endfor %}
+          </div>
         </div>
         {% endif %}
 
@@ -284,6 +313,14 @@
     margin-bottom: 10px;
     text-shadow: 0 1px 8px rgba(0,0,0,0.8);
   }
+  /* v1.10.20 — keep in sync with product_detail.html. */
+  .section-title-power {
+    font-weight: 400;
+    color: var(--ink-mute);
+    font-size: 0.62em;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
   .series-hero-content .section-title {
     color: #fff;
     margin: 0;
@@ -328,6 +365,54 @@
     border: 1px solid var(--line);
   }
   /* Copy lines carried by the slot (ordering_info columns flattened to lines) */
+  /* v1.10.23 (P4-B): the sub-model selector. A plain grid — no new
+     breakpoint, so the N-31 allow-list is untouched. */
+  .detail-series-children {
+    margin: 56px 0 0;
+  }
+  .detail-series-children-title {
+    font-size: clamp(22px, 2vw, 28px);
+    margin: 0 0 20px;
+  }
+  .detail-series-children-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .series-child {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    transition: border-color .2s;
+  }
+  .series-child:hover {
+    border-color: var(--accent);
+  }
+  .series-child img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .series-child-name {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .series-child-power {
+    display: block;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 2px;
+  }
+
   .detail-overview-note {
     font-size: 1.05rem;
     line-height: 1.7;

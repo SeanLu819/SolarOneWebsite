@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load text_filters %}
+{% load image_tags %}
+{% comment %}
+/stadium-lighting/ — the generic stadium / sports lighting landing page (P4-A).
+
+Head blocks are runtime values from the view, not literal translated strings.
+That is deliberate: the meta-description budget audit reads template source and
+only recognises a description block whose body is a literal, so a literal here
+would have to be a fixed English sentence that the view then cannot localise.
+The strings this page renders are budget-checked in tests_seo_p4.py instead —
+the same arrangement projects_collection.html uses.
+
+Every heading below is a real <h2>. v1.10.20 found the product detail page
+presenting its sections as styled <span>s, so a crawler could not see the
+structure; this template must not repeat that.
+{% endcomment %}
+
+{% block title %}{{ page_title }}{% endblock %}
+{% block meta_description %}{{ page_description }}{% endblock %}
+{% block og_title %}{{ page_title }}{% endblock %}
+{% block og_description %}{{ page_description }}{% endblock %}
+
+{% block content %}
+{% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=page_title|escapejs leaf_url=request.path %}
+
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+
+    {# ---- Intro: the H1 states what the page sells, not just its name ---- #}
+    <div style="max-width: 860px; margin-bottom: 56px;">
+      <span class="section-accent-label section-accent-label--compact">{% trans "Stadium Lighting" %}</span>
+      <h1 class="section-title" style="margin-bottom: 12px;">{% trans "LED Stadium Lighting" %}</h1>
+      <p class="section-body">{% blocktrans %}Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues.{% endblocktrans %}</p>
+    </div>
+
+    {# ---- Luminaires -------------------------------------------------- #}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Stadium Floodlights" %}</h2>
+    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans %}The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl.{% endblocktrans %}</p>
+
+    <div class="products-grid" style="margin-bottom: 72px;">
+      {% for product in stadium_products %}
+      <div class="product-card reveal">
+        <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
+        <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+          {% if product.image_url %}
+          <div class="product-card-img"><img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ product.name_t }} — {{ product.seo_keyword_t }}" loading="lazy" decoding="async"></div>
+          {% endif %}
+        </a>
+        <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
+        <p class="product-card-desc">{{ product.description_t }}</p>
+        <div class="product-card-specs">
+          {% for spec in product.specs|slice:":3" %}
+          <div class="product-spec"><span class="product-spec-value">{{ spec.value }}</span><span class="product-spec-label">{{ spec.label }}</span></div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {# ---- Selecting ---------------------------------------------------- #}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Choosing the Right Output" %}</h2>
+    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans %}Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use.{% endblocktrans %}</p>
+
+    <div style="overflow-x: auto; margin-bottom: 72px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-weight: 600;">{% trans "Venue type" %}</th>
+            <th style="text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-weight: 600;">{% trans "Typical fixture" %}</th>
+            <th style="text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-weight: 600;">{% trans "Distribution" %}</th>
+            <th style="text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-weight: 600;">{% trans "Mounting" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Professional stadium, televised{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}VSP-XXXXW-12M-YP, 1000 W+{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}12 / 18 / 30 / 50°{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Roof rim, 30–45 m{% endblocktrans %}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Training ground, club venue{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}FL6M–FL9M, 480–720 W{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}12 / 18 / 30 / 50°{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Pole, 8–12 m{% endblocktrans %}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Multi-sport hall, velodrome{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}RT410-RGBW or RT400HB, 400–600 W{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}60 / 90 / 120°{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Roof truss, 12–20 m{% endblocktrans %}</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Ski run, karting track{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}FL4M–FL6M, 320–480 W{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Asymmetric, low glare{% endblocktrans %}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Pole, 6–10 m{% endblocktrans %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin: -48px 0 72px;">{% blocktrans %}Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height.{% endblocktrans %}</p>
+
+    {# ---- Delivered venues -------------------------------------------- #}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Delivered Venue Projects" %}</h2>
+    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans with n=stadium_product_count %}{{ n }} stadium-class luminaires and {{ stadium_venues|length }} venue installations, from club training grounds to an Asian Games velodrome.{% endblocktrans %}</p>
+
+    <div class="projects-grid" style="margin-bottom: 48px;">
+      {% for venue in stadium_venues %}
+      <a href="{% url 'project_detail' venue.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
+        <div class="project-card-img">
+          {% if venue.image_url %}
+          <img src="{{ venue.image_url }}" srcset="{{ venue.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ venue.title_t }}" loading="lazy" decoding="async">
+          {% else %}
+          <div class="project-card-img-placeholder stadium">
+            <span class="field-label">{% trans "Project Image" %}</span>
+          </div>
+          {% endif %}
+        </div>
+        <div class="project-card-body">
+          <div class="project-card-location"><bdi>{{ venue.location_t }}</bdi></div>
+          <h3 class="project-card-title"><bdi>{{ venue.title_t }}</bdi></h3>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <p style="margin-bottom: 56px;">
+      <a href="{% url 'projects' %}" style="color: var(--accent);">{% trans "All reference projects" %} &rarr;</a>
+    </p>
+
+    {# ---- The rest of the portfolio ----------------------------------- #}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Other Lighting Categories" %}</h2>
+    <p class="section-body" style="margin-bottom: 24px; max-width: 760px;">{% trans "Venue projects are also lit with these platforms." %}</p>
+    <p>
+      <a href="{% url 'products' %}" class="product-card-title" style="display: inline-block; margin-right: 18px;">{% trans "Modular LED flood lights" %}</a>
+      <a href="{% url 'product_detail' 'm-series' %}" style="color: var(--accent); margin-right: 18px;">{% trans "M Series 80–1280 W" %}</a>
+      <a href="{% url 'products' %}" style="color: var(--accent); margin-right: 18px;">{% trans "High bay" %}</a>
+      <a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Roadway" %}</a>
+    </p>
+
+  </div>
+</section>
+
+{% endblock %}

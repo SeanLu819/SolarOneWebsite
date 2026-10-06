@@ -8,12 +8,17 @@ from django.urls import reverse
 from django.utils.translation import get_language, override
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
+from django.templatetags.static import static
+from pages.utils import project_category_keyword
 from .common import get_common_context
-from .data_loaders import get_news, get_news_detail, get_product_detail, get_project_detail
+from .data_loaders import (
+    get_news, get_news_detail, get_product_detail, get_products,
+    get_projects, get_project_detail,
+)
 from .related_links import related_items_for_news
 from .i18n import _t
 from .data_loaders import get_news, get_product_detail, get_project_detail
-from .utils import _load_seed
+from .utils import _first_static, _load_seed
 
 
 def home(request):
@@ -143,6 +148,194 @@ def indexnow_key(request):
     if not key:
         raise Http404
     return HttpResponse(key, content_type='text/plain; charset=utf-8')
+
+#: v1.10.22 (P3-B) — images for the ten *collection* pages.
+#:
+#: Google accepts ``<image:image>`` on any ``<url>``, not only leaf pages, and
+#: a collection page's own banner is exactly the image a shopper searching
+#: that category sees at the top of the result. Before this, 10 of the 59
+#: sitemap URLs carried zero images: the home page, the product index, both
+#: project collections, the news index, about and contact — every page a
+#: first-time visitor lands on.
+#:
+#: 🔴 Two rules keep this honest, and ``tests_image_seo_p3`` enforces both:
+#:
+#: 1. **Only images the page actually renders.** The hero has three slides on
+#:    desktop but a ``<source media="(max-width:767px)">`` portrait variant per
+#:    slide; the portrait files are not listed because on mobile the page
+#:    renders one of them *instead of* the landscape file, and a sitemap entry
+#:    for an image a crawler will never see is a dead reference. The light-theme
+#:    product banner is likewise excluded — it is a CSS alternate of the dark
+#:    one, not a second picture.
+#: 2. **The file must exist.** A path here that is not on disk ships a 404 to
+#:    the crawler, which is worse than no entry at all. Every path is resolved
+#:    through ``_find_static`` and dropped when missing.
+#:
+#: ``privacy`` and ``terms`` are absent on purpose: legal text with no
+#: imagery, and inventing an entry for them would be the very "image for the
+#: sake of an entry" mistake this table exists to avoid.
+#:
+#: Titles and captions are the same strings the templates already put in
+#: ``alt`` / ``og:description``, so the sitemap and the page describe one image
+#: the same way. Nothing here is new copy.
+_COLLECTION_PAGE_IMAGES = {
+    'home': (
+        ('images/hero-main-1.webp', 'LED sports stadium lighting', ''),
+        ('images/hero-main-2.webp', 'Football field LED lighting', ''),
+        ('images/hero-main-3.webp', 'Industrial LED high bay lighting', ''),
+        ('images/home-products.webp',
+         'SolarOne LED product lineup including stadium and industrial luminaires',
+         ''),
+        ('images/home-project.webp',
+         'SolarOne LED lighting reference projects — sports venues, airports, '
+         'and industrial facilities',
+         ''),
+    ),
+    'products': (
+        ('images/products-bar-dark.webp',
+         'SolarOne LED lighting product categories overview',
+         'Modular flood lights, stadium lighting, high bay and roadway '
+         'luminaires from one manufacturer.'),
+    ),
+    'about': (
+        ('images/about-main.webp',
+         'SolarOne LED lighting engineering and manufacturing headquarters in '
+         'Beijing, China',
+         ''),
+    ),
+    'contact': (
+        ('images/agent-usa.webp', 'SolarOne USA agent', ''),
+        ('images/agent-germany.webp', 'SolarOne Germany agent', ''),
+        ('images/agent-france.webp', 'SolarOne France agent', ''),
+    ),
+}
+
+#: Project collections take their images from the project list they render, not
+#: from a literal: membership is decided by the sport filter the collection
+#: view applies plus the seed, so a hard-coded list would rot the moment a
+#: project joins a sport group. Keys are the ``reverse()`` names in urls.py.
+_COLLECTION_PROJECT_SPORTS = {
+    'projects_football': ('FOOTBALL_FIELD', 'SOCCER_FIELD'),
+    'projects_tennis': ('TENNIS_COURTS', 'TENNIS'),
+}
+
+#: A collection page with 50 projects does not need 50 sitemap images — the
+#: leaf project pages carry those, and Google reads a 50-image entry as noise.
+_COLLECTION_IMAGE_CAP = 10
+
+
+def _static_image_tuple(rel_path, title, caption, cap=200):
+    """Resolve a ``static/``-relative path to an image tuple, or ``None``.
+
+    ``None`` is the caller's cue to drop the entry: shipping a known-404 to
+    the crawler is worse than shipping nothing. ``_first_static`` is the
+    project's single existence-checked resolver — it consults the
+    same cached manifest that serves the page, hash-suffix stripping included,
+    so the sitemap can never list a file the page itself would 404 on.
+    """
+    resolved = _first_static([rel_path])
+    if not resolved:
+        return None
+    return (resolved, title, (caption or '')[:cap])
+
+
+def _collection_page_images(name):
+    """``(url, title, caption)`` tuples for one static collection page."""
+    out = []
+    for rel_path, title, caption in _COLLECTION_PAGE_IMAGES.get(name, ()):
+        entry = _static_image_tuple(rel_path, title, caption)
+        if entry:
+            out.append(entry)
+    return out
+
+
+def _project_covers(projects, lang='en'):
+    """Cover-image tuples for a list of enriched projects.
+
+    The caption is venue type + location: the venue type is the phrase the
+    project's own ``<title>`` bids on, and the location supplies the "where"
+    that a bare venue type cannot express. Matches what P3-C puts in the
+    project gallery alt, so one project is described in one vocabulary.
+    """
+    out = []
+    for proj in projects:
+        url = getattr(proj, 'image_url', '') or ''
+        if not url:
+            continue
+        kw = project_category_keyword(getattr(proj, 'sport_type', ''), lang)
+        caption = ' — '.join(
+            p for p in (kw, getattr(proj, 'location_t', '') or '') if p)
+        out.append((url, getattr(proj, 'title_t', '') or '', caption))
+    return out
+
+
+def _collection_dynamic_images(name, lang='en'):
+    """Images for the collection pages whose content comes from the loaders."""
+    if name in _COLLECTION_PROJECT_SPORTS:
+        sports = list(_COLLECTION_PROJECT_SPORTS[name])
+        return _project_covers(
+            (get_projects(lang, '', sports) or [])[:_COLLECTION_IMAGE_CAP], lang)
+    if name == 'stadium_lighting':
+        # The page renders one product cover per stadium luminaire plus a
+        # venue cover per project, so the sitemap entry lists the same
+        # pictures the visitor sees. Drawn from the loaders rather than a
+        # literal for the same reason as the other collections.
+        from .views_stadium import (
+            FEATURED_PRODUCT_LIMIT, STADIUM_CATEGORY, VENUE_PROJECT_LIMIT,
+        )
+        from .related_links import PRODUCT_CATEGORY_TO_PROJECT_SPORTS
+
+        sports = PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(STADIUM_CATEGORY, [])
+        out = []
+        for product in [p for p in (get_products(lang) or [])
+                          if getattr(p, 'category', '') == STADIUM_CATEGORY
+         ][:FEATURED_PRODUCT_LIMIT]:
+            url = getattr(product, 'image_url', '') or ''
+            if url:
+                out.append((url, getattr(product, 'name_t', '') or '', ''))
+        for proj in [p for p in (get_projects(lang) or [])
+                      if getattr(p, 'sport_type', '') in sports
+                      and getattr(p, 'image_url', '')][:VENUE_PROJECT_LIMIT]:
+            kw = project_category_keyword(getattr(proj, 'sport_type', ''), lang)
+            caption = ' — '.join(
+                p for p in (kw, getattr(proj, 'location_t', '') or '') if p)
+            out.append((
+                proj.image_url, getattr(proj, 'title_t', '') or '', caption))
+        return out
+    if name == 'projects':
+        return _project_covers(
+            (get_projects(lang) or [])[:_COLLECTION_IMAGE_CAP], lang)
+    if name == 'news':
+        # Deliberately NOT ``get_news()``: that helper has no seed
+        # fallback by design (a DB failure degrades /news/ to an empty
+        # list rather than serving stale content), so using it here made
+        # the sitemap's /news/ entry lose its images whenever the DB was
+        # unavailable. The seed snapshot is what the detail loop below
+        # already trusts, and a sitemap is a build artefact, so it reads
+        # the same source. Same ``is_published`` gate, same
+        # ``get_news_detail`` resolution, so an unpublished article cannot
+        # leak in through the index.
+        out = []
+        for art in (_load_seed().get('news') or []):
+            if len(out) >= _COLLECTION_IMAGE_CAP:
+                break
+            slug = art.get('slug', '')
+            if not slug or not art.get('is_published', True):
+                continue
+            detail = get_news_detail(slug, lang)
+            if detail is None:
+                continue
+            url = detail.get('image_url') or ''
+            if not url:
+                continue
+            out.append((
+                url,
+                detail.get('title_t') or detail.get('title') or '',
+                detail.get('summary_t') or detail.get('summary') or '',
+            ))
+        return out
+    return []
+
 
 def sitemap_xml(request):
     """Multi-language sitemap.
@@ -275,13 +468,26 @@ def sitemap_xml(request):
             ('projects_football', '0.8'),
             ('projects_tennis', '0.8'),
             ('news', '0.7'),
+            # v1.10.23 (P4-A): the generic stadium-lighting page. Priority
+            # 0.8 — above the news index because it owns 5 010/mo of
+            # measured search volume, below /products/ because it is one term
+            # rather than the whole catalogue.
+            ('stadium_lighting', '0.8'),
             ('about', '0.7'),
             ('privacy', '0.4'),
             ('terms', '0.4'),
             ('contact', '0.7'),
         ]
         for name, priority in static_pages:
-            urls.append(_entry(reverse(name), priority, _lastmod))
+            # v1.10.22 (P3-B): collection pages carry their own imagery —
+            # the banner a visitor sees, or the covers of the cards the page
+            # lists. privacy/terms resolve to [] on purpose (legal text, no
+            # images) and a page whose files went missing drops its entry
+            # rather than shipping a 404 to the crawler.
+            images = _collection_page_images(name)
+            if not images:
+                images = _collection_dynamic_images(name)
+            urls.append(_entry(reverse(name), priority, _lastmod, images))
 
         for p in products:
             slug = p.get('slug', '')

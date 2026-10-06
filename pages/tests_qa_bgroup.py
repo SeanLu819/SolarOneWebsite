@@ -36,7 +36,12 @@ from django.urls import resolve
 # otherwise the URL route raises AttributeError at request time.
 from pages.views import news_feed as _news_feed_from_pkg  # noqa: F401
 from pages.views.views_other import news_feed as _news_feed_from_mod  # noqa: F401
-from pages.views.views_products import PRODUCT_FAQ, build_product_faq_jsonld
+from pages.views.views_products import (
+    PRODUCT_FAQ,
+    PRODUCT_FAQ_BY_CATEGORY,
+    build_product_faq_jsonld,
+    product_faq_for,
+)
 
 
 JSONLD_RE = re.compile(
@@ -155,17 +160,55 @@ class RobotsTxtAiCrawlerTests(TestCase):
 class ProductFaqQaVerificationTests(TestCase):
     """B3 independent verification: content, iron law, visible markup, encoding."""
 
-    PATHS = ('/products/fl6m/', '/products/m-series/')
+    # One representative page per category, so the split is verified
+    # end-to-end rather than only at the constant level.
+    PATHS = (
+        '/products/fl6m/',          # AREA_SITE  — flood/area set
+        '/products/vsp-xxxxw-9m-yp/',  # SPORTS_LIGHTING — sports set
+        '/products/rt400hb/',       # HIGHBAY_LOWBAY — high-bay set
+        '/products/rt600sl-t/',      # ROADWAY — roadway set
+        '/products/mseries-gs/',     # ACCESSORY — accessory set
+    )
 
-    # Confirmed product facts that MUST appear somewhere in the 6 FAQ entries.
-    EXPECTED_FACTS = [
-        'flicker', 'vsp',                 # #1 flicker-free broadcast, VSP drivers
-        'dialux', '48 hours',             # #2 DIALux study within 48h
-        '130 lm/w', 'l70', '100,000 hours',  # #3 efficacy + L70 lifespan
-        'ip66', '10 kv', '°c',            # #4 IP66 / 10kV / temp range
-        '50%', 'hid',                     # #5 >=50% saving vs HID/metal-halide
-        'm series', '1280 w', '80 w',     # #6 M Series 80–1280W modular
+    #: The category each PATHS entry is expected to render. Guards
+    #: against a product being routed to the wrong FAQ set.
+    PATH_CATEGORY = {
+        '/products/fl6m/': 'AREA_SITE',
+        '/products/vsp-xxxxw-9m-yp/': 'SPORTS_LIGHTING',
+        '/products/rt400hb/': 'HIGHBAY_LOWBAY',
+        '/products/rt600sl-t/': 'ROADWAY',
+        '/products/mseries-gs/': 'ACCESSORY',
+    }
+
+    # Facts true of every category except ACCESSORY, which skips the DIALux
+    # entry (a glare shield is neither a luminaire nor a retrofit). Kept in
+    # _SHARED_FAQ, so they must appear on those four probe pages.
+    SHARED_FACTS = [
+        'dialux', '48 hours',                  # photometric study offer
+        '130 lm/w', 'l70', '100,000 hours',     # efficacy + lifetime
+        'ip66', '10 kv', '°c',               # ingress / surge / temperature
     ]
+
+    #: ACCESSORY pins the efficacy/lifetime entry by question text (see
+    #: PRODUCT_FAQ_BY_CATEGORY), so these are the only shared facts it carries.
+    ACCESSORY_SHARED_FACTS = [
+        '130 lm/w', 'l70', '100,000 hours',
+    ]
+
+    # Category-specific facts: each is asserted on its own page only.
+    CATEGORY_FACTS = {
+        'SPORTS_LIGHTING': ['flicker', 'vsp', 'm series', '1280 w', '80 w'],
+        'AREA_SITE': ['50%', 'hid', 'beam angle', 'bracket'],
+        'HIGHBAY_LOWBAY': ['mounting height', 'photometric report',
+                           'ordering code', '70° × 140°'],
+        'ROADWAY': ['mounting height', 'photometric report',
+                   'ordering code', '70° × 140°'],
+        'ACCESSORY': ['glare shield', 'skyglow', 'spilling above the horizontal'],
+    }
+
+    #: The sports question must NOT appear on a non-sports page —
+    #: that was the whole point of the split.
+    SPORTS_ONLY = 'flicker-free for broadcast'
 
     # Business data the engineer must NOT have invented (absent from repo).
     FORBIDDEN_FACTS = [
@@ -183,6 +226,7 @@ class ProductFaqQaVerificationTests(TestCase):
             html = self._rendered(path)
             faq = _faqpage_block(html)
             self.assertIsNotNone(faq, f'{path}: no FAQPage block found')
+            category = self.PATH_CATEGORY[path]
 
             # Concatenate every question + acceptedAnswer text.
             blob = ' '.join(
@@ -190,10 +234,25 @@ class ProductFaqQaVerificationTests(TestCase):
                 for item in faq.get('mainEntity', [])
             ).lower()
 
-            for fact in self.EXPECTED_FACTS:
+            shared = (self.ACCESSORY_SHARED_FACTS if category == 'ACCESSORY'
+                      else self.SHARED_FACTS)
+            for fact in shared + self.CATEGORY_FACTS[category]:
                 self.assertIn(
                     fact, blob,
-                    f'{path}: expected FAQ fact {fact!r} missing from JSON-LD')
+                    f'{path} [{category}]: expected FAQ fact {fact!r} '
+                    f'missing from JSON-LD')
+
+            # v1.10.20: the split is only real if the sports question stays OFF
+            # the other four pages. Before the split all 24 pages carried it.
+            if category == 'SPORTS_LIGHTING':
+                self.assertIn(
+                    self.SPORTS_ONLY, blob,
+                    f'{path}: the sports question is missing from the sports set')
+            else:
+                self.assertNotIn(
+                    self.SPORTS_ONLY, blob,
+                    f'{path} [{category}]: the sports-only question leaked into '
+                    f'a non-sports FAQ set')
             for forbidden in self.FORBIDDEN_FACTS:
                 self.assertNotIn(
                     forbidden, blob,
@@ -227,22 +286,35 @@ class ProductFaqQaVerificationTests(TestCase):
             self.assertEqual(
                 html.count('<summary'), 6,
                 f'{path}: expected 6 <summary>, got {html.count("<summary")}')
-            # Answers are server-rendered (visible without JS): a known answer
-            # fragment must appear in the page HTML.
-            self.assertIn('VSP high-frequency', html,
-                          f'{path}: FAQ answer text not visible in HTML')
-            # Summary text must match the JSON-LD question (spot check #1).
-            self.assertIn(
-                'Are SolarOne stadium lights flicker-free for broadcast?', html,
-                f'{path}: first FAQ <summary> does not match JSON-LD question')
+            # Answers are server-rendered (visible without JS): every question
+            # and answer of THIS page's category must appear in the HTML.
+            # v1.10.20: the probe is derived from the constant the page is
+            # supposed to render, so re-splitting the sets cannot silently
+            # un-verify the no-JS channel (the old probe hard-coded the sports
+            # answer, which only appeared on sports pages after the split).
+            expected = PRODUCT_FAQ_BY_CATEGORY[self.PATH_CATEGORY[path]]
+            for entry in expected:
+                self.assertIn(
+                    entry['answer'][:60], html,
+                    f'{path}: FAQ answer for {entry["question"]!r} not visible '
+                    f'in HTML (no-JS channel broken)')
+            # Summary text must match the JSON-LD questions exactly.
+            for entry in expected:
+                self.assertIn(
+                    entry['question'], html,
+                    f'{path}: FAQ <summary> {entry["question"]!r} does not match '
+                    f'the JSON-LD question')
 
     def test_faq_constants_contain_no_script_breaking_chars(self):
         """Because the FAQPage blob is injected `|safe`, the constant text must
         never contain a literal that would terminate the <script> tag."""
-        for entry in PRODUCT_FAQ:
-            text = (entry['question'] + entry['answer']).lower()
-            self.assertNotIn('</script', text,
-                             f'PRODUCT_FAQ entry contains </script: unsafe with |safe')
+        for category, faq in PRODUCT_FAQ_BY_CATEGORY.items():
+            for entry in faq:
+                text = (entry['question'] + entry['answer']).lower()
+                self.assertNotIn(
+                    '</script', text,
+                    f'PRODUCT_FAQ_BY_CATEGORY[{category}] entry contains '
+                    f'</script: unsafe with |safe')
 
     def test_faq_encoding_adversarial_json_roundtrip(self):
         """If FAQ text ever held a double-quote, backslash, or ``<``/``</script>``,

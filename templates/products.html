@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{% load image_tags %}
 
 {% block title %}{% blocktrans %}LED Lighting Products — SolarOne Professional Lighting{% endblocktrans %}{% endblock %}
 {% block meta_description %}{% blocktrans %}Explore SolarOne's range of LED lighting products: sports lighting, flood lighting, high bay, roadway, and area lighting. Precision optics, modular design.{% endblocktrans %}{% endblock %}
@@ -64,11 +65,11 @@
           可见文本（v1.5.2 曾因此泄漏，且该文本在流内会撑高 banner 容器）。
           {% endcomment %}
           <img src="{% static 'images/products-bar-dark.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-dark" fetchpriority="high" decoding="async">
-          {# B4 (SEO/GEO speed): the light-theme banner is only fetched when the
+          {% comment %} B4 (SEO/GEO speed): the light-theme banner is only fetched when the
           visitor is actually on the light theme. Dark is the default/server
           theme, so its banner loads eagerly; the light one is deferred via
           data-src and promoted by a tiny html.js-gated script below — this
-          avoids downloading ~90 KB for every dark-theme visitor. #}
+          avoids downloading ~90 KB for every dark-theme visitor. {% endcomment %}
           <img data-src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" loading="lazy" decoding="async">
           <script nonce="{{ request.csp_nonce }}">
             (function () {
@@ -97,13 +98,25 @@
 
         <p class="products-banner-subtitle">{{ config.products_subtitle }}</p>
 
+        {% comment %}
+        v1.10.23 (P4-A): the one category with measured search volume gets its
+        own page, so the index has to link to it. Without this the page is an
+        orphan — reachable from the sitemap alone, which is how a landing
+        page quietly fails. Placed above the grid because it is a category
+        shortcut, not a product.
+        {% endcomment %}
+        <p style="margin-bottom: 28px;">
+          <a href="{% url 'stadium_lighting' %}" class="section-accent-label" style="text-decoration: none;">{% trans "Stadium lighting" %} &rarr;</a>
+          <span style="color: var(--ink-mute); font-size: 14px; margin-left: 10px;">{% trans "Broadcast-grade VSP floodlights and 20 delivered venue projects" %}</span>
+        </p>
+
         <div class="products-grid">
           {% for product in products %}
           <div class="product-card reveal">
             <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
             <a href="{% if product.card_link_url %}{{ product.card_link_url }}{% else %}{% url 'product_detail' product.slug %}{% endif %}" style="text-decoration: none; color: inherit;">
               {% if product.image_url %}
-              <div class="product-card-img"><img src="{{ product.image_url }}" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy" decoding="async"></div>
+              <div class="product-card-img"><img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy" decoding="async"></div>
               {% endif %}
             </a>
             <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>

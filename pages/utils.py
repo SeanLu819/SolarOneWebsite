@@ -138,10 +138,98 @@ CATEGORY_KEYWORD = {
     'OTHER': 'LED Lighting Solutions',
 }
 
-#: Optional per-slug keyword override for exceptional products whose category
-#: label is a poor search phrase. Empty by default — B3 wires the mechanism,
-#: individual overrides land with B4/C1 content work.
-SLUG_KEYWORD_OVERRIDE = {}
+#: Per-slug SEO keyword override. B3 wired the mechanism; v1.10.20 (P2-A) fills
+#: it for the M Series modules.
+#:
+#: WHY. Eleven products carry ``category = AREA_SITE``, so ``CATEGORY_KEYWORD``
+#: put the same head phrase ``LED Area & Site Lighting`` at the front of all
+#: eleven titles — including the six M Series modules, which are modular
+#: *floodlights* (the repository's own copy calls them "the FL M-series
+#: floodlight family"), six flood/stadium/tunnel products, and two RGB pages.
+#: Those pages were bidding against each other on one generic phrase.
+#:
+#: The split follows the two buying intents that actually exist in the range:
+#:
+#: * ``fl4m`` – ``fl16m`` — 320 W and up. A buyer at this wattage is lighting
+#:   a pitch or a large outdoor area, and the phrase that matches intent is
+#:   "modular LED flood light". Verified against the measured demand in
+#:   ``docs/keyword-inventory.csv``: ``led stadium lights`` 1,000/mo KD 6 is
+#:   the best difficulty-to-volume trade recorded for this project, and
+#:   ``stadium lights`` is 2,900/mo.
+#: * ``fl1m`` — 80 W, 2.3 kg, EPA 0.26 sq ft. Far too small for a stadium;
+#:   it is the area/site retrofit size, so the generic AREA_SITE phrase is
+#:   actually correct here and no override is needed.
+#:
+#: The uppercase 1M/4M/6M spelling matches the range's own documentation.
+SLUG_KEYWORD_OVERRIDE = {
+    'fl4m': 'Modular LED Flood Light',
+    'fl6m': 'Modular LED Flood Light',
+    'fl9m': 'Modular LED Flood Light',
+    'fl12m': 'Modular LED Flood Light',
+    'fl16m': 'Modular LED Flood Light',
+    'fl9m-rgbw': 'Modular LED Flood Light RGBW',
+    # The RT410 is described in the repository as "Olympic-grade, HDTV-ready
+    # sports lighting" but was filed under AREA_SITE, so its title opened with
+    # "LED Area & Site Lighting" — a category error, not just a generic phrase.
+    # It now shares the sports phrase its own copy already implies.
+    'rt410-series': 'LED Stadium Light',
+}
+
+#: Category -> localised SEO keyword, for the five non-English locales.
+#:
+#: 🔴 v1.10.20 (P2-B). Before this, ``_seo_keyword`` fell back to
+#: ``obj.t('category', lang)`` for non-English, and ``translate()`` falls back to
+#: the ENGLISH value when a translation is missing — which for ``category`` is
+#: the stored enum. Result: **100 of 120 non-English product pages shipped a
+#: title starting with the literal string** ``AREA_SITE`` / ``FLOODLIGHT`` /
+#: ``ROADWAY`` / ``ACCESSORY``. Twenty products have no ``category``
+#: translation at all, and the four that do were inconsistent with
+#: ``CATEGORY_KEYWORD`` anyway (``/fr/products/rt410-series/`` opened with
+#: ``Projecteur``, the sidebar noun, not the category phrase).
+#:
+#: The strings below are **not new copy**. Each one is the translation the site
+#: already ships for that category in ``pages/views/i18n.py``
+#: (``_SIDEBAR_I18N``) — the label beside the product in the sidebar and on the
+#: collection cards. Reusing them keeps the title, the sidebar and the cards
+#: saying the same thing in every language, and it means this change needs no
+#: new translation review to ship.
+#:
+#: A native reviewer may later want a proper search phrase (e.g. French
+#: ``éclairage de stade LED`` rather than the noun phrase ``projecteur``); that
+#: is a copy decision, and until it is made the sidebar wording is strictly
+#: better than an enum. See ``docs/long-tail-keyword-review-2026-10-06.md`` §3.2
+#: for the drafted candidates and the three questions a reviewer must answer.
+CATEGORY_KEYWORD_I18N = {
+    'AREA_SITE': {
+        'fr': 'Zone et Site', 'es': 'Área y Sitio', 'de': 'Bereich und Standort',
+        'ru': 'Территория и площадка', 'ar': 'المنطقة والموقع',
+    },
+    'SPORTS_LIGHTING': {
+        'fr': "Système d'Éclairage Sportif",
+        'es': 'Sistema de Iluminación Deportiva',
+        'de': 'Sportbeleuchtungssystem',
+        'ru': 'Система спортивного освещения',
+        'ar': 'نظام إضاءة رياضية',
+    },
+    'FLOODLIGHT': {
+        'fr': 'Projecteurs', 'es': 'Proyectores', 'de': 'Flutlicht',
+        'ru': 'Прожекторное освещение', 'ar': 'إضاءة فيضانية',
+    },
+    'HIGHBAY_LOWBAY': {
+        'fr': 'Haute & Basse Baie', 'es': 'Alta & Baja Bahía',
+        'de': 'Highbay & Lowbay', 'ru': 'Высокий и низкий пролёт',
+        'ar': 'إضاءة عالية ومنخفضة',
+    },
+    'ROADWAY': {
+        'fr': 'Éclairage Routier', 'es': 'Alumbrado Vial',
+        'de': 'Straßenbeleuchtung', 'ru': 'Дорожное освещение',
+        'ar': 'إنارة الطرق',
+    },
+    'ACCESSORY': {
+        'fr': 'Accessoire', 'es': 'Accesorio', 'de': 'Zubehör',
+        'ru': 'Аксессуар', 'ar': 'ملحق',
+    },
+}
 
 #: Project ``sport_type`` -> SEO keyword phrase (English). All 17 values of
 #: ``Project.SPORT_TYPE_CHOICES`` share the OLD static suffix
@@ -208,20 +296,37 @@ def get_seo_override(obj, field, lang='en'):
 def _seo_keyword(obj, lang='en'):
     """Localized SEO keyword phrase for ``obj``.
 
-    Slug override wins (English only), then the category map. For non-English
-    the category keyword is localized via the object's translated category
-    label; full per-language keyword phrasing is B8/E2 (later batch).
+    🔴 v1.10.20 (P2-B) — the non-English branch used to be
+    ``obj.t('category', lang)``, i.e. the *translated category label*, falling
+    back to the raw English value when a translation is missing. For
+    ``category`` that English value is the stored enum, so a missing
+    translation put ``AREA_SITE`` into the `<title>` of a French page. Measured
+    before the change: 100 of 120 non-English product URLs.
+
+    The order is now:
+
+    1. an explicit ``translations[lang]['seo_title']`` override, handled by the
+       caller (:func:`get_seo_override`);
+    2. a slug override, English only (it is a search phrase, not a label);
+    3. ``CATEGORY_KEYWORD_I18N[category][lang]`` — the wording the site
+       already shows for that category in every locale;
+    4. the English ``CATEGORY_KEYWORD[category]``;
+    5. ``''`` — so the title degrades to ``{model} | SolarOne`` rather than
+       inventing anything.
+
+    ``product.category`` is deliberately NOT consulted at any point: it is an
+    enum, and an enum in a `<title>` is the bug this replaces.
     """
     slug = getattr(obj, 'slug', '') or ''
     override = SLUG_KEYWORD_OVERRIDE.get(slug)
     if override and lang == 'en':
         return override
     cat = getattr(obj, 'category', '') or ''
-    kw = CATEGORY_KEYWORD.get(cat, '')
-    if lang == 'en' or not kw:
-        return kw
-    localized = obj.t('category', lang) if hasattr(obj, 't') else kw
-    return localized or kw
+    if lang != 'en':
+        localized = CATEGORY_KEYWORD_I18N.get(cat, {}).get(lang, '')
+        if localized:
+            return localized
+    return CATEGORY_KEYWORD.get(cat, '')
 
 
 def project_category_keyword(sport_type, lang='en'):
@@ -404,6 +509,16 @@ def build_seo_title(obj, lang='en'):
     Keyword leads so the page ranks for the category phrase; the model/name
     identifier follows; power is appended only when not already inside the
     identifier (some ``model_number`` codes embed wattage).
+
+    🔴 v1.10.20 (P2-C) — the result is clamped to ``MAX_SEO_TITLE_LEN`` on a
+    word boundary, using the same policy the project formula already uses
+    (``_fit_project_title``). ``mseries-gs`` came out at 61 characters
+    ("LED Lighting Accessories Glare Shield for M series | SolarOne") because
+    its ``name`` is 25 characters and has no ``model_number`` to shorten it;
+    the overflow was simply over budget before. Truncation happens on the
+    *identifier only* — the keyword and the brand are the parts worth paying
+    for, and the full name is still rendered in the H1, the og:title, the
+    breadcrumb JSON-LD and the body copy.
     """
     kw = _seo_keyword(obj, lang)
     identifier = _seo_identifier(obj)
@@ -418,7 +533,41 @@ def build_seo_title(obj, lang='en'):
         core = _SEO_BRAND
     if power and power not in core:
         core = f'{core} — {power}'
+    # Word-boundary clamp; see the docstring note on MAX_SEO_TITLE_LEN use.
+    fixed = len(f' | {_SEO_BRAND}')
+    if kw and len(core) + fixed > MAX_SEO_TITLE_LEN:
+        core = f'{kw} {_fit_project_title(identifier, kw, MAX_SEO_TITLE_LEN - fixed)}'
+        if power and power not in core:
+            core = f'{core} — {power}'
     return f'{core} | {_SEO_BRAND}'
+
+
+#: Closing clause per category, so the tail of the meta description says
+#: something true of THAT product instead of the same sentence on all 24
+#: pages. Every phrase is taken from copy the repository already ships for
+#: that category — see the ``description`` of the flood products ("Building
+#: Security, Packing lots … display window, advertisement billboard"), the
+#: high-bay products ("High school, college … Industrial Facilities, Building
+#: facades"), the roadway products ("designed for streets, highways, and
+#: infrastructure projects"), the VSP products ("broadcast venues") and the
+#: accessory hub ("varying glare and light spill requirements").
+#:
+#: 🔴 v1.10.20: the old single tail — "for professional sports, industrial
+#: and commercial lighting projects" — was on every page including the roadway
+#: and flood lines, where "sports" is simply wrong, and 24 identical tails
+#: read as boilerplate.
+_CATEGORY_DESCRIPTION_TAIL = {
+    'AREA_SITE': 'yards, parking lots, building facades and outdoor areas',
+    'SPORTS_LIGHTING': 'stadiums, courts and broadcast venues',
+    'FLOODLIGHT': 'yards, loading lots, residential areas and signage',
+    'HIGHBAY_LOWBAY': 'warehouses, sports halls and industrial facilities',
+    'ROADWAY': 'streets, highways and infrastructure projects',
+    'ACCESSORY': 'cutting glare and light spill on existing installations',
+}
+
+#: Fallback for a category with no entry above. Neutral (no application claim)
+#: rather than a claim that could be wrong.
+_DEFAULT_DESCRIPTION_TAIL = 'commercial and industrial lighting projects'
 
 
 def build_seo_description(obj, lang='en'):
@@ -438,8 +587,12 @@ def build_seo_description(obj, lang='en'):
     desc = bit
     if power:
         desc = f'{desc} delivers {power} of high-efficiency LED output'
-    desc = (f'{desc} for professional sports, industrial and commercial '
-            f'lighting projects.')
-    if len(desc) > 160:
-        desc = desc[:157].rstrip() + '...'
+    tail = _CATEGORY_DESCRIPTION_TAIL.get(
+        (getattr(obj, 'category', '') or ''), _DEFAULT_DESCRIPTION_TAIL)
+    desc = f'{desc} for {tail}.'
+    if len(desc) > MAX_SEO_DESCRIPTION_LEN:
+        # Word-boundary clamp. The old hard cut at [:157] produced snippets
+        # ending mid-word ("… and commercial lighting pro..."), which wastes
+        # the last three characters and reads as broken copy.
+        desc = _fit_project_description(desc, MAX_SEO_DESCRIPTION_LEN)
     return desc

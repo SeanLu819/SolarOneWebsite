@@ -977,3 +977,187 @@ msgstr ""
 "SolarOne освещение теннисных кортов: светодиодные светильники и прожекторы "
 "для уличных и крытых кортов — равномерное освещение, низкий уровень засветки"
 " и цвет, готовый к трансляции, на любом уровне игры."
+
+#: templates/product_detail.html templates/product_overview.html
+msgid "UL, DLC, GS, CE and IP66 certifications for %(name)s"
+msgstr "Сертификаты UL, DLC, GS, CE и IP66 для %(name)s"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "All reference projects"
+msgstr "Все референсные проекты"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Choosing the Right Output"
+msgstr "Выбор подходящей мощности"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Delivered Venue Projects"
+msgstr "Реализованные проекты объектов"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Distribution"
+msgstr "Распределение"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height."
+msgstr "Полные фотометрические данные, файлы IES и отчёты DIALux предоставляются по запросу — пришлите план объекта и высоту монтажа."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "High bay"
+msgstr "Высокий пролёт"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "LED Stadium Lighting"
+msgstr "Светодиодное освещение стадионов"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "LED Stadium Lighting — SolarOne Sports Floodlights"
+msgstr "Светодиодное освещение стадионов SolarOne"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "M Series 80–1280 W"
+msgstr "M Series 80–1280 Вт"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Modular LED flood lights"
+msgstr "Модульные светодиодные прожекторы"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Mounting"
+msgstr "Монтаж"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Other Lighting Categories"
+msgstr "Другие категории"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Roadway"
+msgstr "Дорожное освещение"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects."
+msgstr "Светодиодное освещение стадионов SolarOne: прожекторы VSP для трансляций и модульные прожекторы от 80 до 1280 Вт, 20 реализованных проектов спортивных объектов."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Stadium Floodlights"
+msgstr "Прожекторы для стадионов"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Stadium Lighting"
+msgstr "Освещение стадионов"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
+msgstr "Серия VSP — платформа для трансляций: асимметричная оптика со стороны камер и распределения 12 / 18 / 30 / 50° для трибун."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use."
+msgstr "Проект освещения стадиона определяют два числа: целевая освещенность игрового поля и количество точек крепления, которые допускает конструкция. Вот диапазоны, применяемые в наших реализованных проектах."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Typical fixture"
+msgstr "Типовой прожектор"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues."
+msgstr "Освещение спортивного объекта определяется двумя факторами: возможностью направить прожектор без бликов на позиции камер, и соответствием фотометрического файла геометрии трибун. SolarOne предлагает и то и другое: прожекторы для трансляций и модульные прожекторы от 80 до 1280 Вт для тренировочных площадок и клубных объектов."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue projects are also lit with these platforms."
+msgstr "Эти платформы также используются для освещения объектов."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue type"
+msgstr "Тип объекта"
+
+#: templates/stadium_lighting.html
+msgid "Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
+msgstr "Универсальный зал, велодром|400–600 Вт|60 / 90 / 120°|Стропильная ферма, 12–20 м"
+
+#: templates/stadium_lighting.html
+msgid "Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
+msgstr "Профессиональный стадион с трансляцией|1000 Вт и более|12 / 18 / 30 / 50°|Кровля, 30–45 м"
+
+#: templates/stadium_lighting.html
+msgid "Ski run, karting track|320–480 W|Asymmetric, low glare|Pole, 6–10 m"
+msgstr "Лыжная трасса, картинговая трасса|320–480 Вт|Асимметричная, малая слепимость|Столб, 6–10 м"
+
+#: templates/stadium_lighting.html
+msgid "Training ground, club venue|480–720 W|12 / 18 / 30 / 50°|Pole, 8–12 m"
+msgstr "Тренировочное поле, клубный объект|480–720 Вт|12 / 18 / 30 / 50°|Мачта, 8–12 м"
+
+#: templates/stadium_lighting.html
+msgid "12 / 18 / 30 / 50°"
+msgstr "12 / 18 / 30 / 50°"
+
+#: templates/stadium_lighting.html
+msgid "60 / 90 / 120°"
+msgstr "60 / 90 / 120°"
+
+#: templates/stadium_lighting.html
+msgid "Asymmetric, low glare"
+msgstr "Асимметричная, малая слепимость"
+
+#: templates/stadium_lighting.html
+msgid "FL4M–FL6M, 320–480 W"
+msgstr "FL4M–FL6M, 320–480 W"
+
+#: templates/stadium_lighting.html
+msgid "FL6M–FL9M, 480–720 W"
+msgstr "FL6M–FL9M, 480–720 W"
+
+#: templates/stadium_lighting.html
+msgid "Multi-sport hall, velodrome"
+msgstr "Универсальный зал, велодром"
+
+#: templates/stadium_lighting.html
+msgid "Pole, 6–10 m"
+msgstr "Столб, 6–10 м"
+
+#: templates/stadium_lighting.html
+msgid "Pole, 8–12 m"
+msgstr "Мачта, 8–12 м"
+
+#: templates/stadium_lighting.html
+msgid "Professional stadium, televised"
+msgstr "Профессиональный стадион с трансляцией"
+
+#: templates/stadium_lighting.html
+msgid "RT410-RGBW or RT400HB, 400–600 W"
+msgstr "RT410-RGBW или RT400HB, 400–600 Вт"
+
+#: templates/stadium_lighting.html
+msgid "Roof rim, 30–45 m"
+msgstr "Кровля, 30–45 м"
+
+#: templates/stadium_lighting.html
+msgid "Roof truss, 12–20 m"
+msgstr "Стропильная ферма, 12–20 м"
+
+#: templates/stadium_lighting.html
+msgid "Ski run, karting track"
+msgstr "Лыжная трасса, картинговая трасса"
+
+#: templates/stadium_lighting.html
+msgid "Training ground, club venue"
+msgstr "Тренировочное поле, клубный объект"
+
+#: templates/stadium_lighting.html
+msgid "VSP-XXXXW-12M-YP, 1000 W+"
+msgstr "VSP-XXXXW-12M-YP, 1000 W+"
+
+#: templates/products.html
+msgid "Broadcast-grade VSP floodlights and 20 delivered venue projects"
+msgstr "Прожекторы VSP для трансляций и 20 реализованных проектов объектов"
+
+#: templates/products.html
+msgid "Stadium lighting"
+msgstr "Освещение стадионов"
+
+#: templates/projects.html
+msgid "Which luminaire do these venues use?"
+msgstr "Какие прожекторы используются на этих объектах?"
+
+#: templates/product_overview.html
+msgid "Models in this series"
+msgstr "Модели этой серии"

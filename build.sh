@@ -114,6 +114,10 @@ rm -rf public
 mkdir -p public
 export VERCEL_STATIC_ROOT=public/static
 
+echo "=== [build.sh] Generating responsive image variants (batch C) ==="
+python scripts/gen_image_variants.py
+echo ""
+
 # 2. Run Django collectstatic -> writes the hashed assets into $VERCEL_STATIC_ROOT
 #    (public/static) per STATIC_ROOT. No separate ./staticfiles -> public/ copy.
 #    FAIL CLOSED (P3-1): collectstatic 产出 staticfiles.json（原名 → 哈希名），

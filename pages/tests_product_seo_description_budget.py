@@ -175,14 +175,29 @@ class ProductDescriptionModelPathTests(TestCase):
                                          % (item['slug'], lang, len(out), out))
 
     def test_model_and_seed_paths_agree(self):
-        """The mirrors are two copies of one formula; drift ships reality-only bugs."""
+        """The mirrors are two copies of one formula; drift ships reality-only bugs.
+
+        🔴 v1.10.20 — this constructed the model with only four fields
+        (``slug`` / ``name`` / ``description`` / ``translations``) while
+        ``_DictProduct`` reads six. The formula consumes ``power``,
+        ``model_number`` and ``category`` (``pages/utils.build_seo_description``
+        → ``_seo_keyword`` + ``_seo_identifier``), so the two sides could never
+        agree: every one of the 24 products failed on the ``en`` subtest. The
+        guard was not protecting the mirror, it was reporting its own gap.
+
+        Every field the formula touches is now passed. If a future formula
+        reads another field, this test goes red again — which is the point.
+        """
         from pages.models import Product
 
         for item in _load_seed()['products']:
             product = Product(slug=item.get('slug', ''),
                               name=item.get('name', ''),
                               description=item.get('description', ''),
-                              translations=item.get('translations', {}) or {})
+                              translations=item.get('translations', {}) or {},
+                              category=item.get('category', ''),
+                              power=item.get('power', ''),
+                              model_number=item.get('model_number', ''))
             seed_obj = _DictProduct(item)
             for lang in LANGS:
                 with self.subTest(slug=item['slug'], lang=lang):
@@ -326,7 +341,14 @@ class ProductDescriptionRenderTests(TestCase):
     def test_english_product_pages_are_unchanged(self):
         page = self._get('/products/fl6m/')
         self.assertIn('SolarOne FL6M', page)
+        import html as _html
         import re as _re
         m = _re.search(r'<meta name="description" content="([^"]*)"', page)
         self.assertTrue(m)
-        self.assertLessEqual(len(m.group(1)), MAX_SEO_DESCRIPTION_LEN)
+        # 🔴 v1.10.20 — measure the DECODED length. `&` is written as `&amp;`
+        # in the attribute, so a description containing "Area & Site" measured
+        # 4 characters over budget while the text a search engine parses was
+        # exactly at the limit. The budget is about what the crawler reads, so
+        # the guard has to unescape before counting.
+        self.assertLessEqual(len(_html.unescape(m.group(1))),
+                             MAX_SEO_DESCRIPTION_LEN)

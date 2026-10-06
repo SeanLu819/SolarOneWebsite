@@ -10,6 +10,7 @@ from .utils import (
     _DictProduct, _DictProject,
 )
 from .i18n import _PRODUCT_CARD_LABELS, _PRODUCT_CAT_TO_SIDEBAR_LABEL, _t
+from pages.utils import _seo_keyword, project_category_keyword
 
 logger = logging.getLogger(__name__)
 
@@ -130,14 +131,39 @@ def _gallery_alt(base, qualifier, i):
 
     The seed product names ("M Series", "RT410 Series") contain no
     category/type words, so the bare ``"<name> — view N"`` carried almost no
-    text for SEO. ``qualifier`` is the product category display or the project
-    location — real text we already hold — and is folded in when present. When
-    it is empty we fall back to the original string so no alt is ever
-    ``" — view N"``.
+    text for SEO. ``qualifier`` is folded in when present; when it is empty we
+    fall back to the plain string so no alt is ever ``" — view N"``.
+
+    🔴 v1.10.22 (P3-C) — ``qualifier`` used to be ``category_display``, the
+    *sidebar navigation label* ("Area and Site", "Flood Lighting"). That is a
+    UI label chosen to be short, not a search phrase: nobody types "area and
+    site lighting" into a product search box, they type "LED flood light".
+    The qualifier is now the same phrase the ``<title>`` bids on —
+    ``_seo_keyword()`` for products (slug override -> localised category
+    phrase) and ``project_category_keyword()`` for projects (the venue type,
+    e.g. "LED Football Field Lights"). Alt text and title now describe the
+    page in the same words instead of two different vocabularies.
+
+    A locale whose phrase is missing falls back to English rather than to the
+    category *enum* — ``AREA_SITE`` must never reach an alt attribute.
     """
     if qualifier:
         return f'{base} — {qualifier} — view {i + 1}'
     return f'{base} — view {i + 1}'
+
+
+def _project_alt_qualifier(project):
+    """Venue type + location, the two facts a project photo caption needs.
+
+    Either half may be missing (a project can have no location string),
+    so the join is conditional rather than producing " — " gaps.
+    """
+    parts = [
+        (getattr(project, 'seo_keyword_t', '') or '').strip(),
+        (getattr(project, 'location_t', '') or '').strip(),
+    ]
+    return ' — '.join(p for p in parts if p)
+
 
 
 def _enrich_product(product, lang):
@@ -149,6 +175,9 @@ def _enrich_product(product, lang):
     product.seo_description_t = product.seo_description(lang)
     card_label = _PRODUCT_CARD_LABELS.get(product.slug) or _PRODUCT_CAT_TO_SIDEBAR_LABEL.get(product.category, product.category_t)
     product.category_display = _t(card_label, lang)
+    # v1.10.22 (P3-C): the phrase the <title> bids on — not the
+    # sidebar label. See _gallery_alt for why.
+    product.seo_keyword_t = _seo_keyword(product, lang)
 
     raw_specs = getattr(product, 'specs', None)
     if raw_specs:
@@ -178,7 +207,8 @@ def _enrich_product(product, lang):
                     'image'
                 ),
                 'alt': img.alt_text or _gallery_alt(
-                    product.name_t, getattr(product, 'category_display', ''), i),
+                    product.name_t,
+                    getattr(product, 'seo_keyword_t', ''), i),
             }
             for i, img in enumerate(product.images.all())
         ]
@@ -197,7 +227,8 @@ def _enrich_product(product, lang):
         product.cert_image_url = cert_url
         product.gallery = [
             {'src': _dict_product_image_url(p, slug),
-             'alt': _gallery_alt(product.name_t, getattr(product, 'category_display', ''), i)}
+             'alt': _gallery_alt(
+                 product.name_t, getattr(product, 'seo_keyword_t', ''), i)}
             for i, p in enumerate(product.gallery_paths)
         ]
         if not product.parent_slug:
@@ -234,6 +265,11 @@ def _enrich_project(project, lang):
     # in an ellipsis. Set on both Project and _DictProject (both expose the
     # method); template falls back defensively if an object predates this.
     project.og_description_t = project.og_description(lang)
+    # v1.10.22 (P3-C): venue type first, then geography. The venue type
+    # is the phrase the project title bids on; the location adds the
+    # "where", which a bare venue type cannot express.
+    project.seo_keyword_t = project_category_keyword(
+        getattr(project, 'sport_type', ''), lang)
 
     slug = getattr(project, 'slug', '')
     project.has_compare_images = slug in _COMPARE_IMAGE_SLUGS
@@ -253,7 +289,8 @@ def _enrich_project(project, lang):
                 {
                     'src': _project_image_url(img.image, slug),
                     'alt': img.alt_text or _gallery_alt(
-                        project.title_t, getattr(project, 'location_t', ''), i),
+                        project.title_t,
+                        _project_alt_qualifier(project), i),
                 }
                 for i, img in enumerate(db_images)
             ]
@@ -261,7 +298,8 @@ def _enrich_project(project, lang):
             static_gal_urls = _project_gallery_urls(project)
             project.gallery = [
                 {'src': src,
-                 'alt': _gallery_alt(project.title_t, getattr(project, 'location_t', ''), i)}
+                 'alt': _gallery_alt(
+                     project.title_t, _project_alt_qualifier(project), i)}
                 for i, src in enumerate(static_gal_urls)
             ]
     else:
@@ -291,6 +329,7 @@ def _enrich_project(project, lang):
             gal_urls = static_gal_urls
         project.gallery = [
             {'src': src,
-             'alt': _gallery_alt(project.title_t, getattr(project, 'location_t', ''), i)}
+             'alt': _gallery_alt(
+                 project.title_t, _project_alt_qualifier(project), i)}
             for i, src in enumerate(gal_urls)
         ]

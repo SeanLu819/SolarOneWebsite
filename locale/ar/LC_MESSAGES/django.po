@@ -929,3 +929,187 @@ msgid ""
 msgstr ""
 "SolarOne إضاءة ملاعب التنس: مصابيح ومشابعات LED للملاعب الخارجية والداخلية —"
 " إضاءة متساوية وتوهج منخفض ولون جاهز للبث على كل مستوى."
+
+#: templates/product_detail.html templates/product_overview.html
+msgid "UL, DLC, GS, CE and IP66 certifications for %(name)s"
+msgstr "شهادات UL و DLC و GS و CE و IP66 لـ %(name)s"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "All reference projects"
+msgstr "جميع المشاريع المرجعية"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Choosing the Right Output"
+msgstr "اختيار القدرة المناسبة"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Delivered Venue Projects"
+msgstr "مشاريع المنشآت المنفذة"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Distribution"
+msgstr "التوزيع"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height."
+msgstr "يتم توفير البيانات الفوتومترية الكاملة وملفات IES وتقارير DIALux عند الطلب — أرسل مخطط المنشأة وارتفاع التركيب."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "High bay"
+msgstr "الإضاءة العالية"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "LED Stadium Lighting"
+msgstr "إضاءة الملاعب بـ LED"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "LED Stadium Lighting — SolarOne Sports Floodlights"
+msgstr "إضاءة ملاعب LED — كشافات رياضية من SolarOne"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "M Series 80–1280 W"
+msgstr "سلسلة M من 80 إلى 1280 واط"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Modular LED flood lights"
+msgstr "كشافات LED معيارية"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Mounting"
+msgstr "التركيب"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Other Lighting Categories"
+msgstr "فئات أخرى"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Roadway"
+msgstr "إنارة الطرق"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects."
+msgstr "إضاءة ملاعب LED من SolarOne: كشافات VSP جاهزة للبث التلفزيوني وكشافات معيارية من 80 إلى 1280 واط، مع 20 مشروعاً منفذاً للملاعب."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Stadium Floodlights"
+msgstr "كشافات الملاعب"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Stadium Lighting"
+msgstr "إضاءة الملاعب"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
+msgstr "سلسلة VSP هي منصة البث التلفزيوني: بصريات غير متناظرة لجانب الكاميرات وتوزيعات 12 / 18 / 30 / 50° للمدرجات."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use."
+msgstr "يحدد مشروع الملعب رقمان: الإضاءة المستهدفة على سطح الملعب وعدد نقاط التثبيت التي تسمح بها المنشأة. هذه هي النطاقات المستخدمة في مشاريعنا المنفذة."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Typical fixture"
+msgstr "الكشاف المعتاد"
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues."
+msgstr "يتحدد إنارة المنشأة الرياضية بأمرين: إمكانية توجيه الكشاف دون وهج باتجاه كاميرات التصوير، ومدى ملاءمة الملف الفوتومتري لهندسة المدرجات. توفر SolarOne الاثنين: كشافات ملاعب جاهزة للبث التلفزيوني، وكشافات معيارية من 80 إلى 1280 واط لملاعب التدريب والأندية."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue projects are also lit with these platforms."
+msgstr "تستخدم هذه المنصات أيضاً في إنارة المنشآت الرياضية."
+
+#: pages/views/views_stadium.py templates/stadium_lighting.html
+msgid "Venue type"
+msgstr "نوع المنشأة"
+
+#: templates/stadium_lighting.html
+msgid "Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
+msgstr "صالة متعددة الرياضات، فيلودروم|400–600 واط|60 / 90 / 120°|جمالون السقف، 12–20 م"
+
+#: templates/stadium_lighting.html
+msgid "Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
+msgstr "ملعب محترف مع بث تلفزيوني|1000 واط وأعلى|12 / 18 / 30 / 50°|حافة السقف، 30–45 م"
+
+#: templates/stadium_lighting.html
+msgid "Ski run, karting track|320–480 W|Asymmetric, low glare|Pole, 6–10 m"
+msgstr "مدرج تزلج، مسار كارت|320–480 واط|غير متناظرة، وهج منخفض|عمود، 6–10 م"
+
+#: templates/stadium_lighting.html
+msgid "Training ground, club venue|480–720 W|12 / 18 / 30 / 50°|Pole, 8–12 m"
+msgstr "ملعب تدريب، نادي|480–720 واط|12 / 18 / 30 / 50°|عمود، 8–12 م"
+
+#: templates/stadium_lighting.html
+msgid "12 / 18 / 30 / 50°"
+msgstr "12 / 18 / 30 / 50°"
+
+#: templates/stadium_lighting.html
+msgid "60 / 90 / 120°"
+msgstr "60 / 90 / 120°"
+
+#: templates/stadium_lighting.html
+msgid "Asymmetric, low glare"
+msgstr "غير متناظرة، وهج منخفض"
+
+#: templates/stadium_lighting.html
+msgid "FL4M–FL6M, 320–480 W"
+msgstr "FL4M–FL6M, 320–480 W"
+
+#: templates/stadium_lighting.html
+msgid "FL6M–FL9M, 480–720 W"
+msgstr "FL6M–FL9M, 480–720 W"
+
+#: templates/stadium_lighting.html
+msgid "Multi-sport hall, velodrome"
+msgstr "صالة متعددة الرياضات، فيلودروم"
+
+#: templates/stadium_lighting.html
+msgid "Pole, 6–10 m"
+msgstr "عمود، 6–10 م"
+
+#: templates/stadium_lighting.html
+msgid "Pole, 8–12 m"
+msgstr "عمود، 8–12 م"
+
+#: templates/stadium_lighting.html
+msgid "Professional stadium, televised"
+msgstr "ملعب محترف مع بث تلفزيوني"
+
+#: templates/stadium_lighting.html
+msgid "RT410-RGBW or RT400HB, 400–600 W"
+msgstr "RT410-RGBW أو RT400HB، 400–600 واط"
+
+#: templates/stadium_lighting.html
+msgid "Roof rim, 30–45 m"
+msgstr "حافة السقف، 30–45 م"
+
+#: templates/stadium_lighting.html
+msgid "Roof truss, 12–20 m"
+msgstr "جمالون السقف، 12–20 م"
+
+#: templates/stadium_lighting.html
+msgid "Ski run, karting track"
+msgstr "مدرج تزلج، مسار كارت"
+
+#: templates/stadium_lighting.html
+msgid "Training ground, club venue"
+msgstr "ملعب تدريب، نادي"
+
+#: templates/stadium_lighting.html
+msgid "VSP-XXXXW-12M-YP, 1000 W+"
+msgstr "VSP-XXXXW-12M-YP, 1000 W+"
+
+#: templates/products.html
+msgid "Broadcast-grade VSP floodlights and 20 delivered venue projects"
+msgstr "كشافات VSP للبث التلفزيوني و20 مشروعاً منفذاً للمنشآت"
+
+#: templates/products.html
+msgid "Stadium lighting"
+msgstr "إضاءة الملاعب"
+
+#: templates/projects.html
+msgid "Which luminaire do these venues use?"
+msgstr "ما الكشاف المستخدم في هذه المنشآت؟"
+
+#: templates/product_overview.html
+msgid "Models in this series"
+msgstr "طرازات هذه السلسلة"

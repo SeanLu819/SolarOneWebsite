@@ -2,6 +2,299 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.23 - 2026-10-06
+
+## P4: a landing page for the one term with volume, and hub sub-model links
+
+The plan this batch implements proposed **six** category landing pages. Measuring
+the portfolio first rejected four of them:
+
+    category          products  projects  verdict
+    SPORTS_LIGHTING        2        20    build it
+    AREA_SITE             11         1    already served by /products/
+    FLOODLIGHT             4         0    thin page
+    HIGHBAY_LOWBAY         2         0    thin page
+    ROADWAY                2         1    thin page
+    ACCESSORY              3         0    thin page
+
+A page carrying two products and a paragraph is the thin page v1.10.20 spent a
+batch deleting. So `/stadium-lighting/` is the only new page, and the rejection
+is written into `tests_seo_p4.py` as a guard: a future `highbay_lighting` route
+fails until the measurement behind its rejection is re-argued.
+
+What the page does own is the whole generic stadium term. Of the six measured
+keywords, four are one intent spelled four ways — stadium lights (2 900/mo),
+led stadium lights (1 000/mo), stadium light (720/mo), led sports lighting
+(390/mo) — **5 010 searches/month**, none of them on a page of its own. The
+three URLs that used to carry them were retired in v1.10.0.
+
+The page is built from the same `related_links.PRODUCT_CATEGORY_TO_PROJECT_SPORTS`
+table a product page's "Application Cases" uses, so the two cannot disagree about
+which projects suit which luminaires: 2 stadium floodlights, 9 delivered venues
+with a selection table by venue type and mounting height, and a self-referencing
+canonical in all six locales.
+
+**Also fixed: five template comments were shipping as visible body copy.**
+Django's `{# #}` is single-line only — a multi-line one is not a comment at all,
+and the engine emits it verbatim. Two were introduced in v1.10.20 and v1.10.22
+(including one on the M Series hub, on every `/products/m-series/` view), and one
+older than that was still in `products.html` from a bug v1.5.2 had already fixed
+once. All are now `{% comment %}`, and a guard fails on any page that renders
+`{#`.
+
+**P4-B — the hub pages now list their sub-models in the content area.** 🔴 The
+premise here was wrong and the correction is the interesting part: the batch set
+out to fix "hubs link to none of their children", because a first scan said so.
+That scan stripped `<nav>` elements — and the series filter navigation *is* a
+`<nav>` — so the sidebar's links were removed before counting. The sidebar has
+linked every sub-model all along. The selector is still worth adding, for what
+it carries that a filter control does not: the wattage and the keyword phrase,
+in the content area where the buyer is looking. The first version of its guard
+asserted a bare `assertIn(child_url, body)`, which the sidebar satisfied on its
+own — the mutation probe caught it passing with the selector deleted entirely.
+It now matches the selector's own markup.
+
+New `pages/tests_seo_p4.py` (25 tests) and nine mutation probes.
+
+## v1.10.22 - 2026-10-06
+
+## P3: image SEO — alt vocabulary and collection-page image sitemap
+
+An alt attribute is optional in HTML, so every defect in this batch rendered
+perfectly valid markup and passed every existing check. All three were found by
+reading the rendered output, not the templates.
+
+**P3-A — a formula improvement that had been invisible for months.**
+`_gallery_alt` had already been changed to fold a qualifier into every gallery
+alt, and nothing on the site had changed: `_enrich_product` reads
+`img.alt_text or _gallery_alt(...)`, and 36 `ProductImage` rows still held the
+*old* generated string (`"FL6M — view 1"`). A stored value wins outright, so the
+new formula was dead code on every product that had a gallery. Those rows are
+now cleared — matched by pattern, never a blanket wipe, so a hand-written alt
+could not have been destroyed — which also removes the DB/seed divergence the
+audit found (local previews and production showed different alt text for the
+same file).
+
+**P3-C — the alt vocabulary was a navigation label.** The qualifier was
+`category_display`, the sidebar entry: "Area and Site", "Flood Lighting". Those
+are UI labels chosen to be short. Nobody searches for "area and site lighting";
+they search "LED flood light". The qualifier is now the phrase the `<title>`
+bids on, so one page describes itself in one vocabulary — and because P2 gave
+that phrase a slug override and a per-language table, the alt is localised for
+free. Project galleries gain the venue type ("LED football Stadium Lights")
+alongside the location. Six more bare alts in the product templates now carry
+it, and the certification badge — which was one `{% trans %}` string, i.e. the
+identical alt on all 24 product pages — names the product and is translated
+into all five non-English locales.
+
+**P3-B — 10 of 59 sitemap URLs carried no images at all**, including the home
+page, the product index, both sport collections, the news index, about and
+contact: every page a first-time visitor lands on. All ten now carry images,
+which takes the sitemap from 118 to 240 image entries. Two rules keep it
+honest and are enforced by tests: only images the page actually renders (the
+per-slide portrait hero variants and the light-theme product banner are CSS
+alternates, not second pictures), and the file must exist — a path that is not
+on disk is dropped rather than shipped as a 404 to the crawler. `privacy` and
+`terms` are deliberately left empty; they are legal text.
+
+New `pages/tests_image_seo_p3.py` (24 tests) and eight mutation probes. Two of
+those probes earned their keep by failing on the guards rather than the code:
+one DB-backed guard was reading the empty test database, so writing a stale alt
+back into `db.sqlite3` left the suite green; and the project-collection guard
+derived its expectation from the very mapping it validates, so pointing the
+tennis collection at football's sport types moved both sides together. Both
+now read `db.sqlite3` through a read-only connection with an anti-vacuity
+check, and compare against a literal.
+
+## v1.10.21 - 2026-10-06
+
+## P2: stop the product pages competing with each other
+
+The v1.10.19 audit found three formula-level defects in `pages/utils.py`. All
+three made 24 pages bid against each other on the same words.
+
+**P2-A — eleven pages led with one generic phrase.** `AREA_SITE` maps to
+`LED Area & Site Lighting`, and eleven products carry that category —
+including the six M Series modules, which the repository's own copy calls
+floodlights ("the FL M-series floodlight family"), and two RGB pages.
+`SLUG_KEYWORD_OVERRIDE` (wired in v1.9.x, empty until now) gives the modules
+their own `Modular LED Flood Light` wording and moves the RT410 to
+`LED Stadium Light` — it is described in the repo as "Olympic-grade, HDTV-ready
+sports lighting" but was filed under `AREA_SITE`, so its title opened with a
+category that was simply wrong. `fl1m` keeps the generic phrase on purpose:
+80 W / 2.3 kg / 0.26 sq ft is an area-and-site retrofit size, not a stadium
+one. The eleven-way collision is now seven groups, and the largest is 4.
+
+**P2-B — 100 of 120 non-English titles started with a database enum.**
+`_seo_keyword` localised through `obj.t('category', lang)`, and `translate()`
+falls back to the English value when a translation is missing — which for
+`category` is the stored enum. So `/fr/products/fl6m/` was titled
+`AREA_SITE FL6M-480W-30K-S | SolarOne`. The wording now comes from
+`CATEGORY_KEYWORD_I18N`, and **the strings are not new copy**: each is the
+translation the site already ships for that category in the sidebar and on the
+collection cards, so the title, the sidebar and the cards now agree in every
+language and no new translation review is needed to ship. The fallback chain
+is explicit translation → English phrase → empty, and `product.category` is
+consulted nowhere. A native reviewer may later want proper search phrases
+(French `éclairage de stade LED` rather than the noun `projecteur`); that is a
+copy decision, documented in `docs/long-tail-keyword-review-2026-10-06.md` §3.2.
+
+**P2-C — the title had no length clamp and the description cut mid-word.**
+`mseries-gs` rendered a 61-character title (25-character `name`, no
+`model_number` to shorten it); titles are now clamped on a word boundary using
+the policy the project formula already uses, and only the identifier gives way
+— the keyword and the brand are what the page is bidding for. The description
+tail was one sentence on all 24 pages, and it claimed "professional sports" on
+the street-lighting and flood pages; it is now chosen per category from copy
+the repository already ships, and the hard `desc[:157] + '...'` cut is replaced
+by the same word-boundary clamp.
+
+Also fixed: `tests_product_seo_description_budget.py` built its model path with
+only four of the six fields the formula reads, so `test_model_and_seed_paths_agree`
+failed on all 24 products and was reporting its own gap rather than a mirror
+drift — 24 pre-existing failures gone. And that same guard measured the
+description *before* HTML unescaping, so a description containing `&` counted
+four characters over budget while the text a crawler parses was exactly at the
+limit.
+
+New `pages/tests_seo_p2.py` (18 tests) plus eight mutation probes. One probe
+earns its own note: after the new per-category tails, **no description in the
+seed reaches the clamp any more** (longest is 159 of 160), so the first version
+of the mid-word guard walked the real data, found nothing, and stayed green
+with the hard cut restored. The guard now drives the clamp with a deliberately
+over-budget product.
+
+`tests_seo_keywords.py` was updated for the two inverted contracts: the title
+test asserted the *category* phrase is always present, which made a per-slug
+override impossible by construction, and the localisation test asserted the
+keyword comes from `translations[lang]['category']`, which is the exact chain
+being removed. Both now assert the new contract, and two new tests pin the
+localised map to the sidebar wording so the two cannot drift apart unnoticed.
+
+## v1.10.20 - 2026-10-06
+
+## P1: make product pages say something (content, semantics, FAQ)
+
+The v1.10.19 audit measured a product page at 3947 body words of which **94.3%
+was the same six FAQ entries on every product**, and 11 words of actual product
+description. Twenty-four URLs were competing with identical text. This batch
+fixes the three symptoms.
+
+**P1-A — 24 differentiated descriptions.** Every product had a description of
+1–34 words (six M-series modules shared one sentence with only the model code
+changed; `rt590fl-s` was the bare string `RT590FL-S`). Each is now 107–132
+words covering the facts already in that product's own seed rows: module count
+and wattage, lumen output, beam angles, housing dimensions and weight, EPA,
+efficacy, CCT and CRI, ingress and surge protection, L70 lifetime, dimming and
+bracket options. **No number was invented** — every figure is copied from the
+product's `energy_data` / `ordering_info`, and no business data (MOQ, lead
+time, warranty) was added because none exists in the repository.
+
+**P1-B — real heading structure.** The four section labels (Beam Angle Type,
+Dimensions, Energy and Performance Data, Ordering Information) were styled
+`<span>`s, so the photometric / beam-angle / ordering / certification queries
+had data on the page but no machine-readable marker. They are now `<h2>`s,
+with a CSS reset so the visual rhythm is unchanged. The H1 was the bare model
+code (`FL6M`); it now carries the wattage as a lighter run (`FL6M 480W`) —
+a number, so it needs no translation and is safe in all six locales. The
+no-banner hero fallback was also still reading the raw category enum
+(`AREA_SITE`); that was the last visible enum in either template.
+
+**P1-C — FAQ split by category.** One six-entry list rendered on all 24 pages.
+There are now four sets selected by `Product.category`: sports/broadcast,
+flood and area, high-bay and roadway, and accessories. The three facts that
+hold for every luminaire (efficacy and L70, IP66 and 10 kV and temperature,
+DIALux offer) stay in every set; only the type-specific questions rotate.
+Measured after the change: **4 distinct FAQ combinations across 24 pages**,
+where there was exactly 1 before.
+
+New `pages/tests_product_content_p1.py` (20 tests) locks all three, including
+a check that the build artifact `pages/seed_data.py` matches `seed_data.json` —
+`_load_seed()` imports the artifact, so without that check the depth and
+uniqueness guards would validate a stale file while the committed source of
+truth said something else. Twelve mutation probes confirm none of it is
+vacuous; two of them (a description duplicated across two products, and the
+artifact drifting from the JSON) were added specifically because the first
+versions of those guards passed on a real regression.
+
+`pages/tests_qa_bgroup.py` was updated for the split: the old assertions
+hard-coded the sports answer and expected it on every page, which is the exact
+behaviour the split removes. It now probes one page per category and asserts
+the sports question stays off the other four.
+
+## v1.10.19 - 2026-10-06
+
+## Product data integrity: the P0 batch of the long-tail keyword audit
+
+An audit of all 24 product pages x 6 languages (= 144 URLs) found four data
+defects that feed the SEO formulas directly. They had different root causes but
+the same failure mode: `pages/utils.py` renders `model_number` / `power` /
+`category` straight into `<title>` and the meta description without validation.
+
+**P0-A — the raw category enum was visible on the page.** `views_products.py`
+set `banner_label` from `product.category_t`, which is `Product.category`'s
+*stored enum* — so visitors saw `AREA_SITE` / `FLOODLIGHT` in the hero corner
+of every product page, in every language (144 occurrences). This was a
+conversion problem, not only an SEO one. It now reads
+`product.category_display`, which `enrich.py` already routes through `_t()`.
+Verified: 144/144 pages render a localised label, zero enums.
+
+**P0-B — `rt220ub` was advertising another product's model code.** Its
+`model_number` was `FL1M-80W`, inherited from the field's
+`default="FL1M-80W"`: creating a product in the admin silently stamped a real
+model number onto it. The same product's `energy_data` said `RT220UB` and its
+ordering table said `40W`. Now `RT220UB-40W`, and the field default is gone so
+it cannot recur. The field's help text now says the value goes straight into
+the title and description.
+
+**P0-C — wattages contradicted themselves.** `fl9m.power` said `630W` while its
+specs, energy table, ordering table and model number all said `720W`, so the
+page advertised two different ratings. Thirteen products had an empty `power`,
+which makes `build_seo_title` skip its wattage clause entirely — no wattage in
+the title at all. All thirteen are now backfilled from `energy_data`, and
+`fl12m` (rated 1000W, previously 960W in two of its five sources) is consistent.
+
+**P0-E — a photometric chart was in the wrong folder.** `beamangle-120d-1.webp`
+plots a 120 deg distribution. `rt420fs-s` sells 120 deg; `rt220ub` sells 100 deg
+only — yet the file sat in `rt220ub/` and `rt420fs-s` borrowed it across
+folders. The file now lives with `rt420fs-s`; `rt220ub` has no chart until a
+100 deg one is supplied.
+
+Also new: `pages/tests_product_data_integrity.py` (14 tests) locks all four
+invariants, cross-checking the DB path against the seed path so a `seed_sync`
+drift cannot pass unnoticed. Seven mutation probes confirm the guards are not
+vacuous. `pages/migrations/0032_alter_product_model_number.py` drops the field
+default (no data migration: existing rows keep their values).
+
+## v1.10.18 - 2026-10-06
+
+## SEO/GEO batch C: responsive images (srcset)
+
+Cards were downloading 1920px originals. A product/project card renders at
+**342px** on desktop (measured: `(1280-64-26*2)/3 - 2 - 22*2`), so every card
+pulled 4–10x more bytes than the slot could show — and looked soft on retina.
+
+- New `pages/image_variants.py` generates 360 / 720 / 1248 width variants from
+  every source image in `products`, `projects`, `news` and **`products_page`**
+  (the last one feeds the `/products/` hero banner; omitting it left those
+  images srcset-less).
+- Variants live in a mirrored, **isolated** tree `static/images/_variants/…`,
+  never beside the source. This is load-bearing: `pages/views/utils.py`
+  enumerates galleries and covers with `os.listdir` on the per-slug directory,
+  so variants placed next to originals would be picked up as real gallery
+  images. The tree is build-time derived and git-ignored.
+- New `{% load image_tags %}` provides `srcset` / `src` filters. **The original
+  `src` is kept as the visible image** and only variants go into `srcset`, so a
+  missing variant can never turn into a broken image (iron rule 6).
+- `build.sh` generates variants **before** `collectstatic`, otherwise the
+  production hashed manifest would not know about them and every variant 404s.
+- Measured on a 12-file project sample: **1917 KB → 110 KB (‑94.3%)** at 1x.
+- Guard `pages/tests_image_srcset.py` (18 tests) plus 7 mutation probes. The
+  probes caught three real defects during development: a Windows path-separator
+  bug that wrote 786 variants into the source tree, a `@` width marker that
+  `static()` percent-encoded into `%40360w`, and two self-referential
+  assertions that could not fail.
+
 ## v1.10.17 - 2026-10-06
 
 ## SEO/GEO batch B (P1): cross-linking, AI crawlers, structured data, banner
