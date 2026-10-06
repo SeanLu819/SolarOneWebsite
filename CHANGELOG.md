@@ -14,9 +14,10 @@ All notable changes to this project will be documented in this file.
   now link related products, product detail pages link application-case projects,
   and news articles link products/projects explicitly named in the copy. Deterministic
   category↔sport/venue bridge, works on both DB and seed paths.
-- **B3** Project `Article` JSON-LD now carries `author` (Organization) and
-  `dateModified` (build date). `datePublished` is intentionally omitted — seed
-  projects carry no publication date; add a `published_at` field if real dates wanted.
+- **B3** Project `Article` JSON-LD now carries `author` (Organization named after
+  the brand). No date field for now: `datePublished` is unavailable in seed data and
+  `dateModified` was deferred per user decision (2026-10-06). Both date keys are
+  explicitly asserted absent by the guard so a silent re-add is caught.
 - **B4** `products.html`: the light-theme hero banner is deferred via `data-src` and
   only fetched when the visitor is on the light theme, saving ~90 KB per dark visitor.
 

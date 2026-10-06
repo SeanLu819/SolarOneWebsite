@@ -1,4 +1,11 @@
-"""Guard: SEO batch B3 — project Article JSON-LD carries author + dateModified."""
+"""Guard: SEO batch B3 — project Article JSON-LD carries author (no date field).
+
+Per user decision (2026-10-06) the project Article JSON-LD carries only
+``author`` (an Organization named after the brand). No date field is emitted
+for now: ``datePublished`` is unavailable in seed data, and ``dateModified``
+was deferred. Both date keys are explicitly asserted absent so a later change
+that silently re-adds a date without a real value is caught.
+"""
 import re
 
 from django.test import TestCase
@@ -16,7 +23,7 @@ def _article_blob(content):
 
 
 class ProjectJsonLdAuthorTests(TestCase):
-    def test_article_jsonld_has_author_and_date_modified(self):
+    def test_article_jsonld_has_author_no_date(self):
         resp = self.client.get('/projects/football-field-led-retrofit/',
                                HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
@@ -26,15 +33,11 @@ class ProjectJsonLdAuthorTests(TestCase):
         # author is an Organization named after the brand (never empty).
         self.assertIn('"author"', blob)
         self.assertIn('"@type": "Organization"', blob)
-        self.assertIn('"dateModified"', blob)
-        # dateModified must be a real ISO date, not blank.
-        self.assertRegex(
-            blob, r'"dateModified":\s*"\d{4}-\d{2}-\d{2}"',
-            'dateModified must be a valid ISO date')
-        # datePublished is intentionally omitted (seed projects have no date).
+        # No date field for now (deferred per user): neither key may appear.
         self.assertNotIn('"datePublished"', blob)
+        self.assertNotIn('"dateModified"', blob)
 
-    def test_french_project_also_carries_author(self):
+    def test_french_project_also_carries_author_no_date(self):
         resp = self.client.get('/fr/projects/football-field-led-retrofit/',
                                HTTP_HOST='localhost')
         self.assertEqual(resp.status_code, 200)
@@ -42,5 +45,4 @@ class ProjectJsonLdAuthorTests(TestCase):
         blob = _article_blob(content)
         self.assertIsNotNone(blob)
         self.assertIn('"author"', blob)
-        self.assertRegex(
-            blob, r'"dateModified":\s*"\d{4}-\d{2}-\d{2}"')
+        self.assertNotIn('"dateModified"', blob)

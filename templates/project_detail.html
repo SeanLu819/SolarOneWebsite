@@ -546,8 +546,7 @@
   "author": {
     "@type": "Organization",
     "name": "{{ config.brand_name|escapejs }}"
-  },
-  "dateModified": "{{ project_date_modified }}"{% if project.location_t %},
+  }{% if project.location_t %},
   "contentLocation": {
     "@type": "Place",
     "name": "{{ project.location_t|escapejs }}"

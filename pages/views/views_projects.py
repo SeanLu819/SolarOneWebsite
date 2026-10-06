@@ -12,9 +12,6 @@ from .i18n import (
 )
 from .data_loaders import get_projects, get_project_detail
 from .related_links import related_products_for_project
-from datetime import date
-
-
 # Maps a project's sport_type to the collection page it belongs on, so the
 # project detail page can vote for that keyword page with keyword-rich anchor
 # text. 'football' and 'tennis' resolve to /projects/football/ and
@@ -171,16 +168,6 @@ def project_detail(request, slug):
         # B2: cross-link to products whose category matches this
         # project's sport/venue type (breaks the content islands).
         context['related_products'] = related_products_for_project(project, lang)
-        # B3: Article JSON-LD dateModified. Seed projects carry no
-        # publication date, so datePublished is intentionally omitted.
-        try:
-            from pages.build_meta import SITE_LAST_MODIFIED
-            _lmod = SITE_LAST_MODIFIED or ''
-        except Exception:
-            _lmod = ''
-        if not _lmod:
-            _lmod = date.today().isoformat()
-        context['project_date_modified'] = _lmod
 
     else:
         # S2: an unresolvable slug may simply be a page that was renamed. Only
