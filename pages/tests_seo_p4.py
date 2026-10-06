@@ -36,7 +36,7 @@ from pages.views.related_links import (
 )
 from pages.views.utils import _load_seed
 from pages.views.views_stadium import (
-    FEATURED_PRODUCT_LIMIT,
+    FEATURED_PRODUCT_SLUGS,
     STADIUM_CATEGORY,
     VENUE_PROJECT_LIMIT,
 )
@@ -240,16 +240,26 @@ class StadiumPageTests(TestCase):
 class StadiumContentSourcingTests(TestCase):
     """The page must list what it claims to list."""
 
-    def test_the_product_list_is_the_stadium_category_and_nothing_else(self):
-        expected = [p for p in get_products('en')
-                    if getattr(p, 'category', '') == STADIUM_CATEGORY]
-        self.assertTrue(expected, 'no product carries the stadium category')
+    def test_the_featured_products_are_the_two_vsp_models(self):
+        """The page features exactly the two broadcast models, not a generic list.
+
+        Iron law 4b: the expected roster is written out literally as a product
+        decision; the view's ``FEATURED_PRODUCT_SLUGS`` constant is checked
+        against it so a change to either side fails loudly. The original
+        "first N of the category" read as a VSP-series list rather than the two
+        specific luminaires the page exists to present.
+        """
+        EXPECTED_SLUGS = ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp')
+        self.assertEqual(
+            FEATURED_PRODUCT_SLUGS, EXPECTED_SLUGS,
+            'the featured roster changed without a product decision')
         body = Client().get('/stadium-lighting/',
                             HTTP_HOST='localhost').content.decode()
-        for product in expected[:FEATURED_PRODUCT_LIMIT]:
-            with self.subTest(slug=product.slug):
-                self.assertIn(reverse('product_detail', args=[product.slug]),
-                              body)
+        for slug in EXPECTED_SLUGS:
+            with self.subTest(slug=slug):
+                self.assertIn(
+                    reverse('product_detail', args=[slug]), body,
+                    '%s must be featured on the stadium page' % slug)
 
     def test_the_venue_list_matches_the_sport_mapping(self):
         """Same table the product pages use for "Application Cases".
@@ -311,7 +321,8 @@ class StadiumContentSourcingTests(TestCase):
     def test_the_limits_are_product_decisions(self):
         """Pinned so raising them is a deliberate act."""
         self.assertEqual(VENUE_PROJECT_LIMIT, 9)
-        self.assertEqual(FEATURED_PRODUCT_LIMIT, 6)
+        self.assertEqual(
+            FEATURED_PRODUCT_SLUGS, ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp'))
 
 
 class RejectedCategoryTests(TestCase):

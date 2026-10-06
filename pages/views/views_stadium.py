@@ -45,10 +45,12 @@ STADIUM_CATEGORY = 'SPORTS_LIGHTING'
 #: remainder are one click away through /projects/.
 VENUE_PROJECT_LIMIT = 9
 
-#: How many luminaires to list. Two products is the honest number — that is
-#: what the category holds, and padding the list with flood lights from another
-#: category would make the page bid on words it has no depth for.
-FEATURED_PRODUCT_LIMIT = 6
+#: The two luminaires this page features, in display order. Written literally,
+#: not derived: the page exists to present exactly these two broadcast-grade
+#: models. The original "first N of the category" rendered a generic VSP-series
+#: list; pinning the slugs makes the roster a product decision that has to be
+#: re-made on purpose (9M first — the shorter tower — then 12M).
+FEATURED_PRODUCT_SLUGS = ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp')
 
 
 def stadium_lighting(request):
@@ -76,7 +78,8 @@ def stadium_lighting(request):
         p for p in (get_products(lang) or [])
         if getattr(p, 'category', '') == STADIUM_CATEGORY
     ]
-    featured = category_products[:FEATURED_PRODUCT_LIMIT]
+    by_slug = {p.slug: p for p in category_products}
+    featured = [by_slug[s] for s in FEATURED_PRODUCT_SLUGS if s in by_slug]
     for product in featured:
         product.is_stadium_featured = True
 

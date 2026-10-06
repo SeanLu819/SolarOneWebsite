@@ -281,15 +281,16 @@ def _collection_dynamic_images(name, lang='en'):
         # pictures the visitor sees. Drawn from the loaders rather than a
         # literal for the same reason as the other collections.
         from .views_stadium import (
-            FEATURED_PRODUCT_LIMIT, STADIUM_CATEGORY, VENUE_PROJECT_LIMIT,
+            FEATURED_PRODUCT_SLUGS, STADIUM_CATEGORY, VENUE_PROJECT_LIMIT,
         )
         from .related_links import PRODUCT_CATEGORY_TO_PROJECT_SPORTS
 
         sports = PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(STADIUM_CATEGORY, [])
         out = []
-        for product in [p for p in (get_products(lang) or [])
-                          if getattr(p, 'category', '') == STADIUM_CATEGORY
-         ][:FEATURED_PRODUCT_LIMIT]:
+        category_products = [p for p in (get_products(lang) or [])
+                             if getattr(p, 'category', '') == STADIUM_CATEGORY]
+        by_slug = {p.slug: p for p in category_products}
+        for product in [by_slug[s] for s in FEATURED_PRODUCT_SLUGS if s in by_slug]:
             url = getattr(product, 'image_url', '') or ''
             if url:
                 out.append((url, getattr(product, 'name_t', '') or '', ''))
