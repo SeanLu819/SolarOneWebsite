@@ -57,11 +57,6 @@ static/images/logo.original-compressed.png
 # deployed files. Kept locally as masters, never shipped to the Vercel bundle.
 static/images/news/*/_source/
 
-# Responsive srcset variants (generated at build time by scripts/gen_image_variants.py
-# from the source images; rebuilt by build.sh BEFORE collectstatic). Derived data —
-# never committed, never hand-edited.
-static/images/_variants/
-
 # Vercel preview / design canvas (not runtime code)
 solarone-website-preview/
 
