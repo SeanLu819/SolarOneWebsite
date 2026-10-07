@@ -94,7 +94,7 @@
               <div class="ps-carousel-track">
                 {% for img in gallery %}
                 <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                  <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 92vw, 760px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                 </div>
                 {% endfor %}
               </div>
@@ -112,7 +112,7 @@
             <div class="ps-thumbnails">
               {% for img in gallery %}
               <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-                <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy" decoding="async">
+                <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 24vw, 190px" alt="{{ img.alt }}" loading="lazy" decoding="async">
               </button>
               {% endfor %}
             </div>

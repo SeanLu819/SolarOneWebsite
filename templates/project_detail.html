@@ -83,7 +83,7 @@
           <div class="ps-thumbnails">
             {% for img in gallery %}
             <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-              <img src="{{ img.src }}" alt="{{ img.alt }}" loading="lazy">
+              <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 24vw, 190px" alt="{{ img.alt }}" loading="lazy">
               </button>
               {% endfor %}
             </div>
