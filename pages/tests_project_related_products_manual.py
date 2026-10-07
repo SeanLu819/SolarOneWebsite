@@ -215,3 +215,55 @@ class AutomaticMatchIsGoneTests(_CacheIsolationMixin, TestCase):
         self.assertNotIn('sport_type', src)
         self.assertNotIn('venue_type', src)
         self.assertNotIn('category', src)
+
+
+class AdminChangeFormRendersEveryFieldsetTests(_CacheIsolationMixin, TestCase):
+    """The project change form renders fieldsets through a **whitelist**.
+
+    ``templates/admin/pages/project/change_form.html`` loops over the fieldsets
+    and includes only the ones whose name it recognises, so that the image
+    fieldset can sit next to the gallery inline. Adding a fieldset to
+    ``ProjectAdmin.fieldsets`` without adding its name to that whitelist fails
+    *silently*: the field is present in ``get_fieldsets()`` and in the form, yet
+    never reaches the page. That is exactly how the new "Related Products"
+    block went missing the first time.
+
+    So: every named fieldset must appear in the template. (Iron rule 32 —
+    assert the gate/structure, not a substring that the happy path also emits.)
+    """
+
+    CHANGE_FORM = 'templates/admin/pages/project/change_form.html'
+
+    def _admin(self):
+        return admin.site._registry[Project]
+
+    def _markup(self):
+        with open(self.CHANGE_FORM, encoding='utf-8') as fh:
+            text = fh.read()
+        # Iron rule 13: a comment naming a fieldset must not satisfy the guard.
+        text = re.sub(r'{#.*?#}', '', text, flags=re.S)
+        return re.sub(r'{%\s*comment\s*%}.*?{%\s*endcomment\s*%}', '', text,
+                      flags=re.S)
+
+    def test_every_named_fieldset_is_in_the_render_whitelist(self):
+        markup = self._markup()
+        names = [name for name, _opts in self._admin().fieldsets
+                 if name is not None]
+        self.assertTrue(names, 'ProjectAdmin.fieldsets has no named section')
+        for name in names:
+            with self.subTest(fieldset=name):
+                self.assertIn(
+                    "== '%s'" % name, markup,
+                    '%r is declared in ProjectAdmin.fieldsets but the custom '
+                    'change form never renders it' % name)
+
+    def test_the_related_products_block_reaches_the_page(self):
+        """The contract the user asked for: a picker, on the project page."""
+        markup = self._markup()
+        self.assertIn("== 'Related Products'", markup)
+        fields = [f for _n, opts in self._admin().fieldsets
+                  for f in opts.get('fields', ())]
+        self.assertIn('related_products', fields)
+        self.assertIn(
+            'related_products', self._admin().filter_horizontal,
+            'a plain multi-select is unusable with ~24 products')

@@ -45,6 +45,14 @@ PROBES = [
         'new': b'',
     },
     {
+        # The change form renders fieldsets through a name whitelist, so a
+        # fieldset can exist in ProjectAdmin and still never reach the page.
+        'name': 'the change form whitelist drops the new fieldset',
+        'file': 'templates/admin/pages/project/change_form.html',
+        'old': b" or fieldset.name == 'Related Products'",
+        'new': b'',
+    },
+    {
         # Iron law 32: the guard must check the condition itself, not a
         # substring that a fallback branch would still satisfy.
         'name': 'the template gate grows a fallback so the section always shows',
