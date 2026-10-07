@@ -1163,6 +1163,21 @@
     margin-bottom: 8px;
     flex: 0 0 auto;
   }
+  /* Stadium landing page: keep the full copy in markup (SEO / a11y) but show
+     roughly half of it on the card. Scoped to this page via the modifier class
+     so /products/ and other grids keep their full-height descriptions. */
+  .product-card-desc--compact {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+  }
+  /* Stadium landing page: exactly two featured products, so the desktop grid
+     must stay at two columns instead of the default three. Without this the
+     third column is empty and the page looks lopsided on PC browsers. */
+  @media (min-width: 768px) { .stadium-products-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1200px) { .stadium-products-grid { grid-template-columns: repeat(2, 1fr); } }
   .product-card-specs {
     display: flex;
     gap: 0;

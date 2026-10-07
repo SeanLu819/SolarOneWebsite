@@ -40,7 +40,7 @@ structure; this template must not repeat that.
     <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Stadium Floodlights" %}</h2>
     <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans %}The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl.{% endblocktrans %}</p>
 
-    <div class="products-grid" style="margin-bottom: 72px;">
+    <div class="products-grid stadium-products-grid" style="margin-bottom: 72px;">
       {% for product in stadium_products %}
       <div class="product-card reveal">
         <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
@@ -50,7 +50,7 @@ structure; this template must not repeat that.
           {% endif %}
         </a>
         <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
-        <p class="product-card-desc">{{ product.description_t }}</p>
+        <p class="product-card-desc product-card-desc--compact">{{ product.description_t }}</p>
         <div class="product-card-specs">
           {% for spec in product.specs|slice:":3" %}
           <div class="product-spec"><span class="product-spec-value">{{ spec.value }}</span><span class="product-spec-label">{{ spec.label }}</span></div>

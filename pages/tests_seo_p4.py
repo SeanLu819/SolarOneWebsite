@@ -261,6 +261,37 @@ class StadiumContentSourcingTests(TestCase):
                     reverse('product_detail', args=[slug]), body,
                     '%s must be featured on the stadium page' % slug)
 
+    def test_the_featured_grid_uses_two_columns_on_desktop(self):
+        """Exactly two featured products → desktop grid must stay at two columns.
+
+        The global .products-grid switches to three columns at >=1200px; with
+        only two stadium products that leaves a blank right-hand third. This
+        guard checks both the template markup and the CSS override so the layout
+        cannot accidentally revert to three columns on PC browsers.
+        """
+        template_path = settings.BASE_DIR / 'templates' / 'stadium_lighting.html'
+        template_src = template_path.read_text(encoding='utf-8')
+        self.assertIn(
+            'class="products-grid stadium-products-grid"',
+            template_src,
+            'stadium template must tag the grid for a two-column override')
+
+        css_path = settings.BASE_DIR / 'static' / 'css' / 'base.css'
+        css = css_path.read_text(encoding='utf-8')
+        # Strip comments so the assertion cannot be satisfied by a comment.
+        css_no_comments = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+        self.assertIn(
+            '.stadium-products-grid { grid-template-columns: repeat(2, 1fr); }',
+            css_no_comments,
+            'base.css must override the desktop grid to two columns')
+
+        body = Client().get('/stadium-lighting/',
+                            HTTP_HOST='localhost').content.decode()
+        self.assertIn(
+            'stadium-products-grid',
+            body,
+            'rendered stadium page must carry the two-column grid class')
+
     def test_the_featured_vsp_copy_omits_box_dimensions(self):
         """Iron law: enclosure sizes vary per project, so they must never be
         hard-coded. The VSP series is described only as a remote LED driver
@@ -291,6 +322,29 @@ class StadiumContentSourcingTests(TestCase):
                 self.assertFalse(
                     DIM_RE.search(desc),
                     '%s must not hard-code W×H×D dimensions' % slug)
+                self.assertNotIn(
+                    'box', desc.lower(),
+                    '%s must not use the unprofessional word "box" — '
+                    'use "enclosure" / "LED driver enclosure"' % slug)
+
+    def test_no_box_word_anywhere_in_seed_copy(self):
+        """Iron-law lock for the global "no box" copy policy.
+
+        The user ruled that "box" is unprofessional and must read "enclosure"
+        / "LED driver enclosure" everywhere. A future editor who writes
+        "driver boxes" or "AC box" must fail here, not ship it.
+        """
+        seeds = _load_seed()
+        offenders = []
+        for kind in ('products', 'projects'):
+            for item in seeds.get(kind, []):
+                text = ' '.join(str(item.get(f, '') or '')
+                               for f in ('description', 'name', 'seo_keyword'))
+                if re.search(r'[Bb]ox', text):
+                    offenders.append((kind, item.get('slug'), text))
+        self.assertEqual(
+            offenders, [],
+            'copy still contains "box": %r' % offenders)
 
     def test_the_venue_list_matches_the_sport_mapping(self):
         """Same table the product pages use for "Application Cases".
