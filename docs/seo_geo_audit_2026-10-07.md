@@ -37,11 +37,22 @@
 - ⚠️ **meta description 非英回退**：实测 es 产品页标题西语化，但 `description` 仍是英文
   （`"The RT820SL-T is the higher-output roadway luminaire..."`）。属已知内容欠账（P1：描述+新闻标题待译）。影响：该语种页在 SERP 摘要质量偏低，但不触发重复内容惩罚（hreflang 仍有效）。
 
-### A4. Sitemap —— ✅ 干净 / ⚠️ lastmod 单一
-- 60 个 canonical URL；含 image 扩展（产品/项目图进图站地图）。
-- 覆盖：首页、/products/、/projects/、25 产品、25 项目、4 新闻、/stadium-lighting/。
-- **无过期条目**：已删落地页未出现在 sitemap（见 A7）。
-- ⚠️ 全部 `lastmod` 均为构建戳 `2026-10-07`（同值），非各页真实修改时间 → 搜索引擎再抓取调度效率略降。建议改为各对象真实 `updated_at`/seed 版本戳（LOW）。
+### A4. Sitemap —— ✅ 干净 / ✅ lastmod 已按真实数据处理（v1.10.24 `2d3e158`）
+- 60 个 canonical URL；含 image 扩展（**251 个 `image:image`**，产品/项目/集合页图均有）。
+- 覆盖：首页、/products/、/projects/、24 产品、22 项目、3 新闻、/stadium-lighting/。
+- **无过期条目**：已删落地页未出现在 sitemap；hreflang 每 URL 7 条（420/60 = 7.0）。
+- ✅ **lastmod 已修**：原"全站同值 = 构建戳"（读作"60 个页面每次部署都变了"，Google 会逐步折扣
+  不可信的 lastmod）。先量数据发现：
+  | 类型 | 数量 | 真实时间字段 |
+  |---|---|---|
+  | 新闻 | 3 | ✅ 有 `published_at`（8/31、9/13、9/28） |
+  | 产品 | 24 | ❌ seed 里**零时间字段** |
+  | 项目 | 22 | ❌ seed 里**零时间字段** |
+  | 静态/集合 | 11 | ❌ 无 |
+
+  `lastmod` 在 sitemap schema 里是**可选**的，57/60 拿不到真值时**不输出比输出假日期更诚实**。
+  新政策：**只在有真实日期时输出** ⇒ 3 个新闻页带真值，其余 57 个不输出。
+  curl 实证：60 个 `<url>` 完整、XML 合法、恰好 3 个 `<lastmod>`、hreflang 仍 7.0/URL、251 张图未丢。
 
 ### A5. robots.txt —— ✅ 强
 - `Allow: /`；`Disallow: /admin/`。
@@ -148,21 +159,22 @@
 | 🟡 LOW–MED | `@id` 实体锚点 + NewsArticle `author` | ✅ 已修 `b11fa2b`（见 A6） |
 | ⚪ **撤回** | ~~`llms.txt` 301 到 `llm.txt`~~ | ❌ **不该做**：`build.sh` 刻意保留双入口，见 B1 |
 | ❌ **不加** | ~~`WebSite.SearchAction`~~ | 站点无搜索功能，声明即虚假，已加守卫阻止 |
-| 🟡 LOW | sitemap `lastmod` 改为各对象真实修改时间 | ⏳ 未做（全站同值 `2026-10-07`） |
+| 🟡 LOW | sitemap `lastmod` 真实化 | ✅ 已修 `2d3e158`：量数据后发现 57/60 无真值可给，改为**只在有真实日期时输出**（见 A4） |
 | ⚪ 手动 | Cloudflare 控制台开启 AI Crawl Control 放行（P1） | ⏳ robots 仅为礼貌信号，需边缘配置 |
 | ⚪ 手动 | 确认 Vercel `INDEXNOW_KEY` 已配且发布时真 ping | ⏳ 仓库已接线，env 待核 |
 | ⚪ 内容 | 推进 P1/P2 翻译与内容债务（见 C） | ⏳ 非英 meta description 回退英文等 |
 
-### 已交付提交（本地领先 `origin/main`）
+### 已交付提交
 | 提交 | 内容 |
 |---|---|
 | `aa2a515` | 3 个根级落地页 301 |
 | `eb3ed0b` | 全站 `og:image` 兜底卡 |
 | `1c7443f` | 落地页页面级 FAQ + FAQPage |
 | `b11fa2b` | JSON-LD `@id` 锚点 + NewsArticle author |
+| `2d3e158` | sitemap `lastmod` 只在有真实日期时输出 |
 
-新增守卫：`tests_seo_og_image.py`(5) / `tests_seo_stadium_faq.py`(8) / `tests_seo_entity_ids.py`(10)，
-全部经变异探针验证非空转。相关分组回归 **90/90 绿**。
+新增守卫：`tests_seo_og_image.py`(5) / `tests_seo_stadium_faq.py`(8) / `tests_seo_entity_ids.py`(10) /
+重写 `tests_sitemap_lastmod.py`(14)，全部经变异探针验证非空转。相关分组回归 **112/112 绿**。
 
 ---
 
