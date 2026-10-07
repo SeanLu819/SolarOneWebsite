@@ -819,6 +819,39 @@ class DailyStats(models.Model):
         return str(self.date)
 
 
+def _find_project_media_source(media_root, fname):
+    """Locate the uploaded source file for a project image DB path.
+
+    The DB often stores the path WITH the upload hash
+    (``projects/gallery/x_abc1234.webp``) while the file on disk keeps the
+    clean name -- the same mismatch products had, fixed there in v1.10.24.
+    Fall back to the clean basename beside the upload and in the standard
+    upload folders before giving up.
+    """
+    fname = str(fname).replace('\\', '/')
+    candidates = [os.path.join(media_root, fname)]
+    clean = _clean_hashed_filename(fname)
+    candidates.append(os.path.join(media_root, os.path.dirname(fname), clean))
+    candidates.append(os.path.join(media_root, 'projects', 'gallery', clean))
+    candidates.append(os.path.join(media_root, 'projects', clean))
+    for cand in candidates:
+        if os.path.isfile(cand):
+            return cand
+    return None
+
+
+def _static_project_file_exists(fname):
+    """True when ``fname`` is a canonical static path whose file exists.
+
+    After a save the admin writes these canonical paths back into the DB,
+    so later passes must recognise them instead of treating them as
+    missing media.
+    """
+    fname = str(fname).replace('\\', '/')
+    return fname.startswith('images/') and os.path.isfile(
+        os.path.join(str(settings.BASE_DIR), 'static', fname))
+
+
 def _sync_project_media_to_static(project):
     """Copy project cover + all gallery images from media/ to static/images/projects/<slug>/.
 
@@ -848,8 +881,9 @@ def _sync_project_media_to_static(project):
 
     cover_rel = ''
     if getattr(project, 'image', None) and project.image.name:
-        src_cover = os.path.join(media_root, str(project.image.name))
-        if os.path.exists(src_cover):
+        fname = str(project.image.name)
+        src_cover = _find_project_media_source(media_root, fname)
+        if src_cover:
             dst_name = _clean_hashed_filename(src_cover)
             current_dest_names.add(dst_name)
             dst_cover = os.path.join(static_dir, dst_name)
@@ -858,6 +892,11 @@ def _sync_project_media_to_static(project):
             except Exception:
                 pass
             cover_rel = f'images/projects/{slug}/{dst_name}'
+        elif _static_project_file_exists(fname):
+            # DB already carries the canonical static path written back
+            # after the last save; keep it and protect it from pruning.
+            cover_rel = fname
+            current_dest_names.add(os.path.basename(fname))
 
     gallery_paths = []
     try:
@@ -868,19 +907,22 @@ def _sync_project_media_to_static(project):
         fname = getattr(img.image, 'name', None)
         if not fname:
             continue
-        src = os.path.join(media_root, str(fname))
-        if not os.path.exists(src):
-            continue
-        dst_name = _clean_hashed_filename(src)
-        current_dest_names.add(dst_name)
-        dst = os.path.join(static_dir, dst_name)
-        try:
-            shutil.copy2(src, dst)
-        except Exception:
-            pass
-        rel = f'images/projects/{slug}/{dst_name}'
-        if rel not in gallery_paths:
-            gallery_paths.append(rel)
+        src = _find_project_media_source(media_root, fname)
+        if src:
+            dst_name = _clean_hashed_filename(src)
+            current_dest_names.add(dst_name)
+            dst = os.path.join(static_dir, dst_name)
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+            rel = f'images/projects/{slug}/{dst_name}'
+            if rel not in gallery_paths:
+                gallery_paths.append(rel)
+        elif _static_project_file_exists(fname):
+            if fname not in gallery_paths:
+                gallery_paths.append(fname)
+            current_dest_names.add(os.path.basename(fname))
 
     # ---- Sync protected template-only files from media -> static ----
     # These files are not backed by model fields but the template hardcodes
@@ -898,22 +940,27 @@ def _sync_project_media_to_static(project):
                     pass
 
     # ---- Prune stale files from static directory ----
-    try:
-        for entry in os.listdir(static_dir):
-            entry_lower = entry.lower()
-            if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                continue
-            # Never delete per-slug template-protected comparison images
-            if entry_lower in protected:
-                continue
-            if entry not in current_dest_names:
-                stale_path = os.path.join(static_dir, entry)
-                try:
-                    os.remove(stale_path)
-                except Exception:
-                    pass
-    except Exception:
-        pass
+    # Only when this pass actually resolved at least one image. An empty
+    # set here means the media files were missing, not that the gallery
+    # is empty; pruning then would wipe good static files that the seed
+    # still references (the v1.10.25 Bohemia Manor data loss).
+    if current_dest_names:
+        try:
+            for entry in os.listdir(static_dir):
+                entry_lower = entry.lower()
+                if not entry_lower.endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                    continue
+                # Never delete per-slug template-protected comparison images
+                if entry_lower in protected:
+                    continue
+                if entry not in current_dest_names:
+                    stale_path = os.path.join(static_dir, entry)
+                    try:
+                        os.remove(stale_path)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
 
     return cover_rel, gallery_paths
 

@@ -23,7 +23,13 @@ from django.contrib import admin
 
 from .mixins import CacheClearMixin
 from .widgets import TranslationsWidget
-from pages.models import Project, ProjectImage, _clean_hashed_filename
+from pages.models import (
+    Project,
+    ProjectImage,
+    _clean_hashed_filename,
+    _find_project_media_source,
+    _static_project_file_exists,
+)
 
 
 class ProjectImageInline(admin.TabularInline):
@@ -99,49 +105,84 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
         os.makedirs(static_dir, exist_ok=True)
         media_root = settings.MEDIA_ROOT
 
-        # Collect destination filenames for stale-file pruning
+        # Collect destination filenames for stale-file pruning, plus the
+        # canonical static paths to write back into the DB (same fix as the
+        # products had in v1.10.24: the DB stored hashed upload paths that
+        # never matched any file on disk).
         current_dest_names = set()
+        writebacks = []  # (instance, field name, canonical static rel path)
+
+        def _resolve(fname):
+            """One DB image path -> (media source | None, canonical rel, dest name)."""
+            src = _find_project_media_source(media_root, fname)
+            if src:
+                dst_name = _clean_hashed_filename(src)
+                return src, f'images/projects/{slug}/{dst_name}', dst_name
+            if _static_project_file_exists(fname):
+                # DB already carries the canonical static path written back
+                # after the last save; the file lives in static/.
+                return None, fname, os.path.basename(fname)
+            return None, None, None
 
         cover_rel = ''
         if obj.image:
-            src_cover = os.path.join(media_root, str(obj.image))
-            if os.path.exists(src_cover):
-                dst_name = _clean_hashed_filename(src_cover)
+            fname = str(obj.image)
+            src, rel, dst_name = _resolve(fname)
+            if src:
+                shutil.copy2(src, os.path.join(static_dir, dst_name))
                 current_dest_names.add(dst_name)
-                dst_cover = os.path.join(static_dir, dst_name)
-                shutil.copy2(src_cover, dst_cover)
-                cover_rel = f'images/projects/{slug}/{dst_name}'
+                cover_rel = rel
+                if fname != rel:
+                    writebacks.append((obj, 'image', rel))
+            elif rel:
+                cover_rel = rel
+                current_dest_names.add(dst_name)
 
         gallery_paths = []
         for img in obj.images.all():
-            src = os.path.join(media_root, str(img.image))
-            if not os.path.exists(src):
+            fname = str(img.image)
+            if not fname:
                 continue
-            dst_name = _clean_hashed_filename(src)
-            current_dest_names.add(dst_name)
-            dst = os.path.join(static_dir, dst_name)
-            shutil.copy2(src, dst)
-            rel = f'images/projects/{slug}/{dst_name}'
+            src, rel, dst_name = _resolve(fname)
+            if not rel:
+                continue
+            if src:
+                shutil.copy2(src, os.path.join(static_dir, dst_name))
+                current_dest_names.add(dst_name)
+            else:
+                current_dest_names.add(dst_name)
             if rel not in gallery_paths:
                 gallery_paths.append(rel)
+            if src and fname != rel:
+                writebacks.append((img, 'image', rel))
 
-        # Prune stale files no longer referenced by DB
+        # Write the canonical static paths back to the DB so the next save
+        # finds them without guessing (mirrors the products fix, v1.10.24).
+        for holder, field, rel in writebacks:
+            setattr(holder, field, rel)
+            holder.save(update_fields=[field])
+
+        # Prune stale files no longer referenced by DB — but only when this
+        # save actually resolved at least one image. An empty set here means
+        # the media files were missing, not that the gallery is empty;
+        # pruning then would wipe good static files the seed still references.
         # Template-hardcoded special images (e.g. before/after comparison shots)
         # are preserved — they are not managed through ProjectImage records.
         _preserved = {'old-hid-lighting.webp', 'new-led-lighting.webp'}
-        try:
-            for entry in os.listdir(static_dir):
-                if not entry.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
-                    continue
-                if entry.lower() in _preserved:
-                    continue
-                if entry not in current_dest_names:
-                    try:
-                        os.remove(os.path.join(static_dir, entry))
-                    except OSError:
-                        pass
-        except OSError:
-            pass
+        if current_dest_names:
+            try:
+                for entry in os.listdir(static_dir):
+                    if not entry.lower().endswith(('.webp', '.jpg', '.jpeg', '.png', '.gif')):
+                        continue
+                    if entry.lower() in _preserved:
+                        continue
+                    if entry not in current_dest_names:
+                        try:
+                            os.remove(os.path.join(static_dir, entry))
+                        except OSError:
+                            pass
+            except OSError:
+                pass
 
 
     def save_model(self, request, obj, form, change):
