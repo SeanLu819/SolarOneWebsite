@@ -252,11 +252,18 @@ def product_faq_for(product):
     return PRODUCT_FAQ_BY_CATEGORY.get(category) or _SHARED_FAQ
 
 
-def build_product_faq_jsonld(faq_list):
+def build_product_faq_jsonld(faq_list, entity_id=None):
     """Build a schema.org FAQPage dict from ``faq_list`` (list of
     ``{"question": ..., "answer": ...}``). Returned as a Python dict so the
-    caller can ``json.dumps(..., ensure_ascii=False)`` it for injection."""
-    return {
+    caller can ``json.dumps(..., ensure_ascii=False)`` it for injection.
+
+    ``entity_id`` (v1.10.24) is the value for ``@id``. It is optional so
+    existing callers keep working, but every call site should pass it: a
+    page-level FAQ describes that page, so its anchor is the page URL plus
+    a fragment. Left unset the node is identified only by its contents,
+    which is what let two pages' FAQ blocks merge into one entity.
+    """
+    node = {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
         'mainEntity': [
@@ -271,6 +278,9 @@ def build_product_faq_jsonld(faq_list):
             for item in (faq_list or [])
         ],
     }
+    if entity_id:
+        node['@id'] = entity_id
+    return node
 
 
 def _resolve_ppc_image(card):
@@ -524,7 +534,10 @@ def product_detail(request, slug):
         faq = product_faq_for(product)
         context['product_faq'] = faq
         context['product_faq_json'] = json.dumps(
-            build_product_faq_jsonld(faq),
+            build_product_faq_jsonld(
+                faq,
+                entity_id=f'{settings.CANONICAL_ORIGIN}'
+                f'{request.path}#faq'),
             ensure_ascii=False,
         )
         # B2: cross-link to projects whose sport/venue type matches

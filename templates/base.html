@@ -647,6 +647,7 @@ google-analytics.com, already permitted by connect-src.{% endcomment %}
 {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "{{ canonical_origin }}/#organization",
   "name": "{{ config.brand_name|escapejs }}",
   "url": "{{ canonical_origin }}",
   "logo": "{{ canonical_origin }}{{ config.logo_url }}",

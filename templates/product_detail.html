@@ -1013,11 +1013,12 @@
 {
   "@context": "https://schema.org",
   "@type": "Product",
+  "@id": "{{ canonical_origin }}{{ request.path }}#product",
   "name": "{{ product.name_t|escapejs }}",
   "description": "{{ product.description_t|default:''|escapejs }}",
   "image": "{{ canonical_origin }}{{ product.banner_image_url|default:'' }}",
   "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}",
-  "brand": {"@type": "Brand", "name": "SolarOne"},
+  "brand": {"@type": "Brand", "name": "SolarOne", "@id": "{{ canonical_origin }}/#organization"},
   "sku": "{{ product.model_number|default:product.slug|escapejs }}",
   "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.power %},
   "additionalProperty": [

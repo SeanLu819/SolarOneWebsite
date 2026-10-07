@@ -139,6 +139,7 @@
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
+  "@id": "{{ canonical_origin }}{{ request.path }}#itemlist",
   "name": "{{ config.products_title|escapejs }}",
   "itemListElement": [
     {% for product in products %}

@@ -18,11 +18,13 @@
 {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
+  "@id": "{{ canonical_origin }}{% url 'news_detail' article.slug %}#article",
   "headline": "{{ article.title_t|default:article.title|escapejs }}",
   "description": "{{ article.summary_t|default:article.summary|escapejs }}",
   "datePublished": "{{ article.published_at|date:'c' }}",
   "url": "{{ canonical_origin }}{% url 'news_detail' article.slug %}",
-  "publisher": {"@type": "Organization", "name": "SolarOne"}{% if article.social_image_url %},
+  "author": {"@type": "Organization", "name": "SolarOne", "@id": "{{ canonical_origin }}/#organization"},
+  "publisher": {"@type": "Organization", "name": "SolarOne", "@id": "{{ canonical_origin }}/#organization"}{% if article.social_image_url %},
   "image": "{{ canonical_origin }}{{ article.social_image_url }}"{% endif %}
 }
 </script>

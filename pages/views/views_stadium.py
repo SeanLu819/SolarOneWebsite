@@ -30,6 +30,7 @@ the product pages cannot disagree about which projects suit which luminaires.
 
 import json
 
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import get_language
 
@@ -190,7 +191,9 @@ def stadium_lighting(request):
         'stadium_product_count': len(category_products),
         'stadium_faq': _localised_faq(lang),
         'stadium_faq_json': json.dumps(
-            build_stadium_faq_jsonld(_localised_faq(lang)),
+            build_stadium_faq_jsonld(
+                _localised_faq(lang),
+                entity_id=f'{settings.CANONICAL_ORIGIN}{request.path}#faq'),
             ensure_ascii=False),
     })
     return render(request, 'stadium_lighting.html', context)
@@ -211,7 +214,7 @@ def _localised_faq(lang):
     ]
 
 
-def build_stadium_faq_jsonld(faq_list):
+def build_stadium_faq_jsonld(faq_list, entity_id=None):
     """Build the schema.org FAQPage dict for this page.
 
     Delegates to :func:`build_product_faq_jsonld` — the shape is identical and
@@ -219,7 +222,7 @@ def build_stadium_faq_jsonld(faq_list):
     """
     from .views_products import build_product_faq_jsonld
 
-    return build_product_faq_jsonld(faq_list)
+    return build_product_faq_jsonld(faq_list, entity_id=entity_id)
 
 
 def _t(text, lang):

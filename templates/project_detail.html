@@ -536,13 +536,15 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
+  "@id": "{{ canonical_origin }}{{ request.path }}#article",
   "headline": "{{ project.title_t|escapejs }}",
   "description": "{{ project.description_t|default:''|descrub|escapejs }}",
   "image": "{{ canonical_origin }}{{ project.image_url|default:'' }}",
   "url": "{{ canonical_origin }}{{ request.path }}",
   "publisher": {
     "@type": "Organization",
-    "name": "{{ config.brand_name|escapejs }}"
+    "name": "{{ config.brand_name|escapejs }}",
+    "@id": "{{ canonical_origin }}/#organization"
   },
   "author": {
     "@type": "Organization",

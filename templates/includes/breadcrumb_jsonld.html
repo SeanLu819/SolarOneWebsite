@@ -30,6 +30,7 @@ could leak its own hostname into structured data (audit §4 #1).
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": "{{ canonical_origin }}{{ request.path }}#breadcrumb",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "{% trans 'Home' %}", "item": "{{ canonical_origin }}/"},
     {"@type": "ListItem", "position": 2, "name": "{{ section_name }}", "item": "{{ canonical_origin }}{{ section_url }}"}{% if leaf_name %},

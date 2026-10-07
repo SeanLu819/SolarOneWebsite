@@ -135,8 +135,10 @@
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "{{ canonical_origin }}/#website",
   "name": "{{ config.brand_name|escapejs }}",
-  "url": "{{ canonical_origin }}"
+  "url": "{{ canonical_origin }}",
+  "publisher": {"@id": "{{ canonical_origin }}/#organization"}
 }
 </script>
 
