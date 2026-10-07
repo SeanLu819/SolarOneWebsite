@@ -26,6 +26,11 @@ structure; this template must not repeat that.
 {% block content %}
 {% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=page_title|escapejs leaf_url=request.path %}
 
+{# FAQPage JSON-LD (v1.10.24): the whole blob is built in Python with json.dumps and injected safe; the FAQ text is a constant authored in views_stadium.py, never user input — same invariant as the product FAQ. #}
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{{ stadium_faq_json|safe }}
+</script>
+
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
 
@@ -132,6 +137,25 @@ structure; this template must not repeat that.
     <p style="margin-bottom: 56px;">
       <a href="{% url 'projects' %}" style="color: var(--accent);">{% trans "All reference projects" %} &rarr;</a>
     </p>
+
+    {# ---- FAQ (v1.10.24, GEO) ------------------------------------------ #}
+    {# Page-level questions, not the product FAQ: how many masts, does the     #}
+    {# broadcast deal care, which beam angle. See STADIUM_FAQ in the view for #}
+    {# why these are not the product questions again.                          #}
+    {% if stadium_faq %}
+    <div class="detail-faq stadium-faq" style="margin-bottom: 72px;">
+      <span class="detail-faq-label">{% trans "Frequently Asked Questions" %}</span>
+      <h2 class="detail-faq-title">{% trans "Stadium Lighting FAQ" %}</h2>
+      <div class="detail-faq-list">
+        {% for faq in stadium_faq %}
+        <details class="detail-faq-item">
+          <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
+          <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
 
     {# ---- The rest of the portfolio ----------------------------------- #}
     <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Other Lighting Categories" %}</h2>

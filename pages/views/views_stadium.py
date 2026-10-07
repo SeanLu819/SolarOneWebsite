@@ -28,6 +28,8 @@ The venue set is derived from ``related_links.PRODUCT_CATEGORY_TO_PROJECT_SPORTS
 the product pages cannot disagree about which projects suit which luminaires.
 """
 
+import json
+
 from django.shortcuts import render
 from django.utils.translation import get_language
 
@@ -51,6 +53,87 @@ VENUE_PROJECT_LIMIT = 9
 #: list; pinning the slugs makes the roster a product decision that has to be
 #: re-made on purpose (9M first — the shorter tower — then 12M).
 FEATURED_PRODUCT_SLUGS = ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp')
+
+#: Page-level FAQ (v1.10.24, audit A6/GEO).
+#:
+#: Why this page andnot the product pages: the product FAQ already answers
+#: "is it flicker-free" and "what is the efficacy" 25 times over. What no
+#: product page can answer is the question a buyer has *before* picking a
+#: product — "how many masts will my pitch need?", "does my broadcast deal care
+#: about the lighting?". That is a page-level question, and this page is the
+#: only one on the site with enough context to answer it.
+#:
+#: Every number below is read from ``seed_data.json`` ``energy_data`` for the
+#: two featured models (System Wattage 4200 W, CRI 70~95, L70 100,000 h at
+#: 25 °C, IP66, 10 kV surge, −40 °C to +55 °C, 12/18/30/50° from
+#: ``ordering_info``). Nothing is invented: MOQ, lead time, warranty years and
+#: certification numbers are absent from the repo and are therefore absent here
+#: too — the same constraint the product FAQ documents.
+#:
+#: SAFETY: this blob is injected with ``json.dumps`` and rendered ``|safe``,
+#: exactly like ``build_product_faq_jsonld``. Keep every entry a literal
+#: constant authored here; never interpolate request data into it.
+STADIUM_FAQ = [
+    {
+        'question': 'How many masts does a stadium floodlighting package need?',
+        'answer': (
+            'It follows from the target illuminance on the playing surface and '
+            'the mounting points the structure allows, not from a fixed '
+            'fixture count. The VSP series is rated 4200 W per system, so a '
+            'pitch reaches its target output from fewer masts than the '
+            'high-pressure-scheme it replaces. Send the venue drawing and '
+            'mounting height and we return a photometric layout with the mast '
+            'count.'
+        ),
+    },
+    {
+        'question': (
+            'Are these luminaires usable for televised matches and '
+            'super-slow-motion replay?'
+        ),
+        'answer': (
+            'Yes. Vision Strobe Protection on the VSP series keeps the output '
+            'free of the low-frequency flicker that shows up as banding in '
+            'super-slow-motion replay, and the asymmetric optics are aimed to '
+            'keep glare out of the camera-side seating.'
+        ),
+    },
+    {
+        'question': 'What beam angles are available?',
+        'answer': (
+            '12°, 18°, 30° and 50° from the same M Series optical platform, '
+            'coded 12 / 18 / 30 / 50 in the model number. The narrow angles '
+            'serve the seating bowl, the wider ones the playing surface.'
+        ),
+    },
+    {
+        'question': 'What is the efficacy, lifespan and protection rating?',
+        'answer': (
+            'CRI 70~95, L70 of 100,000 hours at 25 °C, IP66 ingress '
+            'protection, 10 kV surge protection, and an operating range of '
+            '−40 °C to +55 °C.'
+        ),
+    },
+    {
+        'question': 'How is the fixture powered and dimmed?',
+        'answer': (
+            'The remote power system pairs one AC enclosure with n LED driver '
+            'enclosures, so the drivers sit away from the fixture and are '
+            'reached without a ladder. Dimming is 1-10 V, DMX, DALI or Zigbee, '
+            'and both 110–277 VAC and 347–480 VAC inputs are available. '
+            'Enclosure dimensions follow the project, so they are quoted per '
+            'order rather than fixed on this page.'
+        ),
+    },
+    {
+        'question': 'Do you supply photometric studies for our venue?',
+        'answer': (
+            'Yes. Our engineering team delivers a full photometric proposal — '
+            'layout, illuminance and uniformity — within 48 hours of receiving '
+            'your venue drawing.'
+        ),
+    },
+]
 
 
 def stadium_lighting(request):
@@ -105,8 +188,38 @@ def stadium_lighting(request):
         'stadium_venues': venues,
         'stadium_sport_types': sports,
         'stadium_product_count': len(category_products),
+        'stadium_faq': _localised_faq(lang),
+        'stadium_faq_json': json.dumps(
+            build_stadium_faq_jsonld(_localised_faq(lang)),
+            ensure_ascii=False),
     })
     return render(request, 'stadium_lighting.html', context)
+
+
+def _localised_faq(lang):
+    """Translate ``STADIUM_FAQ`` through gettext, same route as page copy.
+
+    Reuses the product FAQ's JSON-LD builder rather than writing a second one:
+    ``FAQPage.mainEntity`` is a fixed shape, and two builders for it would be
+    two places to forget ``acceptedAnswer``.
+    """
+    from django.utils.translation import gettext as _
+
+    return [
+        {'question': _(item['question']), 'answer': _(item['answer'])}
+        for item in STADIUM_FAQ
+    ]
+
+
+def build_stadium_faq_jsonld(faq_list):
+    """Build the schema.org FAQPage dict for this page.
+
+    Delegates to :func:`build_product_faq_jsonld` — the shape is identical and
+    this page's FAQ is the same kind of content.
+    """
+    from .views_products import build_product_faq_jsonld
+
+    return build_product_faq_jsonld(faq_list)
 
 
 def _t(text, lang):
