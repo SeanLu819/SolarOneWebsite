@@ -44,17 +44,31 @@ PRODUCT_SLUG_REDIRECTS = {}
 
 #: Old path (no language prefix, no leading slash) → URL name to reverse.
 #:
-#: The three retired sports keyword landing pages. They were purpose-built for
-#: keywords rather than around real content, so they 301 to pages that carry the
-#: same intent on honest URLs: the football/tennis collections list the actual
-#: projects, and the stadium hub folds back into the catalogue (the VSP product
-#: titles already carry "LED Stadium Light").
+#: Retired sports-keyword landing pages. They were purpose-built for keywords
+#: rather than around real content, so they 301 to pages that carry the same
+#: intent on honest URLs:
+#:
+#: * ``sports-lighting/``         → the consolidated stadium-lighting hub
+#:   (``stadium_lighting``). The VSP product titles already carry "LED Stadium
+#:   Light", so the hub is the honest home for the broad sports-lighting intent.
+#: * ``football-stadium-lights/`` → ``projects_football`` — the football + soccer
+#:   field project collection.
+#: * ``tennis-court-lighting/``   → ``projects_tennis`` — the outdoor + indoor
+#:   tennis project collection.
+#:
+#: Each also had a ``/products/``-prefixed variant (from an earlier site
+#: structure) that is still linked by old sitemaps / backlinks; those are kept
+#: so they 301 too instead of 404.
+#:
 #: Note the targets are *bare URL names* — this table cannot express
 #: ``/projects/?sport=…``, and a filtered URL would be self-defeating anyway:
 #: canonical is built from ``request.path``, which drops the query string, so
 #: every filtered URL canonicalises to /projects/ and the keyword never owns a
 #: distinct indexable URL.
 LEGACY_PATH_REDIRECTS = {
+    'sports-lighting/': 'stadium_lighting',
+    'football-stadium-lights/': 'projects_football',
+    'tennis-court-lighting/': 'projects_tennis',
     'products/sports-lighting/': 'products',
     'products/football-stadium-lights/': 'projects_football',
     'products/tennis-court-lighting/': 'projects_tennis',

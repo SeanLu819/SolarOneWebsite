@@ -244,6 +244,16 @@ class LegacyRouteWiringTests(TestCase):
             registered.get('products/tennis-court-lighting/'),
             'projects_tennis')
 
+    def test_root_keyword_landing_pages_are_registered(self):
+        """v1.10.x: the root-level (no ``/products/`` prefix) keyword pages
+        must also stay redirected to their honest replacements."""
+        registered = dict(legacy_path_entries())
+        self.assertEqual(registered.get('sports-lighting/'), 'stadium_lighting')
+        self.assertEqual(
+            registered.get('football-stadium-lights/'), 'projects_football')
+        self.assertEqual(
+            registered.get('tennis-court-lighting/'), 'projects_tennis')
+
     def test_ordinary_pages_still_resolve(self):
         for url in ('/', '/projects/', '/products/', '/about/'):
             self.assertEqual(Client().get(url, **_KW).status_code, 200, url)
@@ -272,3 +282,42 @@ class LegacyRouteWiringTests(TestCase):
         resp = Client().get(f'/products/series/{_LIVE_PRODUCT}/', **_KW)
         self.assertEqual(resp.status_code, 301)
         self.assertEqual(resp['Location'], f'/products/{_LIVE_PRODUCT}/')
+
+
+class RootKeywordRedirectRoutingTests(TestCase):
+    """URL-level 301 for the root keyword landings (iron law #19).
+
+    ``pages/urls.py`` builds the legacy routes at *import* time, so a runtime
+    patch of ``LEGACY_PATH_REDIRECTS`` never reaches the router — the only real
+    check is hitting the freshly-imported URL with the test client (and, on
+    push, a curl against the live server). The audit already confirmed these
+    paths were 404 before this change; these assertions lock the after-state.
+    """
+
+    def test_sports_lighting_301s_to_stadium_lighting(self):
+        resp = Client().get('/sports-lighting/', **_KW)
+        self.assertEqual(resp.status_code, 301, 'must be permanent')
+        self.assertEqual(resp['Location'], '/stadium-lighting/')
+
+    def test_football_stadium_lights_301s_to_football_collection(self):
+        resp = Client().get('/football-stadium-lights/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/projects/football/')
+
+    def test_tennis_court_lighting_301s_to_tennis_collection(self):
+        resp = Client().get('/tennis-court-lighting/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/projects/tennis/')
+
+    def test_language_prefix_is_preserved_on_redirect(self):
+        """i18n_patterns + LocaleMiddleware make ``reverse()`` language-aware,
+        so a /fr/ visitor lands on /fr/stadium-lighting/, not the English root."""
+        resp = Client().get('/fr/sports-lighting/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/fr/stadium-lighting/')
+        resp = Client().get('/de/football-stadium-lights/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/de/projects/football/')
+        resp = Client().get('/ar/tennis-court-lighting/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/ar/projects/tennis/')
