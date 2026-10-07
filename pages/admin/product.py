@@ -364,15 +364,8 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                 seed_paths['cert_image'], _reused = _static_copy_deduped(
                     src, static_dir, filename)
 
-        gallery_paths = []
-        gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', slug)
-        for img in obj.images.all():
-            if img.image and getattr(img.image, 'name', ''):
-                src = os.path.join(media_root, str(img.image))
-                if os.path.exists(src):
-                    filename = _clean_hashed_filename(str(img.image))
-                    gallery_paths.append(
-                        _static_copy_deduped(src, gallery_dir, filename)[0])
+        # Gallery images are synced in ``save_related`` — the inline rows do not
+        # exist yet at this point (iron rule 25: save_model precedes save_formset).
 
         try:
             subprocess.run(
@@ -383,6 +376,51 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
             )
         except Exception:
             pass
+
+        # 🔴 v1.10.24 — 把解析出的 static 相对路径写回 DB。
+        # 背景（本函数修复的根因）：ImageField 的 ``upload_to`` 决定了上传落点
+        # （``products/`` / ``products/gallery/``），Django 会把那个相对路径
+        # **自动存进 DB**；而本函数复制到的真源目录是
+        # ``static/images/products/<slug>/``。两者结构不同 ⇒ DB 里的路径永远
+        # 指向磁盘上不存在的目录，前台 srcset 全 404（缩略图走原图 src 侥幸能显示，
+        # 主图裂图）。此前本函数算出的 ``seed_paths`` / ``gallery_paths`` 只存进
+        # 局部变量就丢弃，从不回写 ⇒ 每传一次图就复现一次。
+        #
+        # 现在写回 ``images/products/<slug>/<file>``（与 seed_data.json 约定一致）。
+        for field_name, rel in seed_paths.items():
+            if getattr(obj, field_name, None) and rel:
+                setattr(obj, field_name, rel)
+        if seed_paths:
+            obj.save(update_fields=list(seed_paths.keys()))
+        reset_static_image_hash_index()
+
+    def save_related(self, request, form, formsets, change):
+        """Gallery images only exist after ``save_formset`` ran.
+
+        🔴 Iron rule 25: ``save_model`` fires BEFORE ``save_formset``, so syncing
+        the inline gallery there would export the *previous* image set. That is
+        why this hook exists — the inline rows are guaranteed saved at this point.
+        """
+        super().save_related(request, form, formsets, change)
+        obj = form.instance
+        gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', obj.slug)
+        media_root = settings.MEDIA_ROOT
+        touched = False
+        for img in obj.images.all():
+            if not (img.image and getattr(img.image, 'name', '')):
+                continue
+            src = os.path.join(media_root, str(img.image))
+            if not os.path.exists(src):
+                continue
+            filename = _clean_hashed_filename(str(img.image))
+            rel, _reused = _static_copy_deduped(src, gallery_dir, filename)
+            if rel and img.image.name != rel:
+                img.image = rel
+                img.save(update_fields=['image'])
+                touched = True
+        if touched:
+            reset_static_image_hash_index()
+            self._sync_seed_files(request)
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
