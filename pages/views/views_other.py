@@ -137,6 +137,56 @@ def _site_last_modified():
     except Exception:
         return ''
 
+def _news_lastmod(article):
+    """Return a real ``<lastmod>`` date for a news article, or ''.
+
+    WHY THIS EXISTS (v1.10.24)
+    -----------------------
+    Until v1.10.24 every URL in the sitemap carried the same value: the
+    build stamp from ``pages/build_meta.py``. That is a fiction for 57 of
+    the 60 URLs. Google documents ``lastmod`` as the date the page was
+    last significantly modified; stamping it with the deploy date tells
+    the crawler that all 24 product pages and 22 project pages changed on
+    every single deploy, and Google progressively discounts a ``lastmod``
+    it learns to distrust. Measured on the seed: ``products`` and
+    ``projects`` carry no time field at all (no updated_at, no
+    created_at, no published_at), so there is no honest date to emit for
+    them. ``<lastmod>`` is optional in the sitemap schema, so omitting it
+    is the truthful option and lets the crawler fall back to its own
+    crawl-frequency heuristics.
+
+    News is the exception: ``published_at`` is real, differs per article,
+    and is already rendered on the page. A newly published article
+    therefore advertises a genuine recent date, which is exactly the
+    signal IndexNow and the sitemap are supposed to carry.
+
+    Both data paths normalise ``published_at`` to a ``datetime``
+    (``_normalize_news_article`` parses the ISO string,
+    ``_normalize_news_row`` reads the column). When parsing fails the
+    seed path leaves the raw string in place, so both forms are handled.
+    """
+    # ``get_news_detail`` returns a plain dict on the seed path, while the
+    # DB path normalises to the same dict shape — so a plain
+    # ``article.published_at`` attribute access would work in the template
+    # (Django resolves dict keys) but NOT here in Python. Read both.
+    if isinstance(article, dict):
+        value = article.get('published_at')
+    else:
+        value = getattr(article, 'published_at', None)
+    value = value or ''
+    if not value:
+        return ''
+    if isinstance(value, datetime):
+        return value.date().isoformat()
+    text = str(value)
+    try:
+        return datetime.fromisoformat(text).date().isoformat()
+    except ValueError:
+        # An unparseable value must not become a bogus <lastmod>; drop it
+        # rather than emit something the schema does not allow.
+        return ''
+
+
 def indexnow_key(request):
     """Serve the IndexNow key file (Bing / Yandex push protocol).
 
@@ -455,11 +505,14 @@ def sitemap_xml(request):
 
     urls = []
 
-    # <lastmod> (SEO P2): products/projects carry no updated_at in the seed
-    # snapshot, so a per-URL timestamp is unavailable. Use the seed snapshot's
-    # own mtime — stable across requests within a deploy (Google distrusts a
-    # lastmod that changes on every fetch) and honest as "content published".
-    _lastmod = _site_last_modified()
+    # <lastmod> (v1.10.24): only the three news pages carry one.
+    #
+    # Previously every URL got ``_site_last_modified()`` — the build
+    # stamp — which reads as "all 60 pages changed on every deploy".
+    # Google discounts a lastmod it learns to distrust, and the seed has no
+    # time field on products or projects to derive a real one from. News
+    # has ``published_at``, so only those URLs get a truthful date. See
+    # :func:`_news_lastmod` for the full reasoning.
 
     with override('en'):
         static_pages = [
@@ -488,7 +541,7 @@ def sitemap_xml(request):
             images = _collection_page_images(name)
             if not images:
                 images = _collection_dynamic_images(name)
-            urls.append(_entry(reverse(name), priority, _lastmod, images))
+            urls.append(_entry(reverse(name), priority, images=images))
 
         for p in products:
             slug = p.get('slug', '')
@@ -499,7 +552,8 @@ def sitemap_xml(request):
                     ('description_t',),
                 )
                 urls.append(_entry(
-                    reverse('product_detail', args=[slug]), '0.7', _lastmod, images))
+                    reverse('product_detail', args=[slug]), '0.7',
+                    images=images))
 
         for proj in projects:
             slug = proj.get('slug', '')
@@ -510,7 +564,8 @@ def sitemap_xml(request):
                     ('location_t', 'description_t'),
                 )
                 urls.append(_entry(
-                    reverse('project_detail', args=[slug]), '0.7', _lastmod, images))
+                    reverse('project_detail', args=[slug]), '0.7',
+                    images=images))
 
         # News detail pages: same treatment as products/projects. The seed's
         # `is_published` gate mirrors what get_news_detail() enforces, so an
@@ -531,7 +586,8 @@ def sitemap_xml(request):
                    for g in (detail.get('images') or [])]
             )
             urls.append(_entry(
-                reverse('news_detail', args=[slug]), '0.6', _lastmod, images))
+                reverse('news_detail', args=[slug]), '0.6',
+                lastmod=_news_lastmod(detail), images=images))
 
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
