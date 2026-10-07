@@ -30,7 +30,7 @@ structure; this template must not repeat that.
   <div class="container">
 
     {# ---- Intro: the H1 states what the page sells, not just its name ---- #}
-    <div style="max-width: 860px; margin-bottom: 56px;">
+    <div class="stadium-intro" style="margin-bottom: 56px;">
       <span class="section-accent-label section-accent-label--compact">{% trans "Stadium Lighting" %}</span>
       <h1 class="section-title" style="margin-bottom: 12px;">{% trans "LED Stadium Lighting" %}</h1>
       <p class="section-body">{% blocktrans %}Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues.{% endblocktrans %}</p>
@@ -38,7 +38,7 @@ structure; this template must not repeat that.
 
     {# ---- Luminaires -------------------------------------------------- #}
     <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Stadium Floodlights" %}</h2>
-    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans %}The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl.{% endblocktrans %}</p>
+    <p class="section-body stadium-section-lead" style="margin-bottom: 28px;">{% blocktrans %}The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl.{% endblocktrans %}</p>
 
     <div class="products-grid stadium-products-grid" style="margin-bottom: 72px;">
       {% for product in stadium_products %}

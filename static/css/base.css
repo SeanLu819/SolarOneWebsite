@@ -1178,6 +1178,28 @@
      third column is empty and the page looks lopsided on PC browsers. */
   @media (min-width: 768px) { .stadium-products-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 1200px) { .stadium-products-grid { grid-template-columns: repeat(2, 1fr); } }
+  /* Stadium landing page: the hero intro and the section lead sit in an
+     otherwise empty right-hand third on desktop. Remove the readability
+     max-width so the copy fills the container and the page feels balanced. */
+  .stadium-intro,
+  .stadium-intro .section-body,
+  .stadium-section-lead { max-width: none; }
+  /* Stadium landing page: product images render too large in the two-card
+     grid, pushing the table and venue projects below the fold. Cap the image
+     container height and use a wider aspect ratio so visitors see more of the
+     page on first load. */
+  @media (min-width: 768px) {
+    .stadium-products-grid .product-card-img {
+      aspect-ratio: 2 / 1;
+      max-height: 220px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .stadium-products-grid .product-card-img {
+      aspect-ratio: 2 / 1;
+      max-height: 240px;
+    }
+  }
   .product-card-specs {
     display: flex;
     gap: 0;

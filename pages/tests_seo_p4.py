@@ -292,6 +292,72 @@ class StadiumContentSourcingTests(TestCase):
             body,
             'rendered stadium page must carry the two-column grid class')
 
+    def test_the_intro_copy_fills_the_available_width(self):
+        """The hero area has a blank right-hand third because the intro copy is
+        capped at 860px. Remove the cap so the text fills the container on PC
+        browsers.
+
+        Guard checks the template and the CSS so the cap cannot be re-added by an
+        inline style or by the global .section-body max-width.
+        """
+        template_path = settings.BASE_DIR / 'templates' / 'stadium_lighting.html'
+        template_src = template_path.read_text(encoding='utf-8')
+        intro = re.search(
+            r'<div class="stadium-intro"[^>]*>(.*?)</div>.*?<h2',
+            template_src, re.S)
+        self.assertIsNotNone(intro, 'stadium intro div not found in template')
+        self.assertNotIn(
+            'max-width', intro.group(1),
+            'stadium intro must not inline a max-width cap')
+
+        lead = re.search(
+            r'<p class="section-body stadium-section-lead"[^>]*>',
+            template_src)
+        self.assertIsNotNone(lead, 'stadium section lead not found in template')
+        self.assertNotIn(
+            'max-width', lead.group(0),
+            'stadium section lead must not inline a max-width cap')
+
+        css_path = settings.BASE_DIR / 'static' / 'css' / 'base.css'
+        css = css_path.read_text(encoding='utf-8')
+        css_no_comments = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+        self.assertIn(
+            '.stadium-intro,\n  .stadium-intro .section-body,\n  '
+            '.stadium-section-lead { max-width: none; }',
+            css_no_comments,
+            'base.css must remove the max-width cap on stadium intro copy')
+
+        body = Client().get('/stadium-lighting/',
+                            HTTP_HOST='localhost').content.decode()
+        self.assertIn('stadium-intro', body)
+        self.assertIn('stadium-section-lead', body)
+
+    def test_the_featured_product_images_are_capped_on_desktop(self):
+        """The two product cards are oversized for a two-column grid, pushing
+        the table and venue projects below the fold. The stadium override must
+        cap the image container height and use a flatter aspect ratio on
+        desktop breakpoints.
+        """
+        css_path = settings.BASE_DIR / 'static' / 'css' / 'base.css'
+        css = css_path.read_text(encoding='utf-8')
+        css_no_comments = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+        self.assertIn(
+            '.stadium-products-grid .product-card-img',
+            css_no_comments,
+            'base.css must scope the stadium image override')
+        self.assertIn(
+            'aspect-ratio: 2 / 1;',
+            css_no_comments,
+            'stadium product images must use a 2:1 aspect ratio')
+        self.assertIn(
+            'max-height: 220px;',
+            css_no_comments,
+            'stadium product images must be height-capped on tablet')
+        self.assertIn(
+            'max-height: 240px;',
+            css_no_comments,
+            'stadium product images must be height-capped on desktop')
+
     def test_the_featured_vsp_copy_omits_box_dimensions(self):
         """Iron law: enclosure sizes vary per project, so they must never be
         hard-coded. The VSP series is described only as a remote LED driver
