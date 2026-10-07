@@ -293,12 +293,14 @@ class StadiumContentSourcingTests(TestCase):
             'rendered stadium page must carry the two-column grid class')
 
     def test_the_intro_copy_fills_the_available_width(self):
-        """The hero area has a blank right-hand third because the intro copy is
-        capped at 860px. Remove the cap so the text fills the container on PC
-        browsers.
+        """The hero and section leads have a blank right-hand third because the
+        copy is capped (intro 860px, leads 760px). Remove the cap so every
+        stadium-page lead fills the container on PC browsers.
 
         Guard checks the template and the CSS so the cap cannot be re-added by an
-        inline style or by the global .section-body max-width.
+        inline style or by the global .section-body max-width. Every
+        ``.stadium-section-lead`` in the template is scanned, not just the first,
+        so a future lead that re-introduces a max-width fails here.
         """
         template_path = settings.BASE_DIR / 'templates' / 'stadium_lighting.html'
         template_src = template_path.read_text(encoding='utf-8')
@@ -310,13 +312,15 @@ class StadiumContentSourcingTests(TestCase):
             'max-width', intro.group(1),
             'stadium intro must not inline a max-width cap')
 
-        lead = re.search(
+        leads = re.findall(
             r'<p class="section-body stadium-section-lead"[^>]*>',
             template_src)
-        self.assertIsNotNone(lead, 'stadium section lead not found in template')
-        self.assertNotIn(
-            'max-width', lead.group(0),
-            'stadium section lead must not inline a max-width cap')
+        self.assertTrue(
+            leads, 'stadium section leads not found in template')
+        for lead in leads:
+            self.assertNotIn(
+                'max-width', lead,
+                'stadium section lead must not inline a max-width cap')
 
         css_path = settings.BASE_DIR / 'static' / 'css' / 'base.css'
         css = css_path.read_text(encoding='utf-8')
@@ -331,6 +335,9 @@ class StadiumContentSourcingTests(TestCase):
                             HTTP_HOST='localhost').content.decode()
         self.assertIn('stadium-intro', body)
         self.assertIn('stadium-section-lead', body)
+        self.assertGreaterEqual(
+            body.count('stadium-section-lead'), 2,
+            'expected both section leads to carry the full-width class')
 
     def test_the_featured_product_images_are_capped_on_desktop(self):
         """The two product cards are oversized for a two-column grid, pushing
