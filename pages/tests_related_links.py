@@ -2,9 +2,19 @@
 
 The detail pages must vote for the related content so the three "islands"
 (product catalogue, project case studies, news) pass ranking signals to each
-other. Links are derived deterministically from the category <-> sport/venue
-taxonomy (project -> products, product -> projects) and from explicit keyword
-matches in the news copy (never a weak generic link).
+other.
+
+Two directions, deliberately asymmetric since v1.10.25:
+
+* product -> projects ("Application Cases") stays **automatic**, derived from the
+  category taxonomy — a luminaire genuinely serves a class of venues;
+* project -> products ("Related Products") is **manual only**. The old heuristic
+  was deleted: it iterated a ``set`` (so one project showed different products
+  between process starts) and paired venues with luminaires never installed
+  there. No pick in the admin therefore means no section at all.
+
+News links stay keyword-matched against explicit model numbers / project slugs
+so we never emit a weak generic link.
 """
 import re
 
@@ -12,30 +22,24 @@ from django.test import TestCase
 
 
 class ProjectToProductLinksTests(TestCase):
+    """Manual only: an unpicked project must not claim any luminaire."""
+
     def _get(self, slug):
         return self.client.get('/projects/%s/' % slug, HTTP_HOST='localhost')
 
-    def test_sports_project_links_related_products(self):
-        # FOOTBALL_FIELD -> SPORTS_LIGHTING products.
-        resp = self._get('football-field-led-retrofit')
-        self.assertEqual(resp.status_code, 200)
-        content = resp.content.decode()
-        self.assertIn('Related Products', content)
-        self.assertIn('class="related-products"', content)
-        self.assertIn('related-product-card', content)
-        # at least one real product card links to a product detail page
-        self.assertRegex(
-            content, r'href="/products/[a-z0-9-]+/"',
-            'project detail should render at least one related product link')
-
-    def test_airport_project_links_area_or_flood_products(self):
-        # AIRPORT -> AREA_SITE / FLOODLIGHT products (not sports).
-        resp = self._get('beijing-capital-international-airport')
-        self.assertEqual(resp.status_code, 200)
-        content = resp.content.decode()
-        self.assertIn('class="related-products"', content)
-        self.assertRegex(
-            content, r'href="/products/[a-z0-9-]+/"')
+    def test_a_project_with_no_manual_pick_shows_no_related_products(self):
+        # Nothing is picked in the seed, and guessing is exactly what the old
+        # heuristic did wrong — silence is the correct output here.
+        for slug in ('football-field-led-retrofit',
+                     'beijing-capital-international-airport'):
+            with self.subTest(slug=slug):
+                resp = self._get(slug)
+                self.assertEqual(200, resp.status_code)
+                content = resp.content.decode()
+                self.assertNotIn('class="related-products"', content,
+                                 '%s rendered related products with no pick'
+                                 % slug)
+                self.assertNotIn('related-product-card', content)
 
 
 class ProductToProjectLinksTests(TestCase):

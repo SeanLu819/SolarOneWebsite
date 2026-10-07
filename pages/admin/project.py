@@ -65,9 +65,17 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
     list_editable = ['order']
     search_fields = ['title', 'location', 'description']
     inlines = [ProjectImageInline]
+    # Plain multi-select is painful with ~24 products; the horizontal widget
+    # shows the picked luminaires at a glance. The M2M order is not preserved,
+    # so the page renders them in Product.Meta order.
+    filter_horizontal = ('related_products',)
     fieldsets = (
         (None, {
             'fields': (('title', 'slug'), ('venue_type', 'sport_type'), 'location', 'order')
+        }),
+        ('Related Products', {
+            'fields': ('related_products',),
+            'description': '手工选择本项目实际使用的灯具。可多选；<b>不选则不显示</b>页面底部的 "Related Products" 区块（不再自动匹配）。',
         }),
         ('Images', {
             'fields': ('image', 'cover_image'),

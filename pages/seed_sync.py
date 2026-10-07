@@ -305,6 +305,9 @@ def _project_to_dict(project):
 
     gallery = _project_gallery_paths(project)
     pdf_url = _resolve_project_pdf(project)
+    # Manual "Related Products". ``.all()`` follows Product.Meta.order, so
+    # the exported order is deterministic (no set iteration anywhere).
+    related_slugs = [x.slug for x in project.related_products.all()]
 
     return {
         'pk': project.pk,
@@ -320,6 +323,7 @@ def _project_to_dict(project):
         'translations': project.translations if isinstance(project.translations, dict) else {},
         'gallery': gallery,
         'pdf_url': pdf_url,
+        'related_product_slugs': related_slugs,
     }
 
 

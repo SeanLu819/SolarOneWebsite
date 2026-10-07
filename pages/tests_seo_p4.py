@@ -30,10 +30,7 @@ from django.utils import translation
 
 from pages.utils import CATEGORY_KEYWORD
 from pages.views.data_loaders import get_products, get_projects
-from pages.views.related_links import (
-    PRODUCT_CATEGORY_TO_PROJECT_SPORTS,
-    PROJECT_SPORT_TO_PRODUCT_CATEGORIES,
-)
+from pages.views.related_links import PRODUCT_CATEGORY_TO_PROJECT_SPORTS
 from pages.views.utils import _load_seed
 from pages.views.views_stadium import (
     FEATURED_PRODUCT_SLUGS,
@@ -42,6 +39,16 @@ from pages.views.views_stadium import (
 )
 
 LANGS = ('en', 'fr', 'es', 'de', 'ru', 'ar')
+
+# Independent statement of the business rule behind PRODUCT_CATEGORY_TO_PROJECT_
+# SPORTS[STADIUM_CATEGORY] (iron law 4b: never derive an expected value from the
+# implementation it is supposed to be checking). Several entries are venues we
+# have not built a case study for yet, so this cannot be derived from the seed.
+STADIUM_SPORT_TYPES = (
+    'FOOTBALL_FIELD', 'SOCCER_FIELD', 'BASEBALL_FIELD', 'TRACK_FIELD',
+    'VELODROME', 'MULTI_SPORT', 'ICE_ARENA', 'AQUATICS_CENTRE',
+    'KARTING', 'SKI_AREA',
+)
 
 #: SERP budgets this project holds every page to.
 MAX_TITLE_LEN = 60
@@ -458,17 +465,17 @@ class StadiumContentSourcingTests(TestCase):
                         Client().get('/stadium-lighting/', HTTP_HOST='localhost')
                         .content.decode())
 
-    def test_the_mapping_is_inverse_consistent(self):
-        """Iron law for ``related_links``: every sport maps both ways."""
-        for sport, categories in PROJECT_SPORT_TO_PRODUCT_CATEGORIES.items():
-            if STADIUM_CATEGORY not in categories:
-                continue
-            with self.subTest(sport=sport):
-                self.assertIn(
-                    sport,
-                    PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(STADIUM_CATEGORY, []),
-                    '%s claims the stadium category but the reverse map omits it'
-                    % sport)
+    def test_the_reverse_map_is_a_pinned_product_decision(self):
+        """Which venues a stadium-class luminaire serves is a business call.
+
+        The project -> product direction is picked by hand in the admin now, so
+        this map no longer has an inverse to check against. Pinning the list is
+        what is left: editing it must be a deliberate act, never a side effect
+        of some unrelated change.
+        """
+        self.assertEqual(
+            tuple(PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(STADIUM_CATEGORY, [])),
+            STADIUM_SPORT_TYPES)
 
     def test_the_category_is_actually_a_stadium_term(self):
         """Cross-check: the one landing page's keyword must say "stadium"."""

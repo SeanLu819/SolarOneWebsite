@@ -3,66 +3,30 @@
 There is no foreign key between ``Product`` and ``Project`` in the seed data, so
 "related" items are derived *deterministically* from the existing taxonomy:
 
-* a project's ``sport_type`` / ``venue_type`` maps to one or more product
-  ``category`` codes (sports venues -> SPORTS_LIGHTING, roadways -> ROADWAY,
-  airports/infrastructure -> AREA_SITE, indoor venues -> HIGHBAY_LOWBAY, ...);
-* the reverse map sends a product ``category`` back to the project
-  ``sport_type`` / ``venue_type`` values it serves.
+* a product ``category`` maps back to the project ``sport_type`` / ``venue_type``
+  values it serves (the product page's "Application Cases");
+
+* a project's "Related Products" is **manual only** -- the editor picks the
+  luminaires in the admin (``Project.related_products``). The old category-based
+  auto match was deleted: it iterated a ``set`` (so the same project showed
+  different products between processes) and paired venues with luminaires the
+  business never used there. No pick means no section at all.
 
 Both the database path and the seed-JSON path are served through
-``get_products`` / ``get_projects`` (which enrich the objects identically), so
-the same helper produces correct links on Vercel and in local dev without any
-model dual-path duplication. News links are keyword-matched against explicit
-product model numbers / project slugs so we never emit a weak generic link.
+``get_projects`` / ``get_all_products`` (which enrich the objects identically),
+so the same helper produces correct links on Vercel and in local dev without
+any model dual-path duplication. News links are keyword-matched against
+explicit product model numbers / project slugs so we never emit a weak generic
+link.
 """
-from pages.views.data_loaders import get_products, get_projects, get_all_products
+from pages.views.data_loaders import get_projects, get_all_products
 
-
-# sport_type -> product category codes (a venue of this sport needs these lights)
-#
-# Refined with the client's real-world association rule (batch B2): venue size
-# drives the recommendation. Large outdoor venues (football / soccer / baseball
-# / track / velodrome) use high-power sports lighting (VSP / M series ->
-# SPORTS_LIGHTING); small outdoor venues (tennis / basketball / fencing /
-# pickleball) use small / medium floods (RT410 / flood lights -> FLOODLIGHT);
-# indoor venues additionally pull High Bay (HIGHBAY_LOWBAY). Large indoor
-# venues (ice / aquatics / multi-sport) keep SPORTS_LIGHTING for the high-power
-# requirement plus HIGHBAY_LOWBAY. There is deliberately no fixed 1:1 rule --
-# these are the general heuristics the business actually uses.
-PROJECT_SPORT_TO_PRODUCT_CATEGORIES = {
-    'FOOTBALL_FIELD': ['SPORTS_LIGHTING'],
-    'SOCCER_FIELD': ['SPORTS_LIGHTING'],
-    'BASEBALL_FIELD': ['SPORTS_LIGHTING'],
-    'TRACK_FIELD': ['SPORTS_LIGHTING'],
-    'VELODROME': ['SPORTS_LIGHTING'],
-    'MULTI_SPORT': ['SPORTS_LIGHTING', 'HIGHBAY_LOWBAY'],
-    'ICE_ARENA': ['SPORTS_LIGHTING', 'HIGHBAY_LOWBAY'],
-    'AQUATICS_CENTRE': ['SPORTS_LIGHTING', 'HIGHBAY_LOWBAY'],
-    'KARTING': ['SPORTS_LIGHTING', 'FLOODLIGHT'],
-    'SKI_AREA': ['SPORTS_LIGHTING', 'FLOODLIGHT'],
-    'TENNIS_COURTS': ['FLOODLIGHT'],
-    'TENNIS': ['FLOODLIGHT', 'HIGHBAY_LOWBAY'],
-    'BASKETBALL': ['FLOODLIGHT', 'HIGHBAY_LOWBAY'],
-    'FENCING': ['FLOODLIGHT', 'HIGHBAY_LOWBAY'],
-    'PICKLEBALL': ['FLOODLIGHT', 'HIGHBAY_LOWBAY'],
-    'AIRPORT': ['AREA_SITE', 'FLOODLIGHT'],
-    'CITY_EXPRESSWAY': ['ROADWAY', 'FLOODLIGHT'],
-    'ROADWAY': ['ROADWAY', 'FLOODLIGHT'],
-}
-
-# venue_type -> product category codes (fallback for non-sport venues)
-PROJECT_VENUE_TO_PRODUCT_CATEGORIES = {
-    'INFRASTRUCTURE': ['AREA_SITE', 'FLOODLIGHT'],
-    'ROADWAY': ['ROADWAY', 'FLOODLIGHT'],
-    'INDOOR': ['HIGHBAY_LOWBAY'],
-    'OUTDOOR': [],
-}
 
 # reverse: product category -> project sport_types that use it
 #
-# Kept consistent with PROJECT_SPORT_TO_PRODUCT_CATEGORIES: every sport listed
-# here maps back to a category that lists it, so a product's "Application Cases"
-# and a project's "Related Products" are each other's inverse.
+# Used by ``related_projects_for_product`` (a product page's "Application
+# Cases"). It is no longer the inverse of anything: a project's "Related
+# Products" is picked by hand, so these two directions are independent.
 PRODUCT_CATEGORY_TO_PROJECT_SPORTS = {
     'SPORTS_LIGHTING': [
         'FOOTBALL_FIELD', 'SOCCER_FIELD', 'BASEBALL_FIELD', 'TRACK_FIELD',
@@ -92,25 +56,24 @@ PRODUCT_CATEGORY_TO_PROJECT_VENUES = {
 }
 
 
-def related_products_for_project(project, lang='en', limit=3):
-    """Products whose category matches this project's sport/venue type."""
-    cats = set(PROJECT_SPORT_TO_PRODUCT_CATEGORIES.get(
-        getattr(project, 'sport_type', ''), []))
-    cats |= set(PROJECT_VENUE_TO_PRODUCT_CATEGORIES.get(
-        getattr(project, 'venue_type', ''), []))
-    if not cats:
+def related_products_for_project(project, lang='en'):
+    """The products an editor picked for this project — manual only.
+
+    No automatic matching and no fallback: when nothing is picked the section
+    must disappear from the page. The DB path reads the M2M (ordered by
+    ``Product.Meta``); the seed path reads the exported ``related_product_slugs``
+    list. Both are plain ordered sequences — the previous ``set`` iteration made
+    the same project show different products on every process start.
+    """
+    manager = getattr(project, 'related_products', None)
+    if manager is not None and hasattr(manager, 'all'):
+        slugs = [p.slug for p in manager.all()]
+    else:
+        slugs = list(getattr(project, 'related_product_slugs', None) or [])
+    if not slugs:
         return []
-    seen = set()
-    out = []
-    for cat in cats:
-        for p in get_products(lang, active_category=cat):
-            if p.slug in seen:
-                continue
-            seen.add(p.slug)
-            out.append(p)
-            if len(out) >= limit:
-                return out
-    return out
+    by_slug = {p.slug: p for p in get_all_products(lang)}
+    return [by_slug[s] for s in slugs if s in by_slug]
 
 
 def related_projects_for_product(product, lang='en', limit=3):

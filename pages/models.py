@@ -423,6 +423,17 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"title": "...", "description": "...", "location": "...", "results": "..."}, ...}
     translations = JSONField(default=dict, blank=True)
+    # Manual "Related Products" for the project detail page. There is no
+    # automatic fallback on purpose: when the editor picks nothing the
+    # section is not rendered at all (see related_products_for_project).
+    related_products = models.ManyToManyField(
+        'Product',
+        blank=True,
+        related_name='related_projects',
+        verbose_name='Related Products',
+        help_text='Pick the luminaires this project actually used. Leave it '
+                   'empty to hide the "Related Products" section entirely.',
+    )
 
     class Meta:
         ordering = ['order', 'pk']
