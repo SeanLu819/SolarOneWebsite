@@ -26,14 +26,14 @@
 {% block og_type %}<meta property="og:type" content="website">{% endblock %}
 <meta property="og:locale" content="{{ LANGUAGE_CODE }}">
 <meta property="og:site_name" content="{{ config.brand_name }}">
-{% block og_image %}{% if config.og_image %}<meta property="og:image" content="{{ canonical_origin }}{{ config.og_image.url }}">{% endif %}{% endblock %}
+{% block og_image %}{% if config.og_image %}<meta property="og:image" content="{{ canonical_origin }}{{ config.og_image.url }}">{% else %}<meta property="og:image" content="{{ canonical_origin }}{% static 'images/og-default.webp' %}">{% endif %}{% endblock %}
 <!-- Social cards (SEO P2): OG above is the single source of truth. X/Twitter, Slack,
      Discord, WhatsApp and Telegram all fall back to og:title/og:description/og:image
      when twitter:* is absent. We therefore do NOT emit standalone twitter:title/
      twitter:description tags — doing so would shadow the page-specific OG values with
      generic site copy. Only the card type + image hints are kept. -->
 <meta name="twitter:card" content="summary_large_image">
-{% block twitter_image %}{% if config.og_image %}<meta name="twitter:image" content="{{ canonical_origin }}{{ config.og_image.url }}">{% endif %}{% endblock %}
+{% block twitter_image %}{% if config.og_image %}<meta name="twitter:image" content="{{ canonical_origin }}{{ config.og_image.url }}">{% else %}<meta name="twitter:image" content="{{ canonical_origin }}{% static 'images/og-default.webp' %}">{% endif %}{% endblock %}
 {% if ga4_id %}
 <!-- GA4 (M2 / SEO P1c): website analytics. Loaded async with the page CSP nonce.
      Only rendered when GA4_MEASUREMENT_ID is set; no third-party request otherwise. -->
