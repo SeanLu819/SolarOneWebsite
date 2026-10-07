@@ -110,3 +110,41 @@
     align-items: stretch !important;
     gap: 12px !important;
 }
+
+/* ---------------------------------------------------------------------------
+ * Admin change-form usability: keep textarea heights tight and the save button
+ * always visible. Previously the long Content / Translations block pushed the
+ * submit-row off-screen, making it impossible to save on product edit pages.
+ * --------------------------------------------------------------------------- */
+
+/* Respect the rows attribute; don't let Django/base.css min-height blow up boxes */
+#id_description,
+[id^="id_translations_"] {
+    height: auto !important;
+    min-height: unset !important;
+    max-height: none !important;
+    resize: vertical !important;
+    overflow: auto !important;
+}
+
+/* Cap translation JSON boxes so 5 languages don't eat the whole viewport */
+[id^="id_translations_"] {
+    max-height: 5.2em !important;
+}
+
+/* Pin the save button row to the bottom of the viewport */
+.submit-row {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 1000 !important;
+    margin-top: 20px !important;
+    background: var(--body-bg) !important;
+    border: 1px solid var(--hairline-color) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Make sure the parent stacking context doesn't clip the sticky row */
+#content-main {
+    position: relative !important;
+}

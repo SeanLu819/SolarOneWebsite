@@ -166,5 +166,5 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             self._sync_project_images(form.instance)
 
     class Media:
-        css = {'all': ('admin/css/admin_overrides.css',)}
+        css = {'all': ('admin/css/admin_overrides_v2.css',)}
         js = ('admin/js/auto_translate.js',)

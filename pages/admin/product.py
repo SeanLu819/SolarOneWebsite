@@ -124,7 +124,7 @@ class ProductAdminForm(forms.ModelForm):
             'specs': SpecsWidget,
             'energy_data': EnergyDataWidget,
             'ordering_info': OrderingInfoWidget,
-            'description': forms.Textarea(attrs={'rows': 2, 'style': 'width:100%;max-width:900px;box-sizing:border-box;'}),
+            'description': forms.Textarea(attrs={'rows': 2, 'style': 'width:100%;max-width:900px;box-sizing:border-box;max-height:5.5em;'}),
             'translations': TranslationsWidget(attrs={'rows': '2'}),
         }
 
@@ -324,7 +324,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     )
 
     class Media:
-        css = {'all': ('admin/css/admin_overrides.css',)}
+        css = {'all': ('admin/css/admin_overrides_v2.css',)}
         js = ('admin/js/auto_translate.js', 'admin/js/page_layout_toggle.js')
 
     def _sync_product_images(self, obj):

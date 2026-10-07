@@ -177,7 +177,7 @@ class Product(models.Model):
         blank=True,
         verbose_name='Model Number',
         help_text='产品型号标识，示例：FL1M-80W-30K-S。必须与本产品的实际型号一致 —— '
-                  '它会直接进入 <title> 与 meta description（SEO 公式见 pages/utils.py），'
+                  '它会直接进入 页面 title 与 meta description（SEO 公式见 pages/utils.py），'
                   '填错等于给别的产品代打广告。'
     )
     ordering_info = JSONField(

@@ -86,5 +86,5 @@ class NewsArticleAdmin(CacheClearMixin, admin.ModelAdmin):
         # narrow columns (the bug this fixes). auto_translate.js powers the
         # Auto-Translate buttons rendered by TranslationsWidget — they were
         # dead on this page before because the script was never loaded here.
-        css = {'all': ('admin/css/admin_overrides.css',)}
+        css = {'all': ('admin/css/admin_overrides_v2.css',)}
         js = ('admin/js/auto_translate.js',)

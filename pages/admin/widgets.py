@@ -264,7 +264,7 @@ class TranslationsWidget(forms.Widget):
                 f'<div class="translation-lang" style="display:block;width:100% !important;max-width:900px;box-sizing:border-box;margin-bottom:14px;">'
                 f'<label for="{textarea_id}" style="display:block;font-weight:700;margin-bottom:6px;">{code} — {escape(lang_name)}</label>'
                 f'<textarea id="{textarea_id}" name="{name}_{code}" rows="{self.attrs.get("rows", "6")}" '
-                f'style="width:100% !important;max-width:900px;box-sizing:border-box;font-family:monospace;font-size:12px;">{escape(lang_json)}</textarea>'
+                f'style="width:100% !important;max-width:900px;box-sizing:border-box;font-family:monospace;font-size:12px;max-height:5.2em;">{escape(lang_json)}</textarea>'
                 f'<div class="auto-translate-row" style="margin:8px 0 6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">'
                 f'<button type="button" class="button auto-translate-btn" data-lang="{code}" data-target-id="{textarea_id}" '
                 f'style="white-space:nowrap;">🔄 Auto-Translate {escape(lang_name)}</button>'

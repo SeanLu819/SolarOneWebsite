@@ -278,5 +278,24 @@ print(f"[build.sh] compiled {ok} .po -> .mo via polib"
       + (f" ({fail} failed)" if fail else ""))
 PY
 
+# 8. Notify IndexNow (Bing / Yandex / Seznam / Naver) of the deployed URLs.
+# Runs ONLY in the Vercel build env (VERCEL=1) so local/test builds don't ping
+# Bing/Yandex on every dev run. Non-fatal: a transient IndexNow outage must NOT
+# fail the deploy — search engines just fall back to their scheduled crawl.
+# The key file is served at /<key>.txt by the Django view, and CANONICAL_ORIGIN
+# defaults to the production domain, so no extra env is required here.
+# seed_data.py is already regenerated above (step 1.5), so build_urls() sees the
+# current product/project/news slug set at ping time.
+if [ -n "$VERCEL" ]; then
+  echo "=== [build.sh] Notifying IndexNow (Bing/Yandex/Seznam/Naver) ==="
+  if python scripts/indexnow_ping.py --live 2>&1; then
+    echo "  ✓ IndexNow notified of deployed URLs"
+  else
+    echo "  ⚠ WARNING: IndexNow ping failed (non-fatal) — search engines fall back to scheduled crawl."
+  fi
+else
+  echo "=== [build.sh] Skipping IndexNow ping (not in Vercel build env) ==="
+fi
+
 echo ""
 echo "=== [build.sh] ✅ FINISHED SUCCESSFULLY ==="
