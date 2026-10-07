@@ -261,6 +261,37 @@ class StadiumContentSourcingTests(TestCase):
                     reverse('product_detail', args=[slug]), body,
                     '%s must be featured on the stadium page' % slug)
 
+    def test_the_featured_vsp_copy_omits_box_dimensions(self):
+        """Iron law: enclosure sizes vary per project, so they must never be
+        hard-coded. The VSP series is described only as a remote LED driver
+        enclosure for easy operation and maintenance.
+
+        Pinned literally (iron law 4b): the copy must contain the remote-enclosure
+        phrase and must NOT contain dimension tokens (mm / stainless steel / a
+        W×H×D triple). The expected strings are written out, not derived from the
+        implementation, so a future edit that re-adds dimensions fails loudly.
+        """
+        REMOTE_PHRASE = 'remote LED driver enclosure'
+        DIM_RE = re.compile(r'\d+\s*[×xX]\s*\d+')
+        products = {p.slug: p for p in get_products('en')}
+        for slug in FEATURED_PRODUCT_SLUGS:
+            with self.subTest(slug=slug):
+                product = products.get(slug)
+                self.assertIsNotNone(product, '%s missing from seed' % slug)
+                desc = product.description
+                self.assertIn(
+                    REMOTE_PHRASE, desc,
+                    '%s must describe the remote LED driver enclosure' % slug)
+                self.assertNotIn(
+                    'mm', desc,
+                    '%s must not hard-code millimetre dimensions' % slug)
+                self.assertNotIn(
+                    'stainless steel', desc,
+                    '%s must not hard-code enclosure material/size' % slug)
+                self.assertFalse(
+                    DIM_RE.search(desc),
+                    '%s must not hard-code W×H×D dimensions' % slug)
+
     def test_the_venue_list_matches_the_sport_mapping(self):
         """Same table the product pages use for "Application Cases".
 
