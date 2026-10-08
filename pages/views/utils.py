@@ -712,6 +712,10 @@ class _DictProduct:
         self.ordering_info = item.get('ordering_info', []) or []
         self.ordering_image = item.get('ordering_image', '')
         self.cert_image = item.get('cert_image', '')
+        # Manual 'Application Cases' picked in the admin. Iron law 33:
+        # ``getattr`` cannot read a plain dict, so the seed path carries the
+        # slugs as a real attribute instead of relying on a M2M manager.
+        self.application_case_slugs = item.get('application_case_slugs', []) or []
         # 'detail' | 'overview' — picks the public template (see Product.page_layout).
         self.page_layout = item.get('page_layout', 'detail') or 'detail'
 

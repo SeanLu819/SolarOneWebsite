@@ -5,7 +5,7 @@
       "name": "Glare Shield for M series",
       "slug": "mseries-gs",
       "category": "ACCESSORY",
-      "description": "The M Series glare shield is a stainless steel 304 accessory made in a variety of lengths, so the same M Series fixture can be adapted to different glare and light-spill requirements across venues. It cuts the light emitted above the horizontal, directing more of the output down onto the playing surface or work area and reducing skyglow toward neighbouring properties and roads.\n\nBecause the shield is a mechanical accessory it does not alter the host luminaire electrical rating: IP66 ingress protection, 10 kV surge protection and the 100,000 hour L70 lifetime of the M Series fixture are unchanged. Send the fixture model and mounting height and we will confirm the matching shield length before ordering.",
+      "description": "The M Series glare shield is a stainless steel 304 accessory made in a variety of lengths, so the same M Series fixture can be adapted to different glare and light-spill requirements across venues. It cuts the light emitted above the horizontal, directing more of the output down onto the playing surface or work area and reducing skyglow toward neighbouring properties and roads. Send the fixture model and mounting height and we will confirm the matching shield length before ordering.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -41,7 +41,8 @@
         }
       ],
       "model_number": "",
-      "ordering_info": []
+      "ordering_info": [],
+      "application_case_slugs": []
     },
     {
       "pk": 1,
@@ -109,7 +110,8 @@
       ],
       "energy_data": [],
       "model_number": "",
-      "ordering_info": []
+      "ordering_info": [],
+      "application_case_slugs": []
     },
     {
       "pk": 2,
@@ -264,7 +266,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 24,
@@ -302,14 +305,15 @@
       "specs": [],
       "energy_data": [],
       "model_number": "",
-      "ordering_info": []
+      "ordering_info": [],
+      "application_case_slugs": []
     },
     {
       "pk": 25,
       "name": "Accessory",
       "slug": "accessory",
       "category": "ACCESSORY",
-      "description": "To address varying glare and light-spill requirements in different venues and environments, we equip our fixtures with corresponding glare shields rather than leaving the distribution fixed. A shield changes where the light goes, not how much the luminaire produces: host fixtures keep their IP66 ingress protection, 10 kV surge protection, −40 °C to +55 °C operating range and 100,000 hour L70 lifetime at 25 °C.\r\nThis page groups the accessory range, including the M Series and RT410 glare shields supplied in a variety of lengths. Tell us the fixture model, mounting height and — for façade or pole positions — the site drawing, and our engineers will confirm the matching shield length and resulting aiming angle before shipment.",
+      "description": "To address varying glare and light-spill requirements in different venues and environments, we equip our fixtures with corresponding glare shields rather than leaving the distribution fixed. A shield changes where the light goes, not how much the luminaire produces. This page groups the accessory range, including the M Series and RT410 glare shields supplied in a variety of lengths.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -339,7 +343,8 @@
       "specs": [],
       "energy_data": [],
       "model_number": "",
-      "ordering_info": []
+      "ordering_info": [],
+      "application_case_slugs": []
     },
     {
       "pk": 5,
@@ -482,7 +487,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 6,
@@ -635,7 +641,8 @@
         "1. 0-10V\r\n2. DMX\r\n3. Dali\r\n4. Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 7,
@@ -778,7 +785,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 8,
@@ -921,7 +929,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 9,
@@ -1064,7 +1073,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 10,
@@ -1207,7 +1217,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 23,
@@ -1317,14 +1328,15 @@
         "1.DMX\r\n2.DALI",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "W = With Fixture\r\nS = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 22,
       "name": "Glare Shield for RT410",
       "slug": "glare-shield-for-rt410",
       "category": "ACCESSORY",
-      "description": "This glare shield is made for the RT410 series fixtures and is available in a variety of lengths to suit different venues and environments. It addresses glare and light spill by blocking the light that would otherwise be emitted above the horizontal, which improves contrast for players, spectators and neighbours and cuts skyglow from high-mount positions.\n\nThe shield is a mechanical accessory, so the RT410 luminaire keeps its full electrical specification: IP66 ingress protection, 10 kV surge protection, a −40 °C to +55 °C operating range and 100,000 hours L70 at 25 °C. Send the fixture model, mounting height and site drawing and we will confirm the matching shield before you order.",
+      "description": "This glare shield is made for the RT410 series fixtures and is available in a variety of lengths to suit different venues and environments. It addresses glare and light spill by blocking the light that would otherwise be emitted above the horizontal, which improves contrast for players, spectators and neighbours and cuts skyglow from high-mount positions. Send the fixture model, mounting height and site drawing and we will confirm the matching shield before you order.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1356,7 +1368,8 @@
       "specs": [],
       "energy_data": [],
       "model_number": "",
-      "ordering_info": []
+      "ordering_info": [],
+      "application_case_slugs": []
     },
     {
       "pk": 11,
@@ -1478,7 +1491,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "S = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 12,
@@ -1600,7 +1614,8 @@
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket",
         "S = Separated from Fixture"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 20,
@@ -1717,7 +1732,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 16,
@@ -1830,7 +1846,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 17,
@@ -1939,7 +1956,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 18,
@@ -2052,7 +2070,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. DMX\r\n3. DALI\r\n4.Zigbee",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 19,
@@ -2165,7 +2184,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 21,
@@ -2278,7 +2298,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. DMX\r\n3. DALI",
         "U = Hang Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 26,
@@ -2391,7 +2412,8 @@
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. DMX\r\n3. DALI",
         "U = Hang Mount Bracket\r\nL = Sitting Mount Bracket"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 14,
@@ -2503,7 +2525,8 @@
         "70140=70°x 140°",
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. Photocell \r\n3. PLC\r\n4.Zigbee"
-      ]
+      ],
+      "application_case_slugs": []
     },
     {
       "pk": 15,
@@ -2614,7 +2637,8 @@
         "70140=70x140°",
         "GRY=Grey\r\nBLK=Black",
         "1.0-10V\r\n2. Photocell\r\n3. PLC\r\n4.Zigbee"
-      ]
+      ],
+      "application_case_slugs": []
     }
   ],
   "projects": [
@@ -2699,7 +2723,9 @@
         "images/projects/yuanshen-sports-centre-stadium/shys-soccer-05.webp"
       ],
       "pdf_url": "files/yuanshen_sports_centre_stadium.pdf",
-      "related_product_slugs": []
+      "related_product_slugs": [
+        "fl12m"
+      ]
     },
     {
       "pk": 2,

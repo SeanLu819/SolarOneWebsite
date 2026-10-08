@@ -3,14 +3,10 @@
 There is no foreign key between ``Product`` and ``Project`` in the seed data, so
 "related" items are derived *deterministically* from the existing taxonomy:
 
-* a product ``category`` maps back to the project ``sport_type`` / ``venue_type``
-  values it serves (the product page's "Application Cases");
-
-* a project's "Related Products" is **manual only** -- the editor picks the
-  luminaires in the admin (``Project.related_products``). The old category-based
-  auto match was deleted: it iterated a ``set`` (so the same project showed
-  different products between processes) and paired venues with luminaires the
-  business never used there. No pick means no section at all.
+* a product's "Application Cases" is **manual only** (v1.10.26) -- the editor
+  picks the projects in the admin (``Product.application_cases``). The old
+  category-based auto match was deleted: it fabricated venue pairings the
+  business never audited. No pick means no section at all.
 
 Both the database path and the seed-JSON path are served through
 ``get_projects`` / ``get_all_products`` (which enrich the objects identically),
@@ -24,9 +20,9 @@ from pages.views.data_loaders import get_projects, get_all_products
 
 # reverse: product category -> project sport_types that use it
 #
-# Used by ``related_projects_for_product`` (a product page's "Application
-# Cases"). It is no longer the inverse of anything: a project's "Related
-# Products" is picked by hand, so these two directions are independent.
+# Used by the stadium hub page (views_stadium / views_other) to derive which
+# venue types the STADIUM category serves. Since v1.10.26 the product page's
+# "Application Cases" is hand-picked and no longer reads this table.
 PRODUCT_CATEGORY_TO_PROJECT_SPORTS = {
     'SPORTS_LIGHTING': [
         'FOOTBALL_FIELD', 'SOCCER_FIELD', 'BASEBALL_FIELD', 'TRACK_FIELD',
@@ -48,14 +44,6 @@ PRODUCT_CATEGORY_TO_PROJECT_SPORTS = {
     'OTHER': [],
 }
 
-# reverse: product category -> project venue_types that use it
-PRODUCT_CATEGORY_TO_PROJECT_VENUES = {
-    'AREA_SITE': ['INFRASTRUCTURE'],
-    'ROADWAY': ['ROADWAY'],
-    'HIGHBAY_LOWBAY': ['INDOOR'],
-}
-
-
 def related_products_for_project(project, lang='en'):
     """The products an editor picked for this project — manual only.
 
@@ -76,27 +64,24 @@ def related_products_for_project(project, lang='en'):
     return [by_slug[s] for s in slugs if s in by_slug]
 
 
-def related_projects_for_product(product, lang='en', limit=3):
-    """Projects whose sport/venue type matches this product's category."""
-    sports = PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(
-        getattr(product, 'category', ''), [])
-    venues = PRODUCT_CATEGORY_TO_PROJECT_VENUES.get(
-        getattr(product, 'category', ''), [])
-    if not sports and not venues:
+def application_cases_for_product(product, lang='en'):
+    """The projects an editor picked as this product's Application Cases.
+
+    Manual only, mirroring ``related_products_for_project``: no automatic
+    category match and no fallback -- an empty pick must hide the section,
+    not resurrect the old taxonomy guess. The DB path reads the M2M
+    (ordered by ``Project.Meta``); the seed path reads the exported
+    ``application_case_slugs`` list.
+    """
+    manager = getattr(product, 'application_cases', None)
+    if manager is not None and hasattr(manager, 'all'):
+        slugs = [p.slug for p in manager.all()]
+    else:
+        slugs = list(getattr(product, 'application_case_slugs', None) or [])
+    if not slugs:
         return []
-    sport_filter = ','.join(sports) if sports else ''
-    venue_filter = venues[0] if venues else ''
-    seen = set()
-    out = []
-    for p in get_projects(lang, active_venue_type=venue_filter,
-                          active_sport_type=sport_filter):
-        if p.slug in seen:
-            continue
-        seen.add(p.slug)
-        out.append(p)
-        if len(out) >= limit:
-            break
-    return out
+    by_slug = {p.slug: p for p in get_projects(lang)}
+    return [by_slug[s] for s in slugs if s in by_slug]
 
 
 def _news_text(article):

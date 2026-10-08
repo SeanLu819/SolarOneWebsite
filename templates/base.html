@@ -131,6 +131,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     --accent-brand: {{ config.accent_color }};
   }
 </style>
+{# v1.10.26: page-scoped CSS renders here (in <head>) instead of mid-body; #}
+{# a body-inline style parses after the hero image markup, so the first #}
+{# paint ran unscoped and the hero flashed at natural size. #}
+{% block page_css %}{% endblock %}
 </head>
 <body>
 

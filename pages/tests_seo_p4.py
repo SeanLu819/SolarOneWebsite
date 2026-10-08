@@ -563,8 +563,10 @@ class HubInternalLinkTests(TestCase):
     #: module to a series without listing it fails here.
     HUB_CHILDREN = {
         'm-series': ('fl1m', 'fl4m', 'fl6m', 'fl9m', 'fl12m', 'fl16m'),
-        'rgb-rgbw': ('rt410-rgbw', 'fl9m-rgbw'),
-        'accessory': ('mseries-gs', 'glare-shield-for-rt410'),
+        # Order matters: the natural-order guard asserts the selector
+        # renders children in exactly this sequence.
+        'rgb-rgbw': ('fl9m-rgbw', 'rt410-rgbw'),
+        'accessory': ('glare-shield-for-rt410', 'mseries-gs'),
     }
 
     #: The selector's own anchor class. Named here so the guard and the probe
@@ -639,3 +641,27 @@ class HubInternalLinkTests(TestCase):
         self.assertIn(
             'Modular LED Flood Light', markup,
             'the selector must carry the per-module search phrase')
+
+
+class SeriesChildrenOrderTests(TestCase):
+    """The selector must list children in NATURAL module order.
+
+    ``_series_children`` sorted by plain slug, which put FL12M/FL16M ahead of
+    FL1M (lexicographically '2' < 'm'). The order fixture is the existing
+    ``HubInternalLinkTests.HUB_CHILDREN`` literal -- already written in
+    module-count order -- asserted here WITHOUT ``sorted()`` so a
+    lexicographic regression goes red.
+    """
+
+    def test_selector_lists_children_in_natural_module_order(self):
+        for hub, children in HubInternalLinkTests.HUB_CHILDREN.items():
+            body = Client().get('/products/%s/' % hub,
+                                HTTP_HOST='localhost').content.decode()
+            listed = re.findall(
+                r'<a href="(/products/[^"]+)" class="%s"'
+                % HubInternalLinkTests.SELECTOR_CLASS, body)
+            with self.subTest(hub=hub):
+                self.assertEqual(
+                    listed,
+                    [reverse('product_detail', args=[c]) for c in children],
+                    '%s selector is not in natural module order' % hub)

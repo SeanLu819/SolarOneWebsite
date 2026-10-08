@@ -255,6 +255,13 @@ def _product_to_dict(product):
         'energy_data': product.energy_data if isinstance(product.energy_data, list) else [],
         'model_number': product.model_number or '',
         'ordering_info': product.ordering_info if isinstance(product.ordering_info, list) else [],
+        # Manual 'Application Cases' picked in the admin (v1.10.26). Ordered by
+        # Project.Meta so the export is deterministic. The pk guard keeps the
+        # exporter total: an UNSAVED Product (QA probes, dry runs) has no M2M
+        # table yet and ``.all()`` would raise ValueError instead of exporting.
+        'application_case_slugs': (
+            [x.slug for x in product.application_cases.all()]
+            if product.pk else []),
     }
 
 

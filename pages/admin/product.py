@@ -221,6 +221,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
     list_editable = ['order']
     search_fields = ['name', 'category', 'description']
     inlines = [ProductImageInline]
+    filter_horizontal = ('application_cases',)
     list_per_page = 25
     ordering = ('order', 'pk')
     change_list_template = 'admin/pages/product/change_list.html'
@@ -292,6 +293,12 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         ('Content', {
             # Put translations on its own row so it can span full width
             'fields': ('description', 'translations')
+        }),
+        ('Application Cases (产品详情页应用案例 — 纯手工)', {
+            'fields': ('application_cases',),
+            'description': '手工选择详情页 "Application Cases" 区块展示的项目（左右两栏筛选，'
+                           '与项目后台的 Related Products 同一套交互）。不自动匹配、不兜底；'
+                           '留空则前台整个区块不显示。'
         }),
         ('Images', {
             # ordering_image / cert_image are ALSO used by the overview template

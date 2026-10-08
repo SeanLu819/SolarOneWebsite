@@ -200,6 +200,17 @@ class Product(models.Model):
         verbose_name='Certification Image',
         help_text='产品认证标识图（如 UL、DLC、CE、IP66 等）。展示在规格下方。留空则使用通用默认认证图。建议 1200×200 像素（横向长条形）。'
     )
+    # Manual "Application Cases" for the product detail page (v1.10.26).
+    # Same policy as Project.related_products: no automatic category match
+    # and no fallback -- when the editor picks nothing the section is not
+    # rendered at all (see related_links.application_cases_for_product).
+    application_cases = models.ManyToManyField(
+        'Project',
+        blank=True,
+        related_name='product_application_cases',
+        verbose_name='Application Cases',
+        help_text='Manually pick the projects to display in the product detail page "Application Cases" section. Leave empty to hide the entire section.'
+    )
 
     class Meta:
         ordering = ['order', 'pk']

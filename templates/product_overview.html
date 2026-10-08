@@ -11,219 +11,7 @@
 {% block og_type %}<meta property="og:type" content="product">{% endblock %}
 {% block og_image %}{% if product and product.banner_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ product.banner_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
-{% block content %}
-{% if product %}
-{% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=product.name_t|escapejs leaf_url=request.path %}
-{% endif %}
-
-<!-- Series overview page — banner + gallery carousel + copy + free-form
-     image/copy slot. Deliberately has NO technical blocks (beam angle,
-     dimensions, energy/performance table, ordering table, CTA): those live
-     in product_detail.html for leaf products. Which template a product uses
-     is ``Product.page_layout`` (admin: Page template). -->
-<section class="page-with-sidebar" style="padding: 100px 0 80px;">
-  <div class="container">
-    <div class="sidebar-layout">
-
-      <!-- ===== LEFT SIDEBAR ===== -->
-      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
-      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
-      <aside class="sidebar-nav">
-        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
-        <nav class="sidebar-nav-list">
-          {% for cat in product_categories %}
-          <div class="sidebar-nav-group" style="margin-bottom: 3px;">
-            <div class="sidebar-nav-parent">
-              {{ cat.label }}
-            </div>
-            <div class="sidebar-nav-children">
-              {% for sub in cat.series %}
-              {% if sub.subseries %}
-              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
-                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
-                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
-              </div>
-              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
-                {% for grandchild in sub.subseries %}
-                <a href="{% url 'product_detail' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
-                {% endfor %}
-              </div>
-              {% else %}
-              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
-                {{ sub.label }}
-              </a>
-              {% endif %}
-              {% endfor %}
-            </div>
-          </div>
-          {% endfor %}
-        </nav>
-
-        <!-- View all link -->
-        <a href="{% url 'products' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
-      </aside>
-
-      <!-- ===== MAIN CONTENT — Full-width two-column ===== -->
-      <div class="detail-content">
-
-        {% if product %}
-        {% if banner_image %}
-        <div class="series-hero">
-          {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
-          <img src="{{ banner_image }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" class="series-hero-bg" fetchpriority="high" decoding="async">
-          <div class="series-hero-overlay"></div>
-          <div class="series-hero-content">
-            <span class="series-hero-label">{{ banner_label }}</span>
-            {% comment %} v1.10.20: same H1 treatment as product_detail.html — wattage
-               appended as a lighter run. See the long note there. {% endcomment %}
-            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
-          </div>
-        </div>
-        {% else %}
-        <div class="detail-hero">
-          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_display }}</span>
-          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
-        </div>
-        {% endif %}
-
-        <div class="detail-grid{% if active_series == 'M_SERIES' %} detail-grid-bottom-align{% endif %}">
-          <!-- Left: Image / Carousel -->
-          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
-            {% if gallery %}
-            <div class="ps-carousel" id="psCarousel" data-interval="3000">
-              <div class="ps-carousel-track">
-                {% for img in gallery %}
-                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
-                  <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 92vw, 760px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
-                </div>
-                {% endfor %}
-              </div>
-
-              {% if gallery|length > 1 %}
-              <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
-                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
-                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              {% endif %}
-            </div>
-
-            <div class="ps-thumbnails">
-              {% for img in gallery %}
-              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
-                <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 24vw, 190px" alt="{{ img.alt }}" loading="lazy" decoding="async">
-              </button>
-              {% endfor %}
-            </div>
-
-            {% elif product.image_url %}
-            {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
-            <img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" fetchpriority="high" decoding="async">
-            {% else %}
-            <div class="detail-image-placeholder">
-              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
-            </div>
-            {% endif %}
-          </div>
-
-          <!-- Right: Text + Specs -->
-          <div class="detail-info">
-            <div class="detail-desc">{{ product.description_t|nl2para }}</div>
-
-            {% if product.specs %}
-            <div class="detail-specs">
-              {% for spec in product.specs %}
-              <div class="detail-spec">
-                <span class="detail-spec-value">{{ spec.value }}</span>
-                <span class="detail-spec-label">{{ spec.label }}</span>
-              </div>
-              {% endfor %}
-            </div>
-            {% endif %}
-
-            <!-- Certification badges -->
-            {% if product.cert_image_url %}
-            <div class="detail-cert-image">
-              {% comment %} v1.10.22 (P3-C): keep in sync with product_detail.html —
-                 the cert alt must name the product, not just the generic label. {% endcomment %}
-              <img src="{{ product.cert_image_url }}" alt="{% blocktrans with name=product.name_t %}UL, DLC, GS, CE and IP66 certifications for {{ name }}{% endblocktrans %}" loading="lazy">
-            </div>
-            {% endif %}
-          </div>
-        </div>
-
-        {% comment %}
-        Free-form slot: overview pages have no ordering table. Renders whatever
-        image / copy the product carries (M Series puts its ordering sample
-        image here) and collapses entirely when both are empty.
-        {% endcomment %}
-        {% if product.ordering_image_url or product.ordering_cols %}
-        <div class="detail-ordering">
-          {% if product.ordering_image_url %}
-          <div class="detail-ordering-image">
-            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
-          </div>
-          {% endif %}
-          {% if product.ordering_cols %}
-          <div class="detail-overview-note">
-            {% for lines in product.ordering_cols %}{% for line in lines %}<p>{{ line }}</p>{% endfor %}{% endfor %}
-          </div>
-          {% endif %}
-        </div>
-        {% endif %}
-
-        {% comment %}
-        v1.10.23 (P4-B) — the sub-model selector. The filter sidebar
-        already links every sub-model; this puts them in the content area
-        with the wattage and the keyword phrase each child page bids on, so
-        the hub carries the per-module search terms as well as the links.
-        Renders nothing for a leaf product.
-        {% endcomment %}
-        {% if series_children %}
-        <div class="detail-series-children">
-          <h2 class="detail-series-children-title">{% trans "Models in this series" %}</h2>
-          <div class="detail-series-children-grid">
-            {% for child in series_children %}
-            <a href="{% url 'product_detail' child.slug %}" class="series-child">
-              {% if child.image_url %}
-              <img src="{{ child.image_url }}" srcset="{{ child.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 25vw" alt="{{ child.name_t }}{% if child.seo_keyword_t %} — {{ child.seo_keyword_t }}{% endif %}" loading="lazy" decoding="async">
-              {% endif %}
-              <span class="series-child-name"><bdi>{{ child.name_t }}</bdi></span>
-              {% if child.power %}<span class="series-child-power">{{ child.power }}</span>{% endif %}
-            </a>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
-
-        {# B3 (SEO/GEO): visible FAQ section — pure HTML, no JS; answers show even with JavaScript disabled; mirrors the FAQPage JSON-LD above. #}
-        {% if product_faq %}
-        <div class="detail-faq">
-          <span class="detail-faq-label">Frequently Asked Questions</span>
-          <h2 class="detail-faq-title">Product FAQ</h2>
-          <div class="detail-faq-list">
-            {% for faq in product_faq %}
-            <details class="detail-faq-item">
-              <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
-              <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
-            </details>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
-
-        {% else %}
-        <h1 class="section-title">{% trans "Product Not Found" %}</h1>
-        <p class="section-body"><a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Back to Products" %}</a></p>
-        {% endif %}
-
-      </div>
-
-    </div>
-  </div>
-</section>
-
+{% block page_css %}
 <style nonce="{{ request.csp_nonce }}">
   /* Sidebar nav styles inherited from base.html */
 
@@ -376,7 +164,7 @@
   }
   .detail-series-children-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
   }
   .series-child {
@@ -658,6 +446,220 @@
   .detail-faq-a p { margin: 0 0 8px; }
   .detail-faq-a p:last-child { margin-bottom: 0; }
 </style>
+{% endblock %}
+
+{% block content %}
+{% if product %}
+{% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=product.name_t|escapejs leaf_url=request.path %}
+{% endif %}
+
+<!-- Series overview page — banner + gallery carousel + copy + free-form
+     image/copy slot. Deliberately has NO technical blocks (beam angle,
+     dimensions, energy/performance table, ordering table, CTA): those live
+     in product_detail.html for leaf products. Which template a product uses
+     is ``Product.page_layout`` (admin: Page template). -->
+<section class="page-with-sidebar" style="padding: 100px 0 80px;">
+  <div class="container">
+    <div class="sidebar-layout">
+
+      <!-- ===== LEFT SIDEBAR ===== -->
+      <input type="checkbox" id="sidebarToggle" class="sidebar-toggle-input">
+      <label for="sidebarToggle" class="sidebar-toggle-label">{% trans "Filter / Categories" %}</label>
+      <aside class="sidebar-nav">
+        <div class="sidebar-nav-header" style="font-family: var(--ff-mono); font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;">{% trans "Product Categories" %}</div>
+        <nav class="sidebar-nav-list">
+          {% for cat in product_categories %}
+          <div class="sidebar-nav-group" style="margin-bottom: 3px;">
+            <div class="sidebar-nav-parent">
+              {{ cat.label }}
+            </div>
+            <div class="sidebar-nav-children">
+              {% for sub in cat.series %}
+              {% if sub.subseries %}
+              <div class="sidebar-nav-child sidebar-nav-child-toggle{% if active_series == sub.key %} active open{% endif %}" data-target="{{ sub.key }}">
+                <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child-label">{{ sub.label }}</a>
+                <button class="sidebar-nav-toggle-arrow" type="button" aria-label="{% trans 'Toggle subcategories' %}" aria-expanded="{% if active_series == sub.key %}true{% else %}false{% endif %}">›</button>
+              </div>
+              <div class="sidebar-nav-grandchildren{% if active_series == sub.key %} open{% endif %}" data-parent="{{ sub.key }}">
+                {% for grandchild in sub.subseries %}
+                <a href="{% url 'product_detail' grandchild.slug %}" class="sidebar-nav-grandchild{% if active_subseries == grandchild.key %} active{% endif %}">{{ grandchild.label }}</a>
+                {% endfor %}
+              </div>
+              {% else %}
+              <a href="{% url 'product_detail' sub.slug %}" class="sidebar-nav-child{% if active_series == sub.key %} active{% endif %}">
+                {{ sub.label }}
+              </a>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </nav>
+
+        <!-- View all link -->
+        <a href="{% url 'products' %}" style="display: block; margin-top: 24px; padding: 10px 0; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); text-decoration: none; transition: color 0.2s; border-top: 1px solid var(--line);">{% trans "View All Products" %}</a>
+      </aside>
+
+      <!-- ===== MAIN CONTENT — Full-width two-column ===== -->
+      <div class="detail-content">
+
+        {% if product %}
+        {% if banner_image %}
+        <div class="series-hero">
+          {# LCP hero：首屏元素，不加 loading="lazy"，标 fetchpriority="high" #}
+          <img src="{{ banner_image }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" class="series-hero-bg" fetchpriority="high" decoding="async">
+          <div class="series-hero-overlay"></div>
+          <div class="series-hero-content">
+            <span class="series-hero-label">{{ banner_label }}</span>
+            {% comment %} v1.10.20: same H1 treatment as product_detail.html — wattage
+               appended as a lighter run. See the long note there. {% endcomment %}
+            <h1 class="section-title"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
+          </div>
+        </div>
+        {% else %}
+        <div class="detail-hero">
+          <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ product.category_display }}</span>
+          <h1 class="section-title" style="margin-bottom: 16px;"><bdi>{{ product.name_t }}</bdi>{% if product.power %} <span class="section-title-power">{{ product.power }}</span>{% endif %}</h1>
+        </div>
+        {% endif %}
+
+        <div class="detail-grid{% if active_series == 'M_SERIES' %} detail-grid-bottom-align{% endif %}">
+          <!-- Left: Image / Carousel -->
+          <div class="detail-image"{% if gallery %} style="flex-direction: column;"{% endif %}>
+            {% if gallery %}
+            <div class="ps-carousel" id="psCarousel" data-interval="3000">
+              <div class="ps-carousel-track">
+                {% for img in gallery %}
+                <div class="ps-carousel-slide{% if forloop.first %} active{% endif %}">
+                  <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 92vw, 760px" alt="{{ img.alt }}"{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                </div>
+                {% endfor %}
+              </div>
+
+              {% if gallery|length > 1 %}
+              <button class="ps-carousel-arrow ps-prev" type="button" aria-label="{% trans 'Previous' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="ps-carousel-arrow ps-next" type="button" aria-label="{% trans 'Next' %}">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              {% endif %}
+            </div>
+
+            <div class="ps-thumbnails">
+              {% for img in gallery %}
+              <button class="ps-thumb{% if forloop.first %} active{% endif %}" type="button" data-index="{{ forloop.counter0 }}" aria-label="{% blocktrans %}View image {{ forloop.counter }}{% endblocktrans %}">
+                <img src="{{ img.src }}" srcset="{{ img.src|srcset }}" sizes="(max-width:768px) 24vw, 190px" alt="{{ img.alt }}" loading="lazy" decoding="async">
+              </button>
+              {% endfor %}
+            </div>
+
+            {% elif product.image_url %}
+            {# 无 banner 时这是页面主图（首屏 LCP），同样不 lazy #}
+            <img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 90vw, 1200px" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %}" fetchpriority="high" decoding="async">
+            {% else %}
+            <div class="detail-image-placeholder">
+              <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-subtle);">{% trans "Product Image" %}</span>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Right: Text + Specs -->
+          <div class="detail-info">
+            <div class="detail-desc">{{ product.description_t|nl2para }}</div>
+
+            {% if product.specs %}
+            <div class="detail-specs">
+              {% for spec in product.specs %}
+              <div class="detail-spec">
+                <span class="detail-spec-value">{{ spec.value }}</span>
+                <span class="detail-spec-label">{{ spec.label }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Certification badges -->
+            {% if product.cert_image_url %}
+            <div class="detail-cert-image">
+              {% comment %} v1.10.22 (P3-C): keep in sync with product_detail.html —
+                 the cert alt must name the product, not just the generic label. {% endcomment %}
+              <img src="{{ product.cert_image_url }}" alt="{% blocktrans with name=product.name_t %}UL, DLC, GS, CE and IP66 certifications for {{ name }}{% endblocktrans %}" loading="lazy">
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% comment %}
+        Free-form slot: overview pages have no ordering table. Renders whatever
+        image / copy the product carries (M Series puts its ordering sample
+        image here) and collapses entirely when both are empty.
+        {% endcomment %}
+        {% if product.ordering_image_url or product.ordering_cols %}
+        <div class="detail-ordering">
+          {% if product.ordering_image_url %}
+          <div class="detail-ordering-image">
+            <img src="{{ product.ordering_image_url }}" alt="{{ product.name_t }}{% if product.seo_keyword_t %} — {{ product.seo_keyword_t }}{% endif %} — {% trans 'ordering information' %}" loading="lazy" decoding="async">
+          </div>
+          {% endif %}
+          {% if product.ordering_cols %}
+          <div class="detail-overview-note">
+            {% for lines in product.ordering_cols %}{% for line in lines %}<p>{{ line }}</p>{% endfor %}{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% comment %}
+        v1.10.23 (P4-B) — the sub-model selector. The filter sidebar
+        already links every sub-model; this puts them in the content area
+        with the wattage and the keyword phrase each child page bids on, so
+        the hub carries the per-module search terms as well as the links.
+        Renders nothing for a leaf product.
+        {% endcomment %}
+        {% if series_children %}
+        <div class="detail-series-children">
+          <h2 class="detail-series-children-title">{% trans "Models in this series" %}</h2>
+          <div class="detail-series-children-grid">
+            {% for child in series_children %}
+            <a href="{% url 'product_detail' child.slug %}" class="series-child">
+              {% if child.image_url %}
+              <img src="{{ child.image_url }}" srcset="{{ child.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 25vw" alt="{{ child.name_t }}{% if child.seo_keyword_t %} — {{ child.seo_keyword_t }}{% endif %}" loading="lazy" decoding="async">
+              {% endif %}
+              <span class="series-child-name"><bdi>{{ child.name_t }}</bdi></span>
+              {% if child.power %}<span class="series-child-power">{{ child.power }}</span>{% endif %}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {# B3 (SEO/GEO): visible FAQ section — pure HTML, no JS; answers show even with JavaScript disabled; mirrors the FAQPage JSON-LD above. #}
+        {% if product_faq %}
+        <div class="detail-faq">
+          <span class="detail-faq-label">Frequently Asked Questions</span>
+          <h2 class="detail-faq-title">Product FAQ</h2>
+          <div class="detail-faq-list">
+            {% for faq in product_faq %}
+            <details class="detail-faq-item">
+              <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
+              <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
+            </details>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <h1 class="section-title">{% trans "Product Not Found" %}</h1>
+        <p class="section-body"><a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Back to Products" %}</a></p>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+</section>
 
 {% include "includes/carousel_js.html" %}
 

@@ -98,3 +98,7 @@ gitlog*.txt
 # Win32 DeleteFile even with the \\?\ prefix — OS returns ERROR_ACCESS_DENIED).
 # Local-only; keep it out of the repo so it is never committed or pushed.
 /nul
+
+# One-off recovery backups + sub-agent placeholder data: never commit these.
+*.bak-*
+docs/perf_baseline_2026-10-05.json

@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.conf import settings
 from django.http import Http404
@@ -12,7 +13,7 @@ from .i18n import (
     _resolve_product_sidebar,
 )
 from .data_loaders import get_products, get_product_detail
-from .related_links import related_projects_for_product
+from .related_links import application_cases_for_product
 from pages.redirects import redirect_target_for_product
 
 
@@ -490,7 +491,11 @@ def _series_children(parent_slug, lang):
 
     children = [p for p in (get_all_products(lang) or [])
                  if getattr(p, 'parent_slug', '') == parent_slug]
-    children.sort(key=lambda p: p.slug)
+    # Natural sort on the slug's digit runs, so FL4M comes before FL12M
+    # (plain lexicographic order puts FL12M/FL16M ahead of FL1M because
+    # '2' < 'm'). Non-digit runs stay string-compared.
+    children.sort(key=lambda p: [int(t) if t.isdigit() else t
+                                 for t in re.split(r'(\d+)', p.slug)])
     return children
 
 
@@ -540,9 +545,10 @@ def product_detail(request, slug):
                 f'{request.path}#faq'),
             ensure_ascii=False,
         )
-        # B2: cross-link to projects whose sport/venue type matches
-        # this product's category (breaks the content islands).
-        context['related_projects'] = related_projects_for_product(product, lang)
+        # B2 -> v1.10.26: Application Cases is now hand-picked in the admin
+        # (Product.application_cases). No auto match, no fallback -- an empty
+        # pick hides the whole section (template: {% if related_projects %}).
+        context['related_projects'] = application_cases_for_product(product, lang)
 
         # v1.10.23 (P4-B): the sub-model selector's data.
         #
