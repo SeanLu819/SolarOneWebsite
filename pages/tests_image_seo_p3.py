@@ -26,12 +26,13 @@ Expectation sourcing (iron law 4b): the thresholds and word lists below are
 it validates; the one exception is explicitly marked and cross-checked against a
 literal in the same test.
 """
+import unittest
 
 import os
 import re
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.test import Client
 from django.urls import reverse
 from django.utils import translation
@@ -114,7 +115,7 @@ class StaleGalleryAltTests(TestCase):
         import sqlite3
         db = os.path.join(settings.BASE_DIR, 'db.sqlite3')
         if not os.path.exists(db):
-            raise cls.skipTest(
+            raise unittest.SkipTest(
                 'db.sqlite3 missing (stateless deploy) — this guard needs a '
                 'local database to have anything to check')
         cls._con = sqlite3.connect(
@@ -300,7 +301,7 @@ class DbAndSeedAltParityTests(TestCase):
         import sqlite3
         db = os.path.join(settings.BASE_DIR, 'db.sqlite3')
         if not os.path.exists(db):
-            raise cls.skipTest('db.sqlite3 missing (stateless deploy)')
+            raise unittest.SkipTest('db.sqlite3 missing (stateless deploy)')
         cls._con = sqlite3.connect(
             'file:%s?mode=ro' % db.replace('\\', '/'), uri=True)
         cls.product_alts = cls._con.execute(
@@ -466,7 +467,21 @@ class CollectionPageImageSitemapTests(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.pages = _sitemap()
+        import pages.views.utils as _vu
+        from pages.views import enrich as _enrich
+        # 🔴 Sitemap is a build artifact that reads the seed; production runs
+        # IS_VERCEL=True and never the DB. Under IS_VERCEL=False the loaders
+        # fall back to the (empty) test DB, and a prior test class that creates
+        # Project fixtures can poison the process-global
+        # ``_enriched_projects_cache[('en','','')]`` key with cover-less rows,
+        # so ``get_projects('en')`` returns [] and /projects/ ships no images.
+        # Force the production path and clear the poisoned caches so the guard
+        # reflects what Vercel actually serves (iron law: test the real branch).
+        _vu._seed_cache = None
+        _enrich._enriched_projects_cache.clear()
+        _enrich._enriched_products_cache.clear()
+        with override_settings(IS_VERCEL=True):
+            cls.pages = _sitemap()
         cls.origin = settings.CANONICAL_ORIGIN
 
     def _loc(self, name):

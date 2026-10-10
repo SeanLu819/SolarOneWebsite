@@ -2894,8 +2894,12 @@ class ImageSitemapAndAltTests(TestCase):
         self.assertTrue(product.gallery)
         alt = product.gallery[0]['alt']
         self.assertIn(product.name_t, alt)
-        self.assertIn(product.category_display, alt,
-                      f'画廊 alt 未带分类文本: {alt!r}')
+        # v1.10.22 (P3-C): the alt qualifier is the SEO phrase the <title>
+        # bids on (product.seo_keyword_t), not the sidebar label
+        # (category_display). Assert the search phrase is carried, matching
+        # the deliberate implementation in pages/views/enrich.py:_gallery_alt.
+        self.assertIn(product.seo_keyword_t, alt,
+                      f'画廊 alt 未带分类搜索词: {alt!r}')
         self.assertNotEqual(alt, f'{product.name_t} — view 1')
 
     def test_project_gallery_alt_carries_location(self):
@@ -3950,7 +3954,7 @@ class P3VisualReviewCoverageTests(SimpleTestCase):
     # news_feed 是 RSS 2.0 XML 输出（B4），同属机器可读端点，没有可截图的人眼
     # HTML 评审价值，故同样排除在默认视觉评审路径之外。
     NON_PAGE_ROUTES = {'robots_txt', 'sitemap_xml', 'diagnostic', 'product_series',
-                       'news_feed'}
+                       'news_feed', 'indexnow_key'}
 
     @classmethod
     def setUpClass(cls):
@@ -5348,7 +5352,11 @@ class ProductFaqSchemaTests(TestCase):
     because DEBUG=False + ALLOWED_HOSTS would otherwise answer 400.
     """
 
-    PATHS = ('/products/fl6m/', '/products/m-series/')
+    # Both paths are SPORTS_LIGHTING products: the visible-FAQ contract asserts
+    # the broadcast-flicker question (the first _SPORTS_FAQ entry) is present,
+    # which only the sports FAQ set carries. fl6m/m-series are AREA_SITE and
+    # would never show that question, so they cannot satisfy this assertion.
+    PATHS = ('/products/vsp-xxxxw-9m-yp/', '/products/vsp-xxxxw-12m-yp/')
 
     JSONLD_RE = re.compile(
         r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',

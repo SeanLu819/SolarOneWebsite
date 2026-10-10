@@ -163,6 +163,24 @@ _SIDEBAR_I18N = {
     'Industry Insights': {'fr': 'Perspectives du Secteur', 'es': 'Perspectivas del Sector', 'de': 'Marktbeobachtungen', 'ar': 'رؤى السوق', 'ru': 'Обзоры рынка'},
     'Trusted Worldwide': {'fr': 'Reconnu Mondialement', 'es': 'Confianza Mundial', 'de': 'Weltweit Vertraut', 'ar': 'موثوق عالميًا', 'ru': 'Нам доверяют по всему миру'},
     'Real installations across five continents. From Olympic training centers to community football pitches, our luminaires deliver reliable performance under the toughest conditions.': {'fr': 'Installations réelles sur cinq continents. Des centres d\'entraînement olympiques aux terrains de football communautaires, nos luminaires offrent des performances fiables dans les conditions les plus difficiles.', 'es': 'Instalaciones reales en cinco continentes. Desde centros de entrenamiento olímpicos hasta campos de fútbol comunitarios, nuestros luminarios ofrecen un rendimiento fiable en las condiciones más difíciles.', 'de': 'Echte Installationen auf fünf Kontinenten. Vom Olympia-Trainingszentrum bis zum kommunalen Fußballplatz — unsere Leuchten liefern zuverlässige Leistung unter den härtesten Bedingungen.', 'ar': 'تركيبات حقيقية عبر خمس قارات. من مراكز التدريب الأولمبية إلى ملاعب كرة القدم المجتمعية، توفر إضاءاتنا أداءً موثوقًا في أصعب الظروف.', 'ru': 'Реальные установки на пяти континентах. От олимпийских тренировочных центров до местных футбольных полей — наши светильники обеспечивают надёжную работу в самых суровых условиях.'},
+    # Stadium landing page (v1.10.x): page_title / page_description are passed
+    # through _t() in pages/views/views_stadium.py:179-187. They were missing
+    # here, so /fr/ /de/ /es/ /ru/ /ar/ served English under a localized URL —
+    # a self-contradicting hreflang signal. Two strings, five languages each.
+    'LED Stadium Lighting — SolarOne Sports Floodlights': {
+        'fr': 'Éclairage de Stade LED — Projecteurs Sportifs SolarOne',
+        'es': 'Iluminación LED para Estadios — Proyectores Deportivos SolarOne',
+        'de': 'LED-Stadionbeleuchtung — SolarOne Sportflutlichter',
+        'ar': 'إضاءة ملاعب LED — كشافات SolarOne الرياضية',
+        'ru': 'LED-освещение стадионов — Спортивные прожекторы SolarOne',
+    },
+    'SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects.': {
+        'fr': 'Éclairage LED de stade SolarOne : projecteurs VSP de qualité diffusion et floods LED modulaires de 80 W à 1280 W, avec 20 projets de sites livrés.',
+        'es': 'Iluminación LED de estadios SolarOne: proyectores VSP de grado broadcast y floods LED modulares de 80 W a 1280 W, con 20 proyectos de recintos entregados.',
+        'de': 'SolarOne LED-Stadionbeleuchtung: broadcast-taugliche VSP-Flutlichter und modulare LED-Fluter von 80 W bis 1280 W, mit 20 gelieferten Venue-Projekten.',
+        'ar': 'إضاءة ملاعب LED من SolarOne: كشافات VSP بجودة البث وكشافات LED معيارية من 80 واط إلى 1280 واط، مع 20 مشروع موقع تم تسليمها.',
+        'ru': 'LED-освещение стадионов SolarOne: прожекторы VSP вещательного класса и модульные LED-прожекторы от 80 Вт до 1280 Вт, с 20 реализованными проектами арен.',
+    },
 }
 
 

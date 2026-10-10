@@ -402,6 +402,8 @@ class EdgeCacheHeaderTests(TestCase):
         """
         from django.urls import reverse
 
+        from django.utils import translation
+        translation.deactivate()
         self.assertEqual(reverse('home'), '/')
         # Do NOT call resolve('/fr/') here: i18n_patterns prefix matching goes
         # through LocaleMiddleware, not the currently activated language, so

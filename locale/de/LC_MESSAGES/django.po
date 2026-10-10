@@ -1191,3 +1191,32 @@ msgstr "Welchen Fluter nutzen diese Anlagen?"
 #: templates/product_overview.html
 msgid "Models in this series"
 msgstr "Modelle dieser Serie"
+
+msgid ""
+"%(n)s stadium-class luminaires and %(stadium_venues|length)s venue "
+"installations, from club training grounds to an Asian Games velodrome."
+msgstr ""
+"%(n)s stadionklasse Leuchten und %(stadium_venues|length)s Venue-"
+"Installationen, von Vereinstrainingsplätzen bis zu einer Radrennbahn der "
+"Asienspiele."
+
+msgid "Application Cases"
+msgstr "Anwendungsfälle"
+
+msgid "Frequently Asked Questions"
+msgstr "Häufig Gestellte Fragen"
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Project"
+msgstr "Projekt"
+
+msgid "Related Products"
+msgstr "Verwandte Produkte"
+
+msgid "Related Products &amp; Projects"
+msgstr "Verwandte Produkte &amp; Projekte"
+
+msgid "Stadium Lighting FAQ"
+msgstr "FAQ zur Stadionbeleuchtung"

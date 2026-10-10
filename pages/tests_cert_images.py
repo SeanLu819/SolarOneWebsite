@@ -23,6 +23,7 @@ v1.9.9 追加（第4 个坑，本轮实测修掉）：
    改成 `products/rgb-rgbw/<file>` 让 `images/{field_name_value}` 候选命中。
    守卫 `test_no_product_cert_image_resolves_only_via_media`。
 """
+import unittest
 import glob
 import hashlib
 import io
@@ -197,7 +198,7 @@ class CertDatabasePathTests(TestCase):
         import sqlite3
         db = os.path.join(BASE_DIR, 'db.sqlite3')
         if not os.path.exists(db):
-            raise cls.skipTest(
+            raise unittest.SkipTest(
                 'db.sqlite3 不存在（生产为无状态部署）—— 本守卫只适用于有本地 DB 的开发环境')
         cls._con = sqlite3.connect('file:%s?mode=ro' % db.replace('\\', '/'), uri=True)
         cls.rows = cls._con.execute(

@@ -1054,9 +1054,10 @@ class NewsCardCoverFallbackTests(TestCase):
         self.assertIsNotNone(block, '卡片封面没有"有图就渲染 img"的分支')
         firstof = re.search(r'\{% firstof ([^%]+) %\}', block.group(1))
         self.assertIsNotNone(firstof, '分支里没有 firstof')
+        args = re.sub(r'\s+as\s+\w+\s*$', '', firstof.group(1).strip())
         self.assertEqual(
             'article.image_url article.images.0.url',
-            ' '.join(firstof.group(1).split()),
+            ' '.join(args.split()),
             '回落顺序变了：自有封面必须优先于图集首图')
 
     def test_the_card_shows_the_same_file_as_og_and_structured_data(self):

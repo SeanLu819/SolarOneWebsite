@@ -26,7 +26,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne glare shield for M Series LED floodlights cuts uplight and skyglow, improving contrast for neighbours and roads."
+        }
       },
       "gallery": [
         "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
@@ -49,7 +52,7 @@
       "name": "M Series",
       "slug": "m-series",
       "category": "AREA_SITE",
-      "description": "The M Series is a truly modular LED floodlight platform: a single 1M module rated 80 W scales through 4M, 6M, 9M and 12M up to the 16M at 1280 W, with higher counts available on request. Because the module is the unit of scale, one family covers everything from small-area retrofits to large stadium installations, and a single module can be replaced in the field instead of the whole fixture.",
+      "description": "The M Series is a modular LED floodlight platform built from a single 80 W, 1-metre module that scales to 4M, 6M, 9M, 12M and 16M configurations up to 1280 W, with higher outputs available on request. One family serves small-area façade and car-park lighting as well as large stadium and port installations, so specifiers stock a single spare-part set instead of many fixtures. Field-replaceable modules let a failed unit be swapped in minutes without lifting the whole luminaire, cutting maintenance downtime and lifetime cost. With 130 lm/W efficacy, IP66 protection and a broad range of beam angles, the M Series adapts to almost any outdoor floodlighting brief from a single, upgradeable building block.",
       "power": "80~1280W+",
       "efficacy": "130lm/W",
       "output": "",
@@ -90,6 +93,9 @@
           "name": "سلسلة M",
           "category": "معيارية",
           "description": "تصميم معياري حقيقي — قابل للتوسع من وحدة واحدة 1M (80 واط) إلى 16M (1280 واط) أو أكثر. تكوينات مرنة وقابلة للدمج لتلبية متطلبات أي مشروع بدقة."
+        },
+        "en": {
+          "seo_description": "SolarOne M Series modular LED floodlight scales 80 W to 1280 W from one 1M module for area, site and stadium lighting."
         }
       },
       "gallery": [
@@ -118,7 +124,7 @@
       "name": "RT410 Series",
       "slug": "rt410-series",
       "category": "AREA_SITE",
-      "description": "The RT410 series is Olympic-grade, HDTV-ready sports lighting aimed at professional and semi-professional venues. The 260 W / RT410FL configuration delivers more than 31,200 lm with CRI 70–95 from a 418 × 400 × 172 mm aluminium and glass housing weighing 13.5 kg, and is designed as a direct replacement for 400–1000 W HID installations at 20–50 ft mounting heights.",
+      "description": "The RT410 Series is a 260 W LED floodlight delivering 130 lm/W efficacy across a wide 18° to 100° beam range, so a single model covers both long-throw façade lighting and broad-area site illumination. Its die-cast aluminium body and IP66 rating suit permanent outdoor use in car parks, building perimeters, industrial yards and sports training areas, while the adjustable bracket simplifies aiming during installation. A 10 kV surge protector and -40 °C to +55 °C operating range keep it running through harsh weather, and the flicker-free driver supports broadcast-grade environments. Every RT410 ships with a photometric layout matched to your venue drawing, helping you hit target lux and uniformity without over-specifying wattage.",
       "power": "260W",
       "efficacy": "130lm/W",
       "output": "",
@@ -159,6 +165,9 @@
           "name": "سلسلة RT410",
           "category": "مشاريع إضاءة",
           "description": "أضواء LED احترافية للملاعب الرياضية والصالات ومساحات الإضاءة الكبيرة. تستبدل مصابيح HID بقدرة 400–1000 واط بأداء بدون وميض بجودة البث."
+        },
+        "en": {
+          "seo_description": "SolarOne RT410 Series 260 W LED floodlight, 130 lm/W, 18-100° beam for car parks, façades and training areas."
         }
       },
       "gallery": [
@@ -274,7 +283,7 @@
       "name": "RGB / RGBW",
       "slug": "rgb-rgbw",
       "category": "AREA_SITE",
-      "description": "Our M Series, RT410 and HB-M models are available as RGB and RGBW fixtures, so colour and conventional white light come from the same luminaire rather than separate products. The same M Series chassis that scales from a single 80 W module to 1280 W can therefore carry event-coloured output, and the RT410 platform brings broadcast-ready sports lighting into the same colour workflow.",
+      "description": "The RGB and RGBW LED floodlights add full-colour and tunable-white capability to the SolarOne area-lighting range, letting venues switch from functional white task lighting to branded colour washes for events, festivals and façade displays. Each fixture mixes saturated reds, greens, blues and an amber or white channel for pastel and architectural tones, all driven from a single DMX, DALI or 1-10 V controller. The same IP66, surge-protected build used across the range means colour fixtures survive the same outdoor conditions as white-light luminaires, and pre-set scenes let operators recall a logo colour or slow fade at the touch of a button. Ideal for stadium concourses, retail fronts and landmark illumination where atmosphere matters as much as visibility.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -295,7 +304,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RGB and RGBW LED floodlights add full-colour and tunable white for events, façades and landmark lighting."
+        }
       },
       "gallery": [
         "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
@@ -313,7 +325,7 @@
       "name": "Accessory",
       "slug": "accessory",
       "category": "ACCESSORY",
-      "description": "To address varying glare and light-spill requirements in different venues and environments, we equip our fixtures with corresponding glare shields rather than leaving the distribution fixed. A shield changes where the light goes, not how much the luminaire produces. This page groups the accessory range, including the M Series and RT410 glare shields supplied in a variety of lengths.",
+      "description": "The SolarOne accessory range bundles the brackets, glare shields, mounting kits and connection hardware needed to install and adapt the LED floodlight families across real sites. Rather than sourcing generic parts that may not fit, specifiers choose the exact U or L bracket, shield length and cable gland for each fixture and mounting surface, reducing on-site fabrication and rework. Every accessory shares the corrosion-resistant, IP66-rated materials of the luminaires themselves, so a shield or bracket ages at the same rate as the fitting it supports. Photometric and mechanical drawings ship with each order, and our engineering team confirms compatibility with your chosen model and pole height before you commit, keeping the bill of materials complete and correct.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -334,7 +346,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne Accessory brackets, glare shields and mounting kits matched to each model and pole height."
+        }
       },
       "gallery": [
         "images/products/accessory/mseries-glare-shield-720p-02.webp",
@@ -351,7 +366,7 @@
       "name": "FL1M",
       "slug": "fl1m",
       "category": "AREA_SITE",
-      "description": "The FL1M is the single-module configuration of the M Series modular floodlight family, delivering 80 W and 10,400 lm from a 2.3 kg aluminium and glass housing measuring 218 × 235 × 137 mm. With an effective projected area of only 0.26 sq ft it is the lightest option in the range, which makes it practical for retrofits where a heavier fixture would exceed the existing mounting structure.",
+      "description": "The FL1M is the entry module of the FL floodlight family, rated 80 W with 130 lm/W efficacy and a tight 18° to 50° beam for precise, long-throw illumination. Its compact die-cast body suits smaller car parks, building entrances, signage and perimeter poles where a narrow, controlled spread avoids spilling light onto neighbours. IP66 ingress protection and a 10 kV surge protector handle rain, dust and grid transients, while the -40 °C to +55 °C range covers most climates. The FL1M shares the same bracket and optic platform as the larger FL modules, so a site can start small and scale wattage later without changing poles or mounting hardware. Every order includes a photometric layout matched to your drawing.",
       "power": "80W",
       "efficacy": "",
       "output": "",
@@ -372,7 +387,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL1M 80 W LED floodlight, 130 lm/W, 18-50° beam for precise car-park, entrance and signage lighting."
+        }
       },
       "gallery": [
         "images/products/fl1m/fl1m80w-floodlight-855p-01.webp",
@@ -495,7 +513,7 @@
       "name": "FL4M",
       "slug": "fl4m",
       "category": "AREA_SITE",
-      "description": "The FL4M is the four-module configuration of the M Series, combining four light modules into a single 320 W floodlight rated at 41,600 lm typical. It weighs 11.0 kg and measures 368 × 368 × 343 mm, with an effective projected area of 1.05 sq ft — sized for community courts, training pitches and outdoor areas that need more output than the single-module FL1M without stepping up to the six-module housing.",
+      "description": "The FL4M delivers 320 W of LED output with 130 lm/W efficacy and a controlled 18° to 50° beam, producing more than 40,000 lumens for mid-size yards, façades and sports training areas. The narrow beam keeps light on the target plane instead of the sky, improving contrast and cutting complaints from nearby properties, while IP66 protection and a 10 kV surge suppressor suit permanent outdoor duty. Built on the shared FL bracket and optic platform, the FL4M scales cleanly from the 80 W FL1M up to the 1280 W FL16M, so a campus or depot can standardise on one spare-parts set. A flicker-free driver supports broadcast environments, and each order ships with a photometric layout matched to your venue.",
       "power": "320W",
       "efficacy": "130lm/W",
       "output": "40K+ lm",
@@ -522,10 +540,13 @@
           "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
         },
         "ru": {
-          "description": "Модульная конфигурация прожектора FL4M — часть семейства серии M."
+          "description": ""
         },
         "ar": {
-          "description": "تكوين وحدات كاشف FL4M — جزء من عائلة سلسلة M."
+          "description": ""
+        },
+        "en": {
+          "seo_description": "SolarOne FL4M 320 W LED floodlight delivers 40,000+ lumens at 130 lm/W for yards, façades and training areas."
         }
       },
       "gallery": [
@@ -649,7 +670,7 @@
       "name": "FL6M",
       "slug": "fl6m",
       "category": "AREA_SITE",
-      "description": "The FL6M is the six-module configuration of the M Series modular floodlight range, producing 480 W and 62,400 lm typical from a 16.8 kg aluminium and glass housing. At 553 × 368 × 343 mm it is the first module count that takes a rectangular rather than square footprint, and its 1.58 sq ft effective projected area suits school and campus fields, car parks and medium outdoor areas.",
+      "description": "The FL6M is a 480 W LED floodlight producing more than 60,000 lumens at 130 lm/W, with a controlled 18° to 50° beam for high-mast and large-area sites. Its narrow spread targets playing surfaces, yards and aprons precisely, reducing skyglow and glare on neighbouring roads, and IP66 protection with a 10 kV surge protector handles demanding outdoor duty. The FL6M powers high-mast applications such as airports and interchange lighting, where uniform, flicker-free illumination matters for safety and broadcast. Sharing the FL family bracket and optic platform, it scales from the 80 W FL1M to the 1280 W FL16M on one spare-parts set. Every order ships with a photometric layout matched to your venue drawing and target lux.",
       "power": "480W",
       "efficacy": "130lm/W",
       "output": "60K+ lm",
@@ -670,7 +691,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL6M 480 W LED floodlight, 60,000+ lumens, 18-50° beam for high-mast yards, aprons and airports."
+        }
       },
       "gallery": [
         "images/products/fl6m/fl6m480w-floodlight-855p-01.webp",
@@ -793,7 +817,7 @@
       "name": "FL9M",
       "slug": "fl9m",
       "category": "AREA_SITE",
-      "description": "The FL9M is the nine-module configuration of the M Series, delivering 720 W and 93,600 lm typical. The 21.8 × 21.8 × 8.1 inch aluminium and glass housing returns to a square footprint, weighs 26.0 kg and has an effective projected area of 2.37 sq ft — the module count most often specified for club-level venues, tennis centres and larger training grounds.",
+      "description": "The FL9M is a 720 W LED floodlight delivering over 90,000 lumens at 130 lm/W, with a controlled 18° to 50° beam built for large container yards, railyards and stadium perimeters. The narrow optic places light exactly where it is needed, improving uniformity and cutting spill onto adjacent properties, while IP66 protection and a 10 kV surge suppressor suit continuous outdoor service. On the shared FL bracket and optic platform the FL9M sits between the 480 W FL6M and the 1000 W FL12M, letting a port or depot standardise one spare-parts set across every wattage. A flicker-free driver supports broadcast-grade venues, and each order includes a photometric layout matched to your drawing and target illuminance.",
       "power": "720W",
       "efficacy": "130lm/W",
       "output": "90K+ lm",
@@ -814,7 +838,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL9M 720 W LED floodlight, 90,000+ lumens, 18-50° beam for ports, railyards and stadium perimeters."
+        }
       },
       "gallery": [
         "images/products/fl9m/fl9m720w-floodlight-855p-01.webp",
@@ -937,7 +964,7 @@
       "name": "FL12M",
       "slug": "fl12m",
       "category": "AREA_SITE",
-      "description": "The FL12M is the twelve-module configuration of the M Series modular floodlight family, delivering 1000 W and 124,800 lm typical. Its 553 × 737.9 × 343 mm aluminium and glass housing weighs 33.0 kg with an effective projected area of 3.16 sq ft, the size class typically used for municipal sports grounds and stadium approach lighting where a six- or nine-module housing would not meet the required illuminance.",
+      "description": "The FL12M is a 1000 W LED floodlight producing more than 120,000 lumens at 130 lm/W, with a controlled 18° to 50° beam for the largest yards, ports and stadium floodlighting briefs. Its narrow optic maximises reach and uniformity on tall poles while limiting spill onto neighbours, and IP66 protection with a 10 kV surge protector handles permanent outdoor duty in harsh climates. Building on the shared FL bracket and optic platform, the FL12M scales from the 80 W FL1M to the 1280 W FL16M on a single spare-parts set across a site. A flicker-free driver supports broadcast environments, and every order ships with a photometric layout matched to your venue drawing and target lux levels.",
       "power": "1000W",
       "efficacy": "130lm/W",
       "output": "120K+ lm",
@@ -958,7 +985,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL12M 1000 W LED floodlight, 120,000+ lumens, 18-50° beam for large ports and stadium floodlighting."
+        }
       },
       "gallery": [
         "images/products/fl12m/fl12m1000w-floodlight-855p-01.webp",
@@ -1081,7 +1111,7 @@
       "name": "FL16M",
       "slug": "fl16m",
       "category": "AREA_SITE",
-      "description": "The FL16M is the largest module count in the M Series, delivering 1280 W and 166,400 lm typical from a 29 × 29 × 8.1 inch aluminium and glass housing. At 42.5 kg with an effective projected area of 4.16 sq ft it is the configuration specified for large stadium pitches and broadcast-grade venues where the design aims for fewer mounting points and higher output per structure.",
+      "description": "The FL16M is the flagship of the FL floodlight family, rated 1280 W and delivering over 160,000 lumens at 130 lm/W with a controlled 18° to 50° beam for the most demanding high-mast and stadium applications. The narrow optic throws light far and evenly across large surfaces while holding spill away from surrounding roads and properties, and IP66 protection with a 10 kV surge suppressor suits year-round outdoor service. As the top of the shared FL bracket and optic platform, the FL16M scales down to the 80 W FL1M on one common spare-parts set across an entire campus. A flicker-free driver meets broadcast-grade needs, and each order includes a photometric layout matched to your venue.",
       "power": "1280W",
       "efficacy": "130lm/W",
       "output": "160K+ lm",
@@ -1102,7 +1132,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL16M 1280 W LED floodlight, 160,000+ lumens, 18-50° beam for the largest high-mast sites."
+        }
       },
       "gallery": [
         "images/products/fl16m/fl16m1280w-floodlight-855p-01.webp",
@@ -1225,7 +1258,7 @@
       "name": "FL9M-RGBW",
       "slug": "fl9m-rgbw",
       "category": "AREA_SITE",
-      "description": "The FL9M-RGBW combines the nine-module M Series housing with RGB and RGBW output, so a single fixture can carry full-colour light for event use and conventional white light for everyday operation. The 600 W configuration shares the 21.8 × 21.8 × 8.1 inch footprint, 26.0 kg weight and 2.37 sq ft effective projected area of the FL9M, which means it mounts on the same structures and uses the same bracket family.",
+      "description": "The FL9M-RGBW pairs the 720 W-class FL9M optical platform with a 600 W RGBW engine, adding saturated colour and tunable white to large-area floodlighting without a separate fixture. Venues can hold functional white task lighting for daily use and switch to branded colour washes for matches, concerts and façade displays, all from one DMX, DALI or 1-10 V controller. The same IP66, surge-protected build as the white-light FL family means the colour unit survives identical outdoor conditions, and pre-set scenes recall a logo or slow fade instantly. Ideal for stadium concourses, landmark illumination and event sites where atmosphere matters as much as visibility, the FL9M-RGBW ships with a photometric and control layout matched to your brief.",
       "power": "600W",
       "efficacy": "",
       "output": "",
@@ -1246,7 +1279,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne FL9M-RGBW 600 W colour floodlight adds RGBW washes and tunable white for events and façades."
+        }
       },
       "gallery": [
         "images/products/fl9m-rgbw/rgbw-9m-r.webp",
@@ -1336,7 +1372,7 @@
       "name": "Glare Shield for RT410",
       "slug": "glare-shield-for-rt410",
       "category": "ACCESSORY",
-      "description": "This glare shield is made for the RT410 series fixtures and is available in a variety of lengths to suit different venues and environments. It addresses glare and light spill by blocking the light that would otherwise be emitted above the horizontal, which improves contrast for players, spectators and neighbours and cuts skyglow from high-mount positions. Send the fixture model, mounting height and site drawing and we will confirm the matching shield before you order.",
+      "description": "The glare shield for the RT410 is a purpose-made accessory that clips to the luminaire to cut light emitted above the horizontal, redirecting output toward the ground or playing surface. By suppressing uplight it reduces skyglow and improves contrast for drivers, players and neighbouring properties, helping sites meet dark-sky and sports-federation glare limits. Manufactured from the same corrosion-resistant, IP66-rated materials as the RT410, the shield ages at the same rate as the fitting it protects and withstands the same weather. We supply the correct shield length for your RT410 model and mounting height, confirming the match from your drawing before order so the glare control performs as specified without compromising the luminaire's photometric output.",
       "power": "",
       "efficacy": "",
       "output": "",
@@ -1357,7 +1393,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne glare shield for RT410 cuts uplight and skyglow, meeting dark-sky and sports glare limits."
+        }
       },
       "gallery": [
         "images/products/accessory/rt410-glare-shield-01.webp",
@@ -1376,7 +1415,7 @@
       "name": "VSP-XXXXW-9M-YP",
       "slug": "vsp-xxxxw-9m-yp",
       "category": "SPORTS_LIGHTING",
-      "description": "The VSP-XXXXW-9M-YP is a 4200 W broadcast floodlight for televised venues. Vision Strobe Protection eliminates flicker, so super-slow-motion replay stays clean. Its LED drivers sit in a remote enclosure (remote LED driver enclosure) away from the luminaire, keeping on-site operation and maintenance simple. It shares the M Series optical family — 12°/18°/30°/50° beams, CRI 70–95, IP66, 100,000 h at 25 °C.",
+      "description": "The VSP-XXXXW-9M-YP is a 4200 W broadcast-grade stadium floodlight from the VSP family, engineered for flicker-free super-slow-motion replay and HDTV broadcast. A remote LED driver enclosure simplifies maintenance and keeps heat off the optical chamber, while the high-frequency driver eliminates the flicker that ruins broadcast footage. The 9-metre-class optic reaches large playing surfaces with tight uniformity, and IP66 protection with a 10 kV surge suppressor suits permanent mast mounting in all weather. Built for Olympic-grade venues, the unit ships with a photometric layout matched to your stadium drawing and target lux, and scales within the VSP range so a full floodlight tower can be specified from one coherent product line.",
       "power": "4200W",
       "efficacy": "",
       "output": "",
@@ -1417,6 +1456,9 @@
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-9M-YP"
+        },
+        "en": {
+          "seo_description": "SolarOne VSP 4200 W broadcast stadium floodlight, flicker-free HDTV, remote driver, 9M-class optic."
         }
       },
       "gallery": [
@@ -1499,7 +1541,7 @@
       "name": "VSP-XXXXW-12M-YP",
       "slug": "vsp-xxxxw-12m-yp",
       "category": "SPORTS_LIGHTING",
-      "description": "The VSP-XXXXW-12M-YP is the higher-output VSP broadcast model. Its remote power system pairs one AC enclosure with n LED driver enclosures, so a pitch reaches the same output from fewer masts. Vision Strobe Protection keeps super-slow-motion replay flicker-free, and the remote LED driver enclosure makes operation and maintenance easier. It shares the M Series optical platform — 12°/18°/30°/50° beams, CRI 70–95, IP66, 100,000 h L70 at 25 °C.",
+      "description": "The VSP-XXXXW-12M-YP is the 12-metre-class member of the 4200 W VSP broadcast stadium floodlight family, built for flicker-free HDTV and super-slow-motion replay. Its remote LED driver enclosure eases maintenance and isolates heat from the optics, while the high-frequency driver removes the flicker that spoils broadcast images. The longer 12 m optic throws light evenly across large pitches and arenas, and IP66 protection with a 10 kV surge suppressor handles permanent mast duty in harsh climates. Engineered to Olympic-grade, federation-ready standards, it ships with a photometric layout matched to your venue drawing and target lux, and shares the VSP platform so an entire floodlight tower scales from one product line.",
       "power": "4200W",
       "efficacy": "",
       "output": "",
@@ -1540,6 +1582,9 @@
           "category": "نظام إضاءة رياضية",
           "description": "نظام حماية ضد الوامض للمنشآت الإذاعية. يقضي على الوميض في إعادة العرض البطيئة بتقنية تشغيل عالية التردد ومستقرة.",
           "name": "VSP-XXXXW-12M-YP"
+        },
+        "en": {
+          "seo_description": "SolarOne VSP 4200 W 12M-class broadcast floodlight, flicker-free HDTV replay, remote driver enclosure."
         }
       },
       "gallery": [
@@ -1622,7 +1667,7 @@
       "name": "RT590FL-S",
       "slug": "rt590fl-s",
       "category": "FLOODLIGHT",
-      "description": "The RT590FL-S is a 160 W LED floodlight delivering more than 20,800 lm from a 589 × 301 × 248.5 mm aluminium and glass housing weighing 12.8 kg. Its effective projected area of 0.26 sq ft keeps the wind load low relative to its output, which matters when specifying high-mount positions on facades and poles.",
+      "description": "The RT590FL-S is a 160 W LED floodlight for general floodlighting, façades, yards and perimeter security where a robust, efficient luminaire is needed without sports-grade output. Its 130 lm/W-class efficacy and IP66 protection suit permanent outdoor duty, and a 10 kV surge suppressor guards against grid transients. The adjustable bracket aims the beam during installation, while the -40 °C to +55 °C operating range covers most climates. Sharing the SolarOne floodlight build, the RT590FL-S pairs with larger RT models on a common bracket platform so a site can mix wattages without multiplying spare parts. Every order includes a photometric layout matched to your drawing, helping you hit target illuminance without over-specifying wattage or sprawling the bill of materials.",
       "power": "160W",
       "efficacy": "",
       "output": "",
@@ -1643,7 +1688,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT590FL-S 160 W LED floodlight for façades, yards and perimeter security lighting."
+        }
       },
       "gallery": [
         "images/products/rt590fl-s/rt590fl-flood-light-01.webp",
@@ -1740,7 +1788,7 @@
       "name": "RT390FL-S",
       "slug": "rt390fl",
       "category": "FLOODLIGHT",
-      "description": "The RT390FL-S is an 80 W LED floodlight producing more than 10,400 lm from a 369 × 294 × 336 mm aluminium and glass housing weighing 8.5 kg. It is specified for yard, loading-dock and perimeter lighting where a wider spread of light is needed than a narrow flood can give.",
+      "description": "The RT390FL-S is an 80 W LED floodlight for smaller floodlighting tasks: building entrances, signage, bin stores, perimeter paths and compact yards. Its efficient optical design and IP66 protection suit permanent outdoor use, while a 10 kV surge suppressor protects against transients and the -40 °C to +55 °C range covers most climates. The adjustable bracket simplifies aiming, and the compact die-cast body mounts cleanly on walls, poles and soffits. As the smallest member of the RT floodlight family it shares the bracket platform with higher-wattage RT models, so a site can scale up later without changing poles or hardware. Every RT390FL-S order ships with a photometric layout matched to your drawing so you meet target lux without over-lighting.",
       "power": "80W",
       "efficacy": "",
       "output": "",
@@ -1761,7 +1809,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT390FL-S 80 W LED floodlight for entrances, signage and compact yard floodlighting."
+        }
       },
       "gallery": [
         "images/products/rt390fl/rt390-flood-light-01.webp",
@@ -1854,7 +1905,7 @@
       "name": "RT400HB",
       "slug": "rt400hb",
       "category": "HIGHBAY_LOWBAY",
-      "description": "The RT400HB is a 130 W high-bay and low-bay LED luminaire delivering more than 16,900 lm from a 395 × 395 × 401 mm aluminium and glass housing at 8.0 kg. Typical applications are high schools, colleges and professional stadiums, large open areas, industrial facilities and building facades — the 25° / 45° / 90° optic family covers everything from high-bay mounting over a hall to a 90° wide low-bay spread.",
+      "description": "The RT400HB is a 130 W high-bay and low-bay LED luminaire for warehouses, sports halls, workshops and covered industrial areas. Its optical family covers the 30° to 90° beam spread needed from low ceilings to high-bay racks, putting light on the floor and work plane instead of the roof. IP66 protection and a 10 kV surge suppressor suit demanding indoor-industrial and semi-outdoor duty, and the robust housing handles vibration and dust. Sharing the SolarOne build language, the RT400HB pairs with the RT500HB on one bracket platform so a facility can mix wattages across zones. Every order includes a photometric layout matched to your ceiling height and target lux, helping you cut energy use versus legacy HID fittings without sacrificing uniformity.",
       "power": "130W",
       "efficacy": "",
       "output": "",
@@ -1875,7 +1926,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT400HB 130 W high-bay LED luminaire, 30-90° beam for warehouses and sports halls."
+        }
       },
       "gallery": [
         "images/products/rt400hb/rt400hb-01.webp",
@@ -1964,7 +2018,7 @@
       "name": "RT500HB",
       "slug": "rt500hb",
       "category": "HIGHBAY_LOWBAY",
-      "description": "The RT500HB is the higher-output member of the high-bay and low-bay range, delivering 280 W and more than 36,400 lm from a 500 × 500 × 457 mm aluminium and glass housing weighing 16.0 kg. It covers the same typical applications as the RT400HB — high schools, colleges, professional stadiums, large areas, industrial facilities and building facades — for positions that need more illuminance than the 130 W model delivers.",
+      "description": "The RT500HB is a 280 W high-bay and low-bay LED luminaire for larger warehouses, production halls and sports facilities needing more output than the RT400HB. Its 30° to 90° beam family serves both low ceilings and high-bay racking, directing light onto the work plane for safe, uniform illumination. IP66 protection and a 10 kV surge suppressor handle industrial and semi-outdoor conditions, and the durable housing resists vibration and dust. On the shared SolarOne bracket platform the RT500HB scales with the RT400HB across zones on one spare-parts set. Every order ships with a photometric layout matched to your ceiling height and target lux, so you replace legacy HID fittings with less wattage while improving light quality and cutting lifetime energy cost.",
       "power": "280W",
       "efficacy": "",
       "output": "",
@@ -1985,7 +2039,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT500HB 280 W high-bay LED luminaire for large warehouses and production halls."
+        }
       },
       "gallery": [
         "images/products/rt500hb/hb500-05.webp",
@@ -2078,7 +2135,7 @@
       "name": "RT220UB",
       "slug": "rt220ub",
       "category": "FLOODLIGHT",
-      "description": "The RT220UB is a compact 40 W LED floodlight delivering more than 5,200 lm, built for building security, packing and storage lots, residential areas, display windows and advertising billboards. At 257.5 × 207 × 128 mm and 2.3 kg it is one of the smaller fixtures in the range, which suits retrofit positions where a larger housing would not fit the existing bracket or wall space.",
+      "description": "The RT220UB is a 40 W LED floodlight for light-duty floodlighting: stairwells, entrances, small signage, bin stores and perimeter accents where a compact, efficient luminaire is enough. Its optical design and IP66 protection suit permanent outdoor use, while a 10 kV surge suppressor guards against transients and the -40 °C to +55 °C range covers most climates. The small die-cast body mounts on walls, poles and soffits, and the adjustable bracket simplifies aiming during installation. As the lowest-wattage member of the RT floodlight family it shares the bracket platform with higher-wattage models, so a site can scale up later without new poles or hardware. Every RT220UB order includes a photometric layout matched to your drawing.",
       "power": "40W",
       "efficacy": "",
       "output": "",
@@ -2099,7 +2156,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT220UB 40 W LED floodlight for stairwells, entrances and light-duty perimeter lighting."
+        }
       },
       "gallery": [
         "images/products/rt220ub/rt220ub-01.webp",
@@ -2192,7 +2252,7 @@
       "name": "RT420FS-S",
       "slug": "rt420fs-s",
       "category": "FLOODLIGHT",
-      "description": "The RT420FS-S is a 100 W full-size floodlight delivering more than 13,000 lm from a 420 × 390 × 125 mm aluminium and glass housing at 8.0 kg. It is the full-size option in the RT family, used where building security, packing lots, residential areas, display windows and advertising billboards need more output than the compact models deliver.",
+      "description": "The RT420FS-S is a 100 W LED floodlight for façades, yards, building perimeters and security lighting that needs more reach than the smallest RT models without sports-grade output. Its efficient optic and IP66 protection suit permanent outdoor duty, and a 10 kV surge suppressor protects against grid transients while the -40 °C to +55 °C range covers most climates. The adjustable bracket aims the beam at install, and the die-cast body mounts on walls, poles and soffits. Sharing the SolarOne floodlight bracket platform, the RT420FS-S pairs with larger RT models so a site mixes wattages on one spare-parts set. Every order ships with a photometric layout matched to your drawing, helping you hit target illuminance without over-specifying wattage or sprawling the bill of materials.",
       "power": "100W",
       "efficacy": "",
       "output": "",
@@ -2213,7 +2273,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT420FS-S 100 W LED floodlight for façades, yards and building perimeter security."
+        }
       },
       "gallery": [
         "images/products/rt420fs-s/rt420fl-01.webp",
@@ -2306,7 +2369,7 @@
       "name": "RT410-RGBW",
       "slug": "rt410-rgbw",
       "category": "AREA_SITE",
-      "description": "The RT410-RGBW is the colour-capable member of the RT410 series, delivering 200 W and 10,000 lm while sharing the RT410 physical platform — 418 × 400 × 172 mm, 13.5 kg, and a 0.26 sq ft effective projected area. That dimensional identity matters on retrofit projects: existing RT410 mounting positions, brackets and aiming angles carry over unchanged.",
+      "description": "The RT410-RGBW adds a 200 W RGBW colour engine to the RT410 floodlight platform, bringing saturated colour and tunable white to mid-size area lighting. Venues hold functional white for daily use and switch to branded colour washes for events, façade displays and festivals, all from one DMX, DALI or 1-10 V controller. The same IP66, surge-protected build as the white-light RT410 means the colour unit survives identical outdoor conditions, and pre-set scenes recall a logo or slow fade at the touch of a button. Ideal for concourses, retail fronts and landmark illumination where atmosphere matters as much as visibility, the RT410-RGBW ships with a photometric and control layout matched to your brief and mounting height.",
       "power": "200W",
       "efficacy": "",
       "output": "",
@@ -2327,7 +2390,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT410-RGBW 200 W colour floodlight adds RGBW washes and tunable white for venues."
+        }
       },
       "gallery": [
         "images/products/rt410-rgbw/rgbw-rt410-red.webp",
@@ -2420,7 +2486,7 @@
       "name": "RT600SL-T",
       "slug": "rt600sl-t",
       "category": "ROADWAY",
-      "description": "The RT600SL-T is a 120 W LED roadway luminaire delivering more than 14,400 lm from a 596 × 350 × 100 mm aluminium and glass housing weighing 12.5 kg. It is engineered for street, highway and infrastructure projects, where the asymmetric 70° × 140° distribution throws light forward onto the carriageway while limiting the spill onto adjacent properties.",
+      "description": "The RT600SL-T is a 120 W LED street-light luminaire with an asymmetric 70° × 140° distribution engineered for roads, paths and car parks. The shaped optic puts light on the carriageway and walkway rather than into windows or the sky, improving uniformity and cutting glare for drivers and residents. IP66 protection and a 10 kV surge suppressor suit permanent pole-top duty, and the -40 °C to +55 °C range covers most climates. Sharing the SolarOne build language, the RT600SL-T pairs with the RT820SL-T on one bracket platform so a corridor can mix wattages by zone. Every order includes a photometric layout matched to your road geometry and target lux, helping you cut energy use versus legacy HID while meeting lighting standards.",
       "power": "120W",
       "efficacy": "",
       "output": "",
@@ -2441,7 +2507,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT600SL-T 120 W LED street light, asymmetric 70×140° optic for roads and car parks."
+        }
       },
       "gallery": [
         "images/products/rt600sl-t/rt600sl-street-light-01.webp",
@@ -2533,7 +2602,7 @@
       "name": "RT820SL-T",
       "slug": "rt820sl-t",
       "category": "ROADWAY",
-      "description": "The RT820SL-T is the higher-output roadway luminaire in the SL range, delivering 240 W from a 821 × 350 × 100 mm aluminium and glass housing weighing 18.3 kg. It is intended for streets, highways and infrastructure projects where the RT600SL-T does not meet the required illuminance — wider carriageways, higher mounting heights or longer spacing between poles.",
+      "description": "The RT820SL-T is a 240 W LED street-light luminaire with the asymmetric 70° × 140° distribution used for wider roads, arterial routes and large car parks. Its shaped optic directs output onto the carriageway and walkway, lifting uniformity and limiting glare into properties and the night sky. IP66 protection and a 10 kV surge suppressor handle permanent pole-top service, and the -40 °C to +55 °C range covers most climates. On the shared SolarOne bracket platform the RT820SL-T scales with the RT600SL-T across a corridor on one spare-parts set. Every order ships with a photometric layout matched to your road geometry and target lux, so you replace legacy HID fittings with less wattage while meeting uniformity and glare limits.",
       "power": "240W",
       "efficacy": "",
       "output": "",
@@ -2554,7 +2623,10 @@
         "es": {},
         "de": {},
         "ru": {},
-        "ar": {}
+        "ar": {},
+        "en": {
+          "seo_description": "SolarOne RT820SL-T 240 W LED street light, asymmetric 70×140° optic for arterial roads."
+        }
       },
       "gallery": [
         "images/products/rt820sl-t/rt820-street-light-01.webp",
@@ -3621,7 +3693,7 @@
     },
     {
       "slug": "low-cct-high-cri-high-mast-led-retrofit",
-      "title": "SolarOne FL6M-480W Light Up Tianjin Binhai International Airport",
+      "title": "SolarOne FL6M-480W Lights Binhai Airport",
       "category": "Case Studies",
       "summary": "The SolarOne FL6M-480W LED high-mast family replaces the old metal halide apron lighting at Tianjin Binhai International Airport with warm, high-CRI light.",
       "content": "SolarOne FL6M-480W high-mast luminaires have been installed on the apron of Tianjin Binhai International Airport, replacing the site's legacy metal halide system.\r\n\r\nThe FL6M delivers warm white light at a high colour rendering index (CRI), keeping the apron familiar to pilots and ground staff while raising uniformity and making surfaces easier to read after dark.\r\n\r\nSince commissioning the apron lighting has run consistently through dusk and night operations, with even coverage and controlled glare across the whole apron — supporting safe aircraft movement and ground handling.\r\n\r\nSee the FL6M specification sheet for photometrics and mounting options.",

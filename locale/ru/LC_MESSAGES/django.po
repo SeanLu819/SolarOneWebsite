@@ -1201,3 +1201,31 @@ msgstr "Какие прожекторы используются на этих �
 #: templates/product_overview.html
 msgid "Models in this series"
 msgstr "Модели этой серии"
+
+msgid ""
+"%(n)s stadium-class luminaires and %(stadium_venues|length)s venue "
+"installations, from club training grounds to an Asian Games velodrome."
+msgstr ""
+"%(n)s светильников стадионного класса и %(stadium_venues|length)s установок "
+"арен, от клубных тренировочных полей до велодрома Азиатских игр."
+
+msgid "Application Cases"
+msgstr "Примеры применения"
+
+msgid "Frequently Asked Questions"
+msgstr "Часто Задаваемые Вопросы"
+
+msgid "Product"
+msgstr "Продукт"
+
+msgid "Project"
+msgstr "Проект"
+
+msgid "Related Products"
+msgstr "Связанные Продукты"
+
+msgid "Related Products &amp; Projects"
+msgstr "Связанные Продукты &amp; Проекты"
+
+msgid "Stadium Lighting FAQ"
+msgstr "Частые Вопросы по Освещению Стадионов"

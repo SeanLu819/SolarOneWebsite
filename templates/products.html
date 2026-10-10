@@ -174,7 +174,7 @@
           theme, so its banner loads eagerly; the light one is deferred via
           data-src and promoted by a tiny html.js-gated script below — this
           avoids downloading ~90 KB for every dark-theme visitor. {% endcomment %}
-          <img data-src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" loading="lazy" decoding="async">
+          <img data-src="{% static 'images/products-bar-light.webp' %}" alt="{% trans 'SolarOne LED lighting product categories overview' %}" class="products-banner-img products-banner-light" decoding="async">
           <script nonce="{{ request.csp_nonce }}">
             (function () {
               var root = document.documentElement;

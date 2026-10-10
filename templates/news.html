@@ -8,7 +8,7 @@
 {% block og_title %}{% blocktrans %}News — SolarOne LED Lighting Updates{% endblocktrans %}{% endblock %}
 {% block og_description %}{% blocktrans %}Latest news, product launches, and insights from SolarOne. Stay updated on LED lighting innovations and the latest industry developments.{% endblocktrans %}{% endblock %}
 
-{# v1.10.14: the listing page advertised a social card with no picture.
+{% comment %}v1.10.14: the listing page advertised a social card with no picture.
    SiteConfig.og_image is empty, so base.html's site-wide og_image block
    rendered nothing here -- while the page still declared
    `twitter:card=summary_large_image`, i.e. it asked for a large image and
@@ -29,7 +29,7 @@
 
    NOTE: write these tag names without their delimiters in this comment. Django
    parses tags inside comments too, and spelling one out raises
-   TemplateSyntaxError. #}
+   TemplateSyntaxError. {% endcomment %}
 {% block og_image %}{% if articles.0.social_image_url %}<meta property="og:image" content="{{ canonical_origin }}{{ articles.0.social_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% block twitter_image %}{% if articles.0.social_image_url %}<meta name="twitter:image" content="{{ canonical_origin }}{{ articles.0.social_image_url }}">{% else %}{{ block.super }}{% endif %}{% endblock %}
 
@@ -83,7 +83,7 @@
           {% if article.image_url or article.images.0.url %}
           {# v1.10.18: `firstof ... as cover` (not `with` + `default`) on purpose — `article.images` is an empty list for chart-only articles, and `default` would raise VariableDoesNotExist there, while `firstof` skips unresolvable vars silently. That leniency is the whole point of the fallback. #}
           {% firstof article.image_url article.images.0.url as cover %}
-          <img src="{{ cover }}" srcset="{{ cover|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+          <img src="{{ cover }}" srcset="{{ cover|srcset }}" sizes="(max-width:767px) 100vw, (max-width:1199px) 50vw, 33vw"
                alt="{{ article.title_t|default:article.title }}"
                {% if not forloop.first %}loading="lazy"{% endif %} decoding="async">
           {% else %}

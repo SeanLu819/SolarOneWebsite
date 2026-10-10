@@ -1200,3 +1200,32 @@ msgstr "¿Qué proyector utilizan estas instalaciones?"
 #: templates/product_overview.html
 msgid "Models in this series"
 msgstr "Modelos de esta serie"
+
+msgid ""
+"%(n)s stadium-class luminaires and %(stadium_venues|length)s venue "
+"installations, from club training grounds to an Asian Games velodrome."
+msgstr ""
+"%(n)s luminarias de clase estadio y %(stadium_venues|length)s instalaciones "
+"de recinto, desde campos de entrenamiento de club hasta un velódromo de los "
+"Juegos Asiáticos."
+
+msgid "Application Cases"
+msgstr "Casos de Aplicación"
+
+msgid "Frequently Asked Questions"
+msgstr "Preguntas Frecuentes"
+
+msgid "Product"
+msgstr "Producto"
+
+msgid "Project"
+msgstr "Proyecto"
+
+msgid "Related Products"
+msgstr "Productos Relacionados"
+
+msgid "Related Products &amp; Projects"
+msgstr "Productos &amp; Proyectos Relacionados"
+
+msgid "Stadium Lighting FAQ"
+msgstr "FAQ de Iluminación de Estadios"

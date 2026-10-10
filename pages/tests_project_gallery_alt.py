@@ -24,6 +24,7 @@ Andre Vacheresse Stadium 全部没进 alt）。
 本项目**测试库是空的**，断言 DB 内容必须直连真实 `db.sqlite3`（只读），
 走 ORM 拿 0 行会让断言恒绿 = 假守卫。
 """
+import unittest
 import os
 import sqlite3
 
@@ -116,7 +117,7 @@ class ProjectAltDatabaseSyncTests(SimpleTestCase):
     def setUpClass(cls):
         super().setUpClass()
         if not os.path.exists(DB_PATH):
-            raise cls.skipTest(
+            raise unittest.SkipTest(
                 'db.sqlite3 不存在（生产为无状态部署）—— 本守卫只适用于本地开发环境')
         cls._con = sqlite3.connect(
             'file:%s?mode=ro' % DB_PATH.replace('\\', '/'), uri=True)

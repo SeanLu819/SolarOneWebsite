@@ -1145,3 +1145,31 @@ msgstr "ما الكشاف المستخدم في هذه المنشآت؟"
 #: templates/product_overview.html
 msgid "Models in this series"
 msgstr "طرازات هذه السلسلة"
+
+msgid ""
+"%(n)s stadium-class luminaires and %(stadium_venues|length)s venue "
+"installations, from club training grounds to an Asian Games velodrome."
+msgstr ""
+"%(n)s وحدات إضاءة من فئة الملاعب و %(stadium_venues|length)s تركيبات موقع، "
+"من ملاعب تدريب الأندية إلى مضمار سباق دراجات بدورة الألعاب الآسيوية."
+
+msgid "Application Cases"
+msgstr "حالات الاستخدام"
+
+msgid "Frequently Asked Questions"
+msgstr "الأسئلة الشائعة"
+
+msgid "Product"
+msgstr "منتج"
+
+msgid "Project"
+msgstr "مشروع"
+
+msgid "Related Products"
+msgstr "منتجات ذات صلة"
+
+msgid "Related Products &amp; Projects"
+msgstr "منتجات &amp; مشاريع ذات صلة"
+
+msgid "Stadium Lighting FAQ"
+msgstr "أسئلة شائعة عن إضاءة الملاعب"

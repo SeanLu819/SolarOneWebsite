@@ -30,25 +30,29 @@ class ProjectToProductLinksTests(TestCase):
         return self.client.get('/projects/%s/' % slug, HTTP_HOST='localhost')
 
     def test_a_project_with_no_manual_pick_shows_no_related_products(self):
-        # 铁律 7：断言不许写死内容。这里从 seed 真源派生「未手工选择」的项目列表，
-        # 而不是写死两个 slug —— 一旦有人在后台给某个项目选了灯具，它**必须**显示，
-        # 写死名单会让守卫反过来把正确行为判成错误（v1.10.25 就撞上过：
-        # football-field-led-retrofit 被手工选了 fl9m，硬编码用例立刻变红）。
-        from pages.views.utils import _load_seed
-        seed = _load_seed()
-        unpicked = [p['slug'] for p in seed['projects']
-                    if not (p.get('related_product_slugs') or [])]
-        self.assertGreater(len(unpicked), 0,
-                           '所有项目都已手工选择，本用例失去意义')
-        for slug in unpicked[:2]:
-            with self.subTest(slug=slug):
-                resp = self._get(slug)
-                self.assertEqual(200, resp.status_code)
-                content = resp.content.decode()
-                self.assertNotIn('class="related-products"', content,
-                                 '%s rendered related products with no pick'
-                                 % slug)
-                self.assertNotIn('related-product-card', content)
+        # 铁律 7：断言不许写死内容。生产里编辑可能给「所有」项目都选了灯具
+        # （正确行为），那时从 seed 派生「未选」名单会变成空、用例失去意义。
+        # 改为在测试库自建一个「零手工选择」的项目，使守卫与生产状态解耦、
+        # 且仍断言「未选就不渲染相关灯具区块」。post_save 仅同步媒体（无图则
+        # 空操作），这里再 mock 掉以免在 static/ 留下探针目录。
+        from unittest.mock import patch
+        from pages.models import Project
+        with patch('pages.models._sync_project_media_to_static'), \
+             patch('pages.models._invalidate_views_cache'):
+            proj = Project.objects.create(
+                slug='zz-related-probe', title='Related Links Probe',
+                location='Probe City', description='probe project',
+                venue_type='OUTDOOR', sport_type='OTHER')
+        try:
+            resp = self._get(proj.slug)
+            self.assertEqual(200, resp.status_code)
+            content = resp.content.decode()
+            self.assertNotIn('class="related-products"', content,
+                             '%s rendered related products with no pick'
+                             % proj.slug)
+            self.assertNotIn('related-product-card', content)
+        finally:
+            proj.delete()
 
 
 class ProductToProjectLinksTests(TestCase):
