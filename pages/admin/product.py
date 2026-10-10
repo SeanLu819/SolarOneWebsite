@@ -114,6 +114,42 @@ def _static_copy_deduped(src, dst_dir, filename):
     return want, False
 
 
+def _ensure_variants_for_static_rels(rel_paths):
+    """Batch C (v1.10.27): generate missing ``srcset`` variants for images that
+    were just copied into ``static/``.
+
+    🔴 根因（本函数要根治的复发 bug）：批次 C 的响应式变体
+    （``static/images/_variants/…/<name>~360w|720w|1248w.webp``）是**构建期产物**，
+    只有 ``build.sh``（生产）和手工跑 ``scripts/gen_image_variants.py``（本地）才会生成。
+    而本文件的保存钩子只做 ``media/ → static/images/products/<slug>/`` 的原图复制，
+    从不为**新文件名**补变体 ⇒ 后台每上传一次新图，本地预览就全裂一次
+    （fl6m / fl9m 两次实测：原图 200，变体 404，浏览器优先取 srcset 候选 ⇒ 整页裂）。
+
+    把补变体接进保存流程后：本地预览立刻可见，生产仍由 build.sh 生成（互不影响）。
+
+    幂等：``ensure_variants`` 只生成缺失的宽度档，重复调用不重写已有文件。
+    最佳努力：Pillow 缺失 / 图片损坏一律不抛，绝不因生成变体让后台保存失败。
+    返回本次新建的变体文件数。
+    """
+    created = 0
+    try:
+        from pages.image_variants import ensure_variants
+    except Exception:  # pragma: no cover - Pillow/模块缺失不该阻断后台保存
+        return 0
+    seen = set()
+    for rel in rel_paths or ():
+        if not rel or rel in seen:
+            continue
+        seen.add(rel)
+        abs_path = os.path.join(
+            settings.BASE_DIR, 'static', str(rel).replace('/', os.sep))
+        try:
+            created += len(ensure_variants(abs_path))
+        except Exception:  # noqa: BLE001 - best-effort, never fatal to a save
+            pass
+    return created
+
+
 class ProductAdminForm(forms.ModelForm):
     """Custom form that renders specs, energy_data, and ordering_info via custom widgets."""
 
@@ -374,6 +410,10 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         # Gallery images are synced in ``save_related`` — the inline rows do not
         # exist yet at this point (iron rule 25: save_model precedes save_formset).
 
+        # 🔴 v1.10.27 — 变体必须在 collectstatic **之前**生成：这些文件要走同一份
+        # hashe d manifest 才能被收集进部署包 / 被本地 dev server 伺服。
+        _ensure_variants_for_static_rels(seed_paths.values())
+
         try:
             subprocess.run(
                 [sys.executable, 'manage.py', 'collectstatic', '--noinput'],
@@ -413,6 +453,7 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
         gallery_dir = os.path.join(settings.BASE_DIR, 'static', 'images', 'products', obj.slug)
         media_root = settings.MEDIA_ROOT
         touched = False
+        gallery_rels = []
         for img in obj.images.all():
             if not (img.image and getattr(img.image, 'name', '')):
                 continue
@@ -421,10 +462,13 @@ class ProductAdmin(CacheClearMixin, admin.ModelAdmin):
                 continue
             filename = _clean_hashed_filename(str(img.image))
             rel, _reused = _static_copy_deduped(src, gallery_dir, filename)
+            gallery_rels.append(rel)
             if rel and img.image.name != rel:
                 img.image = rel
                 img.save(update_fields=['image'])
                 touched = True
+        # 🔴 v1.10.27 — 同上：轮播图同样要走 srcset，缺变体即本地全裂。
+        _ensure_variants_for_static_rels(gallery_rels)
         if touched:
             reset_static_image_hash_index()
             self._sync_seed_files(request)

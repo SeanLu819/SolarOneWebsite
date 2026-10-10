@@ -146,11 +146,11 @@ msgid "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
 msgstr "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
 
 msgid ""
-"No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, "
-"China"
+"No. 7 Jinyi Street, Jinma Industrial Park, Gaoliying Town, Shunyi District, "
+"Beijing 101300, China"
 msgstr ""
-"No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, "
-"China"
+"No. 7 Jinyi Street, Jinma Industrial Park, Gaoliying Town, Shunyi District, "
+"Beijing 101300, China"
 
 msgid "Tel"
 msgstr "Tel"
@@ -819,8 +819,12 @@ msgid "Distribution"
 msgstr "Distribution"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height."
-msgstr "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height."
+msgid ""
+"Full photometric data, IES files and DIALux reports are supplied on request "
+"— send the venue drawing and mounting height."
+msgstr ""
+"Full photometric data, IES files and DIALux reports are supplied on request "
+"— send the venue drawing and mounting height."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "High bay"
@@ -855,8 +859,12 @@ msgid "Roadway"
 msgstr "Roadway"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects."
-msgstr "SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects."
+msgid ""
+"SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular "
+"LED floods from 80 W to 1280 W, with 20 delivered venue projects."
+msgstr ""
+"SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular "
+"LED floods from 80 W to 1280 W, with 20 delivered venue projects."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Stadium Floodlights"
@@ -867,20 +875,40 @@ msgid "Stadium Lighting"
 msgstr "Stadium Lighting"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
-msgstr "The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
+msgid ""
+"The VSP series is the broadcast-grade platform: asymmetric optics for the "
+"camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
+msgstr ""
+"The VSP series is the broadcast-grade platform: asymmetric optics for the "
+"camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use."
-msgstr "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use."
+msgid ""
+"Two numbers decide a stadium package: the target illuminance on the playing "
+"surface, and the number of mounting points the structure allows. This is the"
+" range our delivered projects actually use."
+msgstr ""
+"Two numbers decide a stadium package: the target illuminance on the playing "
+"surface, and the number of mounting points the structure allows. This is the"
+" range our delivered projects actually use."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Typical fixture"
 msgstr "Typical fixture"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues."
-msgstr "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues."
+msgid ""
+"Venue lighting is decided by two things: whether the fixture can be aimed "
+"without glare into the camera positions, and whether the photometric file "
+"matches the seating geometry. SolarOne builds both — broadcast-grade stadium"
+" floodlights for televised matches, and modular LED flood lights from 80 W "
+"to 1280 W for training grounds and club venues."
+msgstr ""
+"Venue lighting is decided by two things: whether the fixture can be aimed "
+"without glare into the camera positions, and whether the photometric file "
+"matches the seating geometry. SolarOne builds both — broadcast-grade stadium"
+" floodlights for televised matches, and modular LED flood lights from 80 W "
+"to 1280 W for training grounds and club venues."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Venue projects are also lit with these platforms."
@@ -891,12 +919,16 @@ msgid "Venue type"
 msgstr "Venue type"
 
 #: templates/stadium_lighting.html
-msgid "Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
-msgstr "Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
+msgid ""
+"Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
+msgstr ""
+"Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
 
 #: templates/stadium_lighting.html
-msgid "Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
-msgstr "Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
+msgid ""
+"Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
+msgstr ""
+"Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
 
 #: templates/stadium_lighting.html
 msgid "Ski run, karting track|320–480 W|Asymmetric, low glare|Pole, 6–10 m"

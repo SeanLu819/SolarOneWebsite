@@ -144,11 +144,11 @@ msgid "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
 msgstr "BEIJING SOLARONE ENERGY TECHNOLOGY CO., LTD"
 
 msgid ""
-"No.10-15 Xisha Industrial Park, Beiqijia Town, Changping District, Beijing, "
-"China"
+"No. 7 Jinyi Street, Jinma Industrial Park, Gaoliying Town, Shunyi District, "
+"Beijing 101300, China"
 msgstr ""
-"رقم 10-15 مدينة شيخا الصناعية، بلدة بي تشي جيا، منطقة تشانغ بينغ، بكين، "
-"الصين"
+"رقم 7 شارع جين يي، مدينة جينما الصناعية، بلدة قاوليينغ، منطقة شون يي، بكين "
+"101300، الصين"
 
 msgid "Tel"
 msgstr "هاتف"
@@ -951,8 +951,12 @@ msgid "Distribution"
 msgstr "التوزيع"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height."
-msgstr "يتم توفير البيانات الفوتومترية الكاملة وملفات IES وتقارير DIALux عند الطلب — أرسل مخطط المنشأة وارتفاع التركيب."
+msgid ""
+"Full photometric data, IES files and DIALux reports are supplied on request "
+"— send the venue drawing and mounting height."
+msgstr ""
+"يتم توفير البيانات الفوتومترية الكاملة وملفات IES وتقارير DIALux عند الطلب —"
+" أرسل مخطط المنشأة وارتفاع التركيب."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "High bay"
@@ -987,8 +991,12 @@ msgid "Roadway"
 msgstr "إنارة الطرق"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular LED floods from 80 W to 1280 W, with 20 delivered venue projects."
-msgstr "إضاءة ملاعب LED من SolarOne: كشافات VSP جاهزة للبث التلفزيوني وكشافات معيارية من 80 إلى 1280 واط، مع 20 مشروعاً منفذاً للملاعب."
+msgid ""
+"SolarOne LED stadium lighting: broadcast-grade VSP floodlights and modular "
+"LED floods from 80 W to 1280 W, with 20 delivered venue projects."
+msgstr ""
+"إضاءة ملاعب LED من SolarOne: كشافات VSP جاهزة للبث التلفزيوني وكشافات "
+"معيارية من 80 إلى 1280 واط، مع 20 مشروعاً منفذاً للملاعب."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Stadium Floodlights"
@@ -999,20 +1007,38 @@ msgid "Stadium Lighting"
 msgstr "إضاءة الملاعب"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
-msgstr "سلسلة VSP هي منصة البث التلفزيوني: بصريات غير متناظرة لجانب الكاميرات وتوزيعات 12 / 18 / 30 / 50° للمدرجات."
+msgid ""
+"The VSP series is the broadcast-grade platform: asymmetric optics for the "
+"camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl."
+msgstr ""
+"سلسلة VSP هي منصة البث التلفزيوني: بصريات غير متناظرة لجانب الكاميرات "
+"وتوزيعات 12 / 18 / 30 / 50° للمدرجات."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use."
-msgstr "يحدد مشروع الملعب رقمان: الإضاءة المستهدفة على سطح الملعب وعدد نقاط التثبيت التي تسمح بها المنشأة. هذه هي النطاقات المستخدمة في مشاريعنا المنفذة."
+msgid ""
+"Two numbers decide a stadium package: the target illuminance on the playing "
+"surface, and the number of mounting points the structure allows. This is the"
+" range our delivered projects actually use."
+msgstr ""
+"يحدد مشروع الملعب رقمان: الإضاءة المستهدفة على سطح الملعب وعدد نقاط التثبيت "
+"التي تسمح بها المنشأة. هذه هي النطاقات المستخدمة في مشاريعنا المنفذة."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Typical fixture"
 msgstr "الكشاف المعتاد"
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
-msgid "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues."
-msgstr "يتحدد إنارة المنشأة الرياضية بأمرين: إمكانية توجيه الكشاف دون وهج باتجاه كاميرات التصوير، ومدى ملاءمة الملف الفوتومتري لهندسة المدرجات. توفر SolarOne الاثنين: كشافات ملاعب جاهزة للبث التلفزيوني، وكشافات معيارية من 80 إلى 1280 واط لملاعب التدريب والأندية."
+msgid ""
+"Venue lighting is decided by two things: whether the fixture can be aimed "
+"without glare into the camera positions, and whether the photometric file "
+"matches the seating geometry. SolarOne builds both — broadcast-grade stadium"
+" floodlights for televised matches, and modular LED flood lights from 80 W "
+"to 1280 W for training grounds and club venues."
+msgstr ""
+"يتحدد إنارة المنشأة الرياضية بأمرين: إمكانية توجيه الكشاف دون وهج باتجاه "
+"كاميرات التصوير، ومدى ملاءمة الملف الفوتومتري لهندسة المدرجات. توفر SolarOne"
+" الاثنين: كشافات ملاعب جاهزة للبث التلفزيوني، وكشافات معيارية من 80 إلى 1280"
+" واط لملاعب التدريب والأندية."
 
 #: pages/views/views_stadium.py templates/stadium_lighting.html
 msgid "Venue projects are also lit with these platforms."
@@ -1023,12 +1049,18 @@ msgid "Venue type"
 msgstr "نوع المنشأة"
 
 #: templates/stadium_lighting.html
-msgid "Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
-msgstr "صالة متعددة الرياضات، فيلودروم|400–600 واط|60 / 90 / 120°|جمالون السقف، 12–20 م"
+msgid ""
+"Multi-sport hall, velodrome|400–600 W|60 / 90 / 120°|Roof truss, 12–20 m"
+msgstr ""
+"صالة متعددة الرياضات، فيلودروم|400–600 واط|60 / 90 / 120°|جمالون السقف، "
+"12–20 م"
 
 #: templates/stadium_lighting.html
-msgid "Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
-msgstr "ملعب محترف مع بث تلفزيوني|1000 واط وأعلى|12 / 18 / 30 / 50°|حافة السقف، 30–45 م"
+msgid ""
+"Professional stadium, televised|1000 W+|12 / 18 / 30 / 50°|Roof rim, 30–45 m"
+msgstr ""
+"ملعب محترف مع بث تلفزيوني|1000 واط وأعلى|12 / 18 / 30 / 50°|حافة السقف، "
+"30–45 م"
 
 #: templates/stadium_lighting.html
 msgid "Ski run, karting track|320–480 W|Asymmetric, low glare|Pole, 6–10 m"

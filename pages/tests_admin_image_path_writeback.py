@@ -15,11 +15,13 @@
   否则测试会覆盖真实的 ``seed_data.json``。
 """
 import os
+import random
 import shutil
+import tempfile
 import unittest.mock as mock
 
 from django.conf import settings
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, override_settings
 
 from pages.models import Product, ProductImage
 
@@ -163,3 +165,196 @@ class AdminImagePathWritebackTest(TestCase):
             # 这正是主守卫的断言 —— 它必须在这里失败
             with self.assertRaises(AssertionError):
                 self.assertTrue(_static_exists(stored))
+
+
+# 🔴 期望值一律硬编码为「产品决策」而非从实现派生（铁律 4b）：
+# 360 = 新闻/产品卡片 1x，720 = 卡片 2x，1248 = 站点最大渲染宽度（hero/详情主图）。
+VARIANT_WIDTHS = (360, 720, 1248)
+VARIANT_SEP = '~'          # URL 安全的宽度标记（早期 '@' 会被 static() 转义成 %40）
+VARIANT_ROOT = '_variants'  # 镜像目录：变体绝不能落在源图旁边（会污染 gallery 枚举）
+
+
+class AdminImageVariantHookTests(TestCase):
+    """守卫 v1.10.27：后台保存新图片后必须**自动生成** srcset 变体。
+
+    根因（fl6m / fl9m 两次实测）：批次 C 的响应式变体是构建期产物，
+    ``_sync_product_images`` 只把上传复制到 ``static/``，从不为新文件名补变体
+    ⇒ 本地预览必裂（浏览器优先取 srcset 候选，全部 404）。
+
+    ⚠️ 非假绿的关键设计（否则守卫会恒绿、白跑）：
+      ① 用**随机噪声合成图**当上传样本 —— ``_static_copy_deduped`` 按内容 md5
+         复用既有文件，若拿真源图当样本，目标路径会复用已存在的图（其变体早已
+         存在），守卫就会「什么都不做也是绿的」。
+      ② 独立 ``tmp`` BASE_DIR/MEDIA_ROOT —— 测试根本不碰仓库真实 static/ 树。
+      ③ 保存前断言变体目录尚不存在（前提检查，避免前置污染导致假绿）。
+      ④ 文件内探针：禁用钩子后再跑同一断言必须**拿不到**任何变体。
+    """
+
+    def setUp(self):
+        self.admin_obj = _registered_product_admin()
+        from pages.admin.product import reset_static_image_hash_index
+        reset_static_image_hash_index()
+        self.addCleanup(reset_static_image_hash_index)
+
+        self.tmp_root = tempfile.mkdtemp(prefix='zz-variant-hook-')
+        self.static_root = os.path.join(self.tmp_root, 'static')
+        self.media_root = os.path.join(self.tmp_root, 'media')
+        os.makedirs(self.static_root, exist_ok=True)
+        os.makedirs(self.media_root, exist_ok=True)
+
+        self._override = override_settings(
+            BASE_DIR=self.tmp_root, MEDIA_ROOT=self.media_root)
+        self._override.enable()
+        self.addCleanup(self._override.disable)
+        self.addCleanup(lambda: shutil.rmtree(self.tmp_root, ignore_errors=True))
+
+        # 后台保存的两个副作用与本守卫无关，且会把真实 seed_data.json 覆盖 /
+        # 触发耗时的 collectstatic ⇒ 一律 mock 掉。
+        self._seed_patch = mock.patch.object(
+            type(self.admin_obj), '_sync_seed_files', lambda self, request=None: None)
+        self._seed_patch.start()
+        self.addCleanup(self._seed_patch.stop)
+        self._collect_patch = mock.patch(
+            'pages.admin.product.subprocess.run', lambda *a, **k: None)
+        self._collect_patch.start()
+        self.addCleanup(self._collect_patch.stop)
+
+        self.slug = 'zz-diag-variants'
+        self.product = Product.objects.create(
+            slug=self.slug, name='diag variants', category='AREA_SITE',
+            page_layout='detail')
+
+    # --- helpers ---
+
+    def _stage_unique_image(self, rel_name, size=(1400, 900)):
+        """生成一张**内容唯一**的 webp 放进 media/，充当本次上传。"""
+        try:
+            from PIL import Image
+        except ImportError:  # pragma: no cover
+            self.skipTest('需要 Pillow')
+        abs_path = os.path.join(self.media_root, rel_name)
+        os.makedirs(os.path.dirname(abs_path), exist_ok=True)
+        Image.effect_noise(size, random.randint(1, 250)).convert('RGB').save(
+            abs_path, 'WEBP')
+        return abs_path
+
+    def _expected_variant_paths(self, source_rel):
+        """期望值（硬编码约定）：``images/_variants/<同路径>/<名字>~<w>w.<ext>``。"""
+        self.assertTrue(
+            source_rel.startswith('images/'),
+            '源路径应已是 static 相对路径: %r' % source_rel)
+        mirrored = source_rel.replace('images/', 'images/%s/' % VARIANT_ROOT, 1)
+        stem, ext = os.path.splitext(mirrored)
+        out = {}
+        for w in VARIANT_WIDTHS:
+            rel = '%s%s%dw%s' % (stem, VARIANT_SEP, w, ext)
+            # 逐段 join：期望值里不能出现混合分隔符（否则 Windows 下
+            # split(os.sep) 出一个 ``images/_variants/...`` 整块，后续断言失真）
+            out[w] = os.path.join(self.static_root, *rel.split('/'))
+        return out
+
+    def _assert_variants_generated(self, source_rel):
+        """主断���：三档变体必须都已落在磁盘且非空。"""
+        variants = self._expected_variant_paths(source_rel)
+        for width, abs_path in variants.items():
+            self.assertTrue(
+                os.path.isfile(abs_path),
+                '缺 %dw 变体（后台保存没自动生成 ⇒ 本地预览必裂）: %s' % (width, abs_path))
+            self.assertGreater(
+                os.path.getsize(abs_path), 0,
+                '%dw 变体是空文件（生成失败且被静默吞掉）: %s' % (width, abs_path))
+        return variants
+
+    def _assert_no_variant_yet(self):
+        """前提检查：保存前变体目录必须不存在（否则本守卫就是假绿）。"""
+        variant_root = os.path.join(self.static_root, 'images', VARIANT_ROOT)
+        self.assertFalse(
+            os.path.isdir(variant_root),
+            '探针前提失效：变体目录在保存前就已存在，守卫可能恒绿')
+
+    # --- 守卫 ---
+
+    def test_main_image_save_generates_all_variant_widths(self):
+        """``_sync_product_images`` 必须给新主图补出三档变体。"""
+        self._stage_unique_image('products/diag-main.webp')
+        self.product.image = 'products/diag-main.webp'
+        self.product.save(update_fields=['image'])
+
+        self._assert_no_variant_yet()
+        self.admin_obj._sync_product_images(self.product)
+
+        self.product.refresh_from_db()
+        self._assert_variants_generated(self.product.image.name)
+
+    def test_gallery_save_generates_all_variant_widths(self):
+        """``save_related`` 必须给新轮播图（gallery inline）补出三档变体。"""
+        self._stage_unique_image('products/gallery/diag-gallery.webp')
+        img = ProductImage.objects.create(
+            product=self.product, image='products/gallery/diag-gallery.webp',
+            order=99)
+
+        self._assert_no_variant_yet()
+        request = RequestFactory().post('/admin/')
+        self.admin_obj.save_related(request, _FakeForm(self.product), [], change=True)
+
+        img.refresh_from_db()
+        self._assert_variants_generated(img.image.name)
+
+    def test_variants_land_in_mirrored_tree_never_beside_the_source(self):
+        """变体必须落在 ``_variants/`` 镜像树里，绝不能和源图同目录。
+
+        与源图同目录会被 gallery / cover 的 ``os.listdir`` 枚举当作普通图片，
+        变成幽灵轮播图（这正是镜像目录存在的全部理由）。
+        """
+        self._stage_unique_image('products/diag-mirror.webp')
+        self.product.image = 'products/diag-mirror.webp'
+        self.product.save(update_fields=['image'])
+        self.admin_obj._sync_product_images(self.product)
+        self.product.refresh_from_db()
+
+        for width, abs_path in self._expected_variant_paths(
+                self.product.image.name).items():
+            self.assertIn(
+                VARIANT_ROOT, abs_path.split(os.sep),
+                '%dw 变体离开镜像树: %s' % (width, abs_path))
+
+        source_dir = os.path.join(self.static_root, 'images', 'products', self.slug)
+        leaked = [fn for fn in os.listdir(source_dir)
+                  if '%s%sw' % (VARIANT_SEP, '') in fn or any(
+                      '%s%dw' % (VARIANT_SEP, w) in fn for w in VARIANT_WIDTHS)]
+        self.assertEqual(
+            leaked, [],
+            '变体泄漏到源图目录（会污染 gallery 枚举）: %s' % leaked)
+
+    def test_expected_widths_match_the_implementation_contract(self):
+        """实现 == 期望（铁律 4b 的另一半）：档位变了必须先改上面的硬编码期待。"""
+        from pages.image_variants import SRCSET_WIDTHS
+        self.assertEqual(
+            tuple(SRCSET_WIDTHS), VARIANT_WIDTHS,
+            'SRCSET_WIDTHS 与本文件的硬编码期望值不一致 —— 先确认这是有意的产品变更，'
+            '再同步更新 VARIANT_WIDTHS（否则本文件的守卫会变成另一回事）')
+
+    # --- 文件内探针 ---
+
+    def test_probe_no_variant_when_the_hook_is_disabled(self):
+        """变异探针：禁用钩子后，同一断言必须**拿不到**任何变体。
+
+        这证明变体确实来自新加的钩子，而不是别的地方（例如
+        ``_static_copy_deduped`` 顺带产出、或目录早已存在）顺出的。
+        """
+        self._stage_unique_image('products/diag-probe.webp')
+        self.product.image = 'products/diag-probe.webp'
+        self.product.save(update_fields=['image'])
+
+        with mock.patch(
+            'pages.admin.product._ensure_variants_for_static_rels',
+            lambda *a, **k: 0,
+        ):
+            self.admin_obj._sync_product_images(self.product)
+            self.product.refresh_from_db()
+
+        generated = [p for p in self._expected_variant_paths(
+            self.product.image.name).values() if os.path.isfile(p)]
+        self.assertEqual(
+            generated, [],
+            '探针 BROKEN：钩子被禁用后仍生成了变体 ⇒ 主守卫可能恒绿（假绿）')

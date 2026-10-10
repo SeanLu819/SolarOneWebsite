@@ -18,7 +18,7 @@
 ```bash
 E:/Python/python3/python.exe manage.py check
 E:/Python/python3/python.exe manage.py test          # 全量约 253 用例
-E:/Python/python3/python.exe scripts/dev_preview.py  # 本地预览 :8000，runserver --noreload
+E:/Python/python3/python.exe scripts/dev_preview.py  # 本地预览 :8080，runserver --noreload
 E:/Python/python3/python.exe -m pages.seed_sync --json   # JSON → 构建产物（见 §3）
 ```
 

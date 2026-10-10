@@ -8,7 +8,7 @@ Dev Preview — 用真机（手机/平板）直接访问本地开发服务。
       改完刷新就行，不必部署。
 
 用法：
-    python scripts/dev_preview.py              # 默认 8000 端口
+    python scripts/dev_preview.py              # 默认 8080 端口
     python scripts/dev_preview.py --port 8080
     python scripts/dev_preview.py --host 192.168.1.4
 
@@ -46,7 +46,7 @@ def lan_ip() -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--port", type=int, default=8000)
+    ap.add_argument("--port", type=int, default=8080)
     ap.add_argument("--host", default=None, help="手动指定局域网 IP")
     args = ap.parse_args()
 
