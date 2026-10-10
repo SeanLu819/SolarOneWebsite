@@ -2822,7 +2822,8 @@ class ImageSitemapAndAltTests(TestCase):
         locs = re.findall(r'<image:loc>(.*?)</image:loc>', self._sitemap())
         target = next(
             (loc for loc in locs
-             if loc.endswith('/static/images/products/m-series/rt200-m.webp')),
+             if loc.endswith(
+                 '/static/images/products/m-series/m-series-floodlight-01.webp')),
             None,
         )
         self.assertIsNotNone(target, 'm-series 主图未出现在 image:loc 中')

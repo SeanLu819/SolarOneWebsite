@@ -36,8 +36,10 @@ P0-C  **功率字段互相矛盾 / 缺失**
 
 P0-E  **光束角图挂在错误的目录**
     ``beamangle-120d-1.webp`` 画的是 120° 配光。``rt420fs-s`` 卖
-    ``120=120°``，``rt220ub`` 只卖 ``100=100°`` —— 文件却在
+    ``120=120°``，``rt220ub`` 当时标称 ``100=100°`` —— 文件却在
     ``rt220ub/`` 目录下，且 ``rt420fs-s`` 跨 slug 引用它。
+    2026-10-10 业务确认 ``rt220ub`` 光型就是 120°：``ordering_info``
+    改为 ``120=120°``，两产品各自持有自己的 120° 图副本。
 
 本守卫锁死的不变量
 ----------------
@@ -446,8 +448,10 @@ class BeamAngleImageIntegrityTests(TestCase):
 
     1. a chart path that resolves to nothing on disk (online 404), and
     2. a chart whose plotted degrees are not among the degrees the product
-       actually offers (``rt220ub`` sold a 100° optic against a 120° chart
-       — a correctness bug, since the buyer would specify the wrong beam).
+       actually offers (rt220ub was once listed as a 100° optic against a
+       120° chart — the buyer would specify the wrong beam. On 2026-10-10
+       the business confirmed the rt220ub optic IS 120°, so it now offers
+       120° and owns its own copy of the chart).
     """
 
     @classmethod
@@ -524,32 +528,36 @@ class BeamAngleImageIntegrityTests(TestCase):
         )
 
     def test_orphaned_beam_charts_are_not_left_behind(self):
-        """The 120° chart must sit with the product that sells 120°.
+        """Each single-degree chart must sit with a product selling that angle.
 
-        Regression lock for the P0-E fix: the file was moved out of
-        ``rt220ub/`` (which sells 100°) into ``rt420fs-s/``. Asserting the
-        move from both ends — rt220ub must not reference it, and the file
-        must exist where rt420fs-s looks for it — catches a revert that
-        only fixes one side.
+        History: the P0-E bug had rt220ub listed as a 100° optic while
+        pointing at the 120° chart. On 2026-10-10 the business confirmed
+        the rt220ub optic IS 120°, so rt220ub now offers 120° and owns its
+        own copy of the chart. Assert the chart path, the file on disk,
+        and the offered degrees from both ends so a revert of any one
+        side is caught.
         """
         rt220ub = self.seed_products.get('rt220ub') or {}
-        self.assertEqual(
-            (rt220ub.get('beam_angle_image') or ''), '',
-            'rt220ub offers a 100° optic only; pointing it at the 120° chart '
-            'is the P0-E bug',
-        )
-        rt420 = self.seed_products.get('rt420fs-s') or {}
-        path = (rt420.get('beam_angle_image') or '').replace('\\', '/')
+        path = (rt220ub.get('beam_angle_image') or '').replace('\\', '/')
         self.assertTrue(
-            path.endswith('rt420fs-s/beamangle-120d-1.webp'),
-            'rt420fs-s must own the 120° chart, got %r' % path,
+            path.endswith('rt220ub/beamangle-120d-1.webp'),
+            'rt220ub must own the 120° chart, got %r' % path,
         )
         self.assertTrue(
             os.path.isfile(os.path.join(self.static_root, path)),
-            'rt420fs-s beam chart missing on disk: %r' % path,
+            'rt220ub beam chart missing on disk: %r' % path,
         )
-        self.assertFalse(
-            os.path.isfile(os.path.join(
-                self.static_root, 'images/products/rt220ub/beamangle-120d-1.webp')),
-            'the 120° chart is back in rt220ub/ — it belongs to rt420fs-s',
+        self.assertIn(
+            '120', self._offered_degrees(rt220ub),
+            'rt220ub ordering column must offer 120° to match its chart',
+        )
+        rt420 = self.seed_products.get('rt420fs-s') or {}
+        path420 = (rt420.get('beam_angle_image') or '').replace('\\', '/')
+        self.assertTrue(
+            path420.endswith('rt420fs-s/beamangle-120d-1.webp'),
+            'rt420fs-s must own the 120° chart, got %r' % path420,
+        )
+        self.assertTrue(
+            os.path.isfile(os.path.join(self.static_root, path420)),
+            'rt420fs-s beam chart missing on disk: %r' % path420,
         )
