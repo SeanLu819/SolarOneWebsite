@@ -117,7 +117,7 @@ from pages.views.i18n import _SIDEBAR_I18N  # noqa: E402
 seed = json.loads((ROOT / 'seed_data.json').read_text(encoding='utf-8'))
 sc = seed.get('siteconfig', {})
 ROUTED = {'hero_title', 'hero_subtitle', 'products_title', 'products_subtitle',
-          'projects_title', 'projects_subtitle'}
+          'projects_title', 'projects_subtitle', 'meta_title', 'meta_description'}
 STRUCT = re.compile(r'^(font_|color|theme|primary|accent|.*_url$|.*_path$|logo|'
                     r'og_image|hero_background|.*_size$|.*_weight$|.*_enabled$|id$|'
                     r'social_|brand_name|.*_email$|.*_phone$|.*_address$)')

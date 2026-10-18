@@ -2,12 +2,14 @@
 {% load i18n %}
 {% load static %}
 
-{# B1/F1: legal pages are English-only for now; multilingual legal is a follow-up (B5/C). #}
+{# E 段（2026-10-12）：法律页 title/meta/og 字面量经 trans 标签路由到 gettext，并已用 MT 译出
+   五语（用户明确指示牺牲「法律文本不机翻」以换非英语 SERP 标题；正文法律文本仍待 B5/C 专业/
+   法务译文，不在本批）。守卫见 pages/tests_i18n_ea.py（LEGAL_METADATA 必须翻译 + 渲染实证）。 #}
 
-{% block title %}Privacy Policy — SolarOne LED Lighting{% endblock %}
-{% block meta_description %}SolarOne privacy policy: what data we collect through our contact form and analytics, how we use cookies, and your rights under GDPR and CCPA.{% endblock %}
-{% block og_title %}Privacy Policy — SolarOne LED Lighting{% endblock %}
-{% block og_description %}How SolarOne collects, uses and protects your personal data when you visit our website or contact us.{% endblock %}
+{% block title %}{% trans "Privacy Policy — SolarOne LED Lighting" %}{% endblock %}
+{% block meta_description %}{% trans "SolarOne privacy policy: what data we collect through our contact form and analytics, how we use cookies, and your rights under GDPR and CCPA." %}{% endblock %}
+{% block og_title %}{% trans "Privacy Policy — SolarOne LED Lighting" %}{% endblock %}
+{% block og_description %}{% trans "How SolarOne collects, uses and protects your personal data when you visit our website or contact us." %}{% endblock %}
 
 {% block content %}
 

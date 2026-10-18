@@ -1229,3 +1229,95 @@ msgstr "Productos &amp; Proyectos Relacionados"
 
 msgid "Stadium Lighting FAQ"
 msgstr "FAQ de Iluminación de Estadios"
+
+msgid "Application"
+msgstr "Aplicación"
+
+msgid "Change language"
+msgstr "Cambiar idioma"
+
+msgid "Dimming (option)"
+msgstr "Regulación (opcional)"
+
+msgid "Filter / Categories"
+msgstr "Filtrar / Categorías"
+
+msgid "Filter by Application"
+msgstr "Filtrar por aplicación"
+
+msgid "Finish (option)"
+msgstr "Acabado (opcional)"
+
+msgid "Input Voltage"
+msgstr "Tensión de entrada"
+
+msgid "LED Driver Location"
+msgstr "Ubicación del driver LED"
+
+msgid "Main menu"
+msgstr "Menú principal"
+
+msgid "Sorry, we could not save your message. Please try again."
+msgstr "Lo sentimos, no pudimos guardar su mensaje. Inténtelo de nuevo."
+
+msgid "Swipe to view all columns"
+msgstr "Deslice para ver todas las columnas"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid ""
+"Too many messages submitted recently. Please wait a few minutes before "
+"trying again."
+msgstr ""
+"Demasiados mensajes enviados recientemente. Espere unos minutos antes de "
+"intentarlo de nuevo."
+
+msgid "View image %(forloop.counter)s"
+msgstr "Ver imagen %(forloop.counter)s"
+
+msgid ""
+"We could not deliver your message right now. Please try again later or email"
+" us directly using the address on this site."
+msgstr ""
+"No pudimos entregar su mensaje en este momento. Inténtelo más tarde o "
+"envíenos un correo directamente a la dirección de este sitio."
+
+msgid "Your message has been sent successfully!"
+msgstr "¡Su mensaje ha sido enviado con éxito!"
+
+msgid "Privacy Policy — SolarOne LED Lighting"
+msgstr "Política de privacidad — SolarOne Iluminación LED"
+
+msgid ""
+"SolarOne privacy policy: what data we collect through our contact form and "
+"analytics, how we use cookies, and your rights under GDPR and CCPA."
+msgstr ""
+"Política de privacidad de SolarOne: datos que recopilamos a través de "
+"nuestro formulario de contacto y analíticas, uso de cookies y sus derechos "
+"según el RGPD y el CCPA."
+
+msgid ""
+"How SolarOne collects, uses and protects your personal data when you visit "
+"our website or contact us."
+msgstr ""
+"Cómo SolarOne recopila, utiliza y protege sus datos personales cuando visita"
+" nuestro sitio web o se pone en contacto con nosotros."
+
+msgid "Terms of Service — SolarOne LED Lighting"
+msgstr "Términos del servicio — SolarOne Iluminación LED"
+
+msgid ""
+"SolarOne terms of service: website use, intellectual property, product "
+"information disclaimer, and limitations of liability."
+msgstr ""
+"Términos del servicio de SolarOne: uso del sitio web, propiedad intelectual,"
+" descargo de responsabilidad sobre la información de productos y "
+"limitaciones de responsabilidad."
+
+msgid ""
+"The terms governing your use of the SolarOne website and the limitations "
+"that apply to product information shown."
+msgstr ""
+"Los términos que rigen el uso del sitio web de SolarOne y las limitaciones "
+"que se aplican a la información de productos mostrada."

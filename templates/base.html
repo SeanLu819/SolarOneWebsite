@@ -64,13 +64,14 @@
      受 CSP style-src 'self' 'unsafe-inline' 允许。 -->
 <style nonce="{{ request.csp_nonce }}" id="critical-css">
 :root{
-  --bg:#080D1F;--bg-soft:#111827;--bg-raised:#1A2035;
-  --ink:#FFFFFF;--ink-soft:#D9D9E3;--ink-mute:#8A8A95;--ink-subtle:#5A5A65;
-  --accent-brand:#0088FF;--accent:var(--accent-brand,#0088FF);
-  --accent-hover:#269DFF;--accent-soft:rgba(0,136,255,0.10);
-  --accent-glow:rgba(0,136,255,0.22);--accent-deep:#0066BF;
+  --bg:#1F1E1C;--bg-soft:#262420;--bg-raised:#2E2B26;
+  --ink:#FFFFFF;--ink-soft:#E4DFD7;--ink-mute:#9C958B;--ink-subtle:#6E675E;
+  --accent-brand:#1068C9;--accent:var(--accent-brand,#1068C9);
+  --accent-hover:#3E8FD8;--accent-soft:rgba(16,104,201,0.10);
+  --accent-glow:rgba(16,104,201,0.22);--accent-deep:#0E56A8;
   --success:#22C55E;--info:#38BDF8;--warning:#F59E0B;
-  --line:rgba(255,255,255,0.07);--line-strong:rgba(255,255,255,0.14);
+  --line:rgba(237,233,227,0.08);--line-strong:rgba(237,233,227,0.15);
+  --accent-warm:#B89076;--accent-warm-deep:#9A7256;--accent-warm-soft:#D8B89E;
   --ff-display:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', Roboto, sans-serif;
   --ff-body:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans CN', 'Noto Sans CJK SC', Roboto, sans-serif;
   --ff-mono:'IBM Plex Mono',ui-monospace,"SF Mono",Menlo,monospace;
@@ -80,8 +81,8 @@
 [data-theme="light"]{
   --bg:#F5F7FA;--bg-soft:#EBEEF3;--bg-raised:#FFFFFF;
   --ink:#111827;--ink-soft:#374151;--ink-mute:#6B7280;--ink-subtle:#9CA3AF;
-  --accent:#006AC7;--accent-hover:#2684D6;--accent-soft:rgba(0,106,199,0.08);
-  --accent-glow:rgba(0,106,199,0.12);--accent-deep:#005095;
+  --accent:#0E56A8;--accent-hover:#3E8FD8;--accent-soft:rgba(16,104,201,0.08);
+  --accent-glow:rgba(16,104,201,0.12);--accent-deep:#0E56A8;
   --line:rgba(0,0,0,0.07);--line-strong:rgba(0,0,0,0.12)
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -159,7 +160,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <nav class="nav" id="mainNav">
   <div class="container nav-inner">
     <a href="{% url 'home' %}" class="nav-brand">
-      <img id="brandLogo" src="{{ config.logo_url }}" alt="{{ config.brand_name }}"><span style="display:none;font-weight:700;font-size:1.3rem;color:var(--ink)">{{ config.brand_name }}</span>
+      <span class="brand-wordmark">{{ config.brand_name }}<sup class="brand-reg">&reg;</sup></span>
     </a>
     <ul class="nav-links">
       {% include "includes/nav_items.html" %}
@@ -182,7 +183,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand-block">
-        <div class="footer-brand-name">{{ config.brand_name }}</div>
+        <div class="footer-brand-name"><span class="brand-wordmark">{{ config.brand_name }}<sup class="brand-reg">&reg;</sup></span></div>
         <p class="footer-brand-text">{{ config.footer_description }}</p>
       </div>
       <div>
@@ -253,18 +254,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script nonce="{{ request.csp_nonce }}">
 (function() {
   'use strict';
-
-  // Brand logo fallback (replaces onerror=; CSP nonce tightening, v1.6.2)
-  var brandLogo = document.getElementById('brandLogo');
-  if (brandLogo) {
-    var hideBrokenLogo = function(img) {
-      img.style.display = 'none';
-      var sib = img.nextElementSibling;
-      if (sib) sib.style.display = 'inline-block';
-    };
-    brandLogo.addEventListener('error', function() { hideBrokenLogo(this); });
-    if (brandLogo.complete && brandLogo.naturalWidth === 0) hideBrokenLogo(brandLogo);
-  }
 
   // ============ MOBILE PANEL ============
   // N-17: 焦点管理 —— 打开时背景内容 inert + aria-hidden，关闭后焦点回到汉堡按钮；

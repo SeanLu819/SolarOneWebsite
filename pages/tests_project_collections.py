@@ -1,4 +1,4 @@
-"""Guards for the v1.10.0 project collection pages.
+"""Guards for the /projects/football/ and /projects/tennis/ sports-landing pages.
 
 ``/projects/football/`` and ``/projects/tennis/`` replaced the three
 keyword-built landing pages. They exist because pointing a keyword at
@@ -22,6 +22,7 @@ check on the implementation, so the collection can be reimplemented freely.
 import re
 
 from django.test import TestCase
+from django.urls import reverse
 
 EN_TITLES = {
     'football': 'Football Stadium Lighting Projects | SolarOne',
@@ -237,3 +238,85 @@ class ProjectCollectionLocalizationTests(TestCase):
                     self.client.get(url, HTTP_HOST='localhost').status_code, 200,
                     url,
                 )
+
+
+class SportsLandingUnificationTests(TestCase):
+    """Q1: football/tennis share the stadium sports-landing template.
+
+    The old case-grid ``projects_collection.html`` pages have been deleted;
+    these pages render the unified product + project layout driven by
+    ``SPORT_LANDING_PAGES``. Every assertion here pins a product/content
+    decision so a regression is a deliberate act, not a silent drift.
+    """
+
+    def _get(self, path, lang=''):
+        url = ('/%s%s' % (lang, path)) if lang else path
+        response = self.client.get(url, HTTP_HOST='localhost')
+        self.assertEqual(response.status_code, 200, '%s -> %s'
+                         % (url, response.status_code))
+        return response.content.decode('utf-8')
+
+    def test_football_and_tennis_render_the_unified_template(self):
+        """Both keyword pages reuse stadium_lighting.html (the shared layout)."""
+        for key in ('football', 'tennis'):
+            html = self._get('/projects/%s/' % key)
+            self.assertIn(
+                'stadium-products-grid', html,
+                '%s is not on the unified sports-landing template' % key)
+            self.assertIn(
+                'stadium-intro', html,
+                '%s is missing the stadium-intro structural hook' % key)
+
+    def test_football_featured_products_are_m_series_and_vsp(self):
+        from pages.views.views_projects import SPORT_LANDING_PAGES
+        self.assertEqual(
+            SPORT_LANDING_PAGES['football']['featured_slugs'],
+            ('m-series', 'vsp-xxxxw-9m-yp'),
+            'football featured roster changed without a product decision')
+        html = self._get('/projects/football/')
+        for slug in ('m-series', 'vsp-xxxxw-9m-yp'):
+            self.assertIn(
+                reverse('product_detail', args=[slug]), html,
+                '%s must be featured on the football page' % slug)
+
+    def test_tennis_featured_products_are_rt410_series_and_m_series(self):
+        from pages.views.views_projects import SPORT_LANDING_PAGES
+        self.assertEqual(
+            SPORT_LANDING_PAGES['tennis']['featured_slugs'],
+            ('rt410-series', 'm-series'),
+            'tennis featured roster changed without a product decision')
+        html = self._get('/projects/tennis/')
+        for slug in ('rt410-series', 'm-series'):
+            self.assertIn(
+                reverse('product_detail', args=[slug]), html,
+                '%s must be featured on the tennis page' % slug)
+
+    def test_landing_pages_carry_sport_specific_h1_and_faq(self):
+        checks = {
+            'football': (
+                'Football Field Lighting',
+                'How many floodlights does a football pitch need?',
+            ),
+            'tennis': (
+                'Tennis Court Lighting',
+                'What lux level do tennis courts need?',
+            ),
+        }
+        for key, (h1, faq_q) in checks.items():
+            html = self._get('/projects/%s/' % key)
+            self.assertIn(h1, html, '%s H1 is not sport-specific' % key)
+            self.assertIn(faq_q, html, '%s FAQ is not sport-specific' % key)
+
+    def test_selection_table_is_sport_specific(self):
+        football = self._get('/projects/football/')
+        self.assertIn('5-a-side / community pitch', football,
+                      'football selection table lost its sport row')
+        tennis = self._get('/projects/tennis/')
+        self.assertIn('Padel / pickleball court', tennis,
+                      'tennis selection table lost its sport row')
+
+    def test_faq_jsonld_present_on_landing_pages(self):
+        for key in ('football', 'tennis'):
+            html = self._get('/projects/%s/' % key)
+            self.assertIn('FAQPage', html,
+                          '%s is missing the FAQPage JSON-LD' % key)

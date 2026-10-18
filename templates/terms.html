@@ -2,12 +2,14 @@
 {% load i18n %}
 {% load static %}
 
-{# B1/F1: legal pages are English-only for now; multilingual legal is a follow-up (B5/C). #}
+{# E 段（2026-10-12）：法律页 title/meta/og 字面量经 trans 标签路由到 gettext，并已用 MT 译出
+   五语（用户明确指示牺牲「法律文本不机翻」以换非英语 SERP 标题；正文法律文本仍待 B5/C 专业/
+   法务译文，不在本批）。守卫见 pages/tests_i18n_ea.py（LEGAL_METADATA 必须翻译 + 渲染实证）。 #}
 
-{% block title %}Terms of Service — SolarOne LED Lighting{% endblock %}
-{% block meta_description %}SolarOne terms of service: website use, intellectual property, product information disclaimer, and limitations of liability.{% endblock %}
-{% block og_title %}Terms of Service — SolarOne LED Lighting{% endblock %}
-{% block og_description %}The terms governing your use of the SolarOne website and the limitations that apply to product information shown.{% endblock %}
+{% block title %}{% trans "Terms of Service — SolarOne LED Lighting" %}{% endblock %}
+{% block meta_description %}{% trans "SolarOne terms of service: website use, intellectual property, product information disclaimer, and limitations of liability." %}{% endblock %}
+{% block og_title %}{% trans "Terms of Service — SolarOne LED Lighting" %}{% endblock %}
+{% block og_description %}{% trans "The terms governing your use of the SolarOne website and the limitations that apply to product information shown." %}{% endblock %}
 
 {% block content %}
 

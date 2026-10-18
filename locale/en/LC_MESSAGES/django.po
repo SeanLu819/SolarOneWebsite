@@ -1013,3 +1013,60 @@ msgstr "Which luminaire do these venues use?"
 #: templates/product_overview.html
 msgid "Models in this series"
 msgstr "Models in this series"
+
+msgid "Application"
+msgstr "Application"
+
+msgid "Change language"
+msgstr "Change language"
+
+msgid "Dimming (option)"
+msgstr "Dimming (option)"
+
+msgid "Filter / Categories"
+msgstr "Filter / Categories"
+
+msgid "Filter by Application"
+msgstr "Filter by Application"
+
+msgid "Finish (option)"
+msgstr "Finish (option)"
+
+msgid "Input Voltage"
+msgstr "Input Voltage"
+
+msgid "LED Driver Location"
+msgstr "LED Driver Location"
+
+msgid "Main menu"
+msgstr "Main menu"
+
+msgid "Sorry, we could not save your message. Please try again."
+msgstr "Sorry, we could not save your message. Please try again."
+
+msgid "Swipe to view all columns"
+msgstr "Swipe to view all columns"
+
+msgid "Theme"
+msgstr "Theme"
+
+msgid ""
+"Too many messages submitted recently. Please wait a few minutes before "
+"trying again."
+msgstr ""
+"Too many messages submitted recently. Please wait a few minutes before "
+"trying again."
+
+msgid "View image %(forloop.counter)s"
+msgstr "View image %(forloop.counter)s"
+
+msgid ""
+"We could not deliver your message right now. Please try again later or email"
+" us directly using the address on this site."
+msgstr ""
+"We could not deliver your message right now. Please try again later or email"
+" us directly using the address on this site."
+
+msgid "Your message has been sent successfully!"
+msgstr "Your message has been sent successfully!"
+

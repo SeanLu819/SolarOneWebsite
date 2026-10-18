@@ -326,21 +326,19 @@ def _collection_dynamic_images(name, lang='en'):
         return _project_covers(
             (get_projects(lang, '', sports) or [])[:_COLLECTION_IMAGE_CAP], lang)
     if name == 'stadium_lighting':
-        # The page renders one product cover per stadium luminaire plus a
+        # The page renders one product cover per featured luminaire plus a
         # venue cover per project, so the sitemap entry lists the same
-        # pictures the visitor sees. Drawn from the loaders rather than a
-        # literal for the same reason as the other collections.
+        # pictures the visitor sees. Sourced from the view helper so the
+        # sitemap and the rendered page can never disagree (iron law: dual
+        # paths must change together).
         from .views_stadium import (
-            FEATURED_PRODUCT_SLUGS, STADIUM_CATEGORY, VENUE_PROJECT_LIMIT,
+            get_featured_stadium_products, STADIUM_CATEGORY, VENUE_PROJECT_LIMIT,
         )
         from .related_links import PRODUCT_CATEGORY_TO_PROJECT_SPORTS
 
         sports = PRODUCT_CATEGORY_TO_PROJECT_SPORTS.get(STADIUM_CATEGORY, [])
         out = []
-        category_products = [p for p in (get_products(lang) or [])
-                             if getattr(p, 'category', '') == STADIUM_CATEGORY]
-        by_slug = {p.slug: p for p in category_products}
-        for product in [by_slug[s] for s in FEATURED_PRODUCT_SLUGS if s in by_slug]:
+        for product in get_featured_stadium_products(lang):
             url = getattr(product, 'image_url', '') or ''
             if url:
                 out.append((url, getattr(product, 'name_t', '') or '', ''))

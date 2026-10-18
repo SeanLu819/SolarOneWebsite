@@ -89,6 +89,11 @@ def get_common_context():
     # via _SIDEBAR_I18N (same channel as the six fields above).
     config.meta_title = _t(config.meta_title, lang)
     config.meta_description = _t(config.meta_description, lang)
+    # B 段残留：关于页与页脚文案多语
+    config.about_title = _t(config.about_title, lang)
+    config.about_text_1 = _t(config.about_text_1, lang)
+    config.about_text_2 = _t(config.about_text_2, lang)
+    config.footer_description = _t(config.footer_description, lang)
 
     return {
         'config': config,

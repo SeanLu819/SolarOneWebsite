@@ -2072,40 +2072,24 @@ class I18nCatalogGuardTests(SimpleTestCase):
 
     # 存量欠账（截至 2026-09-17）。新增条目 = 又漏了一次翻译同步，不要这么做。
     KNOWN_UNTRANSLATED = frozenset({
+        # --- A 段合规文本（cookie/GDPR/隐私）：法律文本，不接受机翻，留待专业/法务译文（B5/C） ---
         'Accept All',
         'Analytics cookies:',
-        'Application',
-        'Change language',
         'Cookie Usage',
         'Data We Collect',
-        'Dimming (option)',
         'Essential cookies:',
-        'Filter / Categories',
-        'Filter by Application',
-        'Finish (option)',
         'Help us understand how visitors interact with our website',
-        'Input Voltage',
-        'LED Driver Location',
         'Last updated:',
-        'Main menu',
         'Marketing cookies:',
         'Reject',
         'Required for basic site functionality',
-        'Sorry, we could not save your message. Please try again.',
-        'Swipe to view all columns',
-        'Theme',
-        'Too many messages submitted recently. Please wait a few minutes '
-        'before trying again.',
         'Types of cookies we use:',
         'Under GDPR (EU) and similar regulations, you have the right to '
         'access, correct, or delete your personal data. Contact us at',
         'Used to deliver relevant advertisements',
-        'View image %(forloop.counter)s',
         'We collect minimal data necessary for website functionality and '
         'analytics, including: device type, browser type, pages visited, and '
         'referring source. We do not sell your personal data to third parties.',
-        'We could not deliver your message right now. Please try again later '
-        'or email us directly using the address on this site.',
         "We use cookies to enhance your browsing experience and analyze site "
         "traffic. By clicking 'Accept', you consent to our use of cookies.",
         'We use cookies to enhance your browsing experience and analyze site '
@@ -2115,8 +2099,15 @@ class I18nCatalogGuardTests(SimpleTestCase):
         'cookies cannot be disabled as they are necessary for the website to '
         'function.',
         'Your Rights',
-        'Your message has been sent successfully!',
         'for any privacy-related requests.',
+        # stadium_lighting hero lead (2026-10-17): rewrote to name both the M
+        # Series and VSP platforms. MT drafts for fr/es/de/ru/ar TBD — falls
+        # back to English like the other untranslated entries, never an empty
+        # string. Remove from this set once the five translations land.
+        'Two platforms cover the brief: the M Series modular floodlight from '
+        '80 W to 1280 W for training grounds and club venues, and the VSP '
+        'series \u2014 broadcast-grade, with asymmetric optics and 12 / 18 / '
+        '30 / 50 degree distributions for the seating bowl.',
     })
 
     # en 是源语言：msgid 本身就是英文，查不到自然回退英文，不构成缺陷。
@@ -2299,6 +2290,8 @@ class DataDrivenTranslationTests(SimpleTestCase):
     # 静态规则 (c) 的覆盖范围**悄悄变了**（历史上这正好是"原地换数据源"的漏洞）。
     KNOWN_CONFIG_FIELDS = {
         'pages/views/common.py': (
+            'about_text_1', 'about_text_2', 'about_title',
+            'footer_description',
             'hero_subtitle', 'hero_title',
             'meta_description', 'meta_title',
             'products_subtitle', 'products_title',
@@ -2311,7 +2304,7 @@ class DataDrivenTranslationTests(SimpleTestCase):
     # 用数量清单兜底：新增一个变量型调用点就必须同步登记，否则测试变红。
     # 主体（26 处字面量 + 侧栏构建函数）由运行时 spy 覆盖，不进这张表。
     KNOWN_DYNAMIC_SITES = {
-        'pages/views/common.py': 8,   # _t(config.hero_title / …_subtitle / meta_title / meta_description 等 8 个字段)
+        'pages/views/common.py': 12,  # _t(config.<字段>) 共 12 个：hero/products/projects 的 title+subtitle、meta_title/meta_description、about_title/about_text_1/about_text_2/footer_description
         'pages/views/enrich.py': 1,   # _t(card_label) —— 取自两个映射字典
         # _t(cat, lang) x2（news 视图的 chips 数据 + 卡片分类徽章）+ x2（
         # news_detail 视图的详情页分类标签 + related 卡片徽章)。取值只有
@@ -3511,9 +3504,9 @@ class P0StyleConsistencyTests(TestCase):
             'admin 直接写 --accent 会冲掉 light 主题压暗覆盖（历史 bug）')
 
     def test_accent_derivation_gated_and_from_brand(self):
-        self.assertIn('--accent-brand: #0088FF', self.css,
+        self.assertIn('--accent-brand: #1068C9', self.css,
                       'base.css 默认 brand 必须等于 SiteConfig 默认值')
-        self.assertIn('var(--accent-brand, #0088FF)', self.css,
+        self.assertIn('var(--accent-brand, #1068C9)', self.css,
                       '--accent 必须由 --accent-brand 推导')
         self.assertIn('@supports (color: color-mix', self.css,
             'color-mix 派生必须包 @supports：自定义属性不做语法校验，'
@@ -3525,14 +3518,33 @@ class P0StyleConsistencyTests(TestCase):
             'light 主题 accent 必须从 --accent-brand 压暗派生')
 
     def test_accent_defaults_consistent_no_stale_literals(self):
-        self.assertEqual(self.seed['siteconfig']['accent_color'], '#0088FF')
-        self.assertIn('--accent-brand:#0088FF', self.base_html,
+        self.assertEqual(self.seed['siteconfig']['accent_color'], '#1068C9')
+        self.assertIn('--accent-brand:#1068C9', self.base_html,
                       'critical CSS 默认值必须与 seed/base.css 一致')
         css_no_comment = re.sub(r'/\*.*?\*/', '', self.css, flags=re.DOTALL)
         for stale in ('#0077ED', '#0062C4', '#0090FF', '#005BB5',
                       '#004A99'):
             self.assertNotIn(stale, css_no_comment,
                              f'旧 accent 字面 {stale} 残留在 base.css')
+
+    def test_plan_c_tokens_no_cyan_warm_carbon(self):
+        css_no_comment = re.sub(r'/\*.*?\*/', '', self.css, flags=re.DOTALL)
+        # 步骤2：hero 渐变青色端点已删
+        self.assertNotIn('#00D4FF', css_no_comment,
+                         'hero 渐变青色端点 #00D4FF 必须已删除（方案C）')
+        # 步骤1：深色 surface 暖碳灰
+        self.assertRegex(css_no_comment, r'--bg:\s*#1F1E1C',
+                         ':root --bg 必须为暖碳灰 #1F1E1C（方案C）')
+        # 暖棕三档已定义
+        for tok in ('--accent-warm', '--accent-warm-deep', '--accent-warm-soft'):
+            self.assertIn(tok, css_no_comment, f'方案C 暖棕令牌 {tok} 必须已定义')
+        # 暖棕至少被引用 1 次（footer 分隔线），防死令牌回归
+        self.assertIn('var(--accent-warm)', css_no_comment,
+                      '暖棕令牌 --accent-warm 必须至少被引用 1 次')
+        # 除刻意老浏览器兜底外，无旧蓝字面量残留
+        for stale in ('#0088FF', '#006AC7'):
+            self.assertNotIn(stale, css_no_comment,
+                             f'旧蓝字面 {stale} 残留在 base.css（方案C 已统一为钴蓝）')
 
     def test_btn_hover_follows_accent_token(self):
         m = re.search(r'\.btn-primary:hover\s*\{[^}]*\}', self.css)

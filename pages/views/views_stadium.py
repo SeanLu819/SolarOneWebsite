@@ -53,7 +53,13 @@ VENUE_PROJECT_LIMIT = 9
 #: models. The original "first N of the category" rendered a generic VSP-series
 #: list; pinning the slugs makes the roster a product decision that has to be
 #: re-made on purpose (9M first — the shorter tower — then 12M).
-FEATURED_PRODUCT_SLUGS = ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp')
+#: The two luminaires this page features, in display order. Written literally,
+#: not derived: the page exists to present exactly this shortlist — a modular
+#: flood platform (M Series, 80–1280 W) for club/training venues and the
+#: broadcast-grade VSP series for televised stadiums. The earlier "two VSP
+#: models" roster was dropped in favour of two *platforms* so the hero spans
+#: the two distinct buying intents instead of two near-identical 4200 W SKUs.
+FEATURED_PRODUCT_SLUGS = ('m-series', 'vsp-xxxxw-9m-yp')
 
 #: Page-level FAQ (v1.10.24, audit A6/GEO).
 #:
@@ -137,6 +143,70 @@ STADIUM_FAQ = [
 ]
 
 
+def get_featured_landing_products(slugs, lang='en'):
+    """Hero luminaires for any sports-landing page, in ``slugs`` order.
+
+    Each slug is resolved with ``get_product_detail`` — which finds *both*
+    top-level platforms (M Series, VSP series) **and** child sub-models
+    (FL6M, FL9M …) — so a landing page can feature a specific floodlight model
+    that lives under a series rather than the series platform itself. The
+    /products/ index uses ``get_products`` and only lists top-level parents;
+    that filter is intentional there but must not gate the hero roster, or a
+    child model like FL6M silently disappears from the football hero.
+
+    The platform label (e.g. "VSP series") comes from ``productspagecards`` —
+    the same source the /products/ page uses — so every landing hero and the
+    products page spell each platform identically. Child sub-models have no
+    ``productspagecards`` entry (they are not platforms), so for those the
+    card falls back to the product's own name/description and a
+    ``/products/<slug>/`` link. The overlay is applied to a *copy* of each
+    product: ``get_product_detail`` already returns a fresh instance, but the
+    products page can still enrich the shared seed object, so copying keeps
+    this helper side-effect free.
+    """
+    import copy
+
+    from .data_loaders import _load_seed, get_product_detail
+
+    cards = {
+        (c.get('slug') or '').strip(): c
+        for c in (_load_seed().get('productspagecards', []) or [])
+        if c.get('is_active', True)
+    }
+    featured = []
+    for slug in slugs:
+        # ``get_product_detail`` resolves child slugs that ``get_products``
+        # hides behind parent__isnull=True — that is the whole point of this
+        # helper rewrite (FL6M is a child of M Series).
+        product = get_product_detail(slug, lang)
+        if product is None:
+            continue
+        p = copy.copy(product)
+        card = cards.get(slug)
+        if card:
+            if card.get('title'):
+                p.name_t = card['title']
+            if card.get('subtitle'):
+                p.description_t = card['subtitle']
+            if card.get('link_url'):
+                p.card_link_url = card['link_url']
+        else:
+            # Child sub-model (e.g. FL6M): no platform card. Derive the hero
+            # copy from the product itself and link to its own detail page.
+            if not getattr(p, 'name_t', None):
+                p.name_t = getattr(p, 'name', slug)
+            if not getattr(p, 'description_t', None):
+                p.description_t = getattr(p, 'description', '')
+            p.card_link_url = '/products/%s/' % slug
+        featured.append(p)
+    return featured
+
+
+def get_featured_stadium_products(lang='en'):
+    """Stadium hero products, in ``FEATURED_PRODUCT_SLUGS`` order."""
+    return get_featured_landing_products(FEATURED_PRODUCT_SLUGS, lang)
+
+
 def stadium_lighting(request):
     """/stadium-lighting/ — the generic stadium / sports lighting term.
 
@@ -162,10 +232,9 @@ def stadium_lighting(request):
         p for p in (get_products(lang) or [])
         if getattr(p, 'category', '') == STADIUM_CATEGORY
     ]
-    by_slug = {p.slug: p for p in category_products}
-    featured = [by_slug[s] for s in FEATURED_PRODUCT_SLUGS if s in by_slug]
-    for product in featured:
-        product.is_stadium_featured = True
+    # Featured hero uses the shared helper so the platform labels match the
+    # /products/ page and the cached-product objects are never mutated in place.
+    featured = get_featured_stadium_products(lang)
 
     # Projects: the venues, newest-sorted by the loader's own ordering so the
     # page does not add a second, competing notion of "newest".
@@ -185,22 +254,30 @@ def stadium_lighting(request):
             'SolarOne LED stadium lighting: broadcast-grade VSP floodlights '
             'and modular LED floods from 80 W to 1280 W, with 20 delivered '
             'venue projects.', lang),
-        'stadium_products': featured,
+        'landing_products': featured,
+        'landing_venues': venues,
+        # Kept for the template's default venue-lead blocktrans, whose .po entry
+        # still references `stadium_venues`. Football/tennis pass `venue_lead`
+        # overrides, so they do not use this branch.
         'stadium_venues': venues,
-        'stadium_sport_types': sports,
-        'stadium_product_count': len(category_products),
-        'stadium_faq': _localised_faq(lang),
-        'stadium_faq_json': json.dumps(
+        'landing_product_count': len(category_products),
+        'faq_items': _localised_faq(STADIUM_FAQ, lang),
+        'faq_json': json.dumps(
             build_stadium_faq_jsonld(
-                _localised_faq(lang),
+                _localised_faq(STADIUM_FAQ, lang),
                 entity_id=f'{settings.CANONICAL_ORIGIN}{request.path}#faq'),
             ensure_ascii=False),
+        # The text fields (accent / h1 / intro / product_heading / product_lead /
+        # selection_heading / selection_lead / selection_note / venue_heading /
+        # faq_heading) are intentionally NOT passed here: the template falls back
+        # to the stadium copy via default: filters, so this page renders exactly
+        # as it did before the Q1 unification. Football/tennis pass their own.
     })
     return render(request, 'stadium_lighting.html', context)
 
 
-def _localised_faq(lang):
-    """Translate ``STADIUM_FAQ`` through gettext, same route as page copy.
+def _localised_faq(faq_list, lang):
+    """Translate a FAQ list (list of {question, answer}) through gettext.
 
     Reuses the product FAQ's JSON-LD builder rather than writing a second one:
     ``FAQPage.mainEntity`` is a fixed shape, and two builders for it would be
@@ -210,19 +287,24 @@ def _localised_faq(lang):
 
     return [
         {'question': _(item['question']), 'answer': _(item['answer'])}
-        for item in STADIUM_FAQ
+        for item in faq_list
     ]
 
 
-def build_stadium_faq_jsonld(faq_list, entity_id=None):
-    """Build the schema.org FAQPage dict for this page.
+def build_landing_faq_jsonld(faq_list, entity_id=None):
+    """Build the schema.org FAQPage dict for any sports-landing page.
 
     Delegates to :func:`build_product_faq_jsonld` — the shape is identical and
-    this page's FAQ is the same kind of content.
+    every landing page's FAQ is the same kind of content.
     """
     from .views_products import build_product_faq_jsonld
 
     return build_product_faq_jsonld(faq_list, entity_id=entity_id)
+
+
+def build_stadium_faq_jsonld(faq_list, entity_id=None):
+    """Back-compat alias for :func:`build_landing_faq_jsonld`."""
+    return build_landing_faq_jsonld(faq_list, entity_id=entity_id)
 
 
 def _t(text, lang):

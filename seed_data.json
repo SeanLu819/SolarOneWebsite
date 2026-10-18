@@ -2781,11 +2781,31 @@
       "image": "images/projects/yuanshen-sports-centre-stadium/shys-soccer-02.webp",
       "order": 3,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Shanghai, Chine",
+          "description": "[Profil du client]\nSitué dans le nouveau district de Pudong à Shanghai, ce stade polyvalent de 160 000 m² peut accueillir 20 000 spectateurs. Ancien fief du Shanghai Shenxin FC, il sert de domicile au puissant club de CSL du Shanghai Port FC (anciennement SIPG) depuis 2021.\n\n[Étendue des travaux]\nDes normes d'éclairage pour compétitions élite étaient obligatoires. Le système a été conçu pour délivrer 2 200 lux d'éclairement moyen, U0 ≥ 0,8 et Ra > 80, garantissant une conformité totale aux lignes directrices AFC 2018 pour l'éclairage des stades. Notre solution sur mesure a réussi à concilier ces exigences de performance strictes avec les contraintes budgétaires du projet.\n\n[La solution]\nNous avons déployé 320 luminaires sportifs LED haute performance FL12M-1000W (5000–5500K). Un système de contrôle en réseau intelligent a également été intégré, offrant une commutation à distance, des fonctions de gradation et une surveillance de puissance en temps réel.",
+          "results": "2 200 lux en moyenne, U0=0,8, Ra>80 — conforme aux lignes directrices AFC 2018 pour l'éclairage des stades."
+        },
+        "es": {
+          "location": "Shanghai, China",
+          "description": "[Perfil del cliente]\nUbicado en el nuevo distrito de Pudong de Shanghái, este estadio polivalente de 160 000 m² tiene capacidad para 20 000 espectadores. Antiguo hogar del Shanghai Shenxin FC, desde 2021 es el estadio local del potente club de la CSL Shanghai Port FC (antes SIPG).\n\n[Alcance del trabajo]\nEran obligatorias normas de iluminación para competiciones de élite. El sistema se diseñó para entregar 2 200 lux de iluminancia media, U0 ≥ 0,8 y Ra > 80, garantizando el cumplimiento total de las directrices AFC 2018 para la iluminación de estadios. Nuestra solución a medida equilibró con éxito estas estrictas métricas de rendimiento con las restricciones presupuestarias del proyecto.\n\n[La solución]\nDesplegamos 320 luminarias deportivas LED de alto rendimiento FL12M-1000W (5000–5500K). También se integró un sistema de control en red inteligente que ofrece conmutación remota, funciones de atenuación y monitorización de potencia en tiempo real.",
+          "results": "2 200 lux de media, U0=0,8, Ra>80 — cumple las directrices AFC 2018 para la iluminación de estadios."
+        },
+        "de": {
+          "location": "Shanghai, China",
+          "description": "[Kundenprofil]\nIm neuen Bezirk Pudong in Shanghai gelegen, bietet dieses 160 000 m² große Mehrzweckstadion Platz für 20 000 Zuschauer. Ehemalige Heimat des Shanghai Shenxin FC, dient es seit 2021 als Heimstadion des CSL-Clubs Shanghai Port FC (früher SIPG).\n\n[Umfang der Arbeiten]\nBeleuchtungsstandards für Spitzenwettbewerbe waren obligatorisch. Das System wurde für einen durchschnittlichen Beleuchtungswert von 2 200 Lux, U0 ≥ 0,8 und Ra > 80 ausgelegt und erfüllt vollständig die AFC-Stadionbeleuchtungsrichtlinien 2018. Unsere maßgeschneiderte Lösung vereinte diese strengen Leistungskennzahlen mit den budgetären Vorgaben des Projekts.\n\n[Die Lösung]\nWir installierten 320 Hochleistungs-LED-Sportleuchten FL12M-1000W (5000–5500K). Zusätzlich wurde ein intelligentes vernetztes Steuersystem integriert, das Fernumschaltung, Dimming und Echtzeit-Leistungsüberwachung ermöglicht.",
+          "results": "2 200 Lux im Mittel, U0=0,8, Ra>80 — erfüllt die AFC-Stadionbeleuchtungsrichtlinien 2018."
+        },
+        "ru": {
+          "location": "Шанхай, Китай",
+          "description": "[Профиль клиента]\nРасположенный в новом районе Пудун в Шанхае, этот многоцелевой стадион площадью 160 000 м² вмещает 20 000 зрителей. Бывшая арена Shanghai Shenxin FC, с 2021 года он служит домашним стадионом сильного клуба CSL Shanghai Port FC (ранее SIPG).\n\n[Объём работ]\nТребовались стандарты освещения для соревнований высшего уровня. Система была спроектирована для обеспечения средней освещённости 2 200 люкс, U0 ≥ 0,8 и Ra > 80, что гарантирует полное соответствие руководству AFC 2018 по освещению стадионов. Наше индивидуальное решение успешно сбалансировало эти строгие показатели с бюджетными ограничениями проекта.\n\n[Решение]\nМы установили 320 высокопроизводительных светодиодных спортивных светильников FL12M-1000W (5000–5500K). Также была интегрирована интеллектуальная сетевая система управления с удалённым переключением, диммированием и мониторингом мощности в реальном времени.",
+          "results": "2 200 люкс в среднем, U0=0,8, Ra>80 — соответствует руководству AFC 2018 по освещению стадионов."
+        },
+        "ar": {
+          "location": "شانغهاي، الصين",
+          "description": "[ملف العميل]\nيقع هذا الاستاد متعدد الأغراض الذي تبلغ مساحته 160 ألف م² في منطقة بودونغ الجديدة بشانغهاي، ويتسع لـ 20 ألف متفرج. كان سابقاً معقل نادي شانغهاي شينشين، ومنذ عام 2021 يُعد الملعب الرئيسي لنادي شانغهاي بورت القوي في الدوري الصيني الممتاز (شنغهاي بورت إف سي، سابقاً SIPG).\n\n[نطاق العمل]\nكانت معايير الإضاءة لبطولات النخبة إلزامية. صُمم النظام لتوفير إضاءة متوسطة 2,200 لوكس، وU0 ≥ 0.8، وRa > 80، لضمان الامتثال الكامل لإرشادات AFC 2018 لإضاءة الاستادات. نجح حلنا المخصص في الموازنة بين هذه المعايير الصارمة والقيود الميزانية للمشروع.\n\n[الحل]\nنشرنا 320 مصباحاً رياضياً عالي الأداء من نوع FL12M-1000W بتقنية LED (5000–5500K). كما تم دمج نظام تحكم ذكي متصل بالشبكة يوفر التبديل عن بُعد وإمكانات التعتيم والمراقبة الفورية للطاقة.",
+          "results": "2,200 لوكس في المتوسط، U0=0.8، Ra>80 — يلبي إرشادات AFC 2018 لإضاءة الاستادات."
+        }
       },
       "gallery": [
         "images/projects/yuanshen-sports-centre-stadium/shys-soccer-01.webp",
@@ -3022,11 +3042,31 @@
       "image": "images/projects/narbonne-arena/Narbonne-basketball-04.webp",
       "order": 13,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "France",
+          "description": "[Profil du client]\nInaugurée fin 2019, la Narbonne Arena est un lieu modulaire de premier plan dans le sud de la France. Pouvant accueillir jusqu'à 5 000 personnes, elle sert de pôle central pour les tournées, concerts, congrès et événements sportifs.\n\n[Étendue des travaux]\nL'arène nécessitait une infrastructure audio ultramoderne pour compléter son acoustique architecturale moderne. Le projet exigeait un système sonore très polyvalent, capable d'offrir une clarté audio exceptionnelle pour diverses configurations d'événements et layouts modulaires.\n\n[La solution]\nInstallé par Texen, le nouveau système line array GEO S12 comprend 10 grappes de haut-parleurs déployées stratégiquement, dont deux plus grands réseaux de 6 modules face à la tribune principale. Le système est alimenté par trois amplificateurs NXAMP4x4 équipés de cartes Dante, garantissant un routage du signal fluide et des performances audio sans compromis.",
+          "results": ""
+        },
+        "es": {
+          "location": "Francia",
+          "description": "[Perfil del cliente]\nInaugurada a finales de 2019, la Narbonne Arena es un recinto modular de primer nivel en el sur de Francia. Con capacidad para hasta 5 000 personas, es un polo central para giras, conciertos, congresos y eventos deportivos.\n\n[Alcance del trabajo]\nLa arena requería una infraestructura de audio de última generación que complementara su acústica arquitectónica moderna. El proyecto exigía un sistema de sonido muy versátil, capaz de ofrecer una claridad acústica excepcional en diversas configuraciones de eventos y distribuciones modulares.\n\n[La solución]\nInstalado por Texen, el nuevo sistema line array GEO S12 cuenta con 10 agrupaciones de altavoces desplegadas estratégicamente, incluidas dos mayores redes de 6 módulos orientadas a la grada principal. El sistema está alimentado por tres amplificadores NXAMP4x4 equipados con tarjetas Dante, garantizando un enrutamiento de señal fluido y un rendimiento acústico sin concesiones.",
+          "results": ""
+        },
+        "de": {
+          "location": "Frankreich",
+          "description": "[Kundenprofil]\nEnde 2019 eröffnet, ist die Narbonne Arena ein erstklassiger modularer Veranstaltungsort im Süden Frankreichs. Mit Platz für bis zu 5 000 Besucher ist sie ein zentraler Anlaufpunkt für Tourneen, Konzerte, Kongresse und Sportveranstaltungen.\n\n[Umfang der Arbeiten]\nDie Arena benötigte eine modernste Audio-Infrastruktur, die ihre zeitgemäße architektonische Akustik ergänzt. Das Projekt verlangte ein hochgradig vielseitiges Beschallungssystem, das außergewöhnliche Klangklarheit über verschiedene Veranstaltungskonfigurationen und modulare Layouts hinweg liefert.\n\n[Die Lösung]\nInstalliert von Texen, umfasst das neue Line-Array-System GEO S12 zehn strategisch platzierte Lautsprechercluster, darunter zwei größere 6-Modul-Arrays gegenüber der Haupttribüne. Das System wird von drei NXAMP4x4-Verstärkern mit Dante-Karten gespeist und gewährleistet eine nahtlose Signalverteilung sowie kompromisslose Audioleistung.",
+          "results": ""
+        },
+        "ru": {
+          "location": "Франция",
+          "description": "[Профиль клиента]\nОткрытая в конце 2019 года, Narbonne Arena — это первоклассная модульная площадка на юге Франции. Вмещая до 5 000 человек, она служит центральным узлом для гастролей, концертов, конгрессов и спортивных мероприятий.\n\n[Объём работ]\nАрене требовалась современнейшая аудиоинфраструктура, дополняющая её современную архитектурную акустику. Проект предусматривал высокоуниверсальную звуковую систему, обеспечивающую исключительную чёткость звука для различных конфигураций мероприятий и модульных планировок.\n\n[Решение]\nУстановленная компанией Texen, новая линейная массивная система GEO S12 включает 10 стратегически размещённых кластеров громкоговорителей, в том числе два крупных 6-модульных массива, обращённых к главной трибуне. Система питается от трёх усилителей NXAMP4x4 с картами Dante, обеспечивая бесшовную маршрутизацию сигнала и безупречное качество звука.",
+          "results": ""
+        },
+        "ar": {
+          "location": "فرنسا",
+          "description": "[ملف العميل]\nافتُتحت ناربون أرينا أواخر عام 2019، وهي وجهة متعددة الاستخدامات رائدة في جنوب فرنسا. تتسع لما يصل إلى 5,000 شخص، وتعد مركزاً محورياً للجولات والحفلات والمؤتمرات والفعاليات الرياضية.\n\n[نطاق العمل]\nكانت الصالة بحاجة إلى بنية صوتية حديثة تكمل صوتيتها المعمارية المعاصرة. تطلب المشروع نظام صوت عالي التعددية قادر على تقديم وضوح صوتي استثنائي عبر تكوينات وفعاليات وتخطيطات معيارية متنوعة.\n\n[الحل]\nقامت شركة Texen بتركيب نظام الصفيف الخطي GEO S12 الجديد الذي يضم 10 عناقيد مكبرات صوت موزعة استراتيجياً، بما فيها شبكتان أكبر من 6 وحدات مواجهتان للمدرج الرئيسي. يعمل النظام بثلاثة مضخمات NXAMP4x4 مزودة ببطاقات Dante، مما يضمن توجيه الإشارة بسلاسة وأداءً صوتياً لا تنازل فيه.",
+          "results": ""
+        }
       },
       "gallery": [
         "images/projects/narbonne-arena/Narbonne-basketball-04.webp",
@@ -3108,11 +3148,31 @@
       "image": "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-01.webp",
       "order": 17,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nConstruit en 1973, le Beijing International Club Tennis Hall est le premier site de tennis professionnel indoor de Chine. Pour s'aligner sur les normes modernes et assurer son développement continu, l'installation a subi une reconstruction complète sur son site d'origine en 2015.\n\n[Étendue des travaux]\nLe projet de reconstruction exigeait le remplacement à l'identique des projecteurs existants au halogénure métallique 1000W. Comme le tennis est un sport sans marge d'erreur, le système d'éclairage devait offrir la meilleure scène visuelle aux athlètes. Un contrôle avancé de l'éblouissement et une illumination uniforme étaient obligatoires pour éliminer les ombres perturbatrices ou les points chauds, garantissant que l'éclairage reste une constante fiable plutôt qu'une variable imprévisible lors des jeux à haute vitesse.\n\n[La solution]\nUne conception photométrique rigoureuse a été exécutée pour optimiser le contrôle de l'éblouissement et établir des coordonnées de visée précises pour chaque projecteur. Le nouveau système d'éclairage LED a été intégré de manière transparente via un plan de rénovation à l'identique, surpassant les halogénures métalliques existants en offrant une uniformité exceptionnelle dans l'air comme sur le court, garantissant ainsi une clarté visuelle optimale pour le tennis professionnel.",
+          "results": "Les SolarOne Vision Smart RT410FL‑S160W rehaussent les performances d'éclairage du Beijing International Tennis Club. Avec 75 % d'uniformité et 50 % d'économie d'énergie, ces luminaires à faible éblouissement assurent un confort visuel excellent pour les athlètes et les entraîneurs. Les LED longue durée réduisent les remplacements de pièces avec pratiquement aucune maintenance continue."
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nConstruido en 1973, el Beijing International Club Tennis Hall es la primera instalación de tenis profesional indoor de China. Para alinearse con las normas modernas y asegurar su desarrollo continuo, las instalaciones sufrieron una reconstrucción integral en su emplazamiento original en 2015.\n\n[Alcance del trabajo]\nEl proyecto de reconstrucción requería sustituir uno a uno las luminarias existentes de haluro metálico de 1000W. Como el tenis es un deporte sin margen de error, el sistema de iluminación debía ofrecer el mejor escenario visual para los atletas. Un control avanzado del deslumbramiento y una iluminación uniforme eran obligatorios para eliminar sombras distractoras o puntos calientes, garantizando que la iluminación siguiera siendo una constante fiable y no una variable imprevisible durante el juego a alta velocidad.\n\n[La solución]\nSe ejecutó un diseño fotométrico riguroso para optimizar el control del deslumbramiento y establecer coordenadas de apuntamiento precisas para cada luminaria. El nuevo sistema de iluminación LED se integró sin problemas mediante un plan de retroadaptación uno a uno, superando a los haluros metálicos anteriores al ofrecer una uniformidad excepcional en el aire y en la pista, garantizando así una claridad visual óptima para el tenis profesional.",
+          "results": "Las SolarOne Vision Smart RT410FL‑S160W elevan el rendimiento de iluminación del Beijing International Tennis Club. Con un 75 % de uniformidad y un 50 % de ahorro de energía, estas luminarias de bajo deslumbramiento aseguran un excelente confort visual para atletas y entrenadores. Las LED de larga duración reducen los reemplazos de piezas con prácticamente ningún mantenimiento continuo."
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nErrichtet 1973, ist die Beijing International Club Tennis Hall die erste professionelle Indoor-Tennisanlage Chinas. Um den modernen Standards zu entsprechen und die weitere Entwicklung zu sichern, wurde die Anlage 2015 an ihrem ursprünglichen Standort vollständig rekonstruiert.\n\n[Umfang der Arbeiten]\nDas Rekonstruktionsprojekt erforderte den 1:1-Austausch der vorhandenen 1000W-Metalldampflampen. Da Tennis ein Sport ohne Fehlertoleranz ist, musste das Beleuchtungssystem die ultimative visuelle Bühne für die Athleten bieten. Erweiterte Blendkontrolle und gleichmäßige Ausleuchtung waren zwingend, um störende Schatten oder Hotspots zu eliminieren und sicherzustellen, dass die Beleuchtung eine verlässliche Konstante bleibt, statt einer unberechenbaren Variablen beim Hochgeschwindigkeitsspiel.\n\n[Die Lösung]\nEin rigoroses photometrisches Design optimierte die Blendkontrolle und legte präzise Zielkoordinaten für jede Leuchte fest. Das neue LED-Beleuchtungssystem wurde nahtlos über einen 1:1-Retrofit-Plan integriert und übertrifft die alten Metalldampflampen durch außergewöhnliche Gleichmäßigkeit in der Luft und auf dem Platz, wodurch optimale Sichtverhältnisse für professionellen Tennis garantiert werden.",
+          "results": "Die SolarOne Vision Smart RT410FL‑S160W heben die Beleuchtungsleistung im Beijing International Tennis Club. Mit 75 % Gleichmäßigkeit und 50 % Energieeinsparung sorgen diese blendarmen Leuchten für hervorragenden visuellen Komfort von Athleten und Trainern. Langlebige LEDs reduzieren Ersatzteilwechsel bei nahezu wartungsfreiem Betrieb."
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nПостроенный в 1973 году, Beijing International Club Tennis Hall — это первая в Китае профессиональная крытая теннисная арена. Чтобы соответствовать современным стандартам и обеспечить дальнейшее развитие, объект был полностью реконструирован на своём исходном месте в 2015 году.\n\n[Объём работ]\nПроект реконструкции требовал замены существующих светильников с металлогалогенными лампами 1000 Вт «один к одному». Поскольку теннис — это спорт без права на ошибку, система освещения должна была обеспечить идеальную визуальную сцену для спортсменов. Расширенный контроль ослеплённости и равномерное освещение были обязательны для устранения отвлекающих теней или ярких пятен, гарантируя, что освещение остаётся надёжной константой, а не непредсказуемой переменной при игре на высокой скорости.\n\n[Решение]\nБыла выполнена строгая фотометрическая проработка для оптимизации контроля ослеплённости и определения точных координат наводки каждого светильника. Новая светодиодная система освещения была бесшовно интегрирована по плану ретрофита «один к одному», превосходя прежние металлогалогенные лампы благодаря исключительной равномерности в воздухе и на корте, что гарантирует оптимальную видимость для профессионального тенниса.",
+          "results": "Светодиодные светильники SolarOne Vision Smart RT410FL‑S160W повышают показатели освещения в Beijing International Tennis Club. Обеспечивая 75 % равномерности и 50 % экономии энергии, эти светильники с низкой ослеплённостью гарантируют отличный визуальный комфорт для спортсменов и тренеров. Долговечные светодиоды сокращают замену деталей при практически отсутствующем текущем обслуживании."
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nبُني عام 1973، ويُعد Beijing International Club Tennis Hall أول صالة تنس احترافية مغلقة في الصين. لمواكبة المعايير الحديثة وضمان تطوره المستمر، خضع المرفق لإعادة بناء شاملة في موقعه الأصلي عام 2015.\n\n[نطاق العمل]\nتطلب مشروع إعادة البناء استبدال مصابيح الهاليد المعدني الحالية بقدرة 1000 واط بشكل مطابق واحد إلى واحد. وبما أن التنس رياضة لا تقبل الخطأ، كان يجب على نظام الإضاءة توفير أفضل مسرح بصري للرياضيين. كان التحكم المتقدم في الوهج والإضاءة المنتظمة إلزامياً للقضاء على الظلال المشتتة أو البقع الساخنة، لضمان بقاء الإضاءة ثابتاً موثوقاً لا متغيراً غير متوقع أثناء اللعب عالي السرعة.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري صارم لتحسين التحكم في الوهج وتحديد إحداثيات تسديد دقيقة لكل مصباح. تم دمج نظام الإضاءة LED الجديد بسلاسة عبر خطة استبدال مطابقة واحد إلى واحد، متفوقاً على مصابيح الهاليد المعدني القديمة من خلال توفير انتظام استثنائي في الهواء وعلى الملعب، مما يضمن وضوحاً بصرياً مثالياً للتنس الاحترافي.",
+          "results": "تُحسّن مصابيح SolarOne Vision Smart RT410FL‑S160W أداء الإضاءة في نادي بكين الدولي للتنس. مع انتظام 75% وتوفير طاقة 50%، توفر هذه المصابيح منخفضة الوهج راحة بصرية ممتازة للرياضيين والمدربين. تقلل مصابيح LED طويلة العمر من استبدال القطع مع صيانة مستمرة شبه معدومة."
+        }
       },
       "gallery": [
         "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-01.webp",
@@ -3137,11 +3197,31 @@
       "image": "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-01.webp",
       "order": 19,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nConstruit sur le site historique d'une ancienne usine de moteurs de 1897, le National Snow and Ice Training and Research Center a servi de pôle vital pour les Jeux Olympiques d'hiver de Pékin 2022. Il abrite la première patinoire de vitesse au CO2 d'Asie, comprenant une piste de 400 m et deux pistes de short-track construites selon les strictes normes de compétition olympique.\n\n[Étendue des travaux]\nEn tant que lieu d'entraînement olympique d'élite, le centre nécessitait un système d'éclairage haute performance respectant des normes rigoureuses de diffusion et d'entraînement. La solution devait offrir une clarté visuelle exceptionnelle et un rendu des couleurs précis pour le patinage à grande vitesse, tout en s'intégrant parfaitement à l'infrastructure durable du lieu.\n\n[La solution]\nAu total, 304 luminaires sportifs LED haute performance FL9M-630W (CCT : 5000–5500K, Ra : 90) ont été stratégiquement installés pour garantir des conditions visuelles optimales. De plus, un système de contrôle en réseau avancé a été intégré pour permettre le fonctionnement à distance et la surveillance de puissance en temps réel, rationalisant la gestion de l'installation.",
+          "results": "Conçue pour répondre aux exigences strictes d'éclairage de niveau tournoi, la patinoire de vitesse de 400 m atteint une illuminance moyenne de 2000 lx avec une uniformité U₀ de 0,7, satisfaisant aux normes de diffusion TV HD en direct. Son système de contrôle d'éclairage intelligent avec mode d'éclairage par intervalles offre 50 % d'économie d'énergie supplémentaire. L'ensemble de la solution d'éclairage répond à la fois aux attentes budgétaires et de performance du projet."
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nConstruido en el histórico emplazamiento de una antigua fábrica de motores de 1897, el National Snow and Ice Training and Research Center fue un pilar vital para los Juegos Olímpicos de Invierno de Pekín 2022. Alberga la primera pista de patinaje de velocidad con CO2 de Asia, que comprende una pista de 400 m y dos pistas de short-track construidas según estrictas normas de competición olímpica.\n\n[Alcance del trabajo]\nComo recinto de entrenamiento olímpico de élite, el centro requería un sistema de iluminación de alto rendimiento que cumpliera rigurosas normas de retransmisión y entrenamiento. La solución debía ofrecer una claridad visual excepcional y una reproducción cromática precisa para el patinaje a alta velocidad, integrándose a la vez a la infraestructura sostenible del recinto.\n\n[La solución]\nEn total, se instalaron estratégicamente 304 luminarias deportivas LED de alto rendimiento FL9M-630W (CCT: 5000–5500K, Ra: 90) para garantizar condiciones visuales óptimas. Además, se integró un sistema de control en red avanzado para permitir el funcionamiento remoto y la monitorización de potencia en tiempo real, simplificando la gestión de las instalaciones.",
+          "results": "Diseñada para cumplir las estrictas exigencias de iluminación de nivel torneo, la pista de velocidad de 400 m alcanza una iluminancia media de 2000 lx con una uniformidad U₀ de 0,7, satisfaciendo las normas de emisión de TV HD en directo. Su sistema de control de iluminación inteligente con modo de iluminación por intervalos aporta un 50 % adicional de ahorro energético. La solución completa de iluminación satisface tanto las expectativas presupuestarias como de rendimiento del proyecto."
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nAuf dem historischen Gelände einer ehemaligen Motorenfabrik von 1897 errichtet, war das National Snow and Ice Training and Research Center ein wesentlicher Stützpunkt für die Olympischen Winterspiele 2022 in Peking. Es beherbergt die erste CO2-Eisschnelllaufbahn Asiens, bestehend aus einer 400-m-Bahn und zwei Short-Track-Bahnen, die nach strengen olympischen Wettkampfstandards gebaut wurden.\n\n[Umfang der Arbeiten]\nAls elitäre olympische Trainingsstätte benötigte das Zentrum ein Hochleistungs-Beleuchtungssystem, das strengen Übertragungs- und Trainingsstandards entsprach. Die Lösung musste außergewöhnliche visuelle Klarheit und präzise Farbwiedergabe für das Hochgeschwindigkeits-Eislaufen bieten und gleichzeitig nahtlos in die nachhaltige Infrastruktur der Anlage integriert werden.\n\n[Die Lösung]\nInsgesamt wurden 304 Hochleistungs-LED-Sportleuchten FL9M-630W (CCT: 5000–5500K, Ra: 90) strategisch installiert, um optimale Sichtbedingungen zu gewährleisten. Zusätzlich wurde ein fortschrittliches vernetztes Steuersystem integriert, das den Fernbetrieb und die Echtzeit-Leistungsüberwachung ermöglicht und die Anlagenverwaltung optimiert.",
+          "results": "Für die strengen Turnier-Beleuchtungsanforderungen ausgelegt, erreicht die 400-m-Schnelllaufbahn einen durchschnittlichen Beleuchtungswert von 2000 lx bei einer Gleichmäßigkeit U₀ von 0,7 und erfüllt die HD-Live-TV-Übertragungsstandards. Das intelligente Beleuchtungssteuersystem mit Intervall-Schaltung liefert zusätzlich 50 % Energieeinsparung. Die komplette Beleuchtungslösung erfüllt sowohl die budgetären als auch die Leistungsanforderungen des Projekts."
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nПостроенный на историческом месте бывшего моторного завода 1897 года, National Snow and Ice Training and Research Center стал жизненно важным узлом для зимних Олимпийских игр в Пекине 2022 года. В нём расположен первая в Азии скоростная конькобежная арена на CO2, включающая 400-метровую дорожку и две дорожки шорт-трека, построенные по строгим олимпийским соревновательным стандартам.\n\n[Объём работ]\nКак элитная олимпийская тренировочная арена, центр требовал высокопроизводительной системы освещения, отвечающей строгим стандартам трансляции и тренировок. Решение должно было обеспечивать исключительную видимость и точную цветопередачу для скоростного катания, а также бесшовно интегрироваться в устойчивую инфраструктуру объекта.\n\n[Решение]\nВ общей сложности 304 высокопроизводительных светодиодных спортивных светильника FL9M-630W (CCT: 5000–5500K, Ra: 90) были стратегически установлены для обеспечения оптимальных визуальных условий. Кроме того, была интегрирована передовая сетевая система управления для дистанционной работы и мониторинга мощности в реальном времени, упрощая эксплуатацию объекта.",
+          "results": "Спроектированная в соответствии со строгими требованиями турнирного освещения, 400-метровая скоростная дорожка достигает средней освещённости 2000 лк при равномерности U₀ 0,7, удовлетворяя стандартам прямых трансляций в формате HD. Интеллектуальная система управления освещением с интервальным режимом обеспечивает дополнительную экономию энергии 50%. Полное решение по освещению удовлетворяет как бюджетным, так и эксплуатационным ожиданиям проекта."
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nبُني على الموقع التاريخي لمصنع محركات سابق يعود لعام 1897، وشكّل المركز الوطني للتدريب والبحث في الثلج والجليد ركيزة حيوية لدورة الألعاب الأولمبية الشتوية في بكين 2022. يضم أول حلبة تزلج سرعة بـ CO2 في آسيا، وتتألف من مضمار 400 متر ومضمارين للتزلج القصير وفقاً لمعايير المسابقات الأولمبية الصارمة.\n\n[نطاق العمل]\nبصفته وجهة تدريب أولمبية نخبوية، كان المركز بحاجة إلى نظام إضاءة عالي الأداء يلبي معايير البث والتدريب الصارمة. كان على الحل توفير وضوح بصري استثنائي وتدرج لوني دقيق للتزلج عالي السرعة، مع التكامل السلس مع البنية التحتية المستدامة للوجهة.\n\n[الحل]\nتم تركيب 304 مصابيح رياضية عالية الأداء من نوع FL9M-630W بتقنية LED (درجة حرارة اللون: 5000–5500K، Ra: 90) بشكل استراتيجي لضمان ظروف بصرية مثالية. بالإضافة إلى ذلك، تم دمج نظام تحكم متقدم متصل بالشبكة لتمكين التشغيل عن بُعد والمراقبة الفورية للطاقة، مما يبسط إدارة المرفق.",
+          "results": "صُممت لتلبية متطلبات الإضاءة الصارمة لمستوى البطولات، تصل حلبة التزلج السريع بطول 400 متر إلى إضاءة متوسطة 2000 لوكس بانتظام U₀ يبلغ 0.7، وتلبي معايير البث التلفزيوني المباشر بتقنية HD. يوفر نظام التحكم الذكي بالإضاءة مع وضع الإضاءة بالفواصل 50% إضافية من توفير الطاقة. تلبي حلول الإضاءة الكاملة توقعات المشروع من حيث الميزانية والأداء معاً."
+        }
       },
       "gallery": [
         "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-01.webp",
@@ -3167,11 +3247,31 @@
       "image": "images/projects/chunan-velodrome/bycicle-chunan01.webp",
       "order": 21,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Hangzhou, Chine",
+          "description": "[Profil du client]\nSitué dans la zone touristique du lac Qiandao, le Chun'an Velodrome a servi de lieu cycliste central pour les Jeux Asiatiques de Hangzhou. Inspiré du concept « Le poisson bondissant au soleil matinal », ce repère de 40 mètres de haut présente une canopée ovale dynamique en acier et un système d'éclairage floods. Il abrite une piste indoor internationale de 250 mètres d'une capacité de 3 040 places assises.\n\n[Étendue des travaux]\nEn tant que lieu principal pour les compétitions cyclistes d'élite des Jeux Asiatiques, le vélodrome nécessitait un système d'éclairage de classe mondiale capable de soutenir les épreuves sur piste à grande vitesse. La solution d'éclairage devait offrir une uniformité parfaite et une rendu des couleurs précis pour les athlètes comme pour les caméras de diffusion, tout en s'intégrant harmonieusement à la conception architecturale dynamique et inspirée de la perle du lieu.\n\n[La solution]\nUne conception photométrique complète a été exécutée pour optimiser le contrôle de l'éblouissement et assurer un visée précise pour la piste fortement bankée. Le système d'éclairage floods dynamique intégré a été calibré stratégiquement pour mettre en valeur l'architecture emblématique du lieu, offrant une clarté visuelle exceptionnelle et une atmosphère immersive pour les concurrents comme pour les spectateurs.",
+          "results": "Illuminance horizontale : > 3200 lux (Uniformité : 0,90)\nIlluminance caméra principale : > 2600 lux (Uniformité : 0,84)\nIlluminance caméra auxiliaire : > 2200 lux (Uniformité : 0,70)\nConforme aux normes de diffusion HD."
+        },
+        "es": {
+          "location": "Hangzhou, China",
+          "description": "[Perfil del cliente]\nSituado en la zona turística del lago Qiandao, el Chun'an Velodrome fue la instalación ciclista central de los Juegos Asiáticos de Hangzhou. Inspirado en el concepto «El pez saltarín bajo el sol matutino», este hito de 40 metros de altura presenta una cubierta ovalada dinámica de acero y un sistema de iluminación floodlight. Alberga una pista indoor internacional de 250 metros con capacidad para 3 040 espectadores.\n\n[Alcance del trabajo]\nComo recinto principal para las competiciones ciclistas de élite de los Juegos Asiáticos, el velódromo requería un sistema de iluminación de clase mundial capaz de soportar pruebas en pista de alta velocidad. La solución de iluminación debía ofrecer una uniformidad perfecta y una reproducción cromática precisa tanto para los atletas como para las cámaras de retransmisión, integrándose a la vez armoniosamente con el diseño arquitectónico dinámico e inspirado en la perla del recinto.\n\n[La solución]\nSe ejecutó un diseño fotométrico completo para optimizar el control del deslumbramiento y asegurar una puntería precisa para la pista fuertemente peraltada. El sistema de iluminación floodlight dinámico integrado se calibró estratégicamente para resaltar la arquitectura emblemática del recinto, ofreciendo una claridad visual excepcional y una atmósfera inmersiva para competidores y espectadores.",
+          "results": "Iluminancia horizontal: > 3200 lux (Uniformidad: 0,90)\nIluminancia de cámara principal: > 2600 lux (Uniformidad: 0,84)\nIluminancia de cámara auxiliar: > 2200 lux (Uniformidad: 0,70)\nCumple las normas de retransmisión HD."
+        },
+        "de": {
+          "location": "Hangzhou, China",
+          "description": "[Kundenprofil]\nIn der Qiandao-See-Tourismuszone gelegen, war der Chun'an Velodrome die zentrale Radsportstätte der Asienspiele in Hangzhou. Inspiriert vom Konzept „Der springende Fisch in der Morgensonne“, zeichnet sich dieses 40 Meter hohe Wahrzeichen durch eine dynamische ovale Stahlkuppel und ein Flutlicht-System aus. Es beherbergt eine internationale 250-Meter-Indoor-Bahn mit Sitzplätzen für 3 040 Zuschauer.\n\n[Umfang der Arbeiten]\nAls Hauptstätte für Elite-Radsportwettbewerbe der Asienspiele benötigte der Velodrom eine weltklasse Beleuchtungsanlage, die Hochgeschwindigkeits-Bahnrennen unterstützt. Die Beleuchtungslösung musste makellose Gleichmäßigkeit und präzise Farbwiedergabe für Athleten und Übertragungskameras bieten und gleichzeitig harmonisch in das dynamische, perleninspirierte Architekturdesign der Anlage integriert werden.\n\n[Die Lösung]\nEin umfassendes photometrisches Design optimierte die Blendkontrolle und sicherte eine präzise Ausrichtung für die stark überhöhte Bahn. Das integrierte dynamische Flutlichtsystem wurde strategisch kalibriert, um die markante Architektur der Anlage hervorzuheben, und bietet sowohl für Wettkämpfer als auch für Zuschauer außergewöhnliche Sichtverhältnisse und ein beeindruckendes Ambiente.",
+          "results": "Horizontale Beleuchtungsstärke: > 3200 Lux (Gleichmäßigkeit: 0,90)\nHauptkamera-Beleuchtungsstärke: > 2600 Lux (Gleichmäßigkeit: 0,84)\nHilfskamera-Beleuchtungsstärke: > 2200 Lux (Gleichmäßigkeit: 0,70)\nEntspricht HD-Übertragungsstandards."
+        },
+        "ru": {
+          "location": "Ханчжоу, Китай",
+          "description": "[Профиль клиента]\nРасположенный в туристической зоне озера Цяньдаоху, Chun'an Velodrome стал центральной велосипедной ареной Азиатских игр в Ханчжоу. Вдохновлённый концепцией «Прыгающая рыба в утреннем солнце», этот 40-метровый ориентир отличается динамичным овальным стальным навесом и системой прожекторного освещения. В нём размещена международная крытая 250-метровая трасса с 3 040 сидячими местами.\n\n[Объём работ]\nБудучи главной ареной для элитных велосипедных соревнований Азиатских игр, велодром требовал системы освещения мирового класса, способной поддерживать скоростные трековые заезды. Световое решение должно было обеспечивать безупречную равномерность и точную цветопередачу как для спортсменов, так и для трансляционных камер, а также гармонично дополнять динамичный, вдохновлённый жемчужиной архитектурный дизайн объекта.\n\n[Решение]\nБыла выполнена комплексная фотометрическая проработка для оптимизации контроля ослеплённости и обеспечения точной наводки на сильно наклонённой трассе. Интегрированная динамическая система прожекторного освещения была стратегически откалибрована, чтобы подчеркнуть знаковую архитектуру объекта, обеспечивая исключительную видимость и атмосферное погружение для участников и зрителей.",
+          "results": "Горизонтальная освещённость: > 3200 люкс (равномерность: 0,90)\nОсвещённость основной камеры: > 2600 люкс (равномерность: 0,84)\nОсвещённость вспомогательной камеры: > 2200 люкс (равномерность: 0,70)\nСоответствует стандартам HD-трансляции."
+        },
+        "ar": {
+          "location": "هانغتشو، الصين",
+          "description": "[ملف العميل]\nيقع في منطقة بحيرة Qiandao السياحية، وشكّل Chun'an Velodrome المرفق الرئيسي للدراجات في دورة الألعاب الآسيوية في هانغتشو. مستوحى من فكرة «السمكة الوثابة في شمس الصباح»، يبلغ هذا المعلم ارتفاعه 40 متراً ويتميز بسقف فولاذي بيضاوي ديناميكي ونظام إضاءة فيضانية. يضم مضماراً داخلياً دولياً بطول 250 متراً بسعة 3,040 مقعداً.\n\n[نطاق العمل]\nبصفته المرفق الرئيسي لسباقات الدراجات النخبوية في الألعاب الآسيوية، كان المضمار بحاجة إلى نظام إضاءة عالمي المستوى قادر على دعم السباقات السريعة على المضمار. كان على حل الإضاءة توفير انتظام مثالي وتدرج لوني دقيق للرياضيين وكاميرات البث على حد سواء، مع الاندماج المتناغم مع التصميم المعماري الديناميكي المستوحى من اللؤلؤة.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري شامل لتحسين التحكم في الوهج وضمان تسديد دقيق للمضمار المائل بشدة. تمت معايرة نظام الإضاءة الفيضانية الديناميكي المتكامل بشكل استراتيجي لإبراز البنية المعمارية المميزة للوجهة، مما يوفر وضوحاً بصرياً استثنائياً وأجواءً غامرة للمتسابقين والجماهير.",
+          "results": "الإضاءة الأفقية: > 3200 لوكس (الانتظام: 0.90)\nإضاءة الكاميرا الرئيسية: > 2600 لوكس (الانتظام: 0.84)\nإضاءة الكاميرا المساعدة: > 2200 لوكس (الانتظام: 0.70)\nيتوافق مع معايير البث HD."
+        }
       },
       "gallery": [
         "images/projects/chunan-velodrome/bycicle-chunan01.webp",
@@ -3197,11 +3297,31 @@
       "image": "images/projects/olympic-sports-center-gymnasium-beijing/oscg-01.webp",
       "order": 23,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nSitué sur le côté nord du National Olympic Sports Center, le Beijing National Olympic Center Gymnasium (communément appelé « Aoti Center Gymnasium ») est une arène hexagonale de premier plan. S'étendant sur 4 hectares avec une surface bâtie de 32 410 mètres carrés, il accueille 6 300 spectateurs et sert de lieu résident au Beijing Royal Fighters de la Chinese Basketball Association (CBA).\n\n[Étendue des travaux]\nEn tant qu'arène résidente d'une équipe professionnelle de la CBA, le gymnase nécessitait un système d'éclairage haute performance capable de soutenir les compétitions élite de basket-ball et les normes de diffusion. Le projet exigeait une solution offrant une clarté visuelle exceptionnelle, une illumination uniforme et un éblouissement minimal pour suivre l'action rapide, tout en s'intégrant parfaitement à l'architecture hexagonale unique du lieu.\n\n[La solution]\nUne conception photométrique rigoureuse a été exécutée pour optimiser le contrôle de l'éblouissement et établir des coordonnées de visée précises pour le terrain de jeu de 40x70 mètres. Le nouveau système d'éclairage LED a été installé de manière transparente, surpassant les anciens projecteurs par une uniformité supérieure sur le terrain comme dans l'air, garantissant des conditions visuelles optimales pour les athlètes comme pour les spectateurs.",
+          "results": "Illuminance horizontale : > 4000 lux (Uniformité : 0,8)\nIlluminance caméra : > 3000 lux (Uniformité : 0,7)\nConforme aux normes de diffusion HD."
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nSituado en el lado norte del National Olympic Sports Center, el Beijing National Olympic Center Gymnasium (comúnmente conocido como «Aoti Center Gymnasium») es una arena hexagonal de primer nivel. Con 4 hectáreas y 32 410 metros cuadrados de superficie construida, alberga a 6 300 espectadores y es la sede del Beijing Royal Fighters de la Chinese Basketball Association (CBA).\n\n[Alcance del trabajo]\nComo recinto local de un equipo profesional de la CBA, el gimnasio requería un sistema de iluminación de alto rendimiento capaz de soportar competiciones de baloncesto de élite y normas de retransmisión. El proyecto exigía una solución que ofreciera claridad visual excepcional, iluminación uniforme y deslumbramiento mínimo para seguir la acción rápida, integrándose a la vez a la singular arquitectura hexagonal del recinto.\n\n[La solución]\nSe ejecutó un diseño fotométrico riguroso para optimizar el control del deslumbramiento y establecer coordenadas de apuntamiento precisas para la pista de juego de 40x70 metros. El nuevo sistema de iluminación LED se instaló sin problemas, superando a las luminarias anteriores con una uniformidad superior en la pista y en el aire, garantizando condiciones visuales óptimas para atletas y espectadores.",
+          "results": "Iluminancia horizontal: > 4000 lux (Uniformidad: 0,8)\nIluminancia de cámara: > 3000 lux (Uniformidad: 0,7)\nCumple las normas de retransmisión HD."
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nNördlich des National Olympic Sports Center gelegen, ist die Beijing National Olympic Center Gymnasium (umgangssprachlich „Aoti Center Gymnasium“) eine erstklassige hexagonale Arena. Auf 4 Hektar mit 32 410 Quadratmetern Nutzfläche bietet sie 6 300 Zuschauern Platz und ist die Heimstätte der Beijing Royal Fighters der Chinese Basketball Association (CBA).\n\n[Umfang der Arbeiten]\nAls Heimarena eines professionellen CBA-Teams benötigte die Sporthalle ein Hochleistungs-Beleuchtungssystem, das Elite-Basketballwettbewerbe und Übertragungsstandards unterstützt. Das Projekt verlangte eine Lösung mit außergewööhnlicher visueller Klarheit, gleichmäßiger Ausleuchtung und minimaler Blendung für die schnelle Spielaktion, die zugleich nahtlos in die einzigartige hexagonale Architektur der Anlage integriert wird.\n\n[Die Lösung]\nEin rigoroses photometrisches Design optimierte die Blendkontrolle und legte präzise Zielkoordinaten für das 40x70-Meter-Spielfeld fest. Das neue LED-Beleuchtungssystem wurde nahtlos installiert und übertrifft die alten Leuchten durch überlegene Gleichmäßigkeit auf dem Feld und in der Luft, wodurch optimale Sichtverhältnisse für Athleten und Zuschauer gewährleistet werden.",
+          "results": "Horizontale Beleuchtungsstärke: > 4000 Lux (Gleichmäßigkeit: 0,8)\nKamera-Beleuchtungsstärke: > 3000 Lux (Gleichmäßigkeit: 0,7)\nEntspricht HD-Übertragungsstandards."
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nРасположенный с северной стороны Национального олимпийского спортивного центра, Beijing National Olympic Center Gymnasium (в обиходе «Aoti Center Gymnasium») — это первая в своём роде шестиугольная арена. Занимая 4 гектара с площадью застройки 32 410 квадратных метров, она вмещает 6 300 зрителей и служит домашней ареной Beijing Royal Fighters китайской баскетбольной ассоциации (CBA).\n\n[Объём работ]\nБудучи домашней ареной профессиональной команды CBA, спортзал требовал высокопроизводительной системы освещения, способной поддерживать элитные баскетбольные соревнования и стандарты трансляции. Проект требовал решения с исключительной видимостью, равномерным освещением и минимальной ослеплённостью для отслеживания быстрой игры, которое также бесшовно интегрируется в уникальную шестиугольную архитектуру объекта.\n\n[Решение]\nБыла выполнена строгая фотометрическая проработка для оптимизации контроля ослеплённости и определения точных координат наводки для игровой площадки 40×70 метров. Новая светодиодная система освещения была установлена бесшовно, превосходя прежние светильники благодаря превосходной равномерности на площадке и в воздухе, что гарантирует оптимальные условия видимости для спортсменов и зрителей.",
+          "results": "Горизонтальная освещённость: > 4000 люкс (равномерность: 0,8)\nОсвещённость камеры: > 3000 люкс (равномерность: 0,7)\nСоответствует стандартам HD-трансляции."
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nيقع في الجانب الشمالي من المركز الأولمبي الوطني للرياضة، ويُعد Beijing National Olympic Center Gymnasium (المعروف شعبياً باسم «Aoti Center Gymnasium») صالة سداسية رائدة. يمتد على مساحة 4 هكتارات بمساحة بناء 32,410 متراً مربعاً، ويتسع لـ 6,300 متفرج، ويُعد الملعب الرئيسي لفريق Beijing Royal Fighters في رابطة كرة السلة الصينية (CBA).\n\n[نطاق العمل]\nبصفته الملعب الرئيسي لفريق محترف في دوري CBA، كان الصالة بحاجة إلى نظام إضاءة عالي الأداء قادر على دعم مسابقات كرة السلة النخبوية ومعايير البث. تطلب المشروع حلاً يوفر وضوحاً بصرياً استثنائياً وإضاءة منتظمة ووهجاً شبه معدوم لمراقبة اللعب السريع، مع التكامل السلس مع البنية المعمارية السداسية الفريدة للوجهة.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري صارم لتحسين التحكم في الوهج وتحديد إحداثيات تسديد دقيقة لملعب اللعب الذي يبلغ 40×70 متراً. تم تركيب نظام الإضاءة LED الجديد بسلاسة، متفوقاً على المصابيح القديمة من خلال انتظام متفوق على الملعب وفي الهواء، مما يضمن ظروفاً بصرية مثالية للرياضيين والجماهير.",
+          "results": "الإضاءة الأفقية: > 4000 لوكس (الانتظام: 0.8)\nإضاءة الكاميرا: > 3000 لوكس (الانتظام: 0.7)\nيتوافق مع معايير البث HD."
+        }
       },
       "gallery": [
         "images/projects/olympic-sports-center-gymnasium-beijing/oscg-01.webp",
@@ -3227,11 +3347,31 @@
       "image": "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
       "order": 25,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nLiuliqiao est un important carrefour de circulation situé sur la troisième périphérique de Pékin, servant d'artère critique pour le flux véhiculaire important de la ville.\n\n[Étendue des travaux]\nL'infrastructure d'éclairage d'origine de l'intersection se composait de neuf lampes sodium à haute pression (HPS) de 1000W montées sur six mâts de 35 mètres. L'installation nécessitait une mise à niveau complète de l'éclairage pour réduire considérablement la consommation d'énergie et moderniser la qualité d'illumination, tout en maintenant une visibilité adéquate pour la sécurité du trafic nocturne.\n\n[La solution]\nLe projet a exécuté un rétrofit stratégique, remplaçant les lampes HPS existantes par dix-huit projecteurs LED 200W utilisant une température de couleur de 2800K. Cette mise à niveau a permis un taux d'économie d'énergie remarquable de 66,67 %. Le système optimisé délivre désormais une illuminance moyenne de 33 lx avec un ratio d'uniformité de 0,56, maintenant une illuminance maximale de 68 lx et minimale de 23 lx pour assurer une visibilité routière sûre et cohérente.",
+          "results": "Les neuf lampes sodium à haute pression (HPS) 1000W d'origine ont été remplacées par dix-huit projecteurs LED 200W. L'illuminance moyenne est de 33 lx, avec un ratio d'uniformité de 0,56. L'illuminance maximale est de 68 lx et la minimale de 23 lx.\nAvec une température de couleur de 2800K, cette mise à niveau permet un taux d'économie d'énergie de 66,67 %."
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nLiuliqiao es un importante nudo de tráfico situado en el tercer anillo de Pekín, que sirve como arteria crítica para el elevado flujo vehicular de la ciudad.\n\n[Alcance del trabajo]\nLa infraestructura de iluminación original del cruce consistía en nueve lámparas de sodio de alta presión (HPS) de 1000W montadas en seis mástiles de 35 metros. La instalación requería una mejora integral de la iluminación para reducir significativamente el consumo energético y modernizar la calidad de iluminación, manteniendo al mismo tiempo una visibilidad adecuada para la seguridad del tráfico nocturno.\n\n[La solución]\nEl proyecto ejecutó una sustitución estratégica, reemplazando las lámparas HPS existentes por dieciocho proyectores LED 200W con una temperatura de color de 2800K. Esta actualización logró una notable tasa de ahorro energético del 66,67 %. El sistema optimizado ahora entrega una iluminancia media de 33 lx con una relación de uniformidad de 0,56, manteniendo una iluminancia máxima de 68 lx y mínima de 23 lx para garantizar una visibilidad vial segura y coherente.",
+          "results": "Las nueve lámparas de sodio de alta presión (HPS) de 1000W originales se han reemplazado por dieciocho proyectores LED 200W. La iluminancia media es de 33 lx, con una relación de uniformidad de 0,56. La iluminancia máxima es de 68 lx y la mínima de 23 lx.\nCon una temperatura de color de 2800K, esta mejora logra una tasa de ahorro energético del 66,67 %."
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nLiuliqiao ist ein wichtiger Verkehrsknotenpunkt am dritten Ring von Peking und dient als entscheidende Arterie für den hohen Fahrzeugverkehr der Stadt.\n\n[Umfang der Arbeiten]\nDie ursprüngliche Beleuchtungsinfrastruktur der Kreuzung bestand aus neun 1000W-Hochdrucknatriumlampen (HPS), die an sechs 35 Meter hohen Masten montiert waren. Die Anlage benötigte ein umfassendes Beleuchtungs-Upgrade, um den Energieverbrauch drastisch zu senken und die Beleuchtungsqualität zu modernisieren, bei gleichzeitiger Aufrechterhaltung einer ausreichenden Sicht für die nächtliche Verkehrssicherheit.\n\n[Die Lösung]\nDas Projekt führte einen strategischen Retrofit durch und ersetzte die vorhandenen HPS-Lampen durch achtzehn 200W-LED-Flutlichter mit einer Farbtemperatur von 2800K. Dieses Upgrade erzielte eine bemerkenswerte Energieeinsparung von 66,67 %. Das optimierte System liefert nun eine durchschnittliche Beleuchtungsstärke von 33 lx bei einem Gleichmäßigkeitsverhältnis von 0,56 und hält eine maximale Beleuchtungsstärke von 68 lx sowie eine minimale von 23 lx auf, um eine sichere und gleichmäßige Straßensicht zu gewährleisten.",
+          "results": "Die ursprünglichen neun 1000W-Hochdrucknatriumlampen (HPS) wurden durch achtzehn 200W-LED-Flutlichter ersetzt. Die durchschnittliche Beleuchtungsstärke beträgt 33 lx bei einem Gleichmäßigkeitsverhältnis von 0,56. Die maximale Beleuchtungsstärke liegt bei 68 lx, die minimale bei 23 lx.\nBei einer Farbtemperatur von 2800K erzielt dieses Upgrade eine Energieeinsparung von 66,67 %."
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nLiuliqiao — важный транспортный узел, расположенный на третьей кольцевой дороге Пекина и служащий критической артерией для интенсивного автомобильного потока города.\n\n[Объём работ]\nИсходная инфраструктура освещения перекрёстка состояла из девяти натриевых ламп высокого давления (HPS) мощностью 1000 Вт, установленных на шести 35-метровых мачтах. Объект требовал комплексной модернизации освещения для существенного снижения энергопотребления и обновления качества освещения при сохранении адекватной видимости для безопасности ночного движения.\n\n[Решение]\nПроект выполнил стратегическую реконструкцию, заменив прежние HPS-лампы восемнадцатью светодиодными прожекторами 200 Вт с цветовой температурой 2800K. Это обновление обеспечило впечатляющую экономию энергии 66,67 %. Оптимизированная система теперь обеспечивает среднюю освещённость 33 лк при коэффициенте равномерности 0,56, поддерживая максимальную освещённость 68 лк и минимальную 23 лк для безопасной и стабильной видимости на дороге.",
+          "results": "Девять исходных натриевых ламп высокого давления (HPS) мощностью 1000 Вт заменены восемнадцатью светодиодными прожекторами 200 Вт. Средняя освещённость составляет 33 лк при коэффициенте равномерности 0,56. Максимальная освещённость — 68 лк, минимальная — 23 лк.\nПри цветовой температуре 2800K это обновление обеспечивает экономию энергии 66,67 %."
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nليوليتشياو هو مركز مروري رئيسي يقع على الطريق الدائري الثالث في بكين، ويمثل شرياناً حيوياً للتدفق المروري الكثيف في المدينة.\n\n[نطاق العمل]\nتألفت بنية الإضاءة الأصلية عند التقاطع من تسع مصابيح صوديوم عالي الضغط (HPS) بقدرة 1000 واط مثبتة على ستة أعمدة بارتفاع 35 متراً. كان المرفق بحاجة إلى ترقية شاملة للإضاءة لخفض استهلاك الطاقة بشكل كبير وتحديث جودة الإضاءة، مع الحفاظ على رؤية كافية لسلامة المرور الليلي.\n\n[الحل]\nنفذ المشروع عملية استبدال استراتيجية، حيث استبدل مصابيح HPS القديمة بثمانية عشر كشافاً من نوع LED بقدرة 200 واط بدرجة حرارة لون 2800K. حقق هذا التحديث معدل توفير طاقة ملحوظاً يبلغ 66.67%. يوفر النظام المحسّن الآن إضاءة متوسطة 33 لوكس بنسبة انتظام 0.56، مع الحفاظ على إضاءة قصوى 68 لوكس ودنيا 23 لوكس لضمان رؤية طرقية آمنة ومتسقة.",
+          "results": "تم استبدال مصابيح الصوديوم عالي الضغط (HPS) الأصلية التسع بقدرة 1000 واط بثمانية عشر كشافاً LED بقدرة 200 واط. تبلغ الإضاءة المتوسطة 33 لوكس بنسبة انتظام 0.56. الإضاءة القصوى 68 لوكس والدنيا 23 لوكس.\nمع درجة حرارة لون 2800K، يحقق هذا التحديث معدل توفير طاقة 66.67%."
+        }
       },
       "gallery": [
         "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
@@ -3259,11 +3399,31 @@
       "image": "images/projects/fencing-venue-of-the-7th-cism-military-world-games/whzyxy-fencing-04.webp",
       "order": 27,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Wuhan, Chine",
+          "description": "[Profil du client]\nLa salle d'escrime de l'Université de Commerce de Wuhan a servi de lieu pour les épreuves d'escrime du pentathlon moderne lors des 7e Jeux Mondiaux Militaires CISM. Notamment, ce projet a été le premier achevé et affichait le cycle de construction le plus court parmi les 35 lieux des Jeux.\n\n[Étendue des travaux]\nL'arène comprend une zone de compétition avec 10 pistes et une zone d'entraînement avec 5 à 8 pistes, accueillant jusqu'à 2 185 spectateurs. Le principal défi d'éclairage était d'obtenir un véritable effet « sans ombre ». Pour répondre aux exigences rigoureuses de l'escrime à grande vitesse, l'illumination au plafond nécessitait des calculs photométriques précis pour éliminer les ombres perturbatrices et offrir une clarté visuelle impeccable aux athlètes.\n\n[La solution]\nPlus de 180 projecteurs LED FL6M-480W ont été stratégiquement installés sur le plafond. Grâce à une conception optique méticuleuse et à des calculs précis des points de visée, le système délivre un éclat uniforme et sans ombre qui enveloppe complètement les athlètes. Cette solution d'éclairage avancée garantit des conditions visuelles optimales, permettant aux concurrents de suivre les actions rapides avec une précision absolue.",
+          "results": "Illuminance horizontale : > 3600 lux (Uniformité : 0,90)\nIlluminance caméra principale : > 1500 lux (Uniformité : 0,80)\nConforme aux normes de diffusion HD."
+        },
+        "es": {
+          "location": "Wuhan, China",
+          "description": "[Perfil del cliente]\nEl Pabellón de Esgrima de la Universidad de Comercio de Wuhan sirvió como sede de las pruebas de esgrima del pentatlón moderno durante los 7º Juegos Mundiales Militares CISM. Cabe destacar que este proyecto fue el primero en completarse y tuvo el ciclo de construcción más corto entre los 35 recintos de los Juegos.\n\n[Alcance del trabajo]\nLa arena cuenta con una zona de competición con 10 pistas y una zona de entrenamiento con 5 a 8 pistas, con capacidad para 2 185 espectadores. El principal reto de iluminación era lograr un auténtico efecto «sin sombras». Para satisfacer las exigentes demandas de la esgrima a alta velocidad, la iluminación del techo requería cálculos fotométricos precisos para eliminar sombras distractoras y ofrecer una claridad visual impecable a los atletas.\n\n[La solución]\nMás de 180 luminarias LED FL6M-480W se instalaron estratégicamente en el techo. Mediante un diseño óptico meticuloso y cálculos exactos de puntos de apuntamiento, el sistema entrega un resplandor uniforme y sin sombras que envuelve completamente a los atletas. Esta avanzada solución de iluminación garantiza condiciones visuales óptimas, permitiendo a los competidores seguir las acciones rápidas con absoluta precisión.",
+          "results": "Iluminancia horizontal: > 3600 lux (Uniformidad: 0,90)\nIluminancia de cámara principal: > 1500 lux (Uniformidad: 0,80)\nCumple las normas de retransmisión HD."
+        },
+        "de": {
+          "location": "Wuhan, China",
+          "description": "[Kundenprofil]\nDie Fechthalle der Wuhan Business University war Austragungsort der Fechtwettbewerbe des Modernen Fünfkampfs während der 7. Militärweltspiele der CISM. Bemerkenswert war, dass dieses Projekt als erstes fertiggestellt wurde und die kürzeste Bauzeit aller 35 Wettkampfstätten der Spiele aufwies.\n\n[Umfang der Arbeiten]\nDie Arena verfügt über einen Wettkampfbereich mit 10 Planchen und einen Trainingsbereich mit 5 bis 8 Planchen, der bis zu 2 185 Zuschauer fasst. Die Haupt-Herausforderung bei der Beleuchtung bestand darin, einen echten „schattenfreien“ Effekt zu erzielen. Um den strengen Anforderungen des Hochgeschwindigkeits-Fechtens gerecht zu werden, erforderte die Deckenbeleuchtung präzise photometrische Berechnungen, um ablenkende Schatten zu eliminieren und den Athleten makellose Sicht zu bieten.\n\n[Die Lösung]\nÜber 180 FL6M-480W-LED-Leuchten wurden strategisch an der Decke installiert. Durch sorgfältiges optisches Design und exakte Zielpunkt-Berechnungen liefert das System einen gleichmäßigen, schattenfreien Schein, der die Athleten vollständig umhüllt. Diese fortschrittliche Beleuchtungslösung gewährleistet optimale Sichtverhältnisse und ermöglicht es den Wettkämpfern, schnelle Aktionen mit absoluter Präzision zu verfolgen.",
+          "results": "Horizontale Beleuchtungsstärke: > 3600 Lux (Gleichmäßigkeit: 0,90)\nHauptkamera-Beleuchtungsstärke: > 1500 Lux (Gleichmäßigkeit: 0,80)\nEntspricht HD-Übertragungsstandards."
+        },
+        "ru": {
+          "location": "Ухань, Китай",
+          "description": "[Профиль клиента]\nФехтовальный зал Уханьского торгово-экономического университета служил площадкой для фехтовальных соревнований современного пятиборья в рамках 7-х Всемирных военных игр CISM. Примечательно, что этот проект был завершён первым и имел самый короткий цикл строительства среди всех 35 объектов Игр.\n\n[Объём работ]\nАрена включает соревновательную зону с 10 дорожками и тренировочную зону с 5–8 дорожками, вмещая до 2 185 зрителей. Главной задачей освещения было достижение подлинного эффекта «без теней». Чтобы удовлетворить строгим требованиям скоростного фехтования, потолочное освещение требовало точных фотометрических расчётов для устранения отвлекающих теней и обеспечения безупречной видимости спортсменов.\n\n[Решение]\nБолее 180 светодиодных светильников FL6M-480W были стратегически установлены на потолке. Благодаря тщательно проработанной оптике и точным расчётам точек наводки система обеспечивает равномерное, лишённое теней свечение, полностью окутывающее спортсменов. Это передовое световое решение гарантирует оптимальные условия видимости, позволяя участникам отслеживать быстрые действия с абсолютной точностью.",
+          "results": "Горизонтальная освещённость: > 3600 люкс (равномерность: 0,90)\nОсвещённость основной камеры: > 1500 люкс (равномерность: 0,80)\nСоответствует стандартам HD-трансляции."
+        },
+        "ar": {
+          "location": "ووهان، الصين",
+          "description": "[ملف العميل]\nكانت صالة المبارزة بجامعة ووهان للتجارة مكاناً لمنافسات المبارزة في الخماسي الحديث خلال دورة الألعاب العسكرية العالمية السابعة CISM. ومن الجدير بالذكر أن هذا المشروع كان الأول الذي اكتمل وتميز بأقصر دورة بناء بين جميع المواقع الـ 35 للألعاب.\n\n[نطاق العمل]\nتضم الصالة منطقة منافسة بها 10 حلبات ومنطقة تدريب بـ 5 إلى 8 حلبات، بسعة تصل إلى 2,185 متفرجاً. كان التحدي الإضاءة الرئيسي تحقيق تأثير «خالٍ من الظلال» حقيقياً. لتلبية المتطلبات الصارمة للمبارزة عالية السرعة، تطلبت إضاءة السقف حسابات فوتومترية دقيقة للقضاء على الظلال المشتتة وتوفير وضوح بصري لا تشوبه شائبة للرياضيين.\n\n[الحل]\nتم تركيب أكثر من 180 مصباحاً من نوع FL6M-480W بتقنية LED بشكل استراتيجي على السقف. من خلال تصميم بصري دقيق وحسابات دقيقة لنقاط التسديد، يوفر النظام توهجاً منتظماً وخالياً من الظلال يلفّ الرياضيين بالكامل. يضمن حل الإضاءة المتقدم هذا ظروفاً بصرية مثالية، مما يتيح للمتنافسين متابعة الحركات السريعة بدقة مطلقة.",
+          "results": "الإضاءة الأفقية: > 3600 لوكس (الانتظام: 0.90)\nإضاءة الكاميرا الرئيسية: > 1500 لوكس (الانتظام: 0.80)\nيتوافق مع معايير البث HD."
+        }
       },
       "gallery": [
         "images/projects/fencing-venue-of-the-7th-cism-military-world-games/whzyxy-fencing-01.webp",
@@ -3289,11 +3449,31 @@
       "image": "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
       "order": 29,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "Red 1 Karting Beijing est un opérateur室内 et extérieur de karting polyvalent bien connu à Pékin, qui possède la première piste de karting professionnelle internationale certifiée CIK-FIA en Chine.",
+          "results": ""
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "Red 1 Karting Beijing es un conocido operador integral de karting indoor y outdoor en Pekín, que cuenta con la primera pista de karting profesional internacional certificada por la CIK-FIA en China.",
+          "results": ""
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "Red 1 Karting Beijing ist ein bekannter umfassender Indoors- und Outdoor-Kartbahn-Betreiber in Peking und betreibt die erste internationale, CIK-FIA-zertifizierte professionelle Kartbahn in China.",
+          "results": ""
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "Red 1 Karting Beijing — известный комплексный оператор крытых и открытых картодромов в Пекине, располагающий первой в Китае международной профессиональной картинговой трассой, сертифицированной CIK-FIA.",
+          "results": ""
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "Red 1 Karting Beijing هو مشغّل معروف شامل لحلبات الكارتينغ المغلقة والمفتوحة في بكين، ويضم أول حلبة كارتينغ احترافية دولية معتمدة من CIK-FIA في الصين.",
+          "results": ""
+        }
       },
       "gallery": [
         "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
@@ -3319,11 +3499,31 @@
       "image": "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-01.webp",
       "order": 31,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nSitué au sein du National Olympic Sports Center de Pékin, le Yingdong Natatorium est un lieu aquatique emblématique financé par Henry Fok en 1986. S'étendant sur 44 635 mètres carrés avec 6 000 sièges, il a accueilli des événements internationaux prestigieux, dont les Jeux Asiatiques de 1990 et les Jeux Olympiques de Pékin 2008.\n\n[Étendue des travaux]\nLe lieu nécessitait un système d'éclairage haute performance conçu spécifiquement pour la télévision haute définition. La solution devait délivrer une illumination de premier ordre tout en gérant strictement l'éblouissement et les réflexions sur l'eau, garantissant une clarté visuelle et une rendu des couleurs optimales pour les compétitions aquatiques d'élite.\n\n[La solution]\nUne conception photométrique complète a été exécutée pour optimiser le contrôle de l'éblouissement et établir des coordonnées de visée précises. Le nouveau système LED délivre une uniformité supérieure tant dans l'air que sur le bassin, garantissant des conditions visuelles impeccables pour les athlètes et les caméras de diffusion tout en respectant les strictes normes de diffusion HD.",
+          "results": "Illuminance horizontale : > 2700 lux (Uniformité : 0,70)\nIlluminance caméra principale : > 2200 lux (Uniformité : 0,60)\nIlluminance caméra auxiliaire : > 1500 lux (Uniformité : 0,55)\nConforme aux normes de diffusion HD."
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nUbicado dentro del National Olympic Sports Center de Pekín, el Yingdong Natatorium es un recinto acuático emblemático financiado por Henry Fok en 1986. Con 44 635 metros cuadrados y 6 000 asientos, ha acogido prestigiosos eventos internacionales, incluidos los Juegos Asiáticos de 1990 y los Juegos Olímpicos de Pekín 2008.\n\n[Alcance del trabajo]\nEl recinto requería un sistema de iluminación de alto rendimiento diseñado específicamente para la televisión de alta definición. La solución debía ofrecer una iluminación de primer nivel gestionando estrictamente el deslumbramiento y los reflejos en el agua, garantizando una claridad visual y una reproducción cromática óptimas para las competiciones acuáticas de élite.\n\n[La solución]\nSe ejecutó un diseño fotométrico completo para optimizar el control del deslumbramiento y establecer coordenadas de apuntamiento precisas. El nuevo sistema LED ofrece una uniformidad superior tanto en el aire como sobre la piscina, garantizando condiciones visuales impecables para los atletas y las cámaras de retransmisión cumpliendo a la vez las estrictas normas de difusión HD.",
+          "results": "Iluminancia horizontal: > 2700 lux (Uniformidad: 0,70)\nIluminancia de cámara principal: > 2200 lux (Uniformidad: 0,60)\nIluminancia de cámara auxiliar: > 1500 lux (Uniformidad: 0,55)\nCumple las normas de retransmisión HD."
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nIm National Olympic Sports Center von Peking gelegen, ist die Yingdong Natatorium eine markante Wasser-Sportstätte, die 1986 von Henry Fok finanziert wurde. Auf 44 635 Quadratmetern mit 6 000 Sitzplätzen war sie Austragungsort renommierter internationaler Veranstaltungen, darunter der Asienspiele 1990 und der Olympischen Spiele von Peking 2008.\n\n[Umfang der Arbeiten]\nDie Anlage benötigte ein Hochleistungs-Beleuchtungssystem, das speziell für das Fernsehen in hoher Auflösung entwickelt wurde. Die Lösung musste erstklassige Ausleuchtung bieten und dabei Blendung und Wasserreflexionen strikt kontrollieren, um optimale visuelle Klarheit und Farbwiedergabe für Elite-Wassersportwettbewerbe zu gewährleisten.\n\n[Die Lösung]\nEin umfassendes photometrisches Design optimierte die Blendkontrolle und legte präzise Zielkoordinaten fest. Das neue LED-System liefert überlegene Gleichmäßigkeit sowohl in der Luft als auch über dem Becken und garantiert makellose Sichtverhältnisse für Athleten und Übertragungskameras bei gleichzeitiger Erfüllung der strengen HD-Übertragungsstandards.",
+          "results": "Horizontale Beleuchtungsstärke: > 2700 Lux (Gleichmäßigkeit: 0,70)\nHauptkamera-Beleuchtungsstärke: > 2200 Lux (Gleichmäßigkeit: 0,60)\nHilfskamera-Beleuchtungsstärke: > 1500 Lux (Gleichmäßigkeit: 0,55)\nEntspricht HD-Übertragungsstandards."
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nРасположенный в Национальном олимпийском спортивном центре Пекина, Yingdong Natatorium — это знаковый водный объект, профинансированный Генри Фоком в 1986 году. Занимая 44 635 квадратных метров с 6 000 мест, он принимал престижные международные соревнования, включая Азиатские игры 1990 года и Олимпийские игры в Пекине 2008 года.\n\n[Объём работ]\nОбъект требовал высокопроизводительной системы освещения, спроектированной специально для телевидения высокой чёткости. Решение должно было обеспечивать освещение высшего уровня при строгом контроле ослеплённости и отражений от воды, гарантируя оптимальную видимость и цветопередачу для элитных водных соревнований.\n\n[Решение]\nБыла выполнена комплексная фотометрическая проработка для оптимизации контроля ослеплённости и определения точных координат наводки. Новая светодиодная система обеспечивает превосходную равномерность как в воздухе, так и над бассейном, гарантируя безупречные условия видимости для спортсменов и трансляционных камер при соблюдении строгих стандартов HD-трансляции.",
+          "results": "Горизонтальная освещённость: > 2700 люкс (равномерность: 0,70)\nОсвещённость основной камеры: > 2200 люкс (равномерность: 0,60)\nОсвещённость вспомогательной камеры: > 1500 люкс (равномерность: 0,55)\nСоответствует стандартам HD-трансляции."
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nيقع Yingdong Natatorium ضمن المركز الأولمبي الرياضي الوطني في بكين، وهو وجهة مائية معلم بُني بتمويل من هنري فوك عام 1986. يمتد على 44,635 متراً مربعاً بسعة 6,000 مقعد، واستضاف فعاليات دولية مرموقة منها دورة الألعاب الآسيوية 1990 والألعاب الأولمبية في بكين 2008.\n\n[نطاق العمل]\nكان المرفق بحاجة إلى نظام إضاءة عالي الأداء مصمم خصيصاً للتلفزيون عالي الدقة. كان على الحل توفير إضاءة رفيعة المستوى مع التحكم الصارم في الوهج والانعكاسات على الماء، لضمان وضوح بصري وتدرج لوني مثاليين لمنافسات السباحة النخبوية.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري شامل لتحسين التحكم في الوهج وتحديد إحداثيات تسديد دقيقة. يوفر نظام LED الجديد انتظاماً متفوقاً في الهواء وعلى حوض السباحة، مما يضمن ظروفاً بصرية لا تشوبها شائبة للرياضيين وكاميرات البث مع الامتثال لمعايير البث HD الصارمة.",
+          "results": "الإضاءة الأفقية: > 2700 لوكس (الانتظام: 0.70)\nإضاءة الكاميرا الرئيسية: > 2200 لوكس (الانتظام: 0.60)\nإضاءة الكاميرا المساعدة: > 1500 لوكس (الانتظام: 0.55)\nيتوافق مع معايير البث HD."
+        }
       },
       "gallery": [
         "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-01.webp",
@@ -3349,11 +3549,31 @@
       "image": "images/projects/perryville-high-school/phs-football-02.webp",
       "order": 33,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "États-Unis",
+          "description": "[Profil du client]\nPerryville High School est un établissement éducatif public prominent à Perryville, Maryland, exploité par Cecil County Public Schools. Le campus est fier d'être le foyer des Perryville Panthers.\n\n[Étendue des travaux]\nTout comme le récent projet « Bo Manor » réalisé pour CCPS, le terrain d'athlétisme de Perryville souffrait d'un système d'éclairage obsolète, sous-éclairé et exigeant beaucoup d'entretien. De plus, les paramètres du projet exigeaient strictement une intégration transparente avec les structures de mâts préexistantes.\n\n[La solution]\nUne conception photométrique complète a été exécutée pour garantir le respect de toutes les exigences techniques. Le rétrofit final a remplacé quarante (40) unités halogénure métallique 1500W par quarante-huit (48) de nos luminaires sportifs LED haute performance FL9M-630W, offrant une illumination et une efficacité supérieures.",
+          "results": "Plus de 30 fc d'illuminance moyenne, uniformité 1,56:1 — dépassant les exigences du projet. Conforme aux normes NCAA."
+        },
+        "es": {
+          "location": "Estados Unidos",
+          "description": "[Perfil del cliente]\nPerryville High School es un destacado centro educativo público en Perryville, Maryland, gestionado por Cecil County Public Schools. El campus se enorgullece de ser el hogar de los Perryville Panthers.\n\n[Alcance del trabajo]\nAl igual que el reciente proyecto «Bo Manor» realizado para CCPS, el campo deportivo de Perryville sufría de un sistema de iluminación obsoleto, mal iluminado y de alto mantenimiento. Además, los parámetros del proyecto exigían estrictamente una integración transparente con las estructuras de mástiles preexistentes.\n\n[La solución]\nSe ejecutó un diseño fotométrico completo para garantizar el cumplimiento de todos los requisitos técnicos. El retrofit final reemplazó cuarenta (40) unidades de haluro metálico 1500W por cuarenta y ocho (48) de nuestras luminarias deportivas LED de alto rendimiento FL9M-630W, ofreciendo una iluminación y eficiencia superiores.",
+          "results": "Más de 30 fc de iluminancia media, uniformidad 1,56:1 — superando los requisitos del proyecto. Cumple las normas NCAA."
+        },
+        "de": {
+          "location": "Vereinigte Staaten",
+          "description": "[Kundenprofil]\nDie Perryville High School ist eine renommierte öffentliche Bildungseinrichtung in Perryville, Maryland, die von den Cecil County Public Schools betrieben wird. Der Campus ist stolz darauf, die Heimat der Perryville Panthers zu sein.\n\n[Umfang der Arbeiten]\nWie das kürzlich für CCPS realisierte „Bo Manor“-Projekt litt auch das Sportfeld von Perryville unter einer veralteten, unterbeleuchteten und wartungsintensiven Beleuchtungsanlage. Zudem verlangten die Projektvorgaben ausdrücklich eine nahtlose Integration in die vorhandenen Maststrukturen.\n\n[Die Lösung]\nEin umfassendes photometrisches Design wurde ausgeführt, um alle technischen Anforderungen zu erfüllen. Der finale Retrofit ersetzte vierzig (40) 1500W-Metalldampf-Leuchten durch achtundvierzig (48) unserer Hochleistungs-LED-Sportleuchten FL9M-630W und lieferte überlegene Ausleuchtung und Effizienz.",
+          "results": "Über 30 fc durchschnittliche Beleuchtungsstärke, Gleichmäßigkeit 1,56:1 — übertrifft die Projektanforderungen. Entspricht NCAA-Normen."
+        },
+        "ru": {
+          "location": "США",
+          "description": "[Профиль клиента]\nPerryville High School — известное государственное учебное заведение в Перривилле, штат Мэриленд, находящееся в ведении Cecil County Public Schools. Кампус гордится тем, что является домом для команды Perryville Panthers.\n\n[Объём работ]\nКак и недавний проект «Bo Manor», выполненный для CCPS, спортивное поле Перривилля страдало от устаревшей, слабо освещённой и требующей частого обслуживания системы освещения. Кроме того, параметры проекта строго требовали бесшовной интеграции с существующими мачтовыми конструкциями.\n\n[Решение]\nБыла выполнена комплексная фотометрическая проработка для обеспечения выполнения всех технических требований. Итоговая реконструкция заменила сорок (40) светильников с металлогалогенными лампами 1500 Вт на сорок восемь (48) наших высокопроизводительных светодиодных спортивных светильников FL9M-630W, обеспечив превосходное освещение и эффективность.",
+          "results": "Более 30 фут-свечей средней освещённости, равномерность 1,56:1 — превышает требования проекта. Соответствует нормам NCAA."
+        },
+        "ar": {
+          "location": "الولايات المتحدة",
+          "description": "[ملف العميل]\nPerryville High School مؤسسة تعليمية عامة رائدة في بيريفيل، ماريلاند، تديرها Cecil County Public Schools. يفخر الحرم الجامعي بأنه المقر الرئيسي لفريق Perryville Panthers.\n\n[نطاق العمل]\nمثل مشروع «Bo Manor» الأخير الذي أُنجز لصالح CCPS، عانى الملعب الرياضي في بيريفيل من نظام إضاءة قديم وقليل الإضاءة وكثيف الصيانة. علاوة على ذلك، تطلبت معايير المشروع تكاملاً سلساً تماماً مع هياكل الأعمدة الموجودة مسبقاً.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري شامل لضمان استيفاء جميع المتطلبات الفنية. استبدل التحديث النهائي أربعين (40) وحدة هاليد معدني بقدرة 1500 واط بثمانية وأربعين (48) من مصابيحنا الرياضية عالية الأداء من نوع FL9M-630W بتقنية LED، مما يوفر إضاءة وكفاءة متفوقتين.",
+          "results": "أكثر من 30 قدم-شمعة من الإضاءة المتوسطة، الانتظام 1.56:1 — متجاوزاً متطلبات المشروع. يتوافق مع معايير NCAA."
+        }
       },
       "gallery": [
         "images/projects/perryville-high-school/phs-football-05.webp",
@@ -3379,11 +3599,31 @@
       "image": "images/projects/mcintosh-county-academy/mc-football-04.webp",
       "order": 35,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "États-Unis",
+          "description": "[Profil du client]\nMcIntosh County Academy est la seule école secondaire publique du comté de McIntosh, en Géorgie. Anciennement connue sous le nom de Darien High School, elle sert de pôle éducatif et athlétique vital pour la communauté locale.\n\n[Étendue des travaux]\nL'école cherchait à moderniser l'éclairage de son terrain de football vers un système LED moderne et écoénergétique. Une contrainte critique du projet était l'exigence de réutiliser les poteaux et l'infrastructure existants pour maintenir le calendrier de mise à niveau et respecter strictement le budget.\n\n[La solution]\nUne conception photométrique de précision a été exécutée pour garantir la conformité totale avec les niveaux d'éclairage recommandés par l'IES. Le projet a été mené à bien de manière transparente via un rétrofit un pour un utilisant nos luminaires sportifs LED haute performance FL9M-720W, offrant une illumination spectaculaire et une efficacité opérationnelle.",
+          "results": "Plus de 50 fc d'illuminance moyenne, uniformité 1,5:1 — Conforme aux normes NCAA."
+        },
+        "es": {
+          "location": "Estados Unidos",
+          "description": "[Perfil del cliente]\nMcIntosh County Academy es la única escuela secundaria pública del condado de McIntosh, en Georgia. Anteriormente conocida como Darien High School, sirve como un vital centro educativo y atlético para la comunidad local.\n\n[Alcance del trabajo]\nLa escuela buscaba modernizar la iluminación de su campo de fútbol con un sistema LED moderno y energéticamente eficiente. Una restricción crítica del proyecto era la exigencia de reutilizar los postes y la infraestructura existentes para mantener el cronograma de actualización y respetar estrictamente el presupuesto.\n\n[La solución]\nSe ejecutó un diseño fotométrico de precisión para garantizar el cumplimiento total con los niveles de iluminación recomendados por la IES. El proyecto se completó sin problemas mediante un retrofit uno a uno utilizando nuestras luminarias deportivas LED de alto rendimiento FL9M-720W, ofreciendo una iluminación espectacular y eficiencia operativa.",
+          "results": "Más de 50 fc de iluminancia media, uniformité 1,5:1 — Cumple las normas NCAA."
+        },
+        "de": {
+          "location": "Vereinigte Staaten",
+          "description": "[Kundenprofil]\nDie McIntosh County Academy ist die einzige öffentliche High School im McIntosh County, Georgia. Früher als Darien High School bekannt, ist sie ein wesentlicher Bildungs- und Sportmittelpunkt für die lokale Gemeinschaft.\n\n[Umfang der Arbeiten]\nDie Schule wollte die Beleuchtung ihres Footballfelds auf ein modernes, energieeffizientes LED-System aufrüsten. Eine kritische Projektbeschränkung war die Vorgabe, die vorhandenen Masten und Infrastrukturen wiederzuverwenden, um den Zeitplan der Aufrüstung einzuhalten und strikt innerhalb des Budgets zu bleiben.\n\n[Die Lösung]\nEin präzises photometrisches Design wurde ausgeführt, um die vollständige Konformität mit den von der IES empfohlenen Beleuchtungswerten sicherzustellen. Das Projekt wurde nahtlos über einen 1:1-Retrofit mit unseren Hochleistungs-LED-Sportleuchten FL9M-720W abgeschlossen und bietet spektakuläre Ausleuchtung und Betriebseffizienz.",
+          "results": "Über 50 fc durchschnittliche Beleuchtungsstärke, Gleichmäßigkeit 1,5:1 — Entspricht NCAA-Normen."
+        },
+        "ru": {
+          "location": "США",
+          "description": "[Профиль клиента]\nMcIntosh County Academy — единственная государственная средняя школа в округе Макинтош, штат Джорджия. Ранее известная как Darien High School, она служит важным образовательным и спортивным центром для местного сообщества.\n\n[Объём работ]\nШкола стремилась модернизировать освещение своего футбольного поля, перейдя на современную энергоэффективную светодиодную систему. Критическим ограничением проекта была необходимость повторного использования существующих мачт и инфраструктуры, чтобы уложиться в график обновления и строго соблюсти бюджет.\n\n[Решение]\nБыла выполнена точная фотометрическая проработка для обеспечения полного соответствия рекомендованным IES уровням освещения. Проект был бесшовно завершён по принципу ретрофита «один к одному» с использованием наших высокопроизводительных светодиодных спортивных светильников FL9M-720W, обеспечив впечатляющее освещение и эксплуатационную эффективность.",
+          "results": "Более 50 фут-свечей средней освещённости, равномерность 1,5:1 — соответствует нормам NCAA."
+        },
+        "ar": {
+          "location": "الولايات المتحدة",
+          "description": "[ملف العميل]\nMcIntosh County Academy هي المدرسة الثانوية العامة الوحيدة في مقاطعة مكينتوش، جورجيا. كانت تُعرف سابقاً باسم Darien High School، وتُعد مركزاً تعليمياً ورياضياً حيوياً للمجتمع المحلي.\n\n[نطاق العمل]\nسعت المدرسة إلى تحديث إضاءة ملعب كرة القدم الخاص بها بنظام LED حديث وموفر للطاقة. كان قيداً حرجاً في المشروع ضرورة إعادة استخدام الأعمدة والبنية التحتية الموجودة للحفاظ على جدول التحديث والبقاء ضمن الميزانية بصرامة.\n\n[الحل]\nتم تنفيذ تصميم فوتومتري دقيق لضمان الامتثال الكامل لمستويات الإضاءة الموصى بها من IES. اكتمل المشروع بسلاسة عبر استبدال مطابق واحد إلى واحد باستخدام مصابيحنا الرياضية عالية الأداء من نوع FL9M-720W بتقنية LED، مما يوفر إضاءة مذهلة وكفاءة تشغيلية.",
+          "results": "أكثر من 50 قدم-شمعة من الإضاءة المتوسطة، الانتظام 1.5:1 — يتوافق مع معايير NCAA."
+        }
       },
       "gallery": [
         "images/projects/mcintosh-county-academy/mc-football-01.webp",
@@ -3409,11 +3649,31 @@
       "image": "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-01.webp",
       "order": 37,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "États-Unis",
+          "description": "Le système Garrison Forest School utilise des boîtiers de drivers à montage à distance, offrant aux gestionnaires des installations un entretien simple sur site sans interrompre le terrain.",
+          "results": "Plus de 50 fc, 2,0:1 — Conforme aux normes NCAA."
+        },
+        "es": {
+          "location": "Estados Unidos",
+          "description": "El sistema de Garrison Forest School utiliza cajas de controladores montadas a distancia, lo que proporciona a los gestores de instalaciones un mantenimiento sencillo in situ sin interrumpir la pista.",
+          "results": "Más de 50 fc, 2,0:1 — Cumple las normas NCAA."
+        },
+        "de": {
+          "location": "Vereinigte Staaten",
+          "description": "Das System der Garrison Forest School verwendet fernmontierte Treibergehäuse, die den Anlagenmanagern eine einfache Vor-Ort-Wartung ohne Unterbrechung des Platzes ermöglichen.",
+          "results": "Über 50 fc, 2,0:1 — Entspricht NCAA-Normen."
+        },
+        "ru": {
+          "location": "США",
+          "description": "Система Garrison Forest School использует блоки драйверов с дистанционным монтажом, обеспечивая управляющим объектами простое обслуживание на месте без остановки работы площадки.",
+          "results": "Более 50 фут-свечей, 2,0:1 — соответствует нормам NCAA."
+        },
+        "ar": {
+          "location": "الولايات المتحدة",
+          "description": "يستخدم نظام Garrison Forest School علب محركات مثبتة عن بُعد، مما يوفر لمديري المرافق صيانة بسيطة في الموقع دون إيقاف الملعب.",
+          "results": "أكثر من 50 قدم-شمعة، 2.0:1 — يتوافق مع معايير NCAA."
+        }
       },
       "gallery": [
         "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-01.webp",
@@ -3439,11 +3699,31 @@
       "image": "images/projects/north-creek-community-center/ncc-tennis-03.webp",
       "order": 39,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "États-Unis",
+          "description": "[Profil du client]\nNorth Creek Community Center comprend une salle de réunion, des salles communautaires, une piscine, des courts de tennis, des courts de pickleball, un terrain de soccer, une aire de jeux pour petits, un espace d'étude de la nature et des sentiers de marche.\n\n[Étendue des travaux]\nLa fondation Montgomery Village cherchait à améliorer l'éclairage des courts sportifs de cette installation. L'équipe de conception SolarOne a élaboré une disposition d'éclairage pour répondre aux niveaux d'éclairage recommandés par l'IES tout en permettant aux propriétaires de réutiliser les mâts et structures existants.\n\n[La solution]\nUne fois de plus, notre projecteur sportif RT410FL-260W prouve pourquoi il est notre produit phare et la solution de rétrofit LED parfaite pour les courts sportifs !",
+          "results": ""
+        },
+        "es": {
+          "location": "Estados Unidos",
+          "description": "[Perfil del cliente]\nNorth Creek Community Center cuenta con sala de reuniones, salas comunitarias, piscina, pistas de tenis, pistas de pickleball, campo de fútbol, zona infantil, estudio de naturaleza y senderos para caminar.\n\n[Alcance del trabajo]\nLa Montgomery Village Foundation buscaba mejorar la iluminación de las pistas deportivas de esta instalación. El equipo de diseño de SolarOne ideó un diseño de iluminación para cumplir los niveles de iluminación recomendados por la IES permitiendo al mismo tiempo a los propietarios reutilizar los mástiles y estructuras existentes.\n\n[La solución]\n¡Una vez más, nuestra luminaria deportiva RT410FL-260W demuestra por qué es nuestro producto insignia y la solución de retroajuste LED perfecta para las pistas deportivas!",
+          "results": ""
+        },
+        "de": {
+          "location": "Vereinigte Staaten",
+          "description": "[Kundenprofil]\nDas North Creek Community Center verfügt über einen Besprechungsraum, Gemeinschaftsräume, ein Schwimmbecken, Tennisplätze, Pickleball-Plätze, einen Soccer-Platz, einen Spielplatz, eine Naturerlebnisfläche und Wanderwege.\n\n[Umfang der Arbeiten]\nDie Montgomery Village Foundation wollte die Beleuchtung der Sportplätze dieser Einrichtung verbessern. Das SolarOne-Designteam entwickelte eine Beleuchtungsanordnung, die die von der IES empfohlenen Beleuchtungswerte erfüllt und den Eigentümern gleichzeitig die Wiederverwendung vorhandener Masten und Strukturen ermöglicht.\n\n[Die Lösung]\nErneut beweist unsere RT410FL-260W-Sportleuchte, warum sie unser Vorzeigeprodukt und die perfekte LED-Retrofit-Lösung für Sportplätze ist!",
+          "results": ""
+        },
+        "ru": {
+          "location": "США",
+          "description": "[Профиль клиента]\nNorth Creek Community Center включает зал для встреч, общественные помещения, бассейн, теннисные корты, корты для пиклбола, футбольное поле, детскую площадку, зону изучения природы и пешеходные дорожки.\n\n[Объём работ]\nФонд Montgomery Village стремился улучшить освещение спортивных площадок этого объекта. Команда дизайнеров SolarOne разработала схему освещения, соответствующую рекомендованным IES уровням освещения, позволяя при этом владельцам повторно использовать существующие мачты и конструкции.\n\n[Решение]\nВ очередной раз наша спортивная светодиодная лампа RT410FL-260W доказывает, почему она является нашим флагманским продуктом и идеальным LED-ретрофит-решением для спортивных площадок!",
+          "results": ""
+        },
+        "ar": {
+          "location": "الولايات المتحدة",
+          "description": "[ملف العميل]\nيضم North Creek Community Center قاعة اجتماعات وغرفاً مجتمعية وحوض سباحة وملاعب تنس وملاعب بيكبل بالإضافة إلى ملعب كرة قدم ومنطقة ألعاب للأطفال ومساحة لدراسة الطبيعة وممرات للمشي.\n\n[نطاق العمل]\nسعت مؤسسة Montgomery Village إلى تحسين إضاءة الملاعب الرياضية في هذه المنشأة. صمم فريق تصميم SolarOne تخطيطاً للإضاءة يلبي مستويات الإضاءة الموصى بها من IES مع السماح للمالكين بإعادة استخدام الأعمدة والهياكل الموجودة.\n\n[الحل]\nمرة أخرى، تثبت مصابيحنا الرياضية RT410FL-260W أنها منتجنا الرائد والحل المثالي للاستبدال بـ LED للملاعب الرياضية!",
+          "results": ""
+        }
       },
       "gallery": [
         "images/projects/north-creek-community-center/ncc-tennis-01.webp",
@@ -3467,11 +3747,31 @@
       "image": "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-01.webp",
       "order": 41,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "États-Unis",
+          "description": "[Profil du client]\nPickle N Par est le seul établissement dédié au pickleball indoor de Long Island, et le premier du genre. Renommé pour ses surfaces de court exceptionnelles et son éclairage superbe, le lieu offre un cadre idéal pour les joueurs de tous niveaux. Avec des sessions de jeu organisées et un encadrement de premier plan, il est la destination ultime des passionnés de pickleball à New York.\n\n[Étendue des travaux]\nÀ l'été 2019, nos partenaires de Green Arc Energy Advisors ont engagé SolarOne pour concevoir une solution d'éclairage LED pour cette nouvelle installation indoor. L'objectif principal était de fournir une illumination de niveau compétition tout en assurant un confort visuel optimal pour les joueurs comme pour les spectateurs. Notre équipe a développé une disposition d'éclairage de précision et fourni des luminaires haute performance pour répondre à ces normes exigeantes.\n\n[La solution]\nLes luminaires high bay RT400HB-100W de la Série Loisirs ont été sélectionnés comme la solution parfaite pour cette application. En délivrant une illumination uniforme et sans éblouissement, le système a atteint avec succès des niveaux d'éclairage de grade compétition tout en maintenant un confort visuel exceptionnel, rehaussant l'expérience de jeu globale.",
+          "results": ""
+        },
+        "es": {
+          "location": "Estados Unidos",
+          "description": "[Perfil del cliente]\nPickle N Par es la única instalación dedicada exclusivamente al pickleball indoor de Long Island, y la primera de su tipo. Reconocida por sus excepcionales superficies de pista y su magnífica iluminación, el recinto ofrece un entorno ideal para jugadores de todos los niveles. Con sesiones de juego organizadas e instrucción de primer nivel, es el destino definitivo de los entusiastas del pickleball en Nueva York.\n\n[Alcance del trabajo]\nEn el verano de 2019, nuestros socios de Green Arc Energy Advisors contrataron a SolarOne para diseñar una solución de iluminación LED para esta nueva instalación indoor. El objetivo principal era proporcionar iluminación de nivel competición garantizando un confort visual óptimo tanto para jugadores como para espectadores. Nuestro equipo desarrolló un diseño de iluminación de precisión y suministró luminarias de alto rendimiento para cumplir estas exigentes normas.\n\n[La solución]\nLas luminarias high bay RT400HB-100W de la Serie Recreativa fueron seleccionadas como la solución perfecta para esta aplicación. Al ofrecer una iluminación uniforme y sin deslumbramiento, el sistema alcanzó con éxito niveles de iluminación de grado competición manteniendo un confort visual excepcional, elevando la experiencia de juego global.",
+          "results": ""
+        },
+        "de": {
+          "location": "Vereinigte Staaten",
+          "description": "[Kundenprofil]\nPickle N Par ist Long Islands einzige ausschließlich dem Indoor-Pickleball gewidmete Anlage und die erste ihrer Art. Bekannt für ihre außergewöhnlichen Court-Beläge und hervorragende Beleuchtung bietet die Anlage idealen Rahmen für Spieler aller Niveaus. Mit organisierten Spielsessions und erstklassiger Anleitung ist sie das ultimative Ziel für Pickleball-Enthusiasten in New York.\n\n[Umfang der Arbeiten]\nIm Sommer 2019 beauftragten unsere Partner von Green Arc Energy Advisors SolarOne mit der Planung einer LED-Beleuchtungslösung für diese neue Indoor-Anlage. Das Hauptziel war Wettkampf-beleuchtung bei optimalem visuellen Komfort für Spieler und Zuschauer. Unser Team entwickelte ein präzises Beleuchtungslayout und lieferte Hochleistungs-Leuchten, die diese strengen Standards erfüllen.\n\n[Die Lösung]\nDie High-Bay-Leuchten RT400HB-100W der Freizeit-Serie wurden als perfekte Lösung für diese Anwendung ausgewählt. Durch gleichmäßige, blendfreie Ausleuchtung erreichte das System mühelos Wettkampf-Beleuchtungswerte bei außergewöhnlichem visuellen Komfort und hebt das gesamte Spielerlebnis.",
+          "results": ""
+        },
+        "ru": {
+          "location": "США",
+          "description": "[Профиль клиента]\nPickle N Par — единственная на Лонг-Айленде и первая в своём роде крытая площадка, посвящённая исключительно пиклболу. Известная своими выдающимися покрытиями кортов и превосходным освещением, она предлагает идеальную среду для игроков любого уровня. Благодаря организованным игровым сессиям и первоклассным тренировкам она стала конечным пунктом назначения для энтузиастов пиклбола в Нью-Йорке.\n\n[Объём работ]\nЛетом 2019 года наши партнёры из Green Arc Energy Advisors привлекли SolarOne для разработки светодиодного решения по освещению для этого нового крытого объекта. Главной целью было обеспечение освещения соревновательного уровня при оптимальном визуальном комфорте для игроков и зрителей. Наша команда разработала точную схему освещения и поставила высокопроизводительные светильники, отвечающие этим строгим стандартам.\n\n[Решение]\nСветильники типа high bay RT400HB-100W из серии для отдыха были выбраны как идеальное решение для данного применения. Обеспечивая равномерное, не ослепляющее освещение, система успешно достигла показателей освещения соревновательного уровня при исключительном визуальном комфорте, повышая общее игровое впечатление.",
+          "results": ""
+        },
+        "ar": {
+          "location": "الولايات المتحدة",
+          "description": "[ملف العميل]\nPickle N Par هي المنشأة الوحيدة والمخصصة حصرياً للبكلة (pickleball) المغلقة في لونغ آيلاند، والأولى من نوعها. تشتهر بأسطح ملاعبها الاستثنائية وإضاءتها الرائعة، وتوفر بيئة مثالية للاعبين من جميع المستويات. مع جلسات لعب منظمة وتدريب رفيع المستوى، تُعد الوجهة النهائية لعشاق البكلة في نيويورك.\n\n[نطاق العمل]\nفي صيف 2019، تعاقد شركاؤنا في Green Arc Energy Advisors مع SolarOne لتصميم حل إضاءة LED لهذه المنشأة المغلقة الجديدة. كان الهدف الرئيسي توفير إضاءة بمستوى المنافسات مع ضمان راحة بصرية مثالية للاعبين والجماهير على حد سواء. طوّر فريقنا تخطيطاً دقيقاً للإضاءة وزوّد بمصابيح عالية الأداء لتلبية هذه المعايير الصارمة.\n\n[الحل]\nتم اختيار مصابيح هاي باي RT400HB-100W من سلسلة الترفيه كحل مثالي لهذا التطبيق. من خلال توفير إضاءة منتظمة خالية من الوهج، حقق النظام بنجاح مستويات إضاءة بمستوى المنافسات مع الحفاظ على راحة بصرية استثنائية، مما يرفع تجربة اللعب بشكل عام.",
+          "results": ""
+        }
       },
       "gallery": [
         "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-01.webp",
@@ -3497,11 +3797,31 @@
       "image": "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-02.webp",
       "order": 43,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "location": "Pékin, Chine",
+          "description": "[Profil du client]\nSitué au sein du National Olympic Sports Center de Pékin, le Tennis Center est une installation de premier plan dotée de 20 courts intérieurs et extérieurs de haut standard. Il sert de base d'entraînement vitale pour l'équipe nationale chinoise de tennis.\n\n[Étendue des travaux]\nLe projet consistait en une mise à niveau LED un pour un des anciens projecteurs halogénure métallique 400W, réutilisant de manière transparente l'infrastructure de mâts existante. Une clarté absolue de la balle, quelle que soit la vitesse ou la position, est primordiale pour le tennis d'élite. Offrir une visibilité exceptionnelle pour l'action à grande vitesse exige un contraste marqué, une illumination calibrée et une uniformité de court impeccable.\n\n[La solution]\nGrâce à une modélisation photométrique rigoureuse, nous avons optimisé le contrôle de l'éblouissement et le flux lumineux, fournissant des directives de visée exactes pour chaque projecteur. Les projecteurs floods SolarOne Vision Smart 200W RT470 se sont intégrés sans effort à l'infrastructure existante. Notre solution LED surpasse les systèmes halogénure métallique par une uniformité exceptionnelle dans l'air comme sur le court, tout en réduisant drastiquement la pollution et les fuites lumineuses.",
+          "results": ""
+        },
+        "es": {
+          "location": "Pekín, China",
+          "description": "[Perfil del cliente]\nUbicado dentro del National Olympic Sports Center de Pekín, el Tennis Center es una instalación de primer nivel con 20 canchas interiores y exteriores de alto nivel. Sirve como una base de entrenamiento vital para el equipo nacional chino de tenis.\n\n[Alcance del trabajo]\nEl proyecto implicaba una actualización LED uno a uno de las luminarias existentes de haluro metálico de 400W, reutilizando sin problemas la infraestructura de mástiles existente. Una claridad absoluta de la pelota, independientemente de la velocidad o la posición, es primordial para el tenis de élite. Ofrecer visibilidad excepcional para la acción de alta velocidad exige contraste marcado, iluminación calibrada y uniformidad de pista impecable.\n\n[La solución]\nMediante un modelado fotométrico riguroso, optimizamos el control del deslumbramiento y el flujo luminoso, proporcionando directrices de apuntamiento exactas para cada luminaria. Los proyectores floods SolarOne Vision Smart 200W RT470 se integraron sin esfuerzo en la infraestructura existente. Nuestra solución LED supera los sistemas de haluro metálico con una uniformidad excepcional en el aire y en la pista, reduciendo drásticamente el desbordamiento y la contaminación lumínica.",
+          "results": ""
+        },
+        "de": {
+          "location": "Peking, China",
+          "description": "[Kundenprofil]\nIm National Olympic Sports Center von Peking gelegen, ist das Tennis Center eine erstklassige Anlage mit 20 hochwertigen Innen- und Außenplätzen. Es dient als wesentliche Trainingsbasis für die chinesische Tennisationalsmannschaft.\n\n[Umfang der Arbeiten]\nDas Projekt umfasste ein 1:1-LED-Upgrade der vorhandenen 400W-Metalldampf-Leuchten unter nahtloser Wiederverwendung der bestehenden Mastinfrastruktur. Absolute Ballklarheit, unabhängig von Geschwindigkeit oder Position, ist für Elite-Tennis entscheidend. Außergewöhnliche Sichtbarkeit bei Hochgeschwindigkeitsaktion erfordert ausgeprägten Kontrast, kalibrierte Ausleuchtung und makellose Platzgleichmäßigkeit.\n\n[Die Lösung]\nDurch rigorose photometrische Modellierung optimierten wir Blendkontrolle und Lichtausbeute und lieferten exakte Zielvorgaben für jede Leuchte. Die SolarOne Vision Smart 200W RT470-Flutlichter integrierten sich mühelos in die bestehende Infrastruktur. Unsere LED-Lösung übertrifft Metalldampf-Systeme durch außergewöhnliche Gleichmäßigkeit in der Luft und auf dem Platz und reduziert Lichtabfall und -verschmutzung drastisch.",
+          "results": ""
+        },
+        "ru": {
+          "location": "Пекин, Китай",
+          "description": "[Профиль клиента]\nРасположенный в Национальном олимпийском спортивном центре Пекина, Tennis Center — это первая в своём роде площадка с 20 высококлассными крытыми и открытыми кортами. Он служит важной тренировочной базой для национальной теннисной сборной Китая.\n\n[Объём работ]\nПроект предусматривал замену «один к одному» прежних светильников с металлогалогенными лампами 400 Вт с бесшовным повторным использованием существующей мачтовой инфраструктуры. Абсолютная видимость мяча независимо от скорости или позиции имеет первостепенное значение для элитного тенниса. Исключительная видимость при высокоскоростной игре требует выраженного контраста, откалиброванной освещённости и безупречной равномерности корта.\n\n[Решение]\nБлагодаря строгому фотометрическому моделированию мы оптимизировали контроль ослеплённости и световой поток, предоставив точные указания по наводке для каждого светильника. Прожекторы SolarOne Vision Smart 200W RT470 бесшовно интегрировались в существующую инфраструктуру. Наше светодиодное решение превосходит системы с металлогалогенными лампами благодаря исключительной равномерности в воздухе и на корте, а также резко снижает световое загрязнение и паразитный свет.",
+          "results": ""
+        },
+        "ar": {
+          "location": "بكين، الصين",
+          "description": "[ملف العميل]\nيقع ضمن المركز الأولمبي الرياضي الوطني في بكين، ويُعد Tennis Center مرفقاً رائداً يضم 20 ملعباً داخلياً وخارجياً عالي المعايير. يخدم كقاعدة تدريب حيوية للمنتخب الوطني الصيني للتنس.\n\n[نطاق العمل]\nتضمن المشروع ترقية LED مطابقة واحد إلى واحد لمصابيح الهاليد المعدني القديمة بقدرة 400 واط، مع إعادة استخدام سلسة للبنية التحتية الموجودة للأعمدة. الوضوح المطلق للكرة بغض النظر عن السرعة أو الموضع أمر بالغ الأهمية للتنس النخبوي. يتطلب توفير رؤية استثنائية للعب عالي السرعة تبايناً بارزاً وإضاءة معيارية وانتظاماً مثالياً للملعب.\n\n[الحل]\nمن خلال نمذجة فوتومترية صارمة، قمنا بتحسين التحكم في الوهج وتدفق الضوء، مما يوفر توجيهات تسديد دقيقة لكل مصباح. تم دمج كشافات SolarOne Vision Smart 200W RT470 بسلاسة في البنية التحتية الموجودة. يتفوق حلنا بتقنية LED على أنظمة الهاليد المعدني من خلال انتظام استثنائي في الهواء وعلى الملعب، مع تقليل تسرب والتلوث الضوئي بشكل جذري.",
+          "results": ""
+        }
       },
       "gallery": [
         "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-01.webp",
@@ -3571,7 +3891,7 @@
     "font_size_body": "1.05rem",
     "font_size_card_title": "1.25rem",
     "font_size_card_desc": "0.95rem",
-    "accent_color": "#0088FF"
+    "accent_color": "#1068C9"
   },
   "productspagecards": [
     {
@@ -3666,11 +3986,26 @@
       "published_at": "2026-09-28T00:00:00+00:00",
       "is_published": true,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "title": "Le marché mondial des LED triplera d'ici 2034",
+          "summary": "Le marché mondial de l'éclairage LED est estimé à 109,11 milliards USD en 2025 et devrait atteindre 336,90 milliards USD d'ici 2034 avec un TCAC de 13,40 %, porté par l'Asie-Pacifique à 54,4 %."
+        },
+        "es": {
+          "title": "El mercado global de LED se triplicará para 2034",
+          "summary": "El mercado global de iluminación LED alcanza 109,11 mil millones USD en 2025 y se prevé que llegue a 336,90 mil millones USD para 2034 con un CAGR del 13,40 %, liderado por Asia-Pacífico con el 54,4 %."
+        },
+        "de": {
+          "title": "Globaler LED-Markt verdreifacht sich bis 2034",
+          "summary": "Der globale Markt für LED-Beleuchtung wird für 2025 auf 109,11 Mrd. USD geschätzt und soll bis 2034 auf 336,90 Mrd. USD bei einem CAGR von 13,40 % wachsen, angeführt von Asien-Pazifik mit 54,4 %."
+        },
+        "ru": {
+          "title": "Мировой рынок LED утроится к 2034 году",
+          "summary": "Мировой рынок светодиодного освещения оценивается в 109,11 млрд долл. в 2025 году и, как ожидается, достигнет 336,90 млрд долл. к 2034 году при CAGR 13,40 %; лидер — Азиатско-Тихоокеанский регион с 54,4 %."
+        },
+        "ar": {
+          "title": "سوق الإضاءة LED العالمي سيتضاعف ثلاث مرات بحلول 2034",
+          "summary": "يُقدر سوق الإضاءة LED العالمي بـ 109.11 مليار دولار في 2025، ومن المتوقع أن يصل إلى 336.90 مليار دولار بحلول 2034 بمعدل نمو سنوي مركب 13.40%، بقيادة منطقة آسيا والمحيط الهادئ بنسبة 54.4%."
+        }
       }
     },
     {
@@ -3684,11 +4019,26 @@
       "published_at": "2026-09-13T16:00:00+00:00",
       "is_published": true,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "title": "Outdoor and Tech Light Expo 2026, Hong Kong",
+          "summary": "L'Outdoor and Tech Light Expo du HKTDC ouvre du 26 au 29 octobre 2026 à l'AsiaWorld-Expo de Hong Kong, connectant fournisseurs d'éclairage extérieur et acheteurs de l'Asie-Pacifique."
+        },
+        "es": {
+          "title": "Outdoor and Tech Light Expo 2026, Hong Kong",
+          "summary": "La Outdoor and Tech Light Expo del HKTDC se celebra del 26 al 29 de octubre de 2026 en AsiaWorld-Expo, Hong Kong, uniendo proveedores de iluminación exterior con compradores de Asia-Pacífico."
+        },
+        "de": {
+          "title": "Outdoor and Tech Light Expo 2026, Hong Kong",
+          "summary": "Die Outdoor and Tech Light Expo des HKTDC öffnet vom 26. bis 29. Oktober 2026 im AsiaWorld-Expo in Hong Kong und bringt Anbieter von Außenbeleuchtung mit Käufern aus dem Asien-Pazifik-Raum zusammen."
+        },
+        "ru": {
+          "title": "Outdoor and Tech Light Expo 2026, Гонконг",
+          "summary": "Outdoor and Tech Light Expo от HKTDC пройдёт с 26 по 29 октября 2026 года в AsiaWorld-Expo, Гонконг, связывая поставщиков наружного освещения с покупателями из Азиатско-Тихоокеанского региона."
+        },
+        "ar": {
+          "title": "معرض الإضاءة الخارجية والتقنية 2026، هونغ كونغ",
+          "summary": "يفتتح معرض Outdoor and Tech Light Expo التابع لمجلس تنمية التجارة في هونغ كونغ في 26–29 أكتوبر 2026 بآسيا وورلد إكسبو، ويجمع موردي الإضاءة الخارجية بمشترين من آسيا والمحيط الهادئ."
+        }
       }
     },
     {
@@ -3717,11 +4067,26 @@
       "published_at": "2026-08-31T00:00:00+00:00",
       "is_published": true,
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {}
+        "fr": {
+          "title": "Les SolarOne FL6M-480W illuminent l'aéroport de Binhai",
+          "summary": "La gamme de mâts hauts LED SolarOne FL6M-480 W remplace l'ancien éclairage à halogénures métalliques de la aire de trafic de l'aéroport international de Tianjin Binhai par une lumière chaude à fort IRC."
+        },
+        "es": {
+          "title": "Las SolarOne FL6M-480W iluminan el aeropuerto de Binhai",
+          "summary": "La familia de mástiles altos LED SolarOne FL6M-480 W sustituye el antiguo alumbrado de halogenuros metálicos de la plataforma del aeropuerto internacional de Tianjin Binhai con luz cálida de alto CRI."
+        },
+        "de": {
+          "title": "SolarOne FL6M-480W beleuchtet Flughafen Binhai",
+          "summary": "Die SolarOne FL6M-480-W-LED-Hochmastleuchten ersetzen die alte Metallhalogenid-Platzbeleuchtung auf dem Vorfeld des internationalen Flughafens Tianjin Binhai durch warmes Licht mit hohem CRI."
+        },
+        "ru": {
+          "title": "Светильники SolarOne FL6M-480W освещают аэропорт Биньхай",
+          "summary": "Семейство светодиодных высокомачтовых светильников SolarOne FL6M-480 Вт заменяет старое металлогалогенное освещение перрона международного аэропорта Тяньцзинь Биньхай тёплым светом с высоким CRI."
+        },
+        "ar": {
+          "title": "مصابيح SolarOne FL6M-480W تضيء مطار بينهاي",
+          "summary": "تستبدل عائلة مصابيح الإضاءة العالية LED من SolarOne FL6M-480W إضاءة الهاليد المعدني القديمة في ساحة الطائرات بمطار تيانجين بينهاي الدولي بضوء دافئ وعالي دقة الألوان (CRI)."
+        }
       }
     }
   ]

@@ -4,18 +4,26 @@
 {% load text_filters %}
 {% load image_tags %}
 {% comment %}
-/stadium-lighting/ — the generic stadium / sports lighting landing page (P4-A).
+Shared sports-landing template (v1.10.x, Q1 unified template).
 
-Head blocks are runtime values from the view, not literal translated strings.
-That is deliberate: the meta-description budget audit reads template source and
-only recognises a description block whose body is a literal, so a literal here
-would have to be a fixed English sentence that the view then cannot localise.
-The strings this page renders are budget-checked in tests_seo_p4.py instead —
-the same arrangement projects_collection.html uses.
+/stadium-lighting/, /projects/football/ and /projects/tennis/ all render this
+one template. Text fields fall back to the stadium copy through `default:`
+filters (the stadium page passes no overrides, so it is byte-for-byte what it
+was before this unification). Football and tennis pass overrides from their
+views, so the same layout carries sport-specific intro, product roster,
+selection table, venues and FAQ.
+
+Head blocks are runtime values from the view, not literal translated strings —
+the same arrangement the unified landing uses, and the reason the
+meta-description budget is asserted in tests rather than read from source.
 
 Every heading below is a real <h2>. v1.10.20 found the product detail page
 presenting its sections as styled <span>s, so a crawler could not see the
 structure; this template must not repeat that.
+
+The three structural hooks (stadium-intro, stadium-products-grid,
+stadium-section-lead) are read by tests_seo_p4.py's source audit, so they stay
+on this template regardless of which sport renders it.
 {% endcomment %}
 
 {% block title %}{{ page_title }}{% endblock %}
@@ -26,9 +34,9 @@ structure; this template must not repeat that.
 {% block content %}
 {% include "includes/breadcrumb_jsonld.html" with section="products" leaf_name=page_title|escapejs leaf_url=request.path %}
 
-{# FAQPage JSON-LD (v1.10.24): the whole blob is built in Python with json.dumps and injected safe; the FAQ text is a constant authored in views_stadium.py, never user input — same invariant as the product FAQ. #}
+{# FAQPage JSON-LD: built in Python with json.dumps and injected safe; the FAQ text is a constant authored in the view, never user input. #}
 <script nonce="{{ request.csp_nonce }}" type="application/ld+json">
-{{ stadium_faq_json|safe }}
+{{ faq_json|safe }}
 </script>
 
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
@@ -36,24 +44,31 @@ structure; this template must not repeat that.
 
     {# ---- Intro: the H1 states what the page sells, not just its name ---- #}
     <div class="stadium-intro" style="margin-bottom: 56px;">
-      <span class="section-accent-label section-accent-label--compact">{% trans "Stadium Lighting" %}</span>
-      <h1 class="section-title" style="margin-bottom: 12px;">{% trans "LED Stadium Lighting" %}</h1>
-      <p class="section-body">{% blocktrans %}Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues.{% endblocktrans %}</p>
+      {% trans "Stadium Lighting" as d_accent %}
+      <span class="section-accent-label section-accent-label--compact">{{ landing_accent|default:d_accent }}</span>
+      {% trans "LED Stadium Lighting" as d_h1 %}
+      <h1 class="section-title" style="margin-bottom: 12px;">{{ landing_h1|default:d_h1 }}</h1>
+      {% trans "Venue lighting is decided by two things: whether the fixture can be aimed without glare into the camera positions, and whether the photometric file matches the seating geometry. SolarOne builds both — broadcast-grade stadium floodlights for televised matches, and modular LED flood lights from 80 W to 1280 W for training grounds and club venues." as d_intro %}
+      <p class="section-body">{{ landing_intro|default:d_intro }}</p>
     </div>
 
     {# ---- Luminaires -------------------------------------------------- #}
-    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Stadium Floodlights" %}</h2>
-    <p class="section-body stadium-section-lead" style="margin-bottom: 28px;">{% blocktrans %}The VSP series is the broadcast-grade platform: asymmetric optics for the camera side, 12 / 18 / 30 / 50 degree distributions for the seating bowl.{% endblocktrans %}</p>
+    {% trans "Stadium Floodlights" as d_product_heading %}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{{ product_heading|default:d_product_heading }}</h2>
+    {% trans "Two platforms cover the brief: the M Series modular floodlight from 80 W to 1280 W for training grounds and club venues, and the VSP series — broadcast-grade, with asymmetric optics and 12 / 18 / 30 / 50 degree distributions for the seating bowl." as d_product_lead %}
+    <p class="section-body stadium-section-lead" style="margin-bottom: 28px;">{{ product_lead|default:d_product_lead }}</p>
 
     <div class="products-grid stadium-products-grid" style="margin-bottom: 72px;">
-      {% for product in stadium_products %}
+      {% for product in landing_products %}
       <div class="product-card reveal">
         <div class="product-card-top"><span class="index">/0{{ forloop.counter }}</span><span>{{ product.category_display }}</span></div>
-        <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+        {% with card_href=product.card_link_url|default:"" %}
+        <a href="{% if card_href %}{{ card_href }}{% else %}{% url 'product_detail' product.slug %}{% endif %}" style="text-decoration: none; color: inherit;">
           {% if product.image_url %}
           <div class="product-card-img"><img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ product.name_t }} — {{ product.seo_keyword_t }}" loading="lazy" decoding="async"></div>
           {% endif %}
         </a>
+        {% endwith %}
         <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
         <p class="product-card-desc product-card-desc--compact">{{ product.description_t }}</p>
         <div class="product-card-specs">
@@ -66,8 +81,10 @@ structure; this template must not repeat that.
     </div>
 
     {# ---- Selecting ---------------------------------------------------- #}
-    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Choosing the Right Output" %}</h2>
-    <p class="section-body stadium-section-lead" style="margin-bottom: 28px;">{% blocktrans %}Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use.{% endblocktrans %}</p>
+    {% trans "Choosing the Right Output" as d_selection_heading %}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{{ selection_heading|default:d_selection_heading }}</h2>
+    {% trans "Two numbers decide a stadium package: the target illuminance on the playing surface, and the number of mounting points the structure allows. This is the range our delivered projects actually use." as d_selection_lead %}
+    <p class="section-body stadium-section-lead" style="margin-bottom: 28px;">{{ selection_lead|default:d_selection_lead }}</p>
 
     <div style="overflow-x: auto; margin-bottom: 72px;">
       <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
@@ -80,6 +97,16 @@ structure; this template must not repeat that.
           </tr>
         </thead>
         <tbody>
+          {% if selection_rows %}
+          {% for row in selection_rows %}
+          <tr>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{{ row.venue_type }}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{{ row.fixture }}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{{ row.distribution }}</td>
+            <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{{ row.mounting }}</td>
+          </tr>
+          {% endfor %}
+          {% else %}
           <tr>
             <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Professional stadium, televised{% endblocktrans %}</td>
             <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}VSP-XXXXW-12M-YP, 1000 W+{% endblocktrans %}</td>
@@ -104,18 +131,25 @@ structure; this template must not repeat that.
             <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Asymmetric, low glare{% endblocktrans %}</td>
             <td style="padding: 12px 14px; border-bottom: 1px solid var(--line);">{% blocktrans %}Pole, 6–10 m{% endblocktrans %}</td>
           </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
 
-    <p style="margin: -48px 0 72px;">{% blocktrans %}Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height.{% endblocktrans %}</p>
+    {% trans "Full photometric data, IES files and DIALux reports are supplied on request — send the venue drawing and mounting height." as d_selection_note %}
+    <p style="margin: -48px 0 72px;">{{ selection_note|default:d_selection_note }}</p>
 
     {# ---- Delivered venues -------------------------------------------- #}
-    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{% trans "Delivered Venue Projects" %}</h2>
-    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans with n=stadium_product_count %}{{ n }} stadium-class luminaires and {{ stadium_venues|length }} venue installations, from club training grounds to an Asian Games velodrome.{% endblocktrans %}</p>
+    {% trans "Delivered Venue Projects" as d_venue_heading %}
+    <h2 class="section-title" style="font-size: clamp(26px, 2.4vw, 34px); margin-bottom: 8px;">{{ venue_heading|default:d_venue_heading }}</h2>
+    {% if venue_lead %}
+    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{{ venue_lead }}</p>
+    {% else %}
+    <p class="section-body" style="margin-bottom: 28px; max-width: 760px;">{% blocktrans with n=landing_product_count %}{{ n }} stadium-class luminaires and {{ stadium_venues|length }} venue installations, from club training grounds to an Asian Games velodrome.{% endblocktrans %}</p>
+    {% endif %}
 
     <div class="projects-grid" style="margin-bottom: 48px;">
-      {% for venue in stadium_venues %}
+      {% for venue in landing_venues %}
       <a href="{% url 'project_detail' venue.slug %}" class="project-card reveal" style="text-decoration: none; color: inherit;">
         <div class="project-card-img">
           {% if venue.image_url %}
@@ -139,15 +173,14 @@ structure; this template must not repeat that.
     </p>
 
     {# ---- FAQ (v1.10.24, GEO) ------------------------------------------ #}
-    {# Page-level questions, not the product FAQ: how many masts, does the     #}
-    {# broadcast deal care, which beam angle. See STADIUM_FAQ in the view for #}
-    {# why these are not the product questions again.                          #}
-    {% if stadium_faq %}
+    {# Page-level questions, not the product FAQ. See STADIUM_FAQ / the sport FAQ lists in the views for why these are not the product questions. #}
+    {% if faq_items %}
     <div class="detail-faq stadium-faq" style="margin-bottom: 72px;">
       <span class="detail-faq-label">{% trans "Frequently Asked Questions" %}</span>
-      <h2 class="detail-faq-title">{% trans "Stadium Lighting FAQ" %}</h2>
+      {% trans "Stadium Lighting FAQ" as d_faq_heading %}
+      <h2 class="detail-faq-title">{{ faq_heading|default:d_faq_heading }}</h2>
       <div class="detail-faq-list">
-        {% for faq in stadium_faq %}
+        {% for faq in faq_items %}
         <details class="detail-faq-item">
           <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
           <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
@@ -166,6 +199,13 @@ structure; this template must not repeat that.
       <a href="{% url 'products' %}" style="color: var(--accent); margin-right: 18px;">{% trans "High bay" %}</a>
       <a href="{% url 'products' %}" style="color: var(--accent);">{% trans "Roadway" %}</a>
     </p>
+
+    {# Cross-link to the stadium hub; shown only on football/tennis (hub_link_url set by the view), never on the hub page itself. #}
+    {% if hub_link_url %}
+    <p style="margin-top: 28px;">
+      <a href="{{ hub_link_url }}" style="color: var(--accent); font-weight: 600;">{% trans "Stadium lighting" %} &rarr;</a>
+    </p>
+    {% endif %}
 
   </div>
 </section>

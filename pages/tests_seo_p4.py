@@ -247,16 +247,17 @@ class StadiumPageTests(TestCase):
 class StadiumContentSourcingTests(TestCase):
     """The page must list what it claims to list."""
 
-    def test_the_featured_products_are_the_two_vsp_models(self):
-        """The page features exactly the two broadcast models, not a generic list.
+    def test_the_featured_products_are_m_series_and_vsp(self):
+        """The hero shows exactly the two-platform shortlist: M Series + VSP.
 
         Iron law 4b: the expected roster is written out literally as a product
         decision; the view's ``FEATURED_PRODUCT_SLUGS`` constant is checked
-        against it so a change to either side fails loudly. The original
-        "first N of the category" read as a VSP-series list rather than the two
-        specific luminaires the page exists to present.
+        against it so a change to either side fails loudly. The earlier
+        "two VSP models" roster was dropped in favour of two *platforms* — a
+        modular flood (M Series, 80–1280 W) for club/training venues and the
+        broadcast-grade VSP series for televised stadiums.
         """
-        EXPECTED_SLUGS = ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp')
+        EXPECTED_SLUGS = ('m-series', 'vsp-xxxxw-9m-yp')
         self.assertEqual(
             FEATURED_PRODUCT_SLUGS, EXPECTED_SLUGS,
             'the featured roster changed without a product decision')
@@ -385,8 +386,15 @@ class StadiumContentSourcingTests(TestCase):
         REMOTE_PHRASE = 'remote LED driver enclosure'
         DIM_RE = re.compile(r'\d+\s*[×xX]\s*\d+')
         products = {p.slug: p for p in get_products('en')}
-        for slug in FEATURED_PRODUCT_SLUGS:
+        # This guard is about the VSP broadcast copy specifically; M Series (a
+        # modular flood platform) is not expected to carry it, so the roster is
+        # pinned to the VSP model rather than FEATURED_PRODUCT_SLUGS.
+        VSP_SLUGS = ('vsp-xxxxw-9m-yp',)
+        for slug in VSP_SLUGS:
             with self.subTest(slug=slug):
+                self.assertIn(
+                    slug, FEATURED_PRODUCT_SLUGS,
+                    'the VSP model left the featured roster — re-pin VSP_SLUGS')
                 product = products.get(slug)
                 self.assertIsNotNone(product, '%s missing from seed' % slug)
                 desc = product.description
@@ -487,7 +495,7 @@ class StadiumContentSourcingTests(TestCase):
         """Pinned so raising them is a deliberate act."""
         self.assertEqual(VENUE_PROJECT_LIMIT, 9)
         self.assertEqual(
-            FEATURED_PRODUCT_SLUGS, ('vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp'))
+            FEATURED_PRODUCT_SLUGS, ('m-series', 'vsp-xxxxw-9m-yp'))
 
 
 class RejectedCategoryTests(TestCase):
