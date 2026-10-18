@@ -1699,3 +1699,6 @@ msgstr ""
 "Solución de alumbrado vial LED profesional diseñada para calles, autopistas "
 "y proyectos de infraestructura. Proporciona iluminación uniforme con "
 "rendimiento energéticamente eficiente."
+
+msgid "Watch the Video"
+msgstr "Ver el vídeo"

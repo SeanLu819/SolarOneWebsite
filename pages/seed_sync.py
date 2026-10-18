@@ -333,6 +333,7 @@ def _project_to_dict(project):
         'translations': project.translations if isinstance(project.translations, dict) else {},
         'gallery': gallery,
         'pdf_url': pdf_url,
+        'social_video_url': project.social_video_url or '',
         'related_product_slugs': related_slugs,
     }
 

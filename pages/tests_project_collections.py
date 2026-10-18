@@ -21,7 +21,7 @@ check on the implementation, so the collection can be reimplemented freely.
 """
 import re
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 EN_TITLES = {
@@ -320,3 +320,86 @@ class SportsLandingUnificationTests(TestCase):
             html = self._get('/projects/%s/' % key)
             self.assertIn('FAQPage', html,
                           '%s is missing the FAQPage JSON-LD' % key)
+
+
+class ProjectSocialVideoSlotTests(TestCase):
+    """The reserved social-video slot on the project detail page (2026-10-18).
+
+    The admin's Social Video field feeds a link entry on the right of the
+    "Related Lighting Solutions" block. Empty URL renders no slot at all —
+    the same "no pick means no section" philosophy as related_products.
+    """
+
+    def setUp(self):
+        # Creating a Project fires models.sync_project_on_save, which writes
+        # under BASE_DIR/static/images/projects/<slug>/. Iron law 23 pattern:
+        # isolate the case in a tmp BASE_DIR, and flush the process-global
+        # enrichment caches afterwards (the guard-product leak of 2026-10-18).
+        import shutil
+        import tempfile
+
+        from pages.models import Project
+        self._tmp = tempfile.mkdtemp(prefix='svslot_')
+        self.addCleanup(shutil.rmtree, self._tmp, ignore_errors=True)
+        self.enterContext(override_settings(BASE_DIR=self._tmp))
+        self.project = Project.objects.create(
+            slug='sv-slot-project', title='SV Slot Project', location='Beijing',
+            venue_type='OUTDOOR', sport_type='FOOTBALL_FIELD',
+            description='Guard fixture for the social video slot.')
+
+    def tearDown(self):
+        from pages.views.enrich import invalidate_enrichment_cache
+        invalidate_enrichment_cache()
+        super().tearDown()
+
+    def _get_detail(self):
+        resp = self.client.get('/projects/sv-slot-project/')
+        self.assertEqual(resp.status_code, 200)
+        return resp.content.decode('utf-8')
+
+    def test_empty_url_renders_no_slot(self):
+        self.assertEqual(self.project.social_video_url, '')
+        html = self._get_detail()
+        # Assert on the anchor structure, not the bare class substring: the
+        # page-level <style> block always carries the .related-solutions-video
+        # rules (iron law 32 — condition/structure, not identifier substring).
+        self.assertNotIn('<a class="related-solutions-video"', html,
+                         'an empty social_video_url must not render a slot')
+
+    def test_url_renders_the_slot_with_safe_attrs(self):
+        url = 'https://www.youtube.com/watch?v=svslot'
+        from pages.models import Project
+        Project.objects.filter(pk=self.project.pk).update(social_video_url=url)
+        html = self._get_detail()
+        self.assertIn('related-solutions-video', html)
+        m = re.search(r'<a class="related-solutions-video" href="([^"]+)"'
+                      r' target="_blank" rel="noopener noreferrer">', html)
+        self.assertIsNotNone(m, 'slot anchor lost its safe attrs')
+        self.assertEqual(m.group(1), url)
+        self.assertIn('Watch the Video', html)
+
+    def test_seed_path_exposes_the_field(self):
+        """Iron law 1: the seed path (_DictProject) must carry the field."""
+        from pages.views.utils import _DictProject
+        dp = _DictProject({'slug': 'x', 'social_video_url': 'https://v.example/'})
+        self.assertEqual(dp.social_video_url, 'https://v.example/')
+        # missing key must degrade to empty, not AttributeError
+        dp2 = _DictProject({'slug': 'y'})
+        self.assertEqual(dp2.social_video_url, '')
+
+    def test_export_carries_the_field(self):
+        from pages.seed_sync import _project_to_dict
+        from pages.models import Project
+        Project.objects.filter(pk=self.project.pk).update(
+            social_video_url='https://www.tiktok.com/@solarone')
+        out = _project_to_dict(Project.objects.get(pk=self.project.pk))
+        self.assertEqual(out['social_video_url'],
+                         'https://www.tiktok.com/@solarone')
+
+    def test_every_seed_project_carries_the_key(self):
+        """The key exists on all 22 seed rows so a future sync is a no-op."""
+        from pages.views.utils import _load_seed
+        for p in _load_seed()['projects']:
+            with self.subTest(slug=p.get('slug')):
+                self.assertIn('social_video_url', p)
+                self.assertIsInstance(p['social_video_url'], str)

@@ -430,6 +430,16 @@ class Project(models.Model):
         blank=True,
         help_text='Static PDF path relative to /static/ (e.g. "files/project-case-study.pdf"). Used as persistent fallback on Vercel where uploaded files are ephemeral.'
     )
+    # Social video page URL (YouTube / TikTok / Instagram / Bilibili...).
+    # Renders as the video entry on the right of the "Related Lighting
+    # Solutions" block on the project detail page; empty hides it
+    # (same "no pick means no section" philosophy as related_products).
+    social_video_url = models.CharField(
+        max_length=500,
+        blank=True,
+        default='',
+        help_text='Social video page URL (e.g. https://www.youtube.com/watch?v=...). Shown on the project detail page; empty hides it.'
+    )
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     # JSON translations: {"fr": {"title": "...", "description": "...", "location": "...", "results": "..."}, ...}

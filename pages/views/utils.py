@@ -765,6 +765,7 @@ class _DictProject:
         self.translations = item.get('translations', {}) or {}
         self.gallery_paths = item.get('gallery', [])
         self.pdf_url = item.get('pdf_url', '')
+        self.social_video_url = item.get('social_video_url', '') or ''
         # Manual 'Related Products' picked in the admin. Iron law 33:
         # ``getattr`` cannot read a plain dict, so the seed path carries the
         # slugs as a real attribute instead of relying on a M2M manager.

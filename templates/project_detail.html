@@ -161,19 +161,31 @@
           </div>
           {% endif %}
 
-          {# Internal keyword-anchor vote; related_landing is None for non-sports venues. #}
-          {% if related_landing %}
+          {% comment %}Internal keyword-anchor vote + the reserved social-video slot on
+             the right; related_landing is None for non-sports venues, and an
+             empty social_video_url hides the slot (no pick means no section).{% endcomment %}
+          {% if related_landing or project.social_video_url %}
           <div class="related-solutions">
-            <span class="related-solutions-label">{% trans "Related Lighting Solutions" %}</span>
-            <div class="related-solutions-links">
-              {% if related_landing == 'football' %}
-              <a href="{% url 'projects_football' %}" class="related-solutions-link">{% trans "Football Stadium Lights" %}</a>
-              {% elif related_landing == 'tennis' %}
-              <a href="{% url 'projects_tennis' %}" class="related-solutions-link">{% trans "Tennis Court Lighting" %}</a>
-              {% elif related_landing == 'sports' %}
-              <a href="{% url 'products' %}" class="related-solutions-link">{% trans "LED Stadium Lights" %}</a>
+            <div class="related-solutions-main">
+              {% if related_landing %}
+              <span class="related-solutions-label">{% trans "Related Lighting Solutions" %}</span>
+              <div class="related-solutions-links">
+                {% if related_landing == 'football' %}
+                <a href="{% url 'projects_football' %}" class="related-solutions-link">{% trans "Football Stadium Lights" %}</a>
+                {% elif related_landing == 'tennis' %}
+                <a href="{% url 'projects_tennis' %}" class="related-solutions-link">{% trans "Tennis Court Lighting" %}</a>
+                {% elif related_landing == 'sports' %}
+                <a href="{% url 'products' %}" class="related-solutions-link">{% trans "LED Stadium Lights" %}</a>
+                {% endif %}
+              </div>
               {% endif %}
             </div>
+            {% if project.social_video_url %}
+            <a class="related-solutions-video" href="{{ project.social_video_url }}" target="_blank" rel="noopener noreferrer">
+              <span class="related-solutions-video-label">{% trans "Watch the Video" %}</span>
+              <span class="related-solutions-video-url"><bdi>{{ project.social_video_url }}</bdi></span>
+            </a>
+            {% endif %}
           </div>
           {% endif %}
 
@@ -394,11 +406,61 @@
     transform: translateY(-1px);
   }
 
-  /* Related lighting solutions — internal keyword-anchor links */
+  /* Related lighting solutions — internal keyword-anchor links + the
+     reserved social-video slot on the right (empty URL hides the slot) */
   .related-solutions {
     margin-top: 36px;
     padding-top: 28px;
     border-top: 1px solid var(--line);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px 32px;
+    flex-wrap: wrap;
+  }
+  .related-solutions-main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .related-solutions-video {
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 320px;
+    padding: 12px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg-soft);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform .2s, border-color .2s;
+  }
+  .related-solutions-video:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+  }
+  .related-solutions-video-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .related-solutions-video-url {
+    font-size: 13px;
+    color: var(--ink-mute);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  @media (max-width: 767px) {
+    .related-solutions-video {
+      margin-left: 0;
+      max-width: none;
+      width: 100%;
+    }
   }
   .related-solutions-label {
     display: block;

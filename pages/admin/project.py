@@ -96,6 +96,10 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
             'description': '推荐使用 pdf_static 字段（输入路径如 "files/project-name.pdf"），文件请手动放入 static/files/ 目录。pdf_file 仅供本地开发预览使用，上传后 Vercel 无法访问。',
             'classes': ('collapse',),
         }),
+        ('Social Video', {
+            'fields': ('social_video_url',),
+            'description': '社媒视频链接（YouTube / TikTok / Instagram / Bilibili 等视频页完整 URL）。填写后，项目详情页 "Related Lighting Solutions" 区块右侧显示视频入口；<b>留空则不显示</b>。',
+        }),
     )
 
 

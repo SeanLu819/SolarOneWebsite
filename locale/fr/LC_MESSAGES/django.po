@@ -1700,3 +1700,6 @@ msgstr ""
 "Solution d’éclairage routier LED professionnelle conçue pour les rues, les "
 "autoroutes et les projets d’infrastructure. Offre un éclairage uniforme avec"
 " des performances écoénergétiques."
+
+msgid "Watch the Video"
+msgstr "Regarder la vidéo"

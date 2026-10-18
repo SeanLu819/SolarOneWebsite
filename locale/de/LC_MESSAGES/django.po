@@ -1687,3 +1687,6 @@ msgstr ""
 "Professionelle LED-Straßenbeleuchtungslösung für Straßen, Autobahnen und "
 "Infrastrukturprojekte. Liefert gleichmäßige Beleuchtung mit "
 "energieeffizienter Leistung."
+
+msgid "Watch the Video"
+msgstr "Video ansehen"
