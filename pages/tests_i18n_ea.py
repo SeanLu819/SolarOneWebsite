@@ -17,9 +17,11 @@ from django.test import TestCase, SimpleTestCase
 from django.test.utils import override_settings
 from django.conf import settings
 from django.utils import translation
+from django.utils.html import escapejs
 from django.utils.translation import gettext
 import gettext as gettext_module
 import html
+import re
 
 # 16 个已译 UI 串（A 段非法律部分）。
 TRANSLATED_UI = [
@@ -291,3 +293,266 @@ class BResidualRenderTests(TestCase):
         self.assertIn(SITECONFIG_EXPECT['footer_description']['de'], de)
         self.assertNotIn(SITECONFIG_EXPECT['footer_description']['de'], fr)
         self.assertNotIn(SITECONFIG_EXPECT['footer_description']['fr'], de)
+
+
+class SportsLandingI18nTests(TestCase):
+    """Q1 sports-landing pages (football / tennis) translate at runtime.
+
+    Their copy flows through two channels and both must resolve in the five
+    non-English locales:
+
+      * page copy (accent / h1 / intro / product_* / selection_* / venue_* /
+        faq_heading and the FAQ Q&A) is gettext ``_()`` — checked here against
+        the *compiled* ``.mo``, the same table the live site reads, so a
+        forgotten compilemessages cannot hide behind a present ``.po``;
+      * page_title / page_description route through the sidebar ``_t()``.
+
+    These are subscript ``_()`` calls (``_(cfg['h1'])``), which
+    ``I18nCatalogGuardTests``' literal-argument extractor cannot see — so this
+    runtime guard is what stops a new string from silently serving English
+    under a ``/fr/`` URL. Selection-row cells are intentionally out of scope:
+    they carry order codes / model numbers (``FL6M, 480 W``) that must stay
+    literal in every locale.
+    """
+    NON_SOURCE_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    def _prose(self):
+        from pages.views.views_projects import SPORT_LANDING_PAGES
+        items = []
+        for sport, cfg in SPORT_LANDING_PAGES.items():
+            for key in ('accent', 'h1', 'intro', 'product_heading',
+                        'product_lead', 'selection_lead', 'selection_note',
+                        'venue_heading', 'venue_lead', 'faq_heading'):
+                items.append((sport, key, cfg[key]))
+            for i, faq in enumerate(cfg['faq']):
+                items.append((sport, 'faq%d.q' % i, faq['question']))
+                items.append((sport, 'faq%d.a' % i, faq['answer']))
+        return items
+
+    def test_page_copy_resolves_translated_at_runtime(self):
+        for sport, key, msgid in self._prose():
+            for lang in self.NON_SOURCE_LANGS:
+                with translation.override(lang):
+                    got = gettext(msgid)
+                self.assertTrue(
+                    got and got.strip(),
+                    '%s.%s resolved to an empty string in %s' % (sport, key, lang))
+                self.assertNotEqual(
+                    got, msgid,
+                    '%s.%s fell back to English in %s (missing .mo entry?)'
+                    % (sport, key, lang))
+
+    def test_meta_title_and_description_resolve_via_sidebar_t(self):
+        from pages.views.i18n import _t
+        from pages.views.views_projects import SPORT_LANDING_PAGES
+        for sport in ('football', 'tennis'):
+            cfg = SPORT_LANDING_PAGES[sport]
+            for field in ('title', 'description'):
+                en = cfg[field]
+                for lang in self.NON_SOURCE_LANGS:
+                    self.assertNotEqual(
+                        _t(en, lang), en,
+                        '%s.%s fell back to English in %s (not in _SIDEBAR_I18N?)'
+                        % (sport, field, lang))
+
+    def test_fr_football_page_renders_translated(self):
+        resp = self.client.get('/fr/projects/football/')
+        self.assertEqual(resp.status_code, 200)
+        body = html.unescape(resp.content.decode('utf-8'))
+        # <title> is the French meta title, not the English one.
+        self.assertIn("Projets d'\u00e9clairage de stades de football", body)
+        self.assertNotIn('Football Stadium Lighting Projects | SolarOne', body)
+        # A translated product lead and a translated FAQ question appear; the
+        # English originals are gone.
+        self.assertIn('Choisissez selon le niveau de jeu', body)
+        self.assertIn('Combien de projecteurs un terrain de football', body)
+        self.assertNotIn('How many floodlights does a football pitch need?', body)
+
+    def test_ar_tennis_page_renders_translated(self):
+        # RTL, non-latin: the Arabic meta title serves, the English one is gone.
+        resp = self.client.get('/ar/projects/tennis/')
+        self.assertEqual(resp.status_code, 200)
+        body = html.unescape(resp.content.decode('utf-8'))
+        self.assertIn('\u0645\u0634\u0627\u0631\u064a\u0639 \u0625\u0636\u0627\u0621\u0629 '
+                      '\u0645\u0644\u0627\u0639\u0628 \u0627\u0644\u062a\u0646\u0633', body)
+        self.assertNotIn('Tennis Court Lighting Projects | SolarOne', body)
+        self.assertNotIn('What lux level do tennis courts need?', body)
+
+
+class AboutPercentStringI18nTests(TestCase):
+    """运行时守卫：含 `%` 的模板串必须真的译出（2026-10-18 `%%` bug 类）。
+
+    Django 的 `{% trans %}` 在查目录前会把字面 `%` 翻倍成 `%%`
+    （django/template/base.py Variable.resolve：``msgid = value.replace("%", "%%")``），
+    与 templatize/makemessages 的提取形式一致。若 `.po` msgid 写成单 `%`，
+    目录里「有条目、守卫也过」，但运行时永远查不到 → 五语全部静默显示英文。
+
+    about.html 的两段 99% 文案就是这样坏了很久：译文五语齐全却从未生效。
+    静态侧已由 I18nCatalogGuardTests（`_catalog_has` 精确匹配）把守；这里补
+    「渲染出来真的是译文」的运行时证据。
+    """
+
+    # (lang, 第一段译文的探针)
+    PROBES = (
+        ('fr', 'Flux lumineux sup\u00e9rieur'),
+        ('es', 'Mayor rendimiento luminoso'),
+        ('de', 'H\u00f6herer Lichtoutput'),
+        ('ru', '\u0411\u043e\u043b\u0435\u0435 \u0432\u044b\u0441\u043e\u043a\u0438\u0439 '
+               '\u0441\u0432\u0435\u0442\u043e\u0432\u043e\u0439 \u043f\u043e\u0442\u043e\u043a'),
+        ('ar', '\u0645\u062e\u0631\u062c\u0627\u062a \u0625\u0636\u0627\u0621\u0629 '
+               '\u0623\u0639\u0644\u0649'),
+    )
+    ENGLISH_ORIGINALS = (
+        'Higher light output at farther distances',
+        'Proprietary glass achieves 99%',
+    )
+
+    def test_percent_paragraphs_render_translated_in_all_five_languages(self):
+        for lang, probe in self.PROBES:
+            resp = self.client.get('/%s/about/' % lang)
+            self.assertEqual(resp.status_code, 200, lang)
+            body = html.unescape(resp.content.decode('utf-8'))
+            self.assertIn(
+                probe, body,
+                '%s: about.html 99%% 段落回退英文 —— .po msgid 必须是翻倍形式' % lang)
+            for original in self.ENGLISH_ORIGINALS:
+                self.assertNotIn(
+                    original, body,
+                    '%s: about.html 仍渲染英文原文 %r' % (lang, original))
+
+
+class ProductsPageLabelI18nTests(TestCase):
+    """运行时守卫：productspagecards 标签与 FAQ 标题必须真的译出。
+
+    /products/ 索引页和三个 sports landing hero 会用卡片 title/subtitle
+    **覆盖**产品已译的 ``name_t``。这些标签是我们撰写的页面文案、不是产品
+    数据，不过 gettext 就会让 /fr/ /de/ … 页面成为全站唯一还把平台名显示成
+    英文的地方。"Product FAQ" / "Frequently Asked Questions" 标题同理：曾
+    是模板里裸的英文字面量，压根没进 trans 管道。2026-10-18 两处都已修，
+    这里钉住渲染结果。
+    """
+
+    def test_fr_products_index_shows_translated_card_titles(self):
+        resp = self.client.get('/fr/products/')
+        self.assertEqual(resp.status_code, 200)
+        body = html.unescape(resp.content.decode('utf-8'))
+        for probe in ('S\u00e9rie M', 'S\u00e9rie RT410', 'S\u00e9rie VSP',
+                      'Projecteurs', 'Haute Baie', '\u00c9clairage de rue'):
+            self.assertIn(probe, body,
+                          'fr /products/ 卡片标题未翻译（gettext 路由失效？）')
+        # 卡片标签若回落英文，页面上会留下裸的 >M Series< 形式的 h3
+        for raw in ('>M Series<', '>RT410 Series<', '>VSP series<',
+                    '>FLOOD LIGHTING<', '>HIGHBAY<', '>Street Lighting<'):
+            self.assertNotIn(raw, body, 'fr /products/ 仍渲染英文卡片标题 %r' % raw)
+
+    def test_de_products_index_shows_translated_card_titles(self):
+        body = html.unescape(
+            self.client.get('/de/products/').content.decode('utf-8'))
+        for probe in ('M-Serie', 'RT410-Serie', 'Flutlicht',
+                      'Stra\u00dfenbeleuchtung'):
+            self.assertIn(probe, body, 'de /products/ 卡片标题未翻译')
+        self.assertNotIn('>M Series<', body)
+        self.assertNotIn('>FLOOD LIGHTING<', body)
+
+    def test_landing_heroes_use_translated_card_titles(self):
+        # stadium / football / tennis 的 hero 卡同样走卡片标题覆盖
+        for path in ('/fr/stadium-lighting/', '/fr/projects/football/',
+                     '/fr/projects/tennis/'):
+            body = html.unescape(
+                self.client.get(path).content.decode('utf-8'))
+            self.assertNotIn('>M Series<', body,
+                             '%s hero 仍渲染英文卡片标题' % path)
+
+    def test_faq_heading_renders_translated_not_literal(self):
+        # 只看 h2 可见文本：CSS 注释里允许出现 "Product FAQ" 字样。
+        for path, expected in (
+            ('/fr/products/m-series/', 'FAQ produit'),
+            ('/de/products/m-series/', 'Produkt-FAQ'),
+        ):
+            body = self.client.get(path).content.decode('utf-8')
+            m = re.search(r'<h2 class="detail-faq-title">([^<]+)</h2>', body)
+            self.assertIsNotNone(m, '%s 缺 FAQ 标题' % path)
+            self.assertEqual(
+                m.group(1), expected,
+                '%s FAQ 标题未走 gettext（仍是硬编码英文字面量？）' % path)
+        # 英文原串不得作为可见文本出现（注释里允许）
+        body = self.client.get('/fr/products/m-series/').content.decode('utf-8')
+        m = re.search(r'<h2 class="detail-faq-title">([^<]+)</h2>', body)
+        self.assertNotEqual(m.group(1), 'Product FAQ')
+
+
+class ProjectTitleI18nTests(TestCase):
+    """运行时守卫：项目 title 五语覆盖 + 无 MT 报错串残留（2026-10-18）。
+
+    三类失效模式，各有事故史：
+
+    ① 16 个项目的 translations 块只有 description/location/results、title
+       整块缺失 —— title 是 H1 / og:title / JSON-LD headline / 面包屑最可见
+       的字段，缺译即这些位置整块回退英文。断言「每个项目的五语 title 均
+       非空」，数据从 _load_seed()（生产同路径：优先构建产物
+       pages/seed_data.py）派生，不写死项目数量。
+    ② beijing-capital-international-airport 的 es/de/ru/ar 四语 title/
+       description/location/results 曾被 MT API 速率限制写成
+       `[Error: Server Error: ...]` 报错串 —— translate() 只判「非空」，
+       报错串因此赢过英文回退，线上 H1 直接渲染报错串。断言任何 section
+       的任何翻译字段都不得包含 `[Error:`。
+    ③ 渲染层：/fr 与 /ar 项目详情页的 H1 / og:title / JSON-LD headline
+       必须等于该语 title_t（期望值同样从 seed 派生），英文标题不得出现在
+       H1（<title> 走英文 SEO 公式是刻意设计，不在此断言范围）。
+    """
+
+    NON_SOURCE_LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    def _seed(self):
+        from pages.views.utils import _load_seed
+        return _load_seed()
+
+    def test_every_project_title_translated_in_all_five_languages(self):
+        seed = self._seed()
+        for project in seed['projects']:
+            tr = project.get('translations') or {}
+            for lang in self.NON_SOURCE_LANGS:
+                title = ((tr.get(lang) or {}).get('title') or '').strip()
+                self.assertTrue(
+                    title,
+                    '%s 缺 %s title 译文 —— H1/og:title/JSON-LD 将回退英文'
+                    % (project['slug'], lang))
+
+    def test_no_translation_field_contains_mt_error_string(self):
+        seed = self._seed()
+        for section in ('projects', 'products', 'news'):
+            for item in seed[section]:
+                tr = item.get('translations') or {}
+                for lang, block in tr.items():
+                    for field, value in (block or {}).items():
+                        if isinstance(value, str) and '[Error' in value:
+                            self.fail(
+                                '%s %s.%s.%s 残留 MT 报错串：%r'
+                                % (section, item.get('slug'), lang, field,
+                                   value[:60]))
+
+    def test_localized_project_pages_render_translated_title(self):
+        seed = self._seed()
+        by_slug = {p['slug']: p for p in seed['projects']}
+        for slug, lang in (('perryville-high-school', 'fr'),
+                           ('beijing-capital-international-airport', 'ar')):
+            project = by_slug[slug]
+            expected = project['translations'][lang]['title']
+            resp = self.client.get('/%s/projects/%s/' % (lang, slug))
+            self.assertEqual(resp.status_code, 200, '%s %s' % (lang, slug))
+            body = html.unescape(resp.content.decode('utf-8'))
+            m = re.search(r'<h1 class="section-title"[^>]*>([^<]+)</h1>', body)
+            self.assertIsNotNone(m, '%s %s 缺 H1' % (lang, slug))
+            self.assertEqual(m.group(1), expected,
+                             '%s %s H1 不是该语 title_t' % (lang, slug))
+            self.assertNotIn(m.group(1), project['title'],
+                             '%s %s 探针自证失败：译文等于英文原文' % (lang, slug))
+            og = re.search(r'<meta property="og:title" content="([^"]*)"', body)
+            self.assertIsNotNone(og, '%s %s 缺 og:title' % (lang, slug))
+            self.assertIn(expected, og.group(1),
+                          '%s %s og:title 不是该语 title_t' % (lang, slug))
+            # headline 走 escapejs（连字符 -> ﻿ 是 Django 防 `-->`
+            # 序列的刻意转义），断言必须用同一函数派生期望值。
+            self.assertIn('"headline": "%s"' % escapejs(expected), body,
+                          '%s %s JSON-LD headline 不是该语 title_t'
+                          % (lang, slug))
