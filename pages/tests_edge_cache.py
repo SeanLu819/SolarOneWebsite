@@ -23,11 +23,9 @@ import os
 
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, override_settings
-from django.urls import reverse
 
 from pages.edge_cache import (
     CACHEABLE_HTML_PREFIXES,
-    CDN_CACHE_CONTROL,
     EDGE_S_MAXAGE,
     EDGE_SWR,
     EdgeCacheHeaderMiddleware,

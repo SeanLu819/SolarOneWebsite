@@ -227,3 +227,58 @@ class ContactDurabilitySystemCheckTests(TestCase):
     def test_vercel_persistent_db_no_warning(self):
         errors = self._run_with_env(db_url='postgres://u:p@db/contact')
         self.assertFalse(any(e.id == 'pages.W001' for e in errors))
+
+
+class ContactProductContextTests(TestCase):
+    """An enquiry must arrive together with the product it was about.
+
+    ``product_detail.html`` links to ``/contact/?product=<slug>&product_name=<name>``
+    and ``contact.html`` reposts that as a hidden ``product_name`` field. The view
+    read it into a local and never used it (surfaced by a dead-store lint), so
+    every lead reached sales with no product context at all.
+
+    It now lands in ``ContactMessage.subject`` — an existing column that was
+    always empty, so no migration is needed — and in the notification email.
+    """
+
+    def setUp(self):
+        cache.clear()
+
+    def _post(self, data, **settings_override):
+        with override_settings(**settings_override):
+            return Client().post('/contact/', data, HTTP_HOST='localhost')
+
+    def _valid_data(self, **extra):
+        base = {
+            'name': 'Jane Buyer',
+            'email': 'jane@example.com',
+            'phone': '',
+            'message': 'Please quote 20 sets.',
+        }
+        base.update(extra)
+        return base
+
+    def test_posted_product_name_is_persisted(self):
+        self._post(
+            self._valid_data(product_name='FL9M-RGBW'),
+            IS_RUNTIME=False, IS_VERCEL=False, CONTACT_NOTIFY_EMAIL='',
+        )
+        row = ContactMessage.objects.get(email='jane@example.com')
+        self.assertEqual(
+            row.subject, 'FL9M-RGBW',
+            'the product the enquiry was about was dropped from the lead record')
+
+    def test_notification_email_names_the_product(self):
+        with patch('django.core.mail.send_mail') as send_mail:
+            send_mail.return_value = 1
+            self._post(
+                self._valid_data(product_name='FL9M-RGBW'),
+                IS_RUNTIME=False, IS_VERCEL=False,
+                CONTACT_NOTIFY_EMAIL='sales@solaronelighting.com',
+            )
+        self.assertTrue(send_mail.called, 'no notification email was sent')
+        _args, kwargs = send_mail.call_args
+        self.assertIn('FL9M-RGBW', kwargs['subject'],
+                      'notification subject does not name the product')
+        self.assertIn('Product: FL9M-RGBW', kwargs['message'],
+                      'notification body does not carry the product')

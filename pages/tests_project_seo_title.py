@@ -17,13 +17,11 @@ Covers:
 """
 from django.test import Client, TestCase
 
-from pages.models import Project
 from pages.utils import (
     DEFAULT_PROJECT_CATEGORY_KEYWORD,
     PROJECT_CATEGORY_KEYWORD,
     _SEO_BRAND,
     build_project_seo_title,
-    get_seo_override,
     project_category_keyword,
 )
 from pages.views.utils import _DictProject, _load_seed

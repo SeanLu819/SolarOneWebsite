@@ -8,7 +8,6 @@
   E. 模板里硬编码的 title/meta/og 字面量
 """
 import ast
-import gettext as _gettext
 import json
 import os
 import re
@@ -111,7 +110,6 @@ w('† = 模板里是多行写法或 `{{{{ }}}}` 占位符，行号为启发式�
 w()
 
 # ---------- B. SiteConfig 单语文案 ----------
-from pages.models import SiteConfig  # noqa: E402
 from pages.views.i18n import _SIDEBAR_I18N  # noqa: E402
 
 seed = json.loads((ROOT / 'seed_data.json').read_text(encoding='utf-8'))
@@ -154,21 +152,46 @@ w()
 # ---------- C/D. 产品与项目缺译 ----------
 w('## C. Product 缺译（`seed_data.json`）')
 w()
+# v1.10.28 起的产品译文口径：
+#   description + category 五语必译（category 缺译会把 AREA_SITE 之类的枚举值
+#   泄漏进 JSON-LD）；name 只对「非裸型号」产品必译 —— FL1M / RT590FL-S 这类
+#   名字本身就是型号，约定保留英文。
+# 旧版只查 name，于是 17 个裸型号被误报成「五语全缺」，掩盖了真实进度。
 prods = seed.get('products', [])
-rows = []
+desc_rows, cat_rows, name_rows = [], [], []
 for p in prods:
     t = p.get('translations') or {}
-    miss = [l for l in LANGS if not (t.get(l) or {}).get('name', '').strip()]
-    if miss:
-        rows.append((p.get('slug', ''), p.get('name', '')[:40], miss))
-w(f'共 **{len(rows)} / {len(prods)}** 个产品在部分或全部语种下无译文'
-  f'（其中 {sum(1 for r in rows if len(r[2]) == 5)} 个**五语全缺**）。')
-w()
-w('| slug | 英文名 | 缺哪些语言 |')
-w('|---|---|---|')
-for slug, name, miss in rows:
-    w(f'| `{slug}` | {name.replace("|", "/")} | {", ".join(miss)} |')
-w()
+    slug, name = p.get('slug', ''), p.get('name', '')[:40]
+    for field, bucket in (('description', desc_rows),
+                          ('category', cat_rows),
+                          ('name', name_rows)):
+        bad = [l for l in LANGS if not (t.get(l) or {}).get(field, '').strip()]
+        if bad:
+            bucket.append((slug, name, bad))
+
+_C_SECTIONS = (
+    ('C1. 产品描述缺译（`description`，五语必译）', desc_rows,
+     '`description` 是产品页正文，五语必译。空表 = 24/24 × 5 已全量补齐。'),
+    ('C2. 产品分类缺译（`category`，缺译会把枚举值泄漏进 JSON-LD）', cat_rows,
+     '与 `description` 同期补齐；空表 = 已全量补齐。'),
+    ('C3. 产品名称未译（`name`，裸型号按约定保留英文）', name_rows,
+     '列出的是 FL1M / RT590FL-S 一类的**型号名**，v1.10.28 明确约定不译，'
+     '属于有意保留而**非欠账**；其余 7 个（M Series、RT410 Series、两个 VSP、'
+     'Accessory、两个配件）必须译。'),
+)
+for title, rows, note in _C_SECTIONS:
+    w('### ' + title)
+    w()
+    w(note)
+    w()
+    w('| slug | 英文名 | 缺哪些语言 |')
+    w('|---|---|---|')
+    if rows:
+        for slug, name, miss in rows:
+            w(f'| `{slug}` | {name.replace("|", "/")} | {", ".join(miss)} |')
+    else:
+        w('| — | — | （无） |')
+    w()
 
 w('## D. Project 缺译（`seed_data.json`）')
 w()
@@ -208,12 +231,12 @@ w(f'共 {cnt} 处。' if cnt else '（无）')
 
 dest = ROOT / 'docs' / 'i18n_待译清单.md'
 body = '\n'.join(out) + '\n'
-front = f"""---
+front = """---
 doc_id: i18n-translation-inventory
 title: 多语种待译清单（六语站 i18n 欠账盘点）
-version: 1.1.0
+version: 1.2.0
 status: in_progress
-last_updated: 2026-09-17
+last_updated: 2026-10-19
 owner: Sean Lu
 related:
   - path: docs/优化建议清单.md
@@ -263,4 +286,8 @@ E:/Python/python3/python.exe scripts/gen_i18n_inventory.py
 """
 dest.write_text(front + body, encoding='utf-8')
 print(f'written: {dest}')
-print(f'A={len(known)} B=siteconfig C={len(rows)}/{len(prods)} D={len(prow)}/{len(projs)} E={cnt}')
+print(f'A={len(known)} B=siteconfig '
+      f'C1_desc={len(desc_rows)}/{len(prods)} '
+      f'C2_cat={len(cat_rows)}/{len(prods)} '
+      f'C3_name={len(name_rows)}/{len(prods)}(intentional) '
+      f'D={len(prow)}/{len(projs)} E={cnt}')

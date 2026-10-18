@@ -44,7 +44,6 @@ from pages.views.views_other import (
     _COLLECTION_PAGE_IMAGES,
     _COLLECTION_PROJECT_SPORTS,
     _collection_dynamic_images,
-    _collection_page_images,
 )
 
 LANGS = ('en', 'fr', 'es', 'de', 'ru', 'ar')

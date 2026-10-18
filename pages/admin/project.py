@@ -139,7 +139,6 @@ class ProjectAdmin(CacheClearMixin, admin.ModelAdmin):
                 if fname != rel:
                     writebacks.append((obj, 'image', rel))
             elif rel:
-                cover_rel = rel
                 current_dest_names.add(dst_name)
 
         gallery_paths = []

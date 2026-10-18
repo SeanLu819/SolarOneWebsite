@@ -393,7 +393,6 @@ def products(request):
     #
     # When a category/series filter is active, we fall back to the filtered
     # product list (so sidebar navigation still works for categories).
-    cards_ok = False
     final_products = []
     card_order_count = 0
 
@@ -415,7 +414,6 @@ def products(request):
                 cards = None
 
         if cards:
-            cards_ok = True
             for card in cards:
                 slug = (card.slug or '').strip()
                 product = product_by_slug.get(slug)

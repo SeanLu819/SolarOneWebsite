@@ -18,7 +18,6 @@ Two directions, both **manual only** since v1.10.26:
 News links stay keyword-matched against explicit model numbers / project slugs
 so we never emit a weak generic link.
 """
-import re
 
 from django.test import TestCase
 

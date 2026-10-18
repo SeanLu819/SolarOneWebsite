@@ -5,7 +5,7 @@ escaped by the current admin templates, so it breaks the browser's HTML parser
 and swallows the submit-row (Save button) as text content. These tests prevent
 that regression.
 """
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 

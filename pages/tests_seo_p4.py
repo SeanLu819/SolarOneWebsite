@@ -26,7 +26,6 @@ import re
 from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse
-from django.utils import translation
 
 from pages.utils import CATEGORY_KEYWORD
 from pages.views.data_loaders import get_products, get_projects

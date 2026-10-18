@@ -638,7 +638,7 @@ def sync_seed_from_db():
     Returns True on success, False on failure.
     """
     try:
-        from pages.models import Product, Project, SiteConfig, NewsArticle
+        from pages.models import Product, Project, NewsArticle
         from pages.cards import ProductsPageCard
 
         products = [

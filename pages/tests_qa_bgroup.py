@@ -19,7 +19,6 @@ would otherwise answer 400).
 """
 
 import json
-import os
 import re
 import subprocess
 import email.utils
@@ -37,10 +36,8 @@ from django.urls import resolve
 from pages.views import news_feed as _news_feed_from_pkg  # noqa: F401
 from pages.views.views_other import news_feed as _news_feed_from_mod  # noqa: F401
 from pages.views.views_products import (
-    PRODUCT_FAQ,
     PRODUCT_FAQ_BY_CATEGORY,
     build_product_faq_jsonld,
-    product_faq_for,
 )
 
 

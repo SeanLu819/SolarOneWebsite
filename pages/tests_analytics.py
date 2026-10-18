@@ -9,8 +9,6 @@ These verify the analytics foundation without a real GA4 property:
 
 Run:  E:/Python/python3/python.exe manage.py test pages.tests_analytics
 """
-import os
-from importlib import import_module
 
 from django.test import TestCase, override_settings, Client
 from django.urls import reverse

@@ -20,7 +20,6 @@ Standard library only.
 """
 import json
 import os
-import re
 import sys
 import urllib.request
 

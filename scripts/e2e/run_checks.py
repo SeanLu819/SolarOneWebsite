@@ -35,7 +35,7 @@ failures = []
 
 def check(cond, label):
     print(f"  [{'OK ' if cond else 'FAIL'}] {label}")
-    if not cond:en
+    if not cond:
         failures.append(label)
 
 

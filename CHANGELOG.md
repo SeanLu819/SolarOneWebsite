@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.30 - 2026-10-19
+
+### Fix: contact enquiries used to arrive without the product they were about
+
+`product_detail.html` links to `/contact/?product=<slug>&product_name=<name>` and
+`contact.html` reposts it as a hidden `product_name` field — but the view read it
+into a local and never used it. Every lead reached sales with **no product
+context**, and the notification email did not carry it either.
+
+It now lands in `ContactMessage.subject`, an existing column that was always
+empty (so no migration), and in both the notification subject and body. Guarded
+by `pages/tests_contact.py::ContactProductContextTests` (mutation-probe verified).
+
+### Housekeeping before the push
+
+- `scripts/e2e/run_checks.py:38` had been unparseable since v1.8.1 (`if not cond:en`
+  — a stray two characters). The whole e2e script could not run at all.
+- Removed 31 unused imports and 4 dead stores across `pages/` and `scripts/`
+  (`ruff --select F401,F841`); the `__init__.py` re-exports are deliberate and
+  were left alone.
+- `scripts/gen_i18n_inventory.py` only checked product `name`, so it kept
+  reporting "17 / 24 products untranslated" even after descriptions and
+  categories were completed in v1.10.28. It now reports `description` and
+  `category` separately and marks the 17 bare model numbers (FL1M, RT590FL-S…)
+  as intentionally untranslated.
+
 ## v1.10.23 - 2026-10-06
 
 ## P4: a landing page for the one term with volume, and hub sub-model links

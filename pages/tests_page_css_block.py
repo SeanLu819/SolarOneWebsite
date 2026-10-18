@@ -19,7 +19,6 @@ Two regressions this locks down:
    The fix is a real 240px floor. The guard asserts the value itself, not a
    substring of the selector.
 """
-import re
 
 from django.test import TestCase
 

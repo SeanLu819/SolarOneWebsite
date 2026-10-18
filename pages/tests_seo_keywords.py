@@ -29,7 +29,7 @@ from pages.utils import (
     get_seo_override,
     translate,
 )
-from pages.views.utils import _DictProduct, _DictProject, _load_seed
+from pages.views.utils import _DictProduct, _load_seed
 
 
 class _FakeObj:

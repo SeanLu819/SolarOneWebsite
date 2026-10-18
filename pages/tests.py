@@ -1289,7 +1289,6 @@ class ResponsivePhase2Tests(TestCase):
 
     # ---- N-6: Cookie 横幅 safe-area ----
     def test_cookie_banner_uses_env_fallback(self):
-        import re
         self.assertRegex(self.base_html,
             r'padding-bottom:\s*max\(\s*20px,\s*calc\(\s*env\(safe-area-inset-bottom,\s*0px\)\s*\+\s*8px\)\s*\)',
             'Cookie 横幅 padding-bottom 必须 max()+env() 兜底（N-27 改判后的正确方向）')
@@ -1947,7 +1946,6 @@ class StatelessProductionTests(TestCase):
     # ---- B3: news view falls back to the seed JSON in production ----
     @override_settings(IS_VERCEL=True)
     def test_news_seed_fallback(self):
-        from pages.views import views_other
 
         seed = {'news': [{
             'slug': 'x',
@@ -4367,7 +4365,6 @@ class NewsTranslationTests(TestCase):
     # ---- ④ 运行时 spy：lang 真的被用上了 ---------------------------------
     def test_every_requested_lang_reaches_the_lookup(self):
         from pages.views import data_loaders
-        from pages.views.data_loaders import _get_news_from_json
 
         seen = set()
         real = data_loaders._news_translated

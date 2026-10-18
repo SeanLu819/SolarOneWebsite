@@ -8,16 +8,14 @@ from django.urls import reverse
 from django.utils.translation import get_language, override
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.templatetags.static import static
 from pages.utils import project_category_keyword
 from .common import get_common_context
 from .data_loaders import (
-    get_news, get_news_detail, get_product_detail, get_products,
+    get_news, get_news_detail, get_product_detail,
     get_projects, get_project_detail,
 )
 from .related_links import related_items_for_news
 from .i18n import _t
-from .data_loaders import get_news, get_product_detail, get_project_detail
 from .utils import _first_static, _load_seed
 
 

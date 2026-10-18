@@ -14,7 +14,6 @@ cookie/GDPR/隐私合规串「不接受机翻」，继续留在 KNOWN_UNTRANSLAT
 既有的 pages/tests.I18nCatalogGuardTests 已守住「目录里有没有条目」，这里补「运行时是否真生效」。
 """
 from django.test import TestCase, SimpleTestCase
-from django.test.utils import override_settings
 from django.conf import settings
 from django.utils import translation
 from django.utils.html import escapejs

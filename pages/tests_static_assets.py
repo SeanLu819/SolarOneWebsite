@@ -454,7 +454,7 @@ class GalleryFallbackGhostTests(TestCase):
                 self.assertEqual(utils._project_gallery_urls(slug), [],
                                  '用例前提：上传前目录应缓存为空')
                 # 3. admin 上传新图 —— 只有 ProjectImage 的 post_save 会触发。
-                row = ProjectImage.objects.create(
+                ProjectImage.objects.create(
                     project=project,
                     image='projects/ghost-probe.webp',
                     order=0,

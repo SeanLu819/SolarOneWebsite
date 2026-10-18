@@ -254,7 +254,6 @@ class NewsInBodyFigureTests(TestCase):
         the row this test materialised from it, so a marker added to one store
         and forgotten in the other fails here.
         """
-        from pages.views.data_loaders import _load_seed
         import json
         import io
 

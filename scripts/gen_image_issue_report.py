@@ -4,7 +4,6 @@
 """
 from __future__ import annotations
 
-import glob
 import io
 import json
 import os
@@ -12,7 +11,6 @@ import re
 import sys
 from collections import defaultdict
 
-from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AUDIT = os.path.join(ROOT, '.workbuddy', 'preview', 'image_audit.json')

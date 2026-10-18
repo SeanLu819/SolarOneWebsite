@@ -45,11 +45,14 @@ def _send_contact_notification(contact_msg):
                 'persistent DB (Neon/Supabase).'
             )
         return False
-    subject = f'[Contact] New message from {contact_msg.name}'
+    _about = (contact_msg.subject or '').strip()
+    subject = (f'[Contact] {_about} - message from {contact_msg.name}'
+               if _about else f'[Contact] New message from {contact_msg.name}')
     body_lines = [
         f'Name:    {contact_msg.name}',
         f'Email:   {contact_msg.email}',
         f'Phone:   {contact_msg.phone or "(not provided)"}',
+        f'Product: {contact_msg.subject or "(not provided)"}',
         '',
         'Message:',
         contact_msg.message,
@@ -109,7 +112,8 @@ def contact(request):
             try:
                 from pages.models import ContactMessage
                 contact_msg = ContactMessage.objects.create(
-                    name=name, email=email, phone=phone, message=message
+                    name=name, email=email, phone=phone, message=message,
+                    subject=product_name,
                 )
                 notify_ok = _send_contact_notification(contact_msg)
                 if notify_ok:

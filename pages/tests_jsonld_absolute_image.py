@@ -11,12 +11,10 @@ These guards assert the **rendered value**, because a missing prefix is still
 perfectly valid JSON-LD — a syntax-level check cannot catch it.
 """
 import json
-import os
 import re
 import tempfile
 from pathlib import Path
 
-from django.conf import settings
 from django.test import TestCase, override_settings
 
 from pages.models import Project
