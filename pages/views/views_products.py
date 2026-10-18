@@ -4,7 +4,7 @@ import re
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.utils.translation import get_language
+from django.utils.translation import get_language, gettext as _
 from django.templatetags.static import static
 from .common import get_common_context
 from .i18n import (
@@ -422,10 +422,16 @@ def products(request):
                 if product is None:
                     continue
                 card_order_count += 1
+                # Card labels are page copy authored by us: route through
+                # gettext so the products index is not the one place a
+                # platform name ("M Series", "VSP series") stays English on
+                # /fr/ /de/ … pages. They overwrite the product's already
+                # translated ``name_t``, so .po entries must agree with the
+                # seed name translations.
                 if card.title:
-                    product.name_t = card.title
+                    product.name_t = _(card.title)
                 if card.subtitle:
-                    product.description_t = card.subtitle
+                    product.description_t = _(card.subtitle)
                 img_url = _resolve_ppc_image(card)
                 if img_url:
                     product.image_url = img_url
@@ -449,10 +455,12 @@ def products(request):
                     if product is None:
                         continue
                     card_order_count += 1
+                    # Same gettext routing as the DB path above — see the
+                    # comment there for why the card label is translated copy.
                     if card.get('title'):
-                        product.name_t = card['title']
+                        product.name_t = _(card['title'])
                     if card.get('subtitle'):
-                        product.description_t = card['subtitle']
+                        product.description_t = _(card['subtitle'])
                     img_url = _dict_ppc_image(card)
                     if img_url:
                         product.image_url = img_url

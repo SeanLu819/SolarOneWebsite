@@ -637,8 +637,8 @@
         {# B3 (SEO/GEO): visible FAQ section — pure HTML, no JS; answers show even with JavaScript disabled; mirrors the FAQPage JSON-LD above. #}
         {% if product_faq %}
         <div class="detail-faq">
-          <span class="detail-faq-label">Frequently Asked Questions</span>
-          <h2 class="detail-faq-title">Product FAQ</h2>
+          <span class="detail-faq-label">{% trans "Frequently Asked Questions" %}</span>
+          <h2 class="detail-faq-title">{% trans "Product FAQ" %}</h2>
           <div class="detail-faq-list">
             {% for faq in product_faq %}
             <details class="detail-faq-item">

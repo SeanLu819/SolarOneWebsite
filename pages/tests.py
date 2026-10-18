@@ -2100,14 +2100,6 @@ class I18nCatalogGuardTests(SimpleTestCase):
         'function.',
         'Your Rights',
         'for any privacy-related requests.',
-        # stadium_lighting hero lead (2026-10-17): rewrote to name both the M
-        # Series and VSP platforms. MT drafts for fr/es/de/ru/ar TBD — falls
-        # back to English like the other untranslated entries, never an empty
-        # string. Remove from this set once the five translations land.
-        'Two platforms cover the brief: the M Series modular floodlight from '
-        '80 W to 1280 W for training grounds and club venues, and the VSP '
-        'series \u2014 broadcast-grade, with asymmetric optics and 12 / 18 / '
-        '30 / 50 degree distributions for the seating bowl.',
     })
 
     # en 是源语言：msgid 本身就是英文，查不到自然回退英文，不构成缺陷。
@@ -2129,9 +2121,13 @@ class I18nCatalogGuardTests(SimpleTestCase):
 
     @staticmethod
     def _catalog_has(catalog, msgid):
-        # templatize 会把 `%` 翻倍（免得 xgettext 把字面 % 当格式符），
-        # 所以两种写法都算命中。
-        return msgid in catalog or msgid.replace('%%', '%') in catalog
+        # 必须精确匹配 templatize 的提取形式。模板串里的字面 `%` 会被翻倍成
+        # `%%`（django/template/base.py Variable.resolve 查表前同样翻倍），
+        # 所以 `.po` 写成单 `%` 虽然「看起来对」，运行时 `{% trans %}` 永远
+        # 查不到、静默回退英文。2026-10-18 收紧：曾容忍单 `%` 形式，那正是
+        # about.html 两段 99% 文案五语全显示英文却逃过本守卫的根因。
+        # Python 侧 `_()` 串不经翻倍，零个含 `%`（已扫描），不受影响。
+        return msgid in catalog
 
     @classmethod
     def _template_strings(cls):
@@ -2313,6 +2309,15 @@ class DataDrivenTranslationTests(SimpleTestCase):
         # 补齐 fr/es/de/ru/ar 五语；将来新增分类必须同步补字典，否则该语种静默
         # 回退英文。
         'pages/views/views_other.py': 4,
+        # football/tennis sports-landing meta: projects_landing routes
+        # page_title / page_description through _t(cfg['title'/'description'],
+        # lang). The English values are SPORT_LANDING_PAGES[...]['title'/
+        # 'description'] and already live in _SIDEBAR_I18N with all five
+        # translations (see the 'Football/Tennis ... Projects | SolarOne' and
+        # 'Real ... measured results.' entries in pages/views/i18n.py).
+        # SportsLandingI18nRenderTests asserts they resolve non-English at
+        # runtime, so this is an inventoried source, not a silent fallback.
+        'pages/views/views_projects.py': 2,
     }
 
     # 边界说明：SiteConfig 里**未经** common.py 传给 _t() 的字段不在覆盖范围内

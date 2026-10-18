@@ -166,6 +166,7 @@ def get_featured_landing_products(slugs, lang='en'):
     """
     import copy
 
+    from django.utils.translation import gettext as _
     from .data_loaders import _load_seed, get_product_detail
 
     cards = {
@@ -184,10 +185,15 @@ def get_featured_landing_products(slugs, lang='en'):
         p = copy.copy(product)
         card = cards.get(slug)
         if card:
+            # Card labels are page copy authored by us, not product data:
+            # route them through gettext so the hero title is not the one
+            # place a platform name stays English on /fr/ /de/ … pages.
+            # (They overwrite the product's already-translated ``name_t``,
+            # so the .po entries must agree with the seed name translations.)
             if card.get('title'):
-                p.name_t = card['title']
+                p.name_t = _(card['title'])
             if card.get('subtitle'):
-                p.description_t = card['subtitle']
+                p.description_t = _(card['subtitle'])
             if card.get('link_url'):
                 p.card_link_url = card['link_url']
         else:
