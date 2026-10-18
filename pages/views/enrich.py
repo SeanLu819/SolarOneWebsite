@@ -10,7 +10,8 @@ from .utils import (
     _DictProduct, _DictProject,
 )
 from .i18n import _PRODUCT_CARD_LABELS, _PRODUCT_CAT_TO_SIDEBAR_LABEL, _t
-from pages.utils import _seo_keyword, project_category_keyword
+from pages.utils import (
+    _seo_keyword, project_category_keyword, cert_line_for, cert_meta_for)
 
 logger = logging.getLogger(__name__)
 
@@ -233,6 +234,15 @@ def _enrich_product(product, lang):
         ]
         if not product.parent_slug:
             product.parent_slug = ''
+
+    # v1.10.29: the visible certification claim. Set outside the branch above
+    # so both the DB row and the seed dict carry it; empty whenever the product
+    # may not claim one, and on every non-English page (see cert_line_for).
+    product.cert_line = cert_line_for(getattr(product, 'slug', ''), lang)
+    # The structured-data form: same rule, shorter value. CE / GS / IP66 are
+    # dropped because the JSON-LD has no room for them and "Protection" above
+    # already carries the ingress rating.
+    product.cert_meta = cert_meta_for(getattr(product, 'slug', ''), lang)
 
     raw_ordering = getattr(product, 'ordering_info', None) or []
     if raw_ordering:

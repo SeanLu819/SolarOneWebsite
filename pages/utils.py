@@ -68,6 +68,10 @@ JSONLD_PROPERTY_FIELDS = (
     ('Beam Angle', 'beam_angle'),
     ('Protection', 'protection'),
     ('Category', 'category_t'),
+    # v1.10.29: not a stored column — ``cert_meta`` is set by
+    # ``_enrich_product`` from the slug rule, so it is empty (and therefore
+    # skipped) on every non-English page and on products that hold no listing.
+    ('Certification', 'cert_meta'),
 )
 
 
@@ -569,6 +573,83 @@ _CATEGORY_DESCRIPTION_TAIL = {
 #: rather than a claim that could be wrong.
 _DEFAULT_DESCRIPTION_TAIL = 'commercial and industrial lighting projects'
 
+#: v1.10.29 — which products may claim UL / DLC in *indexable text*.
+#:
+#: Before this, the certification badge's ``alt`` was the only place the words
+#: "UL" and "DLC" appeared anywhere on the site: one image alt per page, which
+#: carries far less weight than body copy, the meta description or structured
+#: data. A North American specifier filters on these two listings (UL for
+#: electrical compliance, DLC for utility-rebate eligibility), so the claim
+#: belongs in indexable text — but only where it is true.
+#:
+#: Two tiers, not one boolean: the RGBW branch holds a UL listing but is NOT
+#: DLC qualified. DLC is a rebate-eligibility claim, so printing it on those
+#: three pages would misstate rebate eligibility.
+#:
+#: Keyed on ``slug``, which both ``Product`` and ``_DictProduct`` expose, so
+#: the production seed path and the local DB path agree without a second
+#: implementation.
+UL_DLC_SLUGS = frozenset({
+    'm-series', 'fl1m', 'fl4m', 'fl6m', 'fl9m', 'fl12m', 'fl16m',
+    'rt410-series',
+    'vsp-xxxxw-9m-yp', 'vsp-xxxxw-12m-yp',
+})
+
+UL_ONLY_SLUGS = frozenset({
+    'rgb-rgbw', 'fl9m-rgbw', 'rt410-rgbw',
+})
+
+#: English only by decision. UL and DLC are North American listings; the
+#: fr/es/de/ru/ar pages serve markets that use CE and their own schemes, so
+#: they deliberately do not carry these two names.
+_CERT_LINE_WITH_DLC = 'UL Listed · DLC Standard · CE · GS · IP66'
+_CERT_LINE_UL_ONLY = 'UL Listed · CE · GS · IP66'
+
+#: The meta-description form drops CE / GS / IP66: the SERP budget is 160
+#: characters and the snippet has room for the two listings buyers filter on,
+#: not the whole badge.
+_CERT_META_WITH_DLC = 'UL Listed, DLC Standard'
+_CERT_META_UL_ONLY = 'UL Listed'
+
+
+def _cert_tier(slug):
+    """``'both'`` for UL+DLC, ``'ul'`` for UL only, ``''`` for no claim."""
+    slug = (slug or '').strip()
+    if slug in UL_DLC_SLUGS:
+        return 'both'
+    if slug in UL_ONLY_SLUGS:
+        return 'ul'
+    return ''
+
+
+def cert_line_for(slug, lang='en'):
+    """The visible certification line for ``slug``, or ``''`` for no claim.
+
+    Empty on every non-English locale and for any product outside the two
+    sets, so callers are a plain ``{% if %}`` / truthiness check with no
+    second branch that could drift out of sync with the rule above.
+    """
+    if lang != 'en':
+        return ''
+    tier = _cert_tier(slug)
+    if tier == 'both':
+        return _CERT_LINE_WITH_DLC
+    if tier == 'ul':
+        return _CERT_LINE_UL_ONLY
+    return ''
+
+
+def cert_meta_for(slug, lang='en'):
+    """The short certification phrase for the meta description, or ``''``."""
+    if lang != 'en':
+        return ''
+    tier = _cert_tier(slug)
+    if tier == 'both':
+        return _CERT_META_WITH_DLC
+    if tier == 'ul':
+        return _CERT_META_UL_ONLY
+    return ''
+
 
 def build_seo_description(obj, lang='en'):
     """B5 description formula: unique, 50–160 chars (English baseline).
@@ -590,6 +671,14 @@ def build_seo_description(obj, lang='en'):
     tail = _CATEGORY_DESCRIPTION_TAIL.get(
         (getattr(obj, 'category', '') or ''), _DEFAULT_DESCRIPTION_TAIL)
     desc = f'{desc} for {tail}.'
+    # v1.10.29: the certification claim is NOT prepended here on purpose. All
+    # 24 products carry a hand-written ``translations.en.seo_description`` and
+    # ``get_seo_override`` returns that before this formula runs, so production
+    # (the seed path) never reaches this line — the claim lives in the seed
+    # overrides instead. Prepending it here also pushed several descriptions
+    # past the clamp, which cut their shared category tail at different points
+    # and broke the "one tail per category" invariant
+    # (``test_descriptions_differ_by_category_tail``).
     if len(desc) > MAX_SEO_DESCRIPTION_LEN:
         # Word-boundary clamp. The old hard cut at [:157] produced snippets
         # ending mid-word ("… and commercial lighting pro..."), which wastes

@@ -146,6 +146,17 @@ FOOTBALL_FAQ = [
             'your pitch drawing.'
         ),
     },
+    {
+        # v1.10.29: see pages.utils.UL_DLC_SLUGS. Scoped to the VSP series,
+        # which is what this page features.
+        'question': 'Are your football floodlights UL listed and DLC qualified?',
+        'answer': (
+            'Yes. The VSP series is UL Listed and DLC Standard qualified: UL '
+            'for electrical compliance on North American sites, and DLC '
+            'Standard for utility rebate programmes. Certification '
+            'documentation ships with the quotation.'
+        ),
+    },
 ]
 
 TENNIS_FAQ = [
@@ -195,6 +206,18 @@ TENNIS_FAQ = [
             'Yes. Our engineering team delivers a full photometric proposal — '
             'layout, illuminance and uniformity — within 48 hours of receiving '
             'your court drawing.'
+        ),
+    },
+    {
+        # v1.10.29: this roster mixes certified and uncertified models, so
+        # the answer names the series that hold the listing rather than
+        # claiming it for the whole range. See pages.utils.UL_DLC_SLUGS.
+        'question': 'Are the tennis court lights UL listed and DLC qualified?',
+        'answer': (
+            'The M Series, RT410 and VSP models are UL Listed and DLC Standard '
+            'qualified; some other models in the range are not. Tell us the '
+            'fixture you are specifying and we confirm the listing for that '
+            'exact model before you order.'
         ),
     },
 ]

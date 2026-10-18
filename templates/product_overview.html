@@ -115,6 +115,36 @@
     text-shadow: 0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.7);
   }
 
+  /* v1.10.29 - visible certification claim (English only). Kept in sync
+     with product_detail.html. */
+  .detail-cert-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--accent, var(--ink-subtle));
+    background: rgba(127, 127, 127, 0.08);
+    border-radius: 4px;
+  }
+  .detail-cert-line-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+  .detail-cert-line-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  @media (max-width: 767px) {
+    .detail-cert-line {
+      padding: 8px 10px;
+    }
+  }
   .detail-cert-image {
     width: 100%;
     max-width: 320px;
@@ -579,6 +609,14 @@
             </div>
             {% endif %}
 
+            {% if product.cert_line %}
+            {# v1.10.29: English only by design - see cert_line_for. #}
+            <div class="detail-cert-line">
+              <span class="detail-cert-line-label">Certifications:</span>
+              <span class="detail-cert-line-value">{{ product.cert_line }}</span>
+            </div>
+            {% endif %}
+
             <!-- Certification badges -->
             {% if product.cert_image_url %}
             <div class="detail-cert-image">
@@ -674,7 +712,7 @@
   "url": "{{ canonical_origin }}{% url 'product_detail' product.slug %}",
   "brand": {"@type": "Brand", "name": "SolarOne"},
   "sku": "{{ product.model_number|default:product.slug|escapejs }}",
-  "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.power %},
+  "mpn": "{{ product.model_number|default:product.slug|escapejs }}"{% if product.jsonld_properties %},
   "additionalProperty": [
     {% for label, value in product.jsonld_properties %}{"@type": "PropertyValue", "name": "{{ label }}", "value": "{{ value|escapejs }}"}{% if not forloop.last %},
     {% endif %}{% endfor %}

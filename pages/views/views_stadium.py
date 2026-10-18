@@ -140,6 +140,19 @@ STADIUM_FAQ = [
             'your venue drawing.'
         ),
     },
+    {
+        # v1.10.29: the two listings a North American specifier filters on —
+        # UL for electrical compliance, DLC for utility-rebate eligibility.
+        # Scoped to the VSP series, which is what this page features; see
+        # pages.utils.UL_DLC_SLUGS for the products the claim covers.
+        'question': 'Are your stadium lights UL listed and DLC qualified?',
+        'answer': (
+            'Yes. The VSP series is UL Listed and DLC Standard qualified — UL '
+            'for electrical compliance on North American sites, and DLC '
+            'Standard for utility rebate programmes. Certification '
+            'documentation ships with the quotation.'
+        ),
+    },
 ]
 
 

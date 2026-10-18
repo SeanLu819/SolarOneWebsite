@@ -5199,10 +5199,13 @@ class JsonLdValidityTests(TestCase):
             '/products/fl6m/': [
                 ('Power', '480W'), ('Efficacy', '130lm/W'), ('Output', '60K+ lm'),
                 ('Beam Angle', '18~50°'), ('Category', 'AREA_SITE'),
+                # v1.10.29: the certification a North American buyer filters on.
+                ('Certification', 'UL Listed, DLC Standard'),
             ],
             '/products/m-series/': [
                 ('Power', '80~1280W+'), ('Efficacy', '130lm/W'),
                 ('Category', 'AREA_SITE'),
+                ('Certification', 'UL Listed, DLC Standard'),
             ],
         }
         for path, want in expected.items():
