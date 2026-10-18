@@ -92,6 +92,14 @@ class AdminImagePathWritebackTest(TestCase):
         # 清理本测试可能复制到 static/ 的样本
         if os.path.isdir(self.static_dir):
             shutil.rmtree(self.static_dir, ignore_errors=True)
+        # _sync_product_images 会经 _ensure_variants_for_static_rels 在
+        # static/images/_variants/products/<slug>/ 留下 srcset 变体 ——
+        # 漏清会在真实 static/ 树积攒 zz-diag-* 垃圾（2026-10-18 发现）。
+        variants_dir = os.path.join(
+            settings.BASE_DIR, 'static', 'images', '_variants',
+            'products', self.slug)
+        if os.path.isdir(variants_dir):
+            shutil.rmtree(variants_dir, ignore_errors=True)
         for tmp in (os.path.join(self.media_dir, 'diag-fixture.webp'),
                     os.path.join(self.media_dir, 'gallery', 'diag-gallery.webp')):
             if os.path.isfile(tmp):

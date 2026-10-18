@@ -34,6 +34,14 @@ class AdminProductRenderTests(TestCase):
         help_text = Product._meta.get_field('model_number').help_text
         self.assertNotRegex(help_text, r'<[a-zA-Z][a-zA-Z0-9]*\b')
 
+    def tearDown(self):
+        # The guard-product created in setUpTestData leaks into the
+        # process-global enrichment caches; a later stateless test would then
+        # render the guard card instead of the seed cards.
+        from pages.views.enrich import invalidate_enrichment_cache
+        invalidate_enrichment_cache()
+        super().tearDown()
+
     def test_product_change_page_has_exactly_one_title_tag(self):
         """A stray <title> in help_text would create a second <title> in body."""
         self.client.force_login(self.superuser)

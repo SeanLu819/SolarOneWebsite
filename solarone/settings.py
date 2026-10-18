@@ -314,6 +314,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Test runner: restore the active language after every test.
+# Django's LocaleMiddleware activates the request language and never restores
+# it, so a test that GETs /fr/… leaks 'fr' into the rest of the process —
+# reverse() then emits /fr/-prefixed URLs and later English-expecting tests
+# silently fetch the localized page (see solarone/test_runner.py).
+TEST_RUNNER = 'solarone.test_runner.LocaleSafeDiscoverRunner'
+
 # Internationalization
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Asia/Shanghai'

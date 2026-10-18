@@ -12,7 +12,7 @@ from types import SimpleNamespace
 from unittest import mock
 
 from django.contrib import admin
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from pages import seed_sync
 from pages.models import Product, Project
@@ -140,6 +140,18 @@ class ManualRelatedProductsDbPathTests(_CacheIsolationMixin, TestCase):
     """Local dev and the admin read the M2M."""
 
     def setUp(self):
+        # 🔴 Creating a Product fires models.sync_product_on_save, which writes
+        # under BASE_DIR/static/images/products/<slug>/. Iron law 23 pattern:
+        # isolate the whole case in a tmp BASE_DIR (enterContext also covers
+        # the .save() inside the tests), or every run leaves rp-a/rp-b dirs
+        # in the real static/ and CertDuplicateFileTests goes red.
+        import shutil
+        import tempfile
+
+        tmp = tempfile.mkdtemp(prefix='rpmanual_')
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        self.enterContext(override_settings(BASE_DIR=tmp))
+
         self.a = Product.objects.create(
             slug='rp-a', name='A', category='SPORTS_LIGHTING', description='a')
         self.b = Product.objects.create(

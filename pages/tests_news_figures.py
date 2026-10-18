@@ -1199,14 +1199,33 @@ class NewsArticleSeoBudgetTests(SimpleTestCase):
                     js[field], art[field],
                     f'seed_data.json 与 pages/seed_data.py 的 {field} 不一致')
 
-    def test_the_article_publishes_in_the_five_other_languages_as_empty(self):
-        """Base fields stay English; the five translations start empty and fall
-        back rather than rendering a blank. An accidental non-empty value here
-        would be an unreviewed translation shipping to five locales."""
-        for lang, value in (self._article().get('translations') or {}).items():
+    def test_the_five_translations_are_reviewed_real_translations(self):
+        """The F-batch (2026-10-12) filled fr/es/de/ru/ar title+summary with
+        reviewed MT drafts, so the old "must start empty" assertion expired
+        with that content decision. A translation block, once present, must
+        now be a REAL translation — never blank, never an MT error string
+        (those win the fallback and ship verbatim, the same failure mode as
+        the airport project's error-string titles; see ProjectTitleI18nTests).
+
+        The title is the fair's proper name, which every locale keeps in
+        English by convention (fr/es/de keep it verbatim, ru localises the
+        city, ar translates it) — same rule as project titles. So the title
+        is checked for presence and cleanliness only; the summary is prose
+        and must differ from the English original."""
+        article = self._article()
+        for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+            block = (article.get('translations') or {}).get(lang) or {}
             with self.subTest(lang=lang):
-                self.assertEqual(
-                    {}, value, f'{lang} 译文非空但未复核：{value!r}')
+                for field in ('title', 'summary'):
+                    text = (block.get(field) or '')
+                    self.assertTrue(
+                        text.strip(), f'{lang}.{field} 空白——补译或删键')
+                    self.assertNotIn(
+                        '[Error', text, f'{lang}.{field} 含 MT 报错串')
+                summary = (block.get('summary') or '')
+                self.assertNotEqual(
+                    summary, article.get('summary') or '',
+                    f'{lang}.summary 是英文回落，不是译文')
 
     def test_the_body_carries_no_figure_markers_it_cannot_resolve(self):
         """The article ships a cover and no gallery, so any marker left in the

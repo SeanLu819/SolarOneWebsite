@@ -5045,6 +5045,14 @@ class JsonLdValidityTests(TestCase):
             description='A project used only to validate list-page JSON-LD.',
         )
 
+    def tearDown(self):
+        # The guard-product above leaks into the process-global enrichment
+        # caches; a later stateless test (e.g. /products/ under IS_VERCEL)
+        # would then render the guard card instead of the seed cards.
+        from pages.views.enrich import invalidate_enrichment_cache
+        invalidate_enrichment_cache()
+        super().tearDown()
+
     def _blocks(self, path):
         """Return every JSON-LD block on ``path`` as (raw_text, parsed_obj)."""
         resp = self.client.get(path, HTTP_HOST='localhost')
