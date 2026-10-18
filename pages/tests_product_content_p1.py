@@ -514,3 +514,112 @@ class ProductH1RenderTests(TestCase):
             wattage.group(0), text,
             f'the rendered H1 carries no wattage: {text!r}')
         self.assertIn('FL6M', text)
+
+
+class ProductDescriptionI18nTests(TestCase):
+    """Every product ships a reviewed description in all five locales.
+
+    2026-10-18 batch: the "C 产品待人工梳理" debt (19 of 24 products with no
+    translations at all, FL4M's ru/ar purged after the MT error-string
+    incident) was filled — 97 descriptions plus name/category blocks. The
+    failure mode this locks is the one found on the live site: a /ar/ page
+    silently rendering the English description because ``t()`` falls back to
+    English *by design*. A missing translation is invisible in tests that
+    only assert "the page renders" — hence the explicit per-locale coverage
+    assertions and the end-to-end render probes below.
+    """
+    #: The raw model enums. A translations.category equal to one of these
+    #: means the enum leaked into the JSON-LD additionalProperty (the
+    #: 2026-10-18 audit found "Category": "AREA_SITE" live on /fr/products/fl1m/).
+    ENUMS = {'AREA_SITE', 'FLOODLIGHT', 'HIGHBAY_LOWBAY', 'ROADWAY',
+             'ACCESSORY', 'SPORTS_LIGHTING'}
+
+    def setUp(self):
+        self.items = {p['slug']: p for p in _load_seed().get('products', [])}
+
+    def test_every_product_has_a_real_translation_in_every_locale(self):
+        offenders = []
+        for slug, item in sorted(self.items.items()):
+            base = (item.get('description') or '').strip()
+            tr = item.get('translations') or {}
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                text = ((tr.get(lang) or {}).get('description') or '').strip()
+                if not text:
+                    offenders.append((slug, lang, 'blank'))
+                elif text == base:
+                    offenders.append((slug, lang, 'identical to English'))
+                elif '[Error' in text:
+                    offenders.append((slug, lang, 'MT error string'))
+        self.assertEqual(
+            offenders, [],
+            f'products missing a real per-locale description: {offenders}')
+
+    def test_translated_category_is_never_the_raw_enum(self):
+        offenders = []
+        for slug, item in sorted(self.items.items()):
+            tr = item.get('translations') or {}
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                cat = ((tr.get(lang) or {}).get('category') or '').strip()
+                if not cat:
+                    offenders.append((slug, lang, 'blank'))
+                elif cat in self.ENUMS:
+                    offenders.append((slug, lang, cat))
+        self.assertEqual(
+            offenders, [],
+            f'translations.category missing or leaking the enum: {offenders}')
+
+    def test_localized_pages_render_the_translated_description(self):
+        """End-to-end: /fr/ and /ar/ pages must show THEIR description.
+
+        The negative assertion (the English opening must not appear) is the
+        one that fails when a translation goes missing, because the fallback
+        renders the English text and the page still looks "done".
+        """
+        probes = {
+            'fr': ('aluminium moulé sous pression',
+                   'entry module of the FL floodlight family'),
+            'ar': ('الألومنيوم المصبوب',
+                   'entry module of the FL floodlight family'),
+        }
+        for lang, (translated_probe, english_probe) in sorted(probes.items()):
+            with translation.override(lang), self.subTest(lang=lang):
+                url = reverse('product_detail', args=['fl1m'])
+                response = self.client.get(url, HTTP_HOST='localhost')
+                self.assertEqual(response.status_code, 200)
+                body = response.content.decode('utf-8')
+                self.assertIn(
+                    translated_probe, body,
+                    f'{lang} product page does not render the translated '
+                    f'description (falling back to English?)')
+                self.assertNotIn(
+                    english_probe, body,
+                    f'{lang} product page still renders the English '
+                    f'description — the translation is not reaching t()')
+
+    def test_db_and_seed_translations_agree(self):
+        """Local dev renders the model, production renders the seed mirror.
+
+        Same contract as ``test_db_and_seed_descriptions_agree``, one layer
+        down: if the local DB's translation blocks lag the seed, the next
+        admin save exports the DB's empty blocks and the merge's
+        "absent = delete" rule (iron law 35) wipes the seed translations on
+        the next Vercel build. ``en`` is excluded on purpose — it is the
+        seed's only home and the admin widget cannot round-trip it.
+
+        Rows missing from the local DB are skipped, exactly like the
+        base-description guard (the CI test database is empty by design).
+        """
+        drift = []
+        for slug, item in sorted(self.items.items()):
+            row = Product.objects.filter(slug=slug).first()
+            if row is None:
+                continue
+            seed_tr = item.get('translations') or {}
+            db_tr = row.translations or {}
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                if (db_tr.get(lang) or {}) != (seed_tr.get(lang) or {}):
+                    drift.append((slug, lang))
+        self.assertEqual(
+            drift, [],
+            f'DB and seed translation blocks drifted (an admin save would '
+            f'export the DB side and delete the seed blocks): {drift}')

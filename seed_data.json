@@ -22,11 +22,31 @@
       "page_layout": "detail",
       "parent_slug": "accessory",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "L'écran anti-éblouissement M Series est un accessoire en acier inoxydable 304 décliné en plusieurs longueurs, permettant d'adapter un même luminaire M Series aux différentes exigences d'éblouissement et de débordement lumineux selon les sites. Il coupe la lumière émise au-dessus de l'horizontale, redirigeant le flux vers la surface de jeu et réduisant le halo vers les propriétés et les routes voisines.",
+          "name": "Écran anti-éblouissement pour série M",
+          "category": "Accessoire"
+        },
+        "es": {
+          "description": "La pantalla antideslumbramiento M Series es un accesorio de acero inoxidable 304 fabricado en varias longitudes, para que la misma luminaria M Series se adapte a distintos requisitos de deslumbramiento y dispersión de luz según el recinto. Corta la luz emitida por encima de la horizontal, dirigiendo la salida hacia la superficie de juego y reduciendo el resplandor hacia propiedades y carreteras vecinas.",
+          "name": "Pantalla antideslumbramiento para serie M",
+          "category": "Accesorio"
+        },
+        "de": {
+          "description": "Der M-Serie-Blendschutz ist ein Zubehörteil aus Edelstahl 304 in mehreren Längen, damit dieselbe M-Serie-Leuchte an unterschiedliche Blend- und Streulichtanforderungen der jeweiligen Stätte angepasst werden kann. Er schneidet das Licht oberhalb der Horizontalen ab, lenkt den Lichtstrom auf die Spielfläche und reduziert die Himmelsaufhellung in Richtung Nachbargrundstücke und Straßen.",
+          "name": "Blendschutz für M-Serie",
+          "category": "Zubehör"
+        },
+        "ru": {
+          "description": "Бленда серии M — аксессуар из нержавеющей стали 304 в нескольких длинах, чтобы один и тот же светильник M Series адаптировался под разные требования по блеску и пересвету на объекте. Она срезает свет выше горизонтали, направляя поток вниз на игровую поверхность и снижая засветку неба в сторону соседних объектов и дорог.",
+          "name": "Бленда для серии M",
+          "category": "Аксессуар"
+        },
+        "ar": {
+          "description": "واقي الوهج لسلسلة M ملحق من الفولاذ المقاوم للصدأ 304 يُصنع بأطوال متعددة، فيتكيّف مع متطلبات الوهج والتسرب الضوئي المختلفة لكل موقع. يقطع الضوء الصادر فوق الأفقي، موجّهًا الخرج إلى سطح اللعب ومقلّلًا التوهج نحو المنشآت والطرق المجاورة.",
+          "name": "واقي الوهج لسلسلة M",
+          "category": "ملحق"
+        },
         "en": {
           "seo_description": "SolarOne glare shield for M Series LED floodlights cuts uplight and skyglow, improving contrast for neighbours and roads."
         }
@@ -304,11 +324,26 @@
       "page_layout": "overview",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Les projecteurs LED RGB et RGBW ajoutent la couleur complète et le blanc variable à la gamme d'éclairage de sites SolarOne, permettant aux enceintes de passer de l'éclairage fonctionnel blanc aux nappes de couleur de marque pour les événements, festivals et illuminations de façades. Chaque luminaire mélange rouges, verts et bleus saturés ainsi qu'un canal ambre ou blanc, pilotés depuis un seul contrôleur DMX, DALI ou 1-10 V.",
+          "category": "Projecteur RGB / RGBW"
+        },
+        "es": {
+          "description": "Los proyectores LED RGB y RGBW añaden capacidad de color total y blanco ajustable a la gama de iluminación de zonas de SolarOne, permitiendo a los recintos pasar de la luz blanca funcional a baños de color de marca para eventos, festivales e iluminación de fachadas. Cada luminaria mezcla rojos, verdes y azules saturados más un canal ámbar o blanco, todo pilotado desde un único controlador DMX, DALI o 1-10 V.",
+          "category": "Proyector RGB / RGBW"
+        },
+        "de": {
+          "description": "Die RGB- und RGBW-LED-Flutlichter ergänzen das SolarOne-Flächenbeleuchtungsprogramm um Vollfarbe und abstimmbares Weiß: Betreiber wechseln von funktionalem Weiß zu markenfarbenen Washes für Events, Festivals und Fassadeninszenierungen. Jede Leuchte mischt gesättigte Rot-, Grün- und Blautöne plus einen Amber- oder Weißkanal – alles über einen einzigen DMX-, DALI- oder 1-10-V-Controller.",
+          "category": "RGB-/RGBW-Flutlicht"
+        },
+        "ru": {
+          "description": "Светодиодные прожекторы RGB и RGBW добавляют полноцветность и настраиваемый белый в линейку освещения площадок SolarOne: объекты переходят от функционального белого к фирменным цветовым заливкам на событиях, фестивалях и подсветке фасадов. Каждый светильник смешивает насыщенные красный, зелёный и синий плюс янтарный или белый канал — всё с одного контроллера DMX, DALI или 1-10 В.",
+          "category": "RGB-/RGBW-прожектор"
+        },
+        "ar": {
+          "description": "تضيف كشافات LED من نوع RGB و RGBW قدرة الألوان الكاملة والأبيض القابل للضبط إلى تشكيلة إضاءة المواقع من SolarOne، فتتمكن المنشآت من الانتقال من الإضاءة البيضاء الوظيفية إلى غسلات لونية للهوية في الفعاليات والمهرجانات وإضاءة الواجهات. تمزج كل وحدة أحمر وأخضر وأزرق مشبعة إضافة إلى قناة كهرمانية أو بيضاء، وكلها تُدار من متحكم DMX أو DALI أو 1-10 فولت واحد.",
+          "category": "كشاف RGB / RGBW"
+        },
         "en": {
           "seo_description": "SolarOne RGB and RGBW LED floodlights add full-colour and tunable white for events, façades and landmark lighting."
         }
@@ -346,11 +381,31 @@
       "page_layout": "overview",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "La gamme d'accessoires SolarOne regroupe les supports, écrans anti-éblouissement, kits de montage et matériel de raccordement nécessaires pour installer et adapter les familles de projecteurs LED sur les sites réels. Les prescripteurs choisissent le support U ou L, la longueur d'écran et le presse-étoupe exacts pour chaque luminaire et surface de montage, réduisant la fabrication et la reprise sur site. Chaque accessoire partage les matériaux corrosion-résistants IP66 des luminaires.",
+          "name": "Accessoires",
+          "category": "Accessoire"
+        },
+        "es": {
+          "description": "La gama de accesorios SolarOne reúne los soportes, pantallas antideslumbramiento, kits de montaje y material de conexión necesarios para instalar y adaptar las familias de proyectores LED en obra real. Los prescriptores eligen el soporte U o L exacto, la longitud de pantalla y el prensaestopas para cada luminaria y superficie de montaje, reduciendo la fabricación y el retrabajo en obra. Cada accesorio comparte los materiales resistentes a la corrosión IP66 de las luminarias.",
+          "name": "Accesorios",
+          "category": "Accesorio"
+        },
+        "de": {
+          "description": "Das SolarOne-Zubehörprogramm bündelt Bügel, Blendschutze, Montagesätze und Anschlusshardware, die für Installation und Anpassung der LED-Flutlichtfamilien auf realen Baustellen gebraucht werden. Planer wählen je Leuchte und Montagefläche den passenden U- oder L-Bügel, die Schirmlänge und die Kabelverschraubung – das reduziert Fertigung und Nacharbeit vor Ort. Jedes Zubehörteil teilt die korrosionsbeständigen IP66-Materialien der Leuchten.",
+          "name": "Zubehör",
+          "category": "Zubehör"
+        },
+        "ru": {
+          "description": "Линейка аксессуаров SolarOne объединяет кронштейны, бленды, монтажные комплекты и соединительную арматуру, нужные для установки и адаптации семейств светодиодных прожекторов на реальных объектах. Проектировщики выбирают точный кронштейн U или L, длину бленды и кабельный ввод под каждый светильник и поверхность монтажа, сокращая доработку на площадке. Каждый аксессуар сделан из тех же коррозионностойких IP66-материалов, что и светильники.",
+          "name": "Аксессуары",
+          "category": "Аксессуар"
+        },
+        "ar": {
+          "description": "تجمع تشكيلة ملحقات SolarOne الحوامل وأواقي الوهج وأطقم التركيب ومواد التوصيل اللازمة لتركيب عائلات كشافات LED وتكييفها في المواقع الفعلية. يختار المحدّدون حامل U أو L وطول الواقي وكبل الخروج المناسبين لكل وحدة وسطح تركيب، فتقلّ الأعمال الميدانية وإعادة العمل. يشارك كل ملحق مواد مقاومة للتآكل بمعيار IP66 مع الوحدات الإضاءة.",
+          "name": "ملحقات الإضاءة",
+          "category": "ملحق"
+        },
         "en": {
           "seo_description": "SolarOne Accessory brackets, glare shields and mounting kits matched to each model and pole height."
         }
@@ -387,11 +442,26 @@
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL1M est le module d'entrée de 80 W de la famille de projecteurs FL, conçu pour un éclairage précis à longue portée. Son corps compact en aluminium moulé sous pression convient aux parkings, entrées de bâtiments, enseignes et mâts de périmètre, où un faisceau étroit évacue la lumière vers les propriétés voisines. La protection IP66 et le limiteur de surtension 10 kV encaissent la pluie, la poussière et les transitoires du réseau.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El FL1M es el módulo de entrada de 80 W de la familia de proyectores FL, diseñado para una iluminación precisa de largo alcance. Su cuerpo compacto de aluminio fundido a presión encaja en aparcamientos, entradas de edificios, señalética y mástiles de perímetro, donde un haz estrecho evita deslumbrar a las propiedades vecinas. La protección IP66 y el supresor de sobretensiones de 10 kV soportan lluvia, polvo y transitorios de red.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der FL1M ist das 80-W-Einstiegsmodul der FL-Flutlichtfamilie, gebaut für präzise, weittragende Beleuchtung. Sein kompaktes Aluminium-Druckgussgehäuse passt zu Parkplätzen, Gebäudeeingängen, Beschilderung und Perimeter-Masten, wo ein enger Strahl verhindert, dass Licht auf Nachbargrundstücke fällt. IP66-Schutz und 10-kV-Überspannungsschutz verkraften Regen, Staub und Netztransienten.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "FL1M — стартовый модуль мощностью 80 Вт семейства прожекторов FL, созданный для точного дальнего освещения. Компактный корпус из литого под давлением алюминия подходит для парковок, входов в здания, вывесок и периметральных мачт, где узкий луч не засвечивает соседние объекты. Защита IP66 и ограничитель перенапряжения 10 кВ справляются с дождём, пылью и сетевыми помехами.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ FL1M الوحدة الأولى بقدرة 80 واط من عائلة كشافات الإضاءة FL، ومصممة لإضاءة دقيقة بعيدة المدى. جسمه المضغوط من الألومنيوم المصبوب يناسب مواقف السيارات ومداخل المباني واللافتات وأعمدة المحيط، حيث يجنب الحزمة الضيقة تسرب الضوء على الجوار. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تتحمل المطر والغبار واضطرابات الشبكة.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne FL1M 80 W LED floodlight, 130 lm/W, 18-50° beam for precise car-park, entrance and signage lighting."
         }
@@ -535,19 +605,24 @@
       "parent_slug": "m-series",
       "translations": {
         "fr": {
-          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M."
+          "description": "Configuration modulaire de projecteur FL4M — fait partie de la famille Série M.",
+          "category": "Projecteur"
         },
         "es": {
-          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M."
+          "description": "Configuración modular de proyector FL4M — parte de la familia Serie M.",
+          "category": "Proyector"
         },
         "de": {
-          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie."
+          "description": "Modulare FL4M-Flutlichtkonfiguration — Teil der M-Serie-Familie.",
+          "category": "Flutlicht"
         },
         "ru": {
-          "description": ""
+          "description": "FL4M — прожектор мощностью 320 Вт для дворов среднего размера, фасадов и спортивных тренировочных площадок. Узкий луч держит свет на целевой плоскости вместо неба, повышая контраст и снижая жалобы соседних объектов. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на постоянную работу на улице, а безмерцающий драйвер поддерживает среды вещания.",
+          "category": "Прожектор"
         },
         "ar": {
-          "description": ""
+          "description": "يُعدّ FL4M كشافًا بقدرة 320 واط للساحات متوسطة الحجم والواجهات ومناطق التدريب الرياضي. تُبقي حزمته الضيقة الضوء على المستوى المستهدف بدلًا من السماء، مما يحسّن التباين ويقلّ الشكاوى من المنشآت المجاورة. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تناسبان العمل الخارجي الدائم، والمُشغّل الخالي من الوميض يدعم بيئات البث.",
+          "category": "كشاف"
         },
         "en": {
           "seo_description": "SolarOne FL4M 320 W LED floodlight delivers 40,000+ lumens at 130 lm/W for yards, façades and training areas."
@@ -691,11 +766,26 @@
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL6M est un projecteur de 480 W conçu pour les sites à mâts élevés et les grandes surfaces tels que les aéroports et l'éclairage des échangeurs. Son faisceau étroit cible avec précision les surfaces de jeu, les cours et les aires de trafic, réduisant le halo lumineux et l'éblouissement sur les routes voisines. La protection IP66 et le limiteur de surtension 10 kV assurent un service extérieur exigeant, et le pilote sans scintillement prend en charge les lieux de diffusion.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El FL6M es un proyector de 480 W construido para mástiles altos y grandes superficies como aeropuertos e iluminación de enlaces. Su haz estrecho apunta con precisión a superficies de juego, patios y plataformas, reduciendo el resplandor hacia el cielo y el deslumbramiento en carreteras vecinas. La protección IP66 y el supresor de sobretensiones de 10 kV soportan un exigente servicio exterior, y el driver libre de parpadeo admite recintos de emisión.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der FL6M ist ein 480-W-Flutlicht für Hochmasten und große Flächen wie Flughäfen und Anschlussstellen. Sein enger Strahl zielt präzise auf Spielflächen, Höfe und Vorfelder und reduziert Himmelsaufhellung und Blendung auf Nachbarstraßen. IP66-Schutz und 10-kV-Überspannungsschutz halten den anspruchsvollen Außeneinsatz aus, und der flimmerfreie Treiber unterstützt Übertragungsumgebungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "FL6M — прожектор мощностью 480 Вт для высокомачтовых и крупных площадок: аэропортов, освещения транспортных развязок. Узкий луч точно нацелен на игровые поверхности, дворы и перроны, снижая засветку неба и блики на соседних дорогах. Защита IP66 и ограничитель перенапряжения 10 кВ выдерживают тяжёлый режим на улице, а безмерцающий драйвер поддерживает объекты вещания.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ FL6M كشافًا بقدرة 480 واط للأعمدة العالية والمواقع الكبيرة مثل المطارات وإضاءة التقاطعات. تستهدف حزمته الضيقة أسطح اللعب والساحات والأرصفة بدقة، فتقلّل التوهج السماوي والانبعاث الضوئي على الطرق المجاورة. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تتحمل الخدمة الخارجية الشاقة، والمُشغّل الخالي من الوميض يدعم منشآت البث.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne FL6M 480 W LED floodlight, 60,000+ lumens, 18-50° beam for high-mast yards, aprons and airports."
         }
@@ -838,11 +928,26 @@
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL9M est un projecteur de 720 W conçu pour les grands parcs à conteneurs, les cours de triage et les périmètres de stades. Son optique étroite place la lumière exactement là où elle est nécessaire, améliorant l'uniformité et limitant la dispersion vers les propriétés adjacentes. La protection IP66 et le limiteur de surtension 10 kV conviennent au service extérieur continu, et le pilote sans scintillement prend en charge les stades de diffusion.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El FL9M es un proyector de 720 W construido para grandes patios de contenedores, depósitos ferroviarios y perímetros de estadios. Su óptica estrecha coloca la luz exactamente donde se necesita, mejorando la uniformidad y cortando la dispersión hacia las propiedades adyacentes. La protección IP66 y el supresor de sobretensiones de 10 kV sirven para el servicio exterior continuo, y el driver libre de parpadeo admite estadios de emisión.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der FL9M ist ein 720-W-Flutlicht für große Containerhöfe, Rangierbahnhöfe und Stadionperimeter. Seine enge Optik setzt das Licht genau dort, wo es gebraucht wird, verbessert die Gleichmäßigkeit und begrenzt Streulicht auf benachbarte Grundstücke. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für den Dauerbetrieb im Freien, und der flimmerfreie Treiber unterstützt Übertragungsstätten.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "FL9M — прожектор мощностью 720 Вт для крупных контейнерных терминалов, сортировочных дворов и периметра стадионов. Узкая оптика ставит свет точно туда, где он нужен, повышая равномерность и сокращая пересвет на соседние объекты. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на непрерывную работу на улице, а безмерцающий драйвер поддерживает стадионы вещания.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ FL9M كشافًا بقدرة 720 واط لساحات الحاويات الكبيرة وأرصفة السكك الحديدية ومحيط الملاعب. تضع بصريته الضيقة الضوء تمامًا حيث يلزم، فتحسّن الانتظام وتقطع التسرب على المنشآت المجاورة. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تناسبان الخدمة الخارجية المتواصلة، والمُشغّل الخالي من الوميض يدعم ملاعب البث.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne FL9M 720 W LED floodlight, 90,000+ lumens, 18-50° beam for ports, railyards and stadium perimeters."
         }
@@ -985,11 +1090,26 @@
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL12M est un projecteur de 1000 W destiné aux plus grandes cours, aux ports et aux programmes d'éclairage de stades. Son optique étroite maximise la portée et l'uniformité sur les mâts élevés tout en limitant la dispersion vers les voisins. La protection IP66 et le limiteur de surtension 10 kV tiennent le service extérieur permanent sous climat rude, et le pilote sans scintillement prend en charge les environnements de diffusion.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El FL12M es un proyector de 1000 W para los mayores patios, puertos y proyectos de iluminación de estadios. Su óptica estrecha maximiza el alcance y la uniformidad en mástiles altos limitando la dispersión hacia los vecinos. La protección IP66 y el supresor de sobretensiones de 10 kV soportan el servicio exterior permanente en climas duros, y el driver libre de parpadeo admite entornos de emisión.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der FL12M ist ein 1000-W-Flutlicht für die größten Höfe, Häfen und Stadionbeleuchtungsprojekte. Seine enge Optik maximiert Reichweite und Gleichmäßigkeit an hohen Masten und begrenzt gleichzeitig Streulicht auf die Nachbarn. IP66-Schutz und 10-kV-Überspannungsschutz halten den permanenten Außeneinsatz in rauen Klimazonen aus, und der flimmerfreie Treiber unterstützt Übertragungsumgebungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "FL12M — прожектор мощностью 1000 Вт для крупнейших дворов, портов и проектов освещения стадионов. Узкая оптика максимально увеличивает дальность и равномерность на высоких мачтах, ограничивая пересвет на соседей. Защита IP66 и ограничитель перенапряжения 10 кВ выдерживают постоянную работу на улице в суровом климате, а безмерцающий драйвер поддерживает среды вещания.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ FL12M كشافًا بقدرة 1000 واط لأكبر الساحات والمرافى ومشاريع إضاءة الملاعب. تُكسب بصريته الضيقة أقصى مدى وانتظام على الأعمدة العالية مع تقييد التسرب على الجوار. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تتحمل الخدمة الخارجية الدائمة في المناخات القاسية، والمُشغّل الخالي من الوميض يدعم بيئات البث.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne FL12M 1000 W LED floodlight, 120,000+ lumens, 18-50° beam for large ports and stadium floodlighting."
         }
@@ -1132,11 +1252,26 @@
       "page_layout": "detail",
       "parent_slug": "m-series",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL16M est le fleuron de 1280 W de la famille FL, conçu pour les applications de mâts élevés et de stades les plus exigeantes. Son optique étroite projette la lumière loin et uniformément tout en retenant la dispersion loin des routes et des propriétés environnantes. La protection IP66 et le limiteur de surtension 10 kV conviennent au service extérieur toute l'année, et le pilote sans scintillement répond aux exigences de diffusion.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El FL16M es el buque insignia de 1280 W de la familia FL, construido para las aplicaciones más exigentes de mástiles altos y estadios. Su óptica estrecha lanza la luz lejos y de forma uniforme mientras retiene la dispersión lejos de carreteras y propiedades circundantes. La protección IP66 y el supresor de sobretensiones de 10 kV sirven para el servicio exterior todo el año, y el driver libre de parpadeo cumple las exigencias de emisión.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der FL16M ist das 1280-W-Flagschiff der FL-Familie, gebaut für die anspruchsvollsten Hochmast- und Stadionanwendungen. Seine enge Optik wirft das Licht weit und gleichmäßig und hält gleichzeitig Streulicht von umliegenden Straßen und Grundstücken fern. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für den Ganzjahresbetrieb im Freien, und der flimmerfreie Treiber erfüllt Übertragungsanforderungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "FL16M — флагман семейства FL мощностью 1280 Вт для самых требовательных высокомачтовых и стадионных задач. Узкая оптика бросает свет далеко и равномерно, удерживая пересвет в стороне от окружающих дорог и объектов. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на круглогодичную работу на улице, а безмерцающий драйвер отвечает требованиям вещания.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ FL16M الرائد بقدرة 1280 واط في عائلة FL، ومصمم لأقسى تطبيقات الأعمدة العالية والملاعب. ترمي بصريته الضيقة الضوء بعيدًا وبانتظام مع إبعاد التسرب عن الطرق والمنشآت المحيطة. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تناسبان الخدمة الخارجية طوال العام، والمُشغّل الخالي من الوميض يلبي متطلبات البث.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne FL16M 1280 W LED floodlight, 160,000+ lumens, 18-50° beam for the largest high-mast sites."
         }
@@ -1279,11 +1414,26 @@
       "page_layout": "detail",
       "parent_slug": "rgb-rgbw",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le FL9M-RGBW associe la plateforme optique du FL9M à un moteur RGBW de 600 W, ajoutant couleur saturée et blanc variable à l'éclairage de grandes surfaces sans luminaire séparé. Les enceintes conservent le blanc fonctionnel au quotidien et basculent en nappes de couleur de marque pour les matchs, concerts et illuminations de façades, le tout depuis un seul contrôleur DMX, DALI ou 1-10 V.",
+          "category": "Projecteur RGB / RGBW"
+        },
+        "es": {
+          "description": "El FL9M-RGBW combina la plataforma óptica del FL9M con un motor RGBW de 600 W, añadiendo color saturado y blanco ajustable a la iluminación de grandes superficies sin una luminaria separada. Los recintos mantienen el blanco funcional para el uso diario y cambian a baños de color de marca para partidos, conciertos e iluminación de fachadas, todo desde un único controlador DMX, DALI o 1-10 V.",
+          "category": "Proyector RGB / RGBW"
+        },
+        "de": {
+          "description": "Der FL9M-RGBW kombiniert die FL9M-Optikplattform mit einer 600-W-RGBW-Engine und bringt gesättigte Farbe und abstimmbares Weiß in die Großflächenbeleuchtung – ohne separate Leuchte. Betreiber halten funktionales Weiß für den Alltag und schalten auf markenfarbene Washes für Spiele, Konzerte und Fassadeninszenierungen, alles über einen einzigen DMX-, DALI- oder 1-10-V-Controller.",
+          "category": "RGB-/RGBW-Flutlicht"
+        },
+        "ru": {
+          "description": "FL9M-RGBW сочетает оптическую платформу FL9M с RGBW-движком мощностью 600 Вт, добавляя насыщенный цвет и настраиваемый белый к освещению крупных площадок без отдельного светильника. Объекты держат функциональный белый для ежедневного использования и переключаются на фирменные цветовые заливки на матчи, концерты и подсветку фасадов — всё с одного контроллера DMX, DALI или 1-10 В.",
+          "category": "RGB-/RGBW-прожектор"
+        },
+        "ar": {
+          "description": "يجمع FL9M-RGBW بين المنصة البصرية لـ FL9M ومحرك RGBW بقدرة 600 واط، فيضيف لونًا مشبعًا وأبيضًا قابلًا للضبط إلى إضاءة المساحات الكبيرة دون وحدة منفصلة. تُبقي المنشآت الأبيض الوظيفي للاستخدام اليومي وتتحول إلى غسلات لونية للهوية في المباريات والحفلات وإضاءة الواجهات، كل ذلك من متحكم DMX أو DALI أو 1-10 فولت واحد.",
+          "category": "كشاف RGB / RGBW"
+        },
         "en": {
           "seo_description": "SolarOne FL9M-RGBW 600 W colour floodlight adds RGBW washes and tunable white for events and façades."
         }
@@ -1393,11 +1543,31 @@
       "page_layout": "detail",
       "parent_slug": "accessory",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "L'écran anti-éblouissement pour RT410 se clipse sur le luminaire pour couper la lumière émise au-dessus de l'horizontale, redirigeant le flux vers le sol ou la surface de jeu. En supprimant la lumière vers le haut, il réduit le halo lumineux et améliore le contraste pour les conducteurs, les joueurs et les propriétés voisines, aidant les sites à respecter les limites d'éblouissement dark-sky et des fédérations sportives. Fabriqué dans les mêmes matériaux corrosion-résistants IP66 que le RT410, il vieillit au même rythme que l'appareil qu'il protège.",
+          "name": "Écran anti-éblouissement pour RT410",
+          "category": "Accessoire"
+        },
+        "es": {
+          "description": "La pantalla antideslumbramiento para el RT410 se engancha a la luminaria para cortar la luz emitida por encima de la horizontal, redirigiendo la salida hacia el suelo o la superficie de juego. Al suprimir la luz hacia arriba reduce el resplandor y mejora el contraste para conductores, jugadores y propiedades vecinas, ayudando a los recintos a cumplir los límites de deslumbramiento dark-sky y de las federaciones deportivas. Fabricada con los mismos materiales resistentes a la corrosión IP66 que el RT410, envejece al mismo ritmo que el aparato que protege.",
+          "name": "Pantalla antideslumbramiento para RT410",
+          "category": "Accesorio"
+        },
+        "de": {
+          "description": "Der Blendschutz für den RT410 wird an die Leuchte geklippt, um das Licht oberhalb der Horizontalen abzuschneiden und den Lichtstrom auf Boden oder Spielfläche umzulenken. Durch die Unterdrückung des Aufwärtslichts reduziert er die Himmelsaufhellung und verbessert den Kontrast für Autofahrer, Sportler und Nachbargrundstücke – und hilft Stätten, Dark-Sky- und Verbands-Blendgrenzen einzuhalten. Gefertigt aus denselben korrosionsbeständigen IP66-Materialien wie der RT410, altert er im gleichen Tempo wie die Leuchte, die er schützt.",
+          "name": "Blendschutz für RT410",
+          "category": "Zubehör"
+        },
+        "ru": {
+          "description": "Бленда для RT410 защёлкивается на светильнике, срезая свет выше горизонтали и перенаправляя поток к земле или игровой поверхности. Подавляя свет вверх, она снижает засветку неба и улучшает контраст для водителей, игроков и соседних объектов, помогая площадкам соблюдать лимиты по блеску dark-sky и спортивных федераций. Изготовлена из тех же коррозионностойких IP66-материалов, что и RT410, и стареет тем же темпом, что защищаемый светильник.",
+          "name": "Бленда для RT410",
+          "category": "Аксессуар"
+        },
+        "ar": {
+          "description": "يُثبّت واقي الوهج لـ RT410 على الوحدة لقطع الضوء الصادر فوق الأفقي، مُعيدًا توجيه الخرج نحو الأرض أو سطح اللعب. بقمعه الضوء الصاعد يقلّل التوهج السماوي ويحسّن التباين للسائقين واللاعبين والمنشآت المجاورة، مساعدًا المواقع على الالتزام بحدود الوهج الخاصة بـ dark-sky والاتحادات الرياضية. مصنوع من مواد مقاومة للتآكل بمعيار IP66 مثل RT410، فيشيخ بالوتيرة نفسها التي يشيخ بها الجهاز الذي يحميه.",
+          "name": "واقي الوهج لـ RT410",
+          "category": "ملحق"
+        },
         "en": {
           "seo_description": "SolarOne glare shield for RT410 cuts uplight and skyglow, meeting dark-sky and sports glare limits."
         }
@@ -1688,11 +1858,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT590FL-S est un projecteur LED de 160 W pour l'éclairage général, les façades, les cours et la sécurité de périmètre, là où un luminaire robuste et efficace est nécessaire sans performance de niveau sportif. Sa protection IP66 et son limiteur de surtension 10 kV conviennent au service extérieur permanent, et son support réglable permet d'orienter le faisceau lors de l'installation.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El RT590FL-S es un proyector LED de 160 W para iluminación general, fachadas, patios y seguridad perimetral, donde se necesita una luminaria robusta y eficiente sin salida de grado deportivo. Su protección IP66 y supresor de sobretensiones de 10 kV sirven para el servicio exterior permanente, y su soporte ajustable orienta el haz durante la instalación.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der RT590FL-S ist ein 160-W-LED-Flutlicht für Allgemeinbeleuchtung, Fassaden, Höfe und Perimetersicherung – überall dort, wo eine robuste, effiziente Leuchte ohne Sportstätten-Niveau gebraucht wird. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für den permanenten Außeneinsatz, und der verstellbare Bügel richtet den Strahl bei der Montage aus.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "RT590FL-S — светодиодный прожектор мощностью 160 Вт для общего освещения, фасадов, дворов и периметральной безопасности там, где нужен надёжный и эффективный светильник без спортивного уровня. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на постоянную работу на улице, а регулируемый кронштейн позволяет нацепить луч при монтаже.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ RT590FL-S كشاف LED بقدرة 160 واط للإضاءة العامة والواجهات والساحات وأمن المحيط، حيث يُلزم مصباح متين وفعّال دون أداء بمستوى الملاعب. تناسب حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت الخدمة الخارجية الدائمة، ويتيح الحامل القابل للتعديل توجيه الحزمة أثناء التركيب.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne RT590FL-S 160 W LED floodlight for façades, yards and perimeter security lighting."
         }
@@ -1809,11 +1994,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT390FL-S est un projecteur LED de 80 W pour les tâches d'éclairage de plus petite taille : entrées de bâtiments, enseignes, locaux à poubelles, chemins de périmètre et cours compactes. Sa protection IP66 et son limiteur de surtension 10 kV conviennent à l'usage extérieur permanent, et son corps compact en aluminium moulé sous pression se fixe proprement sur murs, mâts et soffites.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El RT390FL-S es un proyector LED de 80 W para tareas de iluminación menores: entradas de edificios, señalética, cuartos de basura, caminos de perímetro y patios compactos. Su protección IP66 y supresor de sobretensiones de 10 kV sirven para el uso exterior permanente, y su cuerpo compacto de aluminio fundido a presión se monta limpiamente en paredes, mástiles y sofitos.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der RT390FL-S ist ein 80-W-LED-Flutlicht für kleinere Aufgaben: Gebäudeeingänge, Beschilderung, Müllhaus, Perimeterwege und kompakte Höfe. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für den permanenten Außeneinsatz, und das kompakte Aluminium-Druckgussgehäuse montiert sauber an Wänden, Masten und Laibungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "RT390FL-S — светодиодный прожектор мощностью 80 Вт для небольших задач: входов в здания, вывесок, мусорных площадок, периметральных дорожек и компактных дворов. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на постоянную работу на улице, а компактный корпус из литого под давлением алюминия аккуратно ставится на стены, мачты и свесы.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ RT390FL-S كشاف LED بقدرة 80 واط لمهام الإضاءة الأصغر: مداخل المباني واللافتات وأماكن النفايات ومسارات المحيط والساحات المدمجة. تناسب حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت الاستخدام الخارجي الدائم، ويُركّب جسمه المضغوط من الألومنيوم المصبوب بسلاسة على الجدران والأعمدة والأسقف المعلّقة.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne RT390FL-S 80 W LED floodlight for entrances, signage and compact yard floodlighting."
         }
@@ -1926,11 +2126,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT400HB est un luminaire LED high-bay et low-bay de 130 W pour les entrepôts, gymnases, ateliers et zones industrielles couvertes. Sa famille de faisceaux de 30° à 90° couvre la dispersion nécessaire, des plafonds bas aux rayonnages high-bay, en plaçant la lumière sur le sol et le plan de travail plutôt que sur la toiture. La protection IP66 et le limiteur de surtension 10 kV conviennent au service industriel exigeant.",
+          "category": "Éclairage haute et basse"
+        },
+        "es": {
+          "description": "El RT400HB es una luminaria LED high-bay y low-bay de 130 W para almacenes, pabellones deportivos, talleres y zonas industriales cubiertas. Su familia de haces de 30° a 90° cubre la dispersión necesaria desde techos bajos hasta estanterías high-bay, poniendo la luz en el suelo y el plano de trabajo en vez del techo. La protección IP66 y el supresor de sobretensiones de 10 kV sirven para el exigente servicio industrial.",
+          "category": "Iluminación alta y baja"
+        },
+        "de": {
+          "description": "Der RT400HB ist eine 130-W-LED-Hallen- und Niedrigbauleuchte für Lagerhallen, Sporthallen, Werkstätten und überdachte Industriebereiche. Seine Strahlfamilie von 30° bis 90° deckt die nötige Spreizung ab – von niedrigen Decken bis zu Hochregallagern – und setzt das Licht auf Boden und Arbeitsebene statt aufs Dach. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für anspruchsvollen Industrieeinsatz.",
+          "category": "Hallenbeleuchtung"
+        },
+        "ru": {
+          "description": "RT400HB — светодиодный светильник типа high-bay и low-bay мощностью 130 Вт для складов, спортзалов, мастерских и крытых промышленных зон. Семейство углов 30°–90° закрывает нужный разброс от низких потолков до высоких стеллажей, ставя свет на пол и рабочую плоскость вместо кровли. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на тяжёлый промышленный режим.",
+          "category": "Складское освещение"
+        },
+        "ar": {
+          "description": "يُعدّ RT400HB وحدة LED عالية ومنخفضة السقف بقدرة 130 واط للمخازن والصالات الرياضية والورش والمناطق الصناعية المغطاة. تغطي عائلة حزَم 30° إلى 90° الانتشار المطلوب من الأسقف المنخفضة إلى رفوف المخازن العالية، فواضعة الضوء على الأرض ومستوى العمل بدل السقف. حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت تناسبان الخدمة الصناعية الشاقة.",
+          "category": "إضاءة المخازن"
+        },
         "en": {
           "seo_description": "SolarOne RT400HB 130 W high-bay LED luminaire, 30-90° beam for warehouses and sports halls."
         }
@@ -2039,11 +2254,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT500HB est un luminaire LED high-bay et low-bay de 280 W pour les grands entrepôts, halls de production et installations sportives nécessitant plus de flux que le RT400HB. Sa famille de faisceaux de 30° à 90° sert à la fois les plafonds bas et les rayonnages high-bay, dirigeant la lumière sur le plan de travail pour un éclairage sûr et uniforme. La protection IP66 et le limiteur de surtension 10 kV tiennent les conditions industrielles et semi-extérieures.",
+          "category": "Éclairage haute et basse"
+        },
+        "es": {
+          "description": "El RT500HB es una luminaria LED high-bay y low-bay de 280 W para almacenes mayores, naves de producción e instalaciones deportivas que necesitan más flujo que el RT400HB. Su familia de haces de 30° a 90° sirve tanto a techos bajos como a estanterías high-bay, dirigiendo la luz al plano de trabajo para una iluminación segura y uniforme. La protección IP66 y el supresor de sobretensiones de 10 kV soportan condiciones industriales y semi-exteriores.",
+          "category": "Iluminación alta y baja"
+        },
+        "de": {
+          "description": "Der RT500HB ist eine 280-W-LED-Hallen- und Niedrigbauleuchte für größere Lagerhallen, Produktionshallen und Sportstätten, die mehr Lichtstrom brauchen als der RT400HB. Seine Strahlfamilie von 30° bis 90° bedient niedrige Decken und Hochregale gleichermaßen und richtet das Licht auf die Arbeitsebene für sichere, gleichmäßige Beleuchtung. IP66-Schutz und 10-kV-Überspannungsschutz halten industriellen und halboffenen Bedingungen stand.",
+          "category": "Hallenbeleuchtung"
+        },
+        "ru": {
+          "description": "RT500HB — светодиодный светильник типа high-bay и low-bay мощностью 280 Вт для крупных складов, производственных цехов и спортсооружений, которым нужно больше света, чем даёт RT400HB. Семейство углов 30°–90° обслуживает и низкие потолки, и высокие стеллажи, направляя свет на рабочую плоскость для безопасного равномерного освещения. Защита IP66 и ограничитель перенапряжения 10 кВ работают в промышленных и полуоткрытых условиях.",
+          "category": "Складское освещение"
+        },
+        "ar": {
+          "description": "يُعدّ RT500HB وحدة LED عالية ومنخفضة السقف بقدرة 280 واط للمخازن الكبيرة وقاعات الإنتاج والمنشآت الرياضية التي تحتاج تدفقًا أكبر من RT400HB. تخدم عائلة حزَم 30° إلى 90° الأسقف المنخفضة ورفوف المخازن العالية معًا، موجّهة الضوء إلى مستوى العمل لإضاءة آمنة ومنتظمة. تتحمل حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت الظروف الصناعية وشبه الخارجية.",
+          "category": "إضاءة المخازن"
+        },
         "en": {
           "seo_description": "SolarOne RT500HB 280 W high-bay LED luminaire for large warehouses and production halls."
         }
@@ -2156,11 +2386,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT220UB est un projecteur LED de 40 W pour l'éclairage d'appoint : cages d'escalier, entrées, petite signalétique, locaux à poubelles et accents de périmètre. Sa protection IP66, son limiteur de surtension 10 kV et sa plage de -40 °C à +55 °C conviennent à l'usage extérieur permanent, et son petit corps en aluminium moulé sous pression se monte sur murs, mâts et soffites.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El RT220UB es un proyector LED de 40 W para iluminación de servicio ligero: escaleras, entradas, señalética pequeña, cuartos de basura y acentos de perímetro. Su protección IP66, supresor de sobretensiones de 10 kV y rango de -40 °C a +55 °C sirven para el uso exterior permanente, y su pequeño cuerpo de aluminio fundido a presión se monta en paredes, mástiles y sofitos.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der RT220UB ist ein 40-W-LED-Flutlicht für leichte Beleuchtungsaufgaben: Treppenhäuser, Eingänge, kleine Beschilderung, Müllhaus und Perimeter-Akzente. IP66-Schutz, 10-kV-Überspannungsschutz und der Bereich -40 °C bis +55 °C eignen sich für den permanenten Außeneinsatz, und das kleine Aluminium-Druckgussgehäuse montiert an Wänden, Masten und Laibungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "RT220UB — светодиодный прожектор мощностью 40 Вт для лёгкого освещения: лестничных клеток, входов, небольшой вывески, мусорных площадок и периметральных акцентов. Защита IP66, ограничитель перенапряжения 10 кВ и диапазон -40 °C…+55 °C рассчитаны на постоянную работу на улице, а небольшой корпус из литого под давлением алюминия ставится на стены, мачты и свесы.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ RT220UB كشاف LED بقدرة 40 واط للإضاءة الخفيفة: سلالم المباني والمداخل واللافتات الصغيرة وأماكن النفايات ولمسات المحيط. تناسب حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت ونطاق ‎-40 °م إلى +55 °م الاستخدام الخارجي الدائم، ويُركّب جسمه الصغير من الألومنيوم المصبوب على الجدران والأعمدة والأسقف المعلّقة.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne RT220UB 40 W LED floodlight for stairwells, entrances and light-duty perimeter lighting."
         }
@@ -2273,11 +2518,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT420FS-S est un projecteur LED de 100 W pour les façades, cours, périmètres de bâtiments et éclairage de sécurité nécessitant plus de portée que les plus petits modèles RT. Sa protection IP66, son limiteur de surtension 10 kV et sa plage de -40 °C à +55 °C conviennent au service extérieur permanent, et son corps en aluminium moulé sous pression se monte sur murs, mâts et soffites.",
+          "category": "Projecteur"
+        },
+        "es": {
+          "description": "El RT420FS-S es un proyector LED de 100 W para fachadas, patios, perímetros de edificios e iluminación de seguridad que necesita más alcance que los modelos RT más pequeños. Su protección IP66, supresor de sobretensiones de 10 kV y rango de -40 °C a +55 °C sirven para el servicio exterior permanente, y su cuerpo de aluminio fundido a presión se monta en paredes, mástiles y sofitos.",
+          "category": "Proyector"
+        },
+        "de": {
+          "description": "Der RT420FS-S ist ein 100-W-LED-Flutlicht für Fassaden, Höfe, Gebäudeperimeter und Sicherheitsbeleuchtung, die mehr Reichweite brauchen als die kleinsten RT-Modelle. IP66-Schutz, 10-kV-Überspannungsschutz und der Bereich -40 °C bis +55 °C eignen sich für den permanenten Außeneinsatz, und das Aluminium-Druckgussgehäuse montiert an Wänden, Masten und Laibungen.",
+          "category": "Flutlicht"
+        },
+        "ru": {
+          "description": "RT420FS-S — светодиодный прожектор мощностью 100 Вт для фасадов, дворов, периметра зданий и охранного освещения, которому нужна большая дальность, чем у самых малых моделей RT. Защита IP66, ограничитель перенапряжения 10 кВ и диапазон -40 °C…+55 °C рассчитаны на постоянную работу на улице, а корпус из литого под давлением алюминия ставится на стены, мачты и свесы.",
+          "category": "Прожектор"
+        },
+        "ar": {
+          "description": "يُعدّ RT420FS-S كشاف LED بقدرة 100 واط للواجهات والساحات ومحيط المباني وإضاءة الأمن التي تحتاج مدى أبعد من أصغر طرازات RT. تناسب حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت ونطاق ‎-40 °م إلى +55 °م الخدمة الخارجية الدائمة، ويُركّب جسمه من الألومنيوم المصبوب على الجدران والأعمدة والأسقف المعلّقة.",
+          "category": "كشاف"
+        },
         "en": {
           "seo_description": "SolarOne RT420FS-S 100 W LED floodlight for façades, yards and building perimeter security."
         }
@@ -2390,11 +2650,26 @@
       "page_layout": "detail",
       "parent_slug": "rgb-rgbw",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT410-RGBW ajoute un moteur couleur RGBW de 200 W à la plateforme de projecteurs RT410, apportant couleur saturée et blanc variable à l'éclairage de surfaces moyennes. Les enceintes conservent le blanc fonctionnel au quotidien et basculent en nappes de couleur de marque pour les événements, illuminations de façades et festivals, le tout depuis un seul contrôleur DMX, DALI ou 1-10 V.",
+          "category": "Projecteur RGB / RGBW"
+        },
+        "es": {
+          "description": "El RT410-RGBW añade un motor de color RGBW de 200 W a la plataforma de proyectores RT410, llevando color saturado y blanco ajustable a la iluminación de zonas medianas. Los recintos mantienen el blanco funcional para el uso diario y cambian a baños de color de marca para eventos, iluminación de fachadas y festivales, todo desde un único controlador DMX, DALI o 1-10 V.",
+          "category": "Proyector RGB / RGBW"
+        },
+        "de": {
+          "description": "Der RT410-RGBW ergänzt die RT410-Flutlichtplattform um eine 200-W-RGBW-Farbengine und bringt gesättigte Farbe und abstimmbares Weiß in die mittlere Flächenbeleuchtung. Betreiber halten funktionales Weiß für den Alltag und schalten auf markenfarbene Washes für Events, Fassadeninszenierungen und Festivals, alles über einen einzigen DMX-, DALI- oder 1-10-V-Controller.",
+          "category": "RGB-/RGBW-Flutlicht"
+        },
+        "ru": {
+          "description": "RT410-RGBW добавляет к платформе прожекторов RT410 цветовой движок RGBW мощностью 200 Вт, принося насыщенный цвет и настраиваемый белый в освещение площадок среднего размера. Объекты держат функциональный белый для ежедневного использования и переключаются на фирменные цветовые заливки на событиях, подсветке фасадов и фестивалях — всё с одного контроллера DMX, DALI или 1-10 В.",
+          "category": "RGB-/RGBW-прожектор"
+        },
+        "ar": {
+          "description": "يضيف RT410-RGBW محرك ألوان RGBW بقدرة 200 واط إلى منصة كشافات RT410، فيجلب لونًا مشبعًا وأبيضًا قابلًا للضبط إلى إضاءة المساحات متوسطة الحجم. تُبقي المنشآت الأبيض الوظيفي للاستخدام اليومي وتتحول إلى غسلات لونية للهوية في الفعاليات وإضاءة الواجهات والمهرجانات، كل ذلك من متحكم DMX أو DALI أو 1-10 فولت واحد.",
+          "category": "كشاف RGB / RGBW"
+        },
         "en": {
           "seo_description": "SolarOne RT410-RGBW 200 W colour floodlight adds RGBW washes and tunable white for venues."
         }
@@ -2507,11 +2782,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT600SL-T est un lampadaire LED de 120 W à distribution asymétrique 70° × 140° conçue pour les routes, chemins et parkings. L'optique profilée place la lumière sur la chaussée et le trottoir plutôt que dans les fenêtres ou le ciel, améliorant l'uniformité et réduisant l'éblouissement des conducteurs et des riverains. La protection IP66 et le limiteur de surtension 10 kV conviennent au service permanent en tête de mât.",
+          "category": "Éclairage routier"
+        },
+        "es": {
+          "description": "El RT600SL-T es una farola LED de 120 W con distribución asimétrica 70° × 140° diseñada para carreteras, caminos y aparcamientos. La óptica perfilada pone la luz en la calzada y la acera en lugar de en ventanas o el cielo, mejorando la uniformidad y cortando el deslumbramiento de conductores y residentes. La protección IP66 y el supresor de sobretensiones de 10 kV sirven para el servicio permanente en cabecera de mástil.",
+          "category": "Iluminación vial"
+        },
+        "de": {
+          "description": "Der RT600SL-T ist eine 120-W-LED-Straßenleuchte mit asymmetrischer 70° × 140°-Lichtverteilung für Straßen, Wege und Parkplätze. Die profilierte Optik setzt das Licht auf Fahrbahn und Gehweg statt in Fenster oder Himmel, verbessert die Gleichmäßigkeit und reduziert Blendung für Autofahrer und Anwohner. IP66-Schutz und 10-kV-Überspannungsschutz eignen sich für den permanenten Mastkopfeinsatz.",
+          "category": "Straßenbeleuchtung"
+        },
+        "ru": {
+          "description": "RT600SL-T — светодиодный уличный светильник мощностью 120 Вт с асимметричной кривой 70° × 140° для дорог, троп и парковок. Профилированная оптика ставит свет на проезжую часть и тротуар, а не в окна или небо, повышая равномерность и снижая блики для водителей и жителей. Защита IP66 и ограничитель перенапряжения 10 кВ рассчитаны на постоянную работу на мачте.",
+          "category": "Уличное освещение"
+        },
+        "ar": {
+          "description": "يُعدّ RT600SL-T وحدة إضاءة شوارع LED بقدرة 120 واط بتوزيع غير متماثل 70° × 140° مهيّأ للطرق والمسارات ومواقف السيارات. تضع البصريات المشكّلة الضوء على مسار المرور والمشاة بدلًا من النوافذ أو السماء، فتحسّن الانتظام وتقطع الوهج عن السائقين والسكان. تناسب حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت الخدمة الدائمة على قمة العمود.",
+          "category": "إضاءة الشوارع"
+        },
         "en": {
           "seo_description": "SolarOne RT600SL-T 120 W LED street light, asymmetric 70×140° optic for roads and car parks."
         }
@@ -2623,11 +2913,26 @@
       "page_layout": "detail",
       "parent_slug": "",
       "translations": {
-        "fr": {},
-        "es": {},
-        "de": {},
-        "ru": {},
-        "ar": {},
+        "fr": {
+          "description": "Le RT820SL-T est un lampadaire LED de 240 W à distribution asymétrique 70° × 140° utilisée pour les routes plus larges, les axes principaux et les grands parkings. Son optique profilée dirige le flux sur la chaussée et le trottoir, augmentant l'uniformité et limitant l'éblouissement vers les propriétés et le ciel nocturne. La protection IP66 et le limiteur de surtension 10 kV assurent le service permanent en tête de mât.",
+          "category": "Éclairage routier"
+        },
+        "es": {
+          "description": "El RT820SL-T es una farola LED de 240 W con la distribución asimétrica 70° × 140° usada para carreteras más anchas, vías arteriales y grandes aparcamientos. Su óptica perfilada dirige la salida a la calzada y la acera, elevando la uniformidad y limitando el deslumbramiento hacia propiedades y el cielo nocturno. La protección IP66 y el supresor de sobretensiones de 10 kV soportan el servicio permanente en cabecera de mástil.",
+          "category": "Iluminación vial"
+        },
+        "de": {
+          "description": "Der RT820SL-T ist eine 240-W-LED-Straßenleuchte mit derselben asymmetrischen 70° × 140°-Lichtverteilung, eingesetzt für breitere Straßen, Hauptverkehrsachsen und große Parkplätze. Seine profilierte Optik lenkt den Lichtstrom auf Fahrbahn und Gehweg, hebt die Gleichmäßigkeit und begrenzt Blendung in Richtung Wohnbebauung und Nachthimmel. IP66-Schutz und 10-kV-Überspannungsschutz halten den permanenten Mastkopfdienst aus.",
+          "category": "Straßenbeleuchtung"
+        },
+        "ru": {
+          "description": "RT820SL-T — светодиодный уличный светильник мощностью 240 Вт с той же асимметричной кривой 70° × 140°, применяемой на широких дорогах, магистралях и крупных парковках. Профилированная оптика направляет поток на проезжую часть и тротуар, повышая равномерность и ограничивая блики в сторону жилой застройки и ночного неба. Защита IP66 и ограничитель перенапряжения 10 кВ выдерживают постоянную работу на мачте.",
+          "category": "Уличное освещение"
+        },
+        "ar": {
+          "description": "يُعدّ RT820SL-T وحدة إضاءة شوارع LED بقدرة 240 واط بنفس التوزيع غير المتماثل 70° × 140° المستخدم في الطرق الأوسع والمحاور الرئيسية ومواقف السيارع الكبيرة. توجّه بصرياته المشكّلة الخرج إلى مسار المرور والمشاة، فترفع الانتظام وتحدّ من الوهج نحو المساكن وسماء الليل. تتحمل حماية IP66 ومحدّ التغيّرات المفاجئة 10 كيلوفولت الخدمة الدائمة على قمة العمود.",
+          "category": "إضاءة الشوارع"
+        },
         "en": {
           "seo_description": "SolarOne RT820SL-T 240 W LED street light, asymmetric 70×140° optic for arterial roads."
         }
