@@ -5490,3 +5490,132 @@ class NewsFeedTests(TestCase):
                 link.startswith(f'{origin}/news/'),
                 f'feed item link not rooted at CANONICAL_ORIGIN: {link!r}')
             self.assertNotIn('localhost', link)
+
+
+class SeedSyncTranslationMergeTests(TestCase):
+    """后台保存 → seed 导出的 translations 合并语义（2026-10-18）。
+
+    根因：c54976f 把 24 条手写 ``translations.en.seo_description`` 覆盖写进
+    seed_data.json（tests_seo_b4 钉住它们存在），但 DB 里从来没有 en 块 ——
+    admin 的 TranslationsWidget（``value_from_datadict``）只重建
+    fr/es/de/ru/ar，en 不在其中。导出此前是全量覆写，于是后台任何一次保存都会
+    把这 24 条覆盖从 seed 抹掉；下一次 Vercel 构建后，线上元描述全部回退通用
+    公式 —— 而且是静默的。
+
+    落盘隔离：``sync_seed_from_db`` 用 ``settings.BASE_DIR`` 定位输出目录，
+    测试把 BASE_DIR 指到临时目录，真正的 seed_data.json 一次都不碰。造
+    Product 同样必须在 override 内 —— post_save 的 ``sync_product_on_save``
+    会往 ``BASE_DIR/static/images/products/<slug>/`` 建目录。
+    """
+
+    def setUp(self):
+        self._tmp = tempfile.mkdtemp(prefix='seedmerge_')
+        (Path(self._tmp) / 'pages').mkdir(parents=True, exist_ok=True)
+
+    def tearDown(self):
+        shutil.rmtree(self._tmp, ignore_errors=True)
+
+    # -- helpers ---------------------------------------------------------------
+
+    def _plant_seed(self, data):
+        (Path(self._tmp) / 'seed_data.json').write_text(
+            json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+    def _make_product(self, slug, translations=None):
+        from pages.models import Product
+        return Product.objects.create(
+            slug=slug, name=slug.upper(), category='AREA_SITE',
+            description='DB-side description.', translations=translations or {})
+
+    def _sync(self):
+        from pages.seed_sync import sync_seed_from_db
+        with self.settings(BASE_DIR=self._tmp):
+            return sync_seed_from_db()
+
+    def _output_product(self, slug):
+        data = json.loads(
+            (Path(self._tmp) / 'seed_data.json').read_text(encoding='utf-8'))
+        return next(p for p in data['products'] if p['slug'] == slug)
+
+    # -- guards -----------------------------------------------------------------
+
+    def test_handwritten_en_override_survives_admin_save(self):
+        """真数据：seed 里真实存在的 en 覆盖必须在导出后原样存活。"""
+        from pages.views.utils import _load_seed
+        subjects = [p for p in _load_seed()['products']
+                    if (p.get('translations') or {}).get('en', {}).get('seo_description')]
+        self.assertTrue(
+            subjects,
+            'seed 里没有任何手写 en SEO 覆盖（tests_seo_b4 的不变量被破坏）')
+        subject = subjects[0]
+        override = subject['translations']['en']['seo_description']
+
+        real_seed = json.loads(
+            (Path(settings.BASE_DIR) / 'seed_data.json').read_text(encoding='utf-8'))
+        self._plant_seed(real_seed)
+        with self.settings(BASE_DIR=self._tmp):
+            self._make_product(subject['slug'])
+
+        self.assertTrue(self._sync(), '导出失败')
+        out = self._output_product(subject['slug'])
+        self.assertEqual(
+            out['translations'].get('en', {}).get('seo_description'), override,
+            f'{subject["slug"]}: 手写 en SEO 覆盖没能在后台保存后的 seed 导出里存活')
+
+    def test_db_language_block_wins_over_seed(self):
+        """admin 可表达的语言：DB 块整体赢 seed 块（字段级差异不保留）。"""
+        self._plant_seed({'products': [{
+            'slug': 'probe-merge', 'name': 'probe', 'category': 'AREA_SITE',
+            'description': 'seed-side',
+            'translations': {'en': {'seo_description': 'HANDWRITTEN'},
+                             'fr': {'name': 'SEED-FR', 'description': 'SEED-FR-DESC'}},
+        }]})
+        with self.settings(BASE_DIR=self._tmp):
+            self._make_product('probe-merge', translations={'fr': {'name': 'DB-FR'}})
+
+        self.assertTrue(self._sync())
+        out = self._output_product('probe-merge')
+        self.assertEqual(out['translations']['fr'], {'name': 'DB-FR'})
+        self.assertEqual(out['translations']['en']['seo_description'], 'HANDWRITTEN')
+
+    def test_cleared_language_is_deleted_not_resurrected(self):
+        """admin 里清空某语种 textarea → seed 里该语种必须被删除，不得复活。"""
+        self._plant_seed({'products': [{
+            'slug': 'probe-merge', 'name': 'probe', 'category': 'AREA_SITE',
+            'description': 'seed-side',
+            'translations': {'en': {'seo_description': 'HANDWRITTEN'},
+                             'fr': {'name': 'SEED-FR'}},
+        }]})
+        with self.settings(BASE_DIR=self._tmp):
+            self._make_product('probe-merge', translations={})
+
+        self.assertTrue(self._sync())
+        out = self._output_product('probe-merge')
+        self.assertNotIn('fr', out['translations'])
+        self.assertIn('en', out['translations'])
+
+    def test_first_run_without_existing_json_still_exports(self):
+        """首次运行（没有既有 seed_data.json）必须照常导出。"""
+        self.assertFalse((Path(self._tmp) / 'seed_data.json').exists())
+        with self.settings(BASE_DIR=self._tmp):
+            self._make_product('probe-merge')
+
+        self.assertTrue(self._sync())
+        self.assertEqual(
+            self._output_product('probe-merge')['description'], 'DB-side description.')
+
+    def test_corrupt_existing_json_aborts_export(self):
+        """既有 seed_data.json 解析失败时必须拒绝导出且不碰文件。
+
+        覆写一份损坏的 seed 会用 DB 转储毁掉只有 seed 才有的内容（en 覆盖），
+        所以这里选择失败 —— 管理员看到 warning，而不是静默丢数据。
+        """
+        (Path(self._tmp) / 'seed_data.json').write_text(
+            '{ not valid json', encoding='utf-8')
+        with self.settings(BASE_DIR=self._tmp):
+            self._make_product('probe-merge')
+
+        self.assertFalse(self._sync())
+        self.assertEqual(
+            (Path(self._tmp) / 'seed_data.json').read_text(encoding='utf-8'),
+            '{ not valid json')

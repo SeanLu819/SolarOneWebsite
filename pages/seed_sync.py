@@ -15,12 +15,15 @@ Image paths are always resolved against static/ so the seed contains
 canonical paths like 'images/products/fl1m/fl1m-01.webp'.
 """
 import json
+import logging
 import os
 import sys
 
 from django.db import models
 from pages.static_scan import source_file_set
 from pages.utils import strip_hash_suffix
+
+logger = logging.getLogger(__name__)
 
 
 def _resolve_static_path(db_path, slug, asset_type='products', field_name=''):
@@ -438,11 +441,7 @@ def _write_seed_files(seed_data, base_dir=None, write_json=True):
     regenerate the embedded Python module and never write back to the JSON.
     """
     if base_dir is None:
-        try:
-            from django.conf import settings
-            base_dir = str(settings.BASE_DIR)
-        except Exception:
-            base_dir = os.getcwd()
+        base_dir = _seed_base_dir()
 
     py_path = os.path.join(base_dir, 'pages', 'seed_data.py')
 
@@ -551,6 +550,85 @@ def _siteconfig_to_dict():
     return data
 
 
+def _seed_base_dir():
+    """Resolve the directory that holds ``seed_data.json`` / ``pages/``."""
+    try:
+        from django.conf import settings
+        return str(settings.BASE_DIR)
+    except Exception:
+        return os.getcwd()
+
+
+def _admin_expressible_langs():
+    """Language codes the admin TranslationsWidget can round-trip.
+
+    ``pages.admin.widgets.TranslationsWidget.value_from_datadict`` rebuilds the
+    whole translations dict from per-language textareas and skips English (the
+    source language) entirely — an ``en`` block can therefore never survive an
+    admin save *in the database*. See ``_merge_translations``.
+    """
+    try:
+        from django.conf import settings
+        return {code for code, _ in getattr(settings, 'LANGUAGES', [])
+                if code != 'en'}
+    except Exception:
+        return {'fr', 'es', 'de', 'ru', 'ar'}
+
+
+def _merge_translations(existing, incoming):
+    """Merge the seed file's translations with a fresh DB export.
+
+    根因（2026-10-18）：c54976f 把 24 条手写 ``translations.en.
+    seo_description`` 覆盖写进 seed_data.json（tests_seo_b4 钉住它们存在），
+    但 DB 里从来没有 en 块 —— admin 的 TranslationsWidget 只重建
+    fr/es/de/ru/ar，en 不在其中。导出此前是全量覆写，于是后台任何一次保存都会
+    把这 24 条覆盖从 seed 里抹掉；下一次 Vercel 构建后，线上元描述全部回退
+    通用公式文案 —— 而且是静默的。
+
+    Semantics:
+      * admin-expressible languages (fr/es/de/ru/ar): the DB block wins
+        outright — including *absence*. Clearing a language textarea in the
+        admin must delete that translation from the seed, never resurrect the
+        previous one.
+      * every other language block (today: ``en``): only the seed file can
+        hold it, so the existing seed block is preserved verbatim.
+    """
+    if not isinstance(existing, dict) or not existing:
+        return incoming if isinstance(incoming, dict) else {}
+    if not isinstance(incoming, dict):
+        incoming = {}
+    merged = dict(incoming)
+    expressible = _admin_expressible_langs()
+    for lang, block in existing.items():
+        if lang not in expressible:
+            merged[lang] = block
+    return merged
+
+
+def _read_existing_seed_translations(base_dir):
+    """Index the current seed file's translations by ``(section, slug)``.
+
+    Returns ``{}`` when no seed file exists yet (first run — nothing to
+    preserve) and ``None`` when the file exists but cannot be parsed. The
+    caller must treat ``None`` as "refuse to export": blindly overwriting a
+    corrupt seed with a DB dump destroys content only the seed holds.
+    """
+    json_path = os.path.join(base_dir, 'seed_data.json')
+    if not os.path.isfile(json_path):
+        return {}
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception:
+        return None
+    index = {}
+    for section in ('products', 'projects', 'news'):
+        for item in data.get(section) or []:
+            if isinstance(item, dict) and item.get('slug'):
+                index[(section, item['slug'])] = item.get('translations')
+    return index
+
+
 def sync_seed_from_db():
     """Full DB → seed sync. Reads all products + projects + siteconfig from DB,
     resolves image paths against static/, writes both JSON and Python.
@@ -606,7 +684,28 @@ def sync_seed_from_db():
             'news': news,
         }
 
-        json_path, py_path = _write_seed_files(seed_data)
+        # 导出前与即将被覆写的 seed_data.json 合并 translations：admin 表达
+        # 不了的语言块（今天就是手写 en SEO 覆盖）只存在于 seed 文件里，全量
+        # 覆写会把它们静默删掉。详见 _merge_translations。
+        base_dir = _seed_base_dir()
+        existing_translations = _read_existing_seed_translations(base_dir)
+        if existing_translations is None:
+            logger.error(
+                'Refusing to export seed: %s exists but is unreadable — '
+                'overwriting it would destroy content only the seed holds '
+                '(e.g. handwritten translations.en SEO overrides).',
+                os.path.join(base_dir, 'seed_data.json'))
+            return False
+        if existing_translations:
+            for section in ('products', 'projects', 'news'):
+                for item in seed_data[section]:
+                    previous = existing_translations.get(
+                        (section, item.get('slug')))
+                    if isinstance(previous, dict):
+                        item['translations'] = _merge_translations(
+                            previous, item.get('translations') or {})
+
+        json_path, py_path = _write_seed_files(seed_data, base_dir=base_dir)
 
         product_count = len(products)
         project_count = len(projects)
@@ -615,8 +714,6 @@ def sync_seed_from_db():
         print(f'[seed_sync] DB → seed: {product_count} products ({gallery_count} gallery images), {project_count} projects, {news_count} news')
         return True
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
         logger.error(f'Failed to sync seed from DB: {e}', exc_info=True)
         return False
 
