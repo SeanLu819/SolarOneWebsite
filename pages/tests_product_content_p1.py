@@ -36,10 +36,21 @@ from pages.views.views_products import (
 
 LANGS = ('en', 'fr', 'es', 'de', 'ru', 'ar')
 
-#: A description longer than this cannot carry the application, the
-#: electrical envelope and the mounting story. Measured baseline before the
-#: batch was 11 words (six pages) and 1 word (rt590fl-s).
-MIN_DESCRIPTION_WORDS = 80
+#: Product decision (revised 2026-10-18): the floor that still catches a
+#: vacuum / placeholder description. The previous 80-word floor came from the
+#: v1.10.19 baseline (11 words on six pages, 1 word on rt590fl-s) but was
+#: revised after a UI audit with screenshots: on the PC two-column layout
+#: .detail-desc has no height cap, so a ~115-word right column towered over
+#: the left media column and left a dead zone under the image. The prose
+#: block is now the *supplement* layer — positioning, application scenarios,
+#: differentiators — because the parameters it used to repeat are already
+#: featured at large type in the detail-specs zone (m-series, rt410-series,
+#: fl1m–fl16m) or in the spec/ordering tables below (the other 16 products).
+#: Page word count is not a Google ranking factor and the SERP snippet is
+#: governed by the handwritten translations.en.seo_description overrides,
+#: which are independent of this field. 40 words remains well above the
+#: 1–11 word vacuum the floor exists to catch.
+MIN_DESCRIPTION_WORDS = 40
 
 #: Product decision: two product descriptions whose word-bigram Jaccard
 #: similarity reaches this level are treated as the same copy. Doorway pages
