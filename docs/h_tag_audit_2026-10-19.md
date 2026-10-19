@@ -26,7 +26,7 @@
 
 ## 二、问题清单（按优先级）
 
-### 问题 1（P1）：三个列表页 H1→H3 跳级 —— **待用户决策（A/B 方案）**
+### 问题 1（P1）：三个列表页 H1→H3 跳级 —— ✅ **已修复（v1.10.35，方案 B）**
 
 列表页的卡片/条目标题直接用了 H3，而它们的父级分组没有 H2，形成 H1→H3 断层：
 
@@ -41,13 +41,25 @@
 - 方案 A（贴近落地页模式）：在 H3 卡片区前补一个 H2 分组标题（如 "Product Series" / "Featured Projects" / "Latest Articles"）。
 - 方案 B（语义升级）：列表页条目标题 H3 → H2（每个系列/项目本身即页面二级主题）。
 
-### 问题 2（P1）：`/projects/` 的 H1 文案不具关键词且与 About 重复 —— **待用户定文案**
+**已采用方案 B（v1.10.35，用户拍板）**：三个模板卡片标题 h3→h2；CSS class 补显式
+`margin: 1em 0 …`（h3 UA 默认 1em，h2 为 0.83em，base.css 无全局 reset，不补则每张卡片
+上间距缩 ~3px）。守卫 `tests_heading_semantics.py::ListPageHeadingSemanticsTests`
+（三页无跳级 + 每页卡片 class 防空转 + /news/ 因 `get_news` 刻意无 seed 回落而自建一篇
+文章）。注意：/news/ 列表页在空测试库渲染 0 卡片（DB-only），无防空转断言时该页守卫
+天然空转。
+
+### 问题 2（P1）：`/projects/` 的 H1 文案不具关键词且与 About 重复 —— ✅ **已修复（v1.10.35）**
 
 - `/projects/` H1 = "Trusted Worldwide"
 - `/about/` H1 = "Trusted worldwide for a reason."
 
 两个不同意图的页面共用近似 H1，且项目列表页 H1 不含任何关键词（"projects"/"lighting"）。
 建议 `/projects/` H1 改为含关键词的文案（如 "Lighting Projects" / "Our Lighting Projects"）——具体文案你定。
+
+**已修复（v1.10.35，用户选定 "Our Lighting Projects"）**：五语 .po 已补译文并重编
+.mo（fr/es/de/ru/ar）；"Trusted Worldwide" 仍留在首页 H2（首页用它不构成重复，无孤儿
+msgid）。守卫 `tests_heading_semantics.py::ProjectsH1CopyTests`（英文精确值 + 五语
+非英文非空）。
 
 ### 问题 3（P2）：`/contact/` 公司名用了 H3 —— ✅ **已修复（v1.10.34）**
 
@@ -66,10 +78,15 @@
 修复：`<h3 class="detail-request-sample-title">` → `<p class="detail-request-sample-title">`
 （样式全在 class 上，视觉零变化）。守卫 `tests_heading_semantics.py::ProductDetailHeadingSemanticsTests`。
 
-### 问题 5（P3）：About 页末尾混入隐私政策区块 —— **待用户决策**
+### 问题 5（P3）：About 页末尾混入隐私政策区块 —— ✅ **已修复（v1.10.35）**
 
 `/about/` 末尾出现 H2 "Privacy Policy" + H3 "Cookie Usage" / "Data We Collect" / "Your Rights"。
 About 页不应承载隐私详情（已有独立 `/privacy/` 页），疑为复用组件带入。内容组织问题，可选清理。
+
+**已修复（v1.10.35，用户拍板删除）**：整段（含 HTML 注释横幅）移除。连带修复：cookie 同意
+横幅里 `{% url 'about' %}#privacy` 死链（原指向被删区块的锚点）→ 改指 `{% url 'privacy' %}`。
+守卫 `tests_heading_semantics.py::AboutPrivacyBlockRemovedTests`（About 无 Privacy 标题 /
+无 #privacy 死锚 / 横幅链到 /privacy/ / /privacy/ 页自身 H1 完好）。
 
 ### 问题 6（P2）：~~`product_overview.html` 模板存在但无路由~~ —— **结论已修正（v1.10.34）**
 

@@ -1984,10 +1984,12 @@ class StatelessProductionTests(TestCase):
         # the inner markup must be stripped instead of matching plain text.
         # (Asserting on the *expected behaviour* — which titles render, in what
         # order — not on the exact markup, which legitimately changes.)
+        # v1.10.35: H3 -> H2 promotion (H-tag audit problem 1, plan B); the
+        # extraction targets the card-title class either way.
         rendered = [
             re.sub(r'<[^>]+>', '', m.group(1)).strip()
             for m in re.finditer(
-                r'<h3[^>]*class="[^"]*product-card-title[^"]*"[^>]*>(.*?)</h3>',
+                r'<h2[^>]*class="[^"]*product-card-title[^"]*"[^>]*>(.*?)</h2>',
                 resp.content.decode('utf-8'), re.S)
         ]
 
@@ -4548,13 +4550,13 @@ class NewsChipsAndCopyTests(TestCase):
         active = [e for e in entries if 'active' in e[1]]
         self.assertEqual(['Case Studies'], [e[2].strip() for e in active],
                          '筛选后选中态没落在正确的分类 chip 上')
-        self.assertEqual(1, html.count('<h3 class="news-card-title">'),
+        self.assertEqual(1, html.count('<h2 class="news-card-title">'),
                          '?category= 没有真的过滤文章')
 
     def test_unknown_category_key_falls_back_to_the_full_feed(self):
         """A stale bookmark must not render as an empty news page."""
         html = self._render(query='?category=No+Such+Category')
-        self.assertEqual(3, html.count('<h3 class="news-card-title">'))
+        self.assertEqual(3, html.count('<h2 class="news-card-title">'))
         active = [e for e in self._chips(html) if 'active' in e[1]]
         self.assertEqual(['All News'], [e[2].strip() for e in active])
 
@@ -4935,10 +4937,13 @@ class RtlBidiIsolationTests(TestCase):
     # empty grid — a rendered-HTML assertion would pass vacuously. Source-level
     # checks still fail if someone removes the <bdi> wrapper.
     def test_card_titles_are_wrapped_in_bdi(self):
+        # v1.10.35: card titles were promoted H3 -> H2 (H-tag audit problem 1,
+        # plan B) — only the tag level changed, the <bdi> wrapping intent is
+        # identical.
         cases = [
-            ('products.html', '<h3 class="product-card-title"><bdi>'),
-            ('projects.html', '<h3 class="project-card-title"><bdi>'),
-            ('news.html', '<h3 class="news-card-title"><bdi>'),
+            ('products.html', '<h2 class="product-card-title"><bdi>'),
+            ('projects.html', '<h2 class="project-card-title"><bdi>'),
+            ('news.html', '<h2 class="news-card-title"><bdi>'),
         ]
         for name, needle in cases:
             self.assertIn(needle, self._template(name),

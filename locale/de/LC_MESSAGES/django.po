@@ -1729,3 +1729,6 @@ msgstr ""
 "Standard qualifiziert; einige andere Modelle der Baureihe nicht. Nennen Sie "
 "uns die vorgesehene Leuchte, und wir bestätigen die Listung genau dieses "
 "Modells vor Ihrer Bestellung."
+
+msgid "Our Lighting Projects"
+msgstr "Unsere Beleuchtungsprojekte"

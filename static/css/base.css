@@ -1170,7 +1170,7 @@
     font-weight: 500;
     color: var(--ink);
     letter-spacing: -0.02em;
-    margin-bottom: 4px;
+    margin: 1em 0 4px;
     line-height: 1.2;
   }
   .product-card-desc {
@@ -1461,7 +1461,7 @@
     font-weight: 500;
     color: var(--ink);
     letter-spacing: -0.02em;
-    margin-bottom: 8px;
+    margin: 1em 0 8px;
     line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;

@@ -16,9 +16,11 @@ Two rendering-level fixes landed together (report:
   contains a non-section heading.
 
 Scope note: the audit's problem 1 (H1 -> H3 skips on the /products/,
-/projects/ and /news/ list pages) is **not** covered here yet — that fix is
-pending a copy/structure decision. When it lands, extend
-``test_no_heading_level_skips`` to the three list URLs.
+/projects/ and /news/ list pages) was fixed in v1.10.35 (plan B: card
+titles promoted H3 -> H2) and is covered by
+``ListPageHeadingSemanticsTests`` below. Problem 2 (/projects/ H1 copy) and
+problem 5 (About privacy block) landed in the same version and are guarded
+by ``ProjectsH1CopyTests`` / ``AboutPrivacyBlockRemovedTests``.
 
 The guards parse the *rendered* HTML through the test client. Before looking
 for headings, three kinds of non-body markup are stripped:
@@ -37,6 +39,7 @@ Heading levels are derived from the markup itself, never hardcoded (iron rule 7)
 import re
 
 from django.test import TestCase
+from django.urls import reverse
 
 _HEADING_RE = re.compile(r'<(h[1-6])\b[^>]*>(.*?)</\1>', re.S | re.I)
 _STYLE_RE = re.compile(r'<style\b[^>]*>.*?</style>', re.S | re.I)
@@ -133,3 +136,127 @@ class ProductDetailHeadingSemanticsTests(TestCase):
                 self.assertEqual(resp.status_code, 200)
                 _assert_no_level_skips(
                     [lvl for lvl, _ in _headings(resp.content.decode())])
+
+
+class ListPageHeadingSemanticsTests(TestCase):
+    """v1.10.35 (audit problem 1, plan B): the three list pages promoted
+    their card titles H3 -> H2, so H1 -> H2 is the new floor. Each card
+    title keeps its class (all visuals live in the class) and each class
+    now spells the old UA top margin explicitly — an H3's UA default is
+    1em, an H2's is 0.83em, and base.css has no global reset, so without
+    the explicit ``margin: 1em 0 …`` every card would shift ~3px.
+
+    /products/ and /projects/ fall back to the seed JSON when the DB is
+    empty (data_loaders), but ``get_news`` is deliberately DB-only with no
+    silent seed fallback — an empty test DB would render zero news cards
+    and the /news/ half of this guard would pass vacuously. So the test
+    seeds one article first (same pattern as tests_related_links' Project
+    probe) and every URL additionally asserts its card class rendered.
+    """
+
+    CARD_MARKERS = {
+        '/products/': 'product-card-title',
+        '/projects/': 'project-card-title',
+        '/news/': 'news-card-title',
+    }
+
+    def _seed_one_news_article(self):
+        from unittest.mock import patch
+        from django.utils import timezone
+        from pages.models import NewsArticle
+        with patch('pages.models._sync_news_media_to_static'):
+            NewsArticle.objects.create(
+                slug='zz-heading-probe',
+                title='Heading Probe Article',
+                content='probe body',
+                category='Product News',
+                published_at=timezone.now())
+
+    def test_list_pages_have_no_level_skips(self):
+        self._seed_one_news_article()
+        try:
+            for url, marker in self.CARD_MARKERS.items():
+                with self.subTest(url=url):
+                    resp = self.client.get(url, HTTP_HOST='localhost')
+                    self.assertEqual(resp.status_code, 200)
+                    html = resp.content.decode()
+                    self.assertIn(
+                        marker, html,
+                        'no cards rendered on %s — guard would be vacuous'
+                        % url)
+                    _assert_no_level_skips(
+                        [lvl for lvl, _ in _headings(html)])
+        finally:
+            from pages.models import NewsArticle
+            NewsArticle.objects.filter(slug='zz-heading-probe').delete()
+
+
+class ProjectsH1CopyTests(TestCase):
+    """v1.10.35 (audit problem 2): /projects/ lost its keyword-free
+    "Trusted Worldwide" (a near-duplicate of /about/'s H1) for
+    "Our Lighting Projects", translated in all five non-English locales.
+    """
+
+    EN_COPY = 'Our Lighting Projects'
+
+    def _h1(self, url):
+        resp = self.client.get(url, HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200, url)
+        heads = _headings(resp.content.decode())
+        self.assertTrue(heads, 'no headings on %s' % url)
+        self.assertEqual(heads[0][0], 1,
+                         'first heading on %s is not H1' % url)
+        return heads[0][1]
+
+    def test_h1_is_the_keyword_copy(self):
+        self.assertEqual(self._h1('/projects/'), self.EN_COPY)
+
+    def test_h1_is_translated_in_every_locale(self):
+        for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+            with self.subTest(lang=lang):
+                text = self._h1('/%s/projects/' % lang)
+                self.assertTrue(text, '%s H1 rendered empty' % lang)
+                self.assertNotEqual(
+                    text, self.EN_COPY,
+                    '%s fell back to the English H1 (translation missing)'
+                    % lang)
+
+
+class AboutPrivacyBlockRemovedTests(TestCase):
+    """v1.10.35 (audit problem 5): the duplicated privacy block is gone from
+    /about/ (the full six-section version lives on /privacy/), and the
+    cookie-banner link that used to target the block's #privacy anchor now
+    points at /privacy/ itself.
+    """
+
+    def test_about_has_no_privacy_heading(self):
+        resp = self.client.get('/about/', HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200)
+        heads = _headings(resp.content.decode())
+        privacy = [h for h in heads if 'Privacy Policy' in h[1]]
+        self.assertEqual(
+            privacy, [],
+            'About must not carry the privacy block headings (the cookie '
+            'banner link text is not a heading, so this is section-only)')
+
+    def test_about_has_no_dead_privacy_anchor(self):
+        resp = self.client.get('/about/', HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200)
+        html = resp.content.decode()
+        self.assertNotIn('/about/#privacy', html,
+                         'cookie banner still links to the removed anchor')
+        self.assertNotIn('id="privacy"', html,
+                         'the #privacy section anchor still exists')
+
+    def test_cookie_banner_links_to_privacy_page(self):
+        resp = self.client.get('/about/', HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'href="%s"' % reverse('privacy'))
+
+    def test_privacy_page_keeps_its_own_h1(self):
+        resp = self.client.get('/privacy/', HTTP_HOST='localhost')
+        self.assertEqual(resp.status_code, 200)
+        heads = _headings(resp.content.decode())
+        self.assertTrue(heads, '/privacy/ lost its headings')
+        self.assertEqual(heads[0][0], 1, '/privacy/ first heading is not H1')
+        self.assertIn('Privacy Policy', heads[0][1])

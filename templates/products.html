@@ -223,7 +223,7 @@
               <div class="product-card-img"><img src="{{ product.image_url }}" srcset="{{ product.image_url|srcset }}" sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" alt="{{ product.name_t }}" class="{% if product.slug == 'm-series' %}m-series-img{% endif %}" loading="lazy" decoding="async"></div>
               {% endif %}
             </a>
-            <h3 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h3>
+            <h2 class="product-card-title"><bdi>{{ product.name_t }}</bdi></h2>
             <p class="product-card-desc">{{ product.description_t }}</p>
             <div class="product-card-specs">
               {% for spec in product.specs|slice:":3" %}

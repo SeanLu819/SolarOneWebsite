@@ -1745,3 +1745,6 @@ msgstr ""
 "cualificación DLC Standard; otros modelos de la gama no. Indíquenos la "
 "luminaria que va a especificar y confirmaremos la certificación de ese "
 "modelo exacto antes de su pedido."
+
+msgid "Our Lighting Projects"
+msgstr "Nuestros proyectos de iluminación"

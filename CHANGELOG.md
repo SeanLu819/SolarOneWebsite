@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.35 - 2026-10-19
+
+### fix: H-tag audit batch 2 — list-page levels, /projects/ H1 copy, About privacy block
+
+Second half of the 2026-10-19 H-tag audit (`docs/h_tag_audit_2026-10-19.md`),
+all three items decided by the site owner:
+
+* **Problem 1 (plan B)**: card titles on `/products/`, `/projects/` and
+  `/news/` promoted H3 -> H2 — no more H1 -> H3 level skips. Zero visual
+  change: the classes carry every style, and each now spells the old UA
+  top margin explicitly (an H3's UA default is 1em, an H2's is 0.83em, and
+  base.css has no global reset).
+* **Problem 2**: `/projects/` H1 "Trusted Worldwide" (keyword-free, a
+  near-duplicate of `/about/`'s H1) replaced with "Our Lighting Projects",
+  translated into fr/es/de/ru/ar. "Trusted Worldwide" stays on the home
+  page, where it is not a duplicate.
+* **Problem 5**: the duplicated privacy block (H2 + 3 H3) removed from
+  `/about/`; the full six-section version lives on `/privacy/`. The cookie
+  banner's "Privacy Policy" link pointed at the removed `about#privacy`
+  anchor and now goes to `/privacy/` itself.
+
+Guard: `pages/tests_heading_semantics.py` extended — no level skips on all
+three list pages (with an anti-vacuum card assertion per page and a seeded
+news article, since `get_news` is DB-only by design), the new H1 copy in
+English and all five locales (non-empty, not the English fallback), and the
+About page free of privacy headings / dead anchors. Mutation-probed: 7/7
+reverts turn the guards red (probe v1's opening-tag-only mutation produced
+invalid HTML and passed for the wrong reason — v2 swaps complete tag
+pairs), restores byte-identical.
+
 ## v1.10.34 - 2026-10-19
 
 ### fix: heading semantics on /contact/ and product detail pages (H-tag audit)

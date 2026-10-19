@@ -1743,3 +1743,6 @@ msgstr ""
 "Standard ; d’autres modèles de la gamme ne le sont pas. Indiquez-nous le "
 "luminaire retenu et nous confirmons l’homologation de ce modèle précis avant"
 " votre commande."
+
+msgid "Our Lighting Projects"
+msgstr "Nos projets d’éclairage"

@@ -57,7 +57,7 @@
           <p class="section-body" style="max-width: none;">{% trans "Professional lighting solutions for outdoor venues." %}</p>
           {% else %}
           <span class="section-accent-label section-accent-label--compact">{% trans "SolarOne Projects" %}</span>
-          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Trusted Worldwide" %}</h1>
+          <h1 class="section-title" style="margin-bottom: 8px;">{% trans "Our Lighting Projects" %}</h1>
           <p class="section-body" style="max-width: none;">{% trans "Over 500+ projects delivered across 50+ countries. From professional sports venues to industrial facilities, airports and seaports — we bring first-hand knowledge and experience." %}</p>
           {% endif %}
         </div>
@@ -76,7 +76,7 @@
             </div>
             <div class="project-card-body">
               <div class="project-card-location"><bdi>{{ project.location_t }}</bdi></div>
-              <h3 class="project-card-title"><bdi>{{ project.title_t }}</bdi></h3>
+              <h2 class="project-card-title"><bdi>{{ project.title_t }}</bdi></h2>
               <p class="project-card-desc">{{ project.description_t|descrub }}</p>
               {% if project.results %}<p class="project-card-desc project-card-results" style="margin-top:12px;">{% trans "Results:" %} <bdi>{{ project.results_t }}</bdi></p>{% endif %}
               <span class="project-card-link">{% trans "View project" %} →</span>
