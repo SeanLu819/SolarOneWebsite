@@ -5,6 +5,7 @@ import secrets
 import zoneinfo
 import user_agents
 from django.conf import settings
+from django.http import HttpResponsePermanentRedirect
 from django.utils import timezone
 from pages.ip import get_client_ip as django_get_client_ip
 from .models import Visitor, DailyStats
@@ -174,3 +175,39 @@ class ContentSecurityPolicyMiddleware:
         elif self._policy:
             response['Content-Security-Policy'] = self._policy.replace('__NONCE__', nonce)
         return response
+
+
+class DefaultLanguagePrefixRedirectMiddleware:
+    """301 ``/en/…`` → ``/…`` (v1.10.31, iron law #52).
+
+    ``i18n_patterns(..., prefix_default_language=False)`` means English pages
+    carry no language prefix, so any ``/en/…`` URL is a dead 404 on the wire —
+    a stale external backlink still pointing at ``/en/products/fl4m/`` would
+    leak its link equity into that 404. This middleware strips the default
+    prefix *before* URL resolution and issues a permanent redirect to the
+    canonical prefixless path, preserving the query string.
+
+    The match is exactly ``/en`` or a ``/en/`` prefix — never a bare ``/en``
+    prefix match — so ``/energy/`` or ``/english/`` are untouched, and the
+    real language prefixes (``/fr/`` ``/es/`` ``/de/`` ``/ru/`` ``/ar/``) are
+    untouched because their second segment is not ``en``.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        path = request.path_info
+        if path == '/en':
+            target = '/'
+        elif path.startswith('/en/'):
+            target = path[3:]  # drop the leading '/en'
+            if not target:
+                target = '/'
+        else:
+            return self.get_response(request)
+
+        qs = request.META.get('QUERY_STRING', '')
+        if qs:
+            target += '?' + qs
+        return HttpResponsePermanentRedirect(target)

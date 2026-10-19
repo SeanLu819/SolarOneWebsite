@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.31 - 2026-10-19
+
+### Content: news article bodies are translated at last
+
+Every non-English news article read as a translated headline over an English
+body. The v1.10.12 F-batch had translated `title` and `summary` but left
+`content` untouched, and nothing failed loudly — `translate()` falls back to
+English by design. The gap survived because `scripts/gen_i18n_inventory.py`
+never enumerated news at all, so the field was never listed as owing.
+
+All three articles now carry a fr/es/de/ru/ar body (15 translations, 4,691
+English characters). The pin that matters is **marker conservation**: the market
+article interleaves three charts through `{{figure:…}}` markers, and a
+translation that reorders or drops one does not error — it simply stops placing
+that chart. Guarded in `NewsContentI18nTests`.
+
+### Fix: `/en/…` now 301s to the canonical prefixless URL
+
+`/en/products/fl4m/` had always 404'd, because `i18n_patterns` runs with
+`prefix_default_language=False` — English carries no prefix, so any `/en/…`
+link is a dead 404 on the wire. That is harmless for *our* URLs (canonical,
+hreflang, x-default and the sitemap all point at the prefixless form, and zero
+internal links use `/en/`), but a stale external backlink still pointing at
+`/en/…` would leak its link equity into a 404. A new
+`DefaultLanguagePrefixRedirectMiddleware` (MIDDLEWARE slot 1, before
+LocaleMiddleware) strips the default prefix *before* URL resolution and issues
+a permanent 301 to the canonical path, preserving the query string. The match
+is `/en/` (or exactly `/en`) only — `/fr/`, `/es/`, `/de/`, `/ru/`, `/ar/` and
+look-alikes like `/energy/` are untouched. Guarded in
+`DefaultLanguagePrefixRedirectTests` (URL-level, like the legacy redirects).
+
 ## v1.10.30 - 2026-10-19
 
 ### Fix: contact enquiries used to arrive without the product they were about

@@ -184,6 +184,7 @@ CONTENT_SECURITY_POLICY = (
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'pages.middleware.DefaultLanguagePrefixRedirectMiddleware',
     'pages.middleware.ContentSecurityPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -518,4 +519,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.10.30'
+APP_VERSION = '1.10.31'

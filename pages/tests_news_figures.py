@@ -1477,3 +1477,234 @@ class NewsCoverCentringTests(SimpleTestCase):
             f'卡片封面用 object-fit: {fit.group(1)} —— 会把素材自带的白边也裁掉，'
             '与「完整展示、缩小到卡片能完整显示」的要求相反')
 
+
+# ═════════════════════════════════════════════════════════════════════════
+# v1.10.31 — the three shipped articles finally carry a translated body.
+# ═════════════════════════════════════════════════════════════════════════
+class NewsContentI18nTests(TestCase):
+    """v1.10.31 — translated bodies for all three shipped articles.
+
+    Why these pins and why the obvious ones would not do:
+
+    The v1.10.12 F-batch translated ``title`` and ``summary`` but not
+    ``content``, so every non-English article read as a translated headline
+    over an English body. Nothing failed loudly — ``translate()`` falls back
+    to English by design — and the gap was invisible for a year because
+    ``scripts/gen_i18n_inventory.py`` never enumerated news at all, so this
+    field was never listed as owing.
+
+    The pin that actually matters is **marker conservation**. The body carries
+    ``{{figure:…}}`` markers that ``build_article_body`` consumes; a machine
+    translation that rewrites, reorders or drops one does not raise anything,
+    it merely stops placing that chart. Comparing the marker *sequence* is not
+    enough on its own either, so this also runs the real builder over the
+    translated text and pins the resulting figure-block count against the
+    English article's — the failure mode is then observable end to end, not
+    just as a string diff.
+
+    Deliberately not asserted: a fixed list of slugs, or a word count. Both
+    would drift the moment an editor adds an article. Every article in the
+    seed is held to the rule instead, so adding one incidentally adds its pins.
+    """
+
+    LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    # Same marker grammar as pages/views/news_body.py, re-declared rather than
+    # imported: see AGENTS.md — a guard's expected values must be an
+    # independent statement of the product decision, never derived from the
+    # implementation it watches (a shared constant would let edit A fix edit B).
+    _MARKER = re.compile(r'\{\{\s*figure\s*:\s*([A-Za-z0-9_.-]+)\s*\}\}')
+
+    @classmethod
+    def setUpTestData(cls):
+        """Mirror all three seed articles into the test DB."""
+        from django.utils.timezone import now
+        from pages.models import NewsArticle, NewsImage
+        from pages.views.data_loaders import _load_seed
+
+        for article in _load_seed()['news']:
+            row = NewsArticle.objects.create(
+                slug=article['slug'],
+                title=article['title'],
+                summary=article['summary'],
+                content=article['content'],
+                category=article.get('category') or 'Exhibition Information',
+                image=article['image'],
+                published_at=now(),
+                is_published=True,
+                translations=article.get('translations') or {},
+            )
+            for image in article['images']:
+                NewsImage.objects.create(
+                    article=row, image=image['image'],
+                    alt_text=image.get('alt') or '',
+                    caption=image.get('caption') or '',
+                    order=image.get('order') or 1,
+                    width=image.get('width'), height=image.get('height'),
+                )
+
+    def _seed_articles(self):
+        """Read the source of truth. Not `_load_seed()`: that prefers the build
+        artifact, so a JSON-only edit would sail through green here (MEMORY
+        rule 2)."""
+        from pages.views.data_loaders import _load_seed
+        # Both readers must see the same content; see test_the_db_rows_agree.
+        return list(_load_seed()['news'])
+
+    @staticmethod
+    def _paragraphs(text):
+        return [p.strip() for p in re.split(r'\r\n\r\n|\n\n', text or '') if p.strip()]
+
+    def test_every_article_has_a_body_in_all_five_languages(self):
+        for article in self._seed_articles():
+            block = article.get('translations') or {}
+            for lang in self.LANGS:
+                with self.subTest(slug=article['slug'], lang=lang):
+                    self.assertTrue(
+                        ((block.get(lang) or {}).get('content') or '').strip(),
+                        f'{article["slug"]}.{lang}.content 空白 —— 补译或删键')
+
+    def test_figure_markers_survive_translation_verbatim(self):
+        """A rewritten marker does not error — it silently stops placing a chart."""
+        for article in self._seed_articles():
+            english = self._MARKER.findall(article.get('content') or '')
+            block = article.get('translations') or {}
+            for lang in self.LANGS:
+                with self.subTest(slug=article['slug'], lang=lang):
+                    self.assertEqual(
+                        english, self._MARKER.findall(
+                            (block.get(lang) or {}).get('content') or ''),
+                        f'{article["slug"]}.{lang} 的 figure 标记序列与英文不一致')
+
+    def test_translated_body_yields_the_same_figure_blocks_as_english(self):
+        """End-to-end version of the pin above: run the real builder.
+
+        Two traps worth naming, because both were hit while writing this:
+
+        1. ``build_article_body`` resolves markers through ``id``/``name``/
+           ``file_name``/``alt``/``url`` — i.e. it wants the **normalised**
+           image dicts that ``_get_news_from_json`` produces, not the raw seed
+           rows (whose gallery carries ``image`` instead). Handing it the raw
+           ones builds an empty lookup, so both sides emit zero figure blocks
+           and ``0 == 0`` passes green while the article quietly loses every
+           chart.
+        2. Therefore the English side is asserted to place at least one figure.
+           Without that, an article with no figures — or one whose gallery
+           stopped parsing — would compare two zeros and prove nothing.
+        """
+        from pages.views.data_loaders import _get_news_from_json
+
+        english = {r['slug']: r for r in _get_news_from_json('en')}
+        checked = 0
+        figures_seen = 0
+        for lang in self.LANGS:
+            for row in _get_news_from_json(lang):
+                source = english[row['slug']]
+                if not source['images']:
+                    # No gallery, so no marker can bind and no figure block can
+                    # appear on either side. Comparing two zeros would prove
+                    # nothing; `test_figure_markers_survive_translation_verbatim`
+                    # already pins that such an article carries no markers at
+                    # all (see also NewsInBodyFigureTests for the hktexpo copy).
+                    continue
+                english_figures = len([
+                    b for b in build_article_body(
+                        source.get('content_t') or source['content'],
+                        source['images'])[0] if b['type'] != 'p'])
+                with self.subTest(slug=row['slug'], lang=lang):
+                    placed = len([
+                        b for b in build_article_body(
+                            row.get('content_t') or row['content'],
+                            row['images'])[0] if b['type'] != 'p'])
+                    self.assertEqual(
+                        english_figures, placed,
+                        f'{row["slug"]}.{lang} 只摆放了 {placed} / '
+                        f'{english_figures} 张图表 —— 译文丢了 marker')
+                    checked += 1
+                    figures_seen += english_figures
+        self.assertTrue(
+            checked,
+            '没有任何一篇「有图集」的文章被覆盖 —— '
+            '是不是三篇文章的图集都空了？那这条守卫就空转了')
+        # A gallery with no marker in the copy (the retrofit case study is one)
+        # yields zero on both sides, and comparing two zeros proves nothing. So pin that the corpus as a whole really
+        # did place figures — otherwise a format slip (handing the builder raw
+        # seed images instead of the normalised ones) would green silently.
+        self.assertTrue(
+            figures_seen,
+            '全站没有任何图表靠 marker 摆放出来 —— '
+            'images 大概是传成了未规范化的格式，整条守卫在 0 == 0 上空转')
+
+    def test_the_translation_keeps_the_english_paragraph_structure(self):
+        """Merging or splitting paragraphs reshapes the page for no reason."""
+        for article in self._seed_articles():
+            english = self._paragraphs(article.get('content'))
+            block = article.get('translations') or {}
+            for lang in self.LANGS:
+                with self.subTest(slug=article['slug'], lang=lang):
+                    self.assertEqual(
+                        len(english),
+                        len(self._paragraphs((block.get(lang) or {}).get('content'))),
+                        f'{article["slug"]}.{lang} 段落数与英文不一致')
+
+    def test_no_paragraph_is_a_verbatim_english_fallback(self):
+        for article in self._seed_articles():
+            english = self._paragraphs(article.get('content'))
+            block = article.get('translations') or {}
+            for lang in self.LANGS:
+                body = self._paragraphs((block.get(lang) or {}).get('content'))
+                if not body:
+                    continue
+                for i, paragraph in enumerate(body):
+                    with self.subTest(slug=article['slug'], lang=lang, para=i):
+                        self.assertNotEqual(
+                            paragraph, english[i],
+                            f'{article["slug"]}.{lang} 第 {i + 1} 段是英文原文')
+
+    def test_no_machine_translation_error_strings_shipped(self):
+        """An MT error string is non-empty, so `translate()` prefers it over the
+        English fallback and renders it verbatim (MEMORY rule 36)."""
+        for article in self._seed_articles():
+            block = article.get('translations') or {}
+            for lang in self.LANGS:
+                with self.subTest(slug=article['slug'], lang=lang):
+                    self.assertNotIn(
+                        '[Error', (block.get(lang) or {}).get('content') or '',
+                        f'{article["slug"]}.{lang}.content 含 MT 报错串')
+
+    def test_the_db_rows_agree_with_the_seed_bodies(self):
+        """Local dev reads the DB, production reads the seed. A body that only
+        exists on one side reads translated for one audience and English for
+        the other — the exact half-state this batch removes."""
+        from pages.views.data_loaders import _get_news_from_db, _get_news_from_json
+
+        for lang in self.LANGS:
+            by_slug = {r['slug']: r for r in _get_news_from_db(lang)}
+            for row in _get_news_from_json(lang):
+                with self.subTest(slug=row['slug'], lang=lang):
+                    other = by_slug.get(row['slug'])
+                    self.assertIsNotNone(
+                        other, f'{row["slug"]} 不在 DB 里')
+                    self.assertEqual(
+                        row.get('content_t'), other.get('content_t'),
+                        f'{row["slug"]}.{lang} 的正文在 DB 与 seed 之间不一致')
+
+    def test_the_rendered_fr_and_ar_bodies_are_not_english(self):
+        """Render rather than trust the layer below: `/fr/news/<slug>/` used to
+        ship a French headline over English paragraphs, and no unit-level
+        assertion on the seed would have caught that."""
+        longest = max(self._seed_articles(),
+                      key=lambda a: len(a.get('content') or ''))
+        slug = longest['slug']
+        english_opening = self._paragraphs(longest['content'])[0][:120]
+
+        for lang in ('fr', 'ar'):
+            html = self.client.get(f'/{lang}/news/{slug}/').content.decode('utf-8')
+            body = re.search(
+                r'<div class="news-detail-body">(.*?)</div>\s*</div>', html, re.S)
+            with self.subTest(lang=lang):
+                self.assertIsNotNone(body, '没找到正文容器 —— 选择器失效')
+                self.assertNotIn(
+                    english_opening[:60], body.group(1),
+                    f'/{lang}/news/{slug}/ 渲染出的正文仍是英文')
+

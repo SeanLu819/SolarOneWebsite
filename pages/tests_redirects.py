@@ -321,3 +321,57 @@ class RootKeywordRedirectRoutingTests(TestCase):
         resp = Client().get('/ar/tennis-court-lighting/', **_KW)
         self.assertEqual(resp.status_code, 301)
         self.assertEqual(resp['Location'], '/ar/projects/tennis/')
+
+
+class DefaultLanguagePrefixRedirectTests(TestCase):
+    """v1.10.31 (iron law #52): ``/en/…`` 301s to the canonical prefixless path.
+
+    URL-level — the redirect is a middleware that runs *before* URL resolution,
+    so the only honest check is hitting the path with the test client (and, on
+    push, a curl against live). ``/en/…`` is a dead 404 otherwise
+    (``prefix_default_language=False``), so a 301 here is a real behaviour
+    change, not a false-green: without the middleware the same path returns 404.
+    """
+
+    def test_root_en_redirects_to_root(self):
+        resp = Client().get('/en/', **_KW)
+        self.assertEqual(resp.status_code, 301, 'must be permanent')
+        self.assertEqual(resp['Location'], '/')
+
+    def test_en_product_page_redirects_to_prefixless(self):
+        resp = Client().get('/en/products/fl4m/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/products/fl4m/')
+
+    def test_en_news_index_redirects(self):
+        resp = Client().get('/en/news/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/news/')
+
+    def test_en_project_page_redirects(self):
+        resp = Client().get('/en/projects/', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/projects/')
+
+    def test_query_string_is_preserved(self):
+        resp = Client().get('/en/products/fl4m/?utm_source=x', **_KW)
+        self.assertEqual(resp.status_code, 301)
+        self.assertEqual(resp['Location'], '/products/fl4m/?utm_source=x')
+
+    def test_real_language_prefixes_are_not_stripped(self):
+        """/fr/ etc. resolve to a real page and must NOT be redirected by the
+        /en/ middleware."""
+        for prefix in ('fr', 'es', 'de', 'ru', 'ar'):
+            with self.subTest(lang=prefix):
+                resp = Client().get(f'/{prefix}/', **_KW)
+                self.assertNotEqual(
+                    resp.status_code, 301,
+                    f'/{prefix}/ must not be stripped by the /en/ middleware')
+                self.assertEqual(resp.status_code, 200)
+
+    def test_similar_prefix_is_not_stripped(self):
+        """/energy/ starts with '/en' but not '/en/' — it must NOT 301.
+        It 404s (no such route) but the redirect middleware must leave it
+        alone."""
+        resp = Client().get('/energy/', **_KW)
+        self.assertNotEqual(resp.status_code, 301)
