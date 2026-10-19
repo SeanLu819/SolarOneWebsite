@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.32 - 2026-10-19
+
+### i18n: news figure alt + caption now localized
+
+Every news gallery figure carried an English-only `alt` (and an English
+`caption` rendered directly beneath it), so a French or German article showed a
+localized headline and body over an English figure description. The `alt`/`caption`
+on each of the five seeded news figures now carry `alt_translations` /
+`caption_translations` for fr/es/de/ru/ar; `pages.views.data_loaders` resolves
+them per `lang` and falls back to the English base.
+
+- `NewsImage.alt_translations` / `caption_translations` (JSONField) + migration
+  `0037`; seed JSON is the source of truth, so `regenerate_seed` carries the
+  translations into the build artifact.
+- `NewsImageAltI18nTests` guards the five-language coverage, the `/fr/` rendering
+  (translated, not English), the `/en/` fallback, and DB↔seed parity. A mutation
+  probe confirms the guard fails when one translation is dropped and restores
+  cleanly.
+- Figure placement is unchanged: markers bind by image URL basename, not `alt`,
+  so localizing `alt` never disturbs figure layout.
+
 ## v1.10.31 - 2026-10-19
 
 ### Content: news article bodies are translated at last

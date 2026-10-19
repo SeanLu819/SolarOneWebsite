@@ -329,22 +329,48 @@ def _news_social_image(row):
     return ''
 
 
-def _normalize_news_image(i):
+def _resolve_news_image_text(base, translations, lang):
+    """Pick the per-language alt/caption for a news figure.
+
+    ``translations`` is ``{"fr": "...", "es": ...}`` (seed dict or the DB
+    JSONField). English always falls back to ``base`` — the translations dict
+    never carries an ``en`` key, so this also guards against a stray one. When
+    the requested language is missing we degrade to English rather than emit a
+    blank alt, which would be worse for accessibility and SEO than the English
+    original.
+    """
+    if not lang or lang == 'en':
+        return base or ''
+    if isinstance(translations, str):
+        try:
+            translations = json.loads(translations)
+        except (ValueError, TypeError):
+            translations = {}
+    return (translations or {}).get(lang) or base or ''
+
+
+def _normalize_news_image(i, lang='en'):
     """Normalize one seed ``news[].images[]`` entry to a template dict.
 
     The seed / admin shapes differ slightly (``alt`` vs ``alt_text``), so both
     aliases are accepted. ``width``/``height`` stay optional: the template only
     emits them when present (they are a CLS hint, never a resize instruction).
+    ``alt``/``caption`` are resolved per ``lang`` (v1.10.32) so a French page
+    shows a French figure description instead of the English one.
 
     ``id``/``name`` are kept because ``{{figure:…}}`` markers inside the body
-    bind to them — see ``pages.views.news_body.build_article_body``.
+    bind to them — see ``pages.views.news_body.build_article_body``. The marker
+    binding uses the image URL basename, not ``alt``, so localizing ``alt``
+    never disturbs figure placement.
     """
     return {
         'id': i.get('id') or '',
         'name': i.get('name') or '',
         'url': _static_url(i.get('image', '') or ''),
-        'alt': i.get('alt') or i.get('alt_text') or '',
-        'caption': i.get('caption') or '',
+        'alt': _resolve_news_image_text(
+            i.get('alt') or i.get('alt_text') or '', i.get('alt_translations'), lang),
+        'caption': _resolve_news_image_text(
+            i.get('caption') or '', i.get('caption_translations'), lang),
         'width': i.get('width') or None,
         'height': i.get('height') or None,
     }
@@ -374,7 +400,7 @@ def _normalize_news_article(a, lang='en'):
     except (ValueError, TypeError):
         published_at = raw
     images = [
-        _normalize_news_image(i)
+        _normalize_news_image(i, lang)
         for i in (a.get('images') or [])
         if i.get('image')
     ]
@@ -476,8 +502,10 @@ def _normalize_news_row(a, lang='en'):
                 'id': im.pk,
                 'name': '',
                 'url': _news_db_image_url(im.image),
-                'alt': im.alt_text or '',
-                'caption': im.caption or '',
+                'alt': _resolve_news_image_text(
+                    im.alt_text or '', getattr(im, 'alt_translations', None), lang),
+                'caption': _resolve_news_image_text(
+                    im.caption or '', getattr(im, 'caption_translations', None), lang),
                 'width': im.width or None,
                 'height': im.height or None,
             }

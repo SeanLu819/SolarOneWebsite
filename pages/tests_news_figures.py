@@ -1708,3 +1708,176 @@ class NewsContentI18nTests(TestCase):
                     english_opening[:60], body.group(1),
                     f'/{lang}/news/{slug}/ 渲染出的正文仍是英文')
 
+
+class NewsImageAltI18nTests(TestCase):
+    """v1.10.32 — per-language alt / caption on news gallery figures.
+
+    Until this version every news figure carried an English-only ``alt`` (and an
+    English ``caption`` shown directly under it). A French article therefore read
+    a French headline and body over an English figure description — the exact
+    half-state the news body translation removed for prose. These pins hold the
+    five-language ``alt_translations`` / ``caption_translations`` on every seeded
+    gallery image, and that the rendered ``alt``/``caption`` actually switch with
+    ``lang`` (English fallback stays the English base, never the translation).
+
+    The marker binding is by image URL basename, not ``alt``, so localizing
+    ``alt`` cannot disturb figure placement — a guard below asserts placement is
+    untouched so that invariant is never silently broken.
+    """
+
+    LANGS = ('fr', 'es', 'de', 'ru', 'ar')
+
+    @classmethod
+    def setUpTestData(cls):
+        """Mirror the seeded articles (with figure translations) into the test DB."""
+        from django.utils.timezone import now
+        from pages.models import NewsArticle, NewsImage
+        from pages.views.data_loaders import _load_seed
+
+        for article in _load_seed()['news']:
+            row = NewsArticle.objects.create(
+                slug=article['slug'],
+                title=article['title'],
+                summary=article['summary'],
+                content=article['content'],
+                category=article.get('category') or 'Exhibition Information',
+                image=article['image'],
+                published_at=now(),
+                is_published=True,
+                translations=article.get('translations') or {},
+            )
+            for image in article['images']:
+                NewsImage.objects.create(
+                    article=row, image=image['image'],
+                    alt_text=image.get('alt') or '',
+                    caption=image.get('caption') or '',
+                    alt_translations=image.get('alt_translations') or {},
+                    caption_translations=image.get('caption_translations') or {},
+                    order=image.get('order') or 1,
+                    width=image.get('width'), height=image.get('height'),
+                )
+
+    @staticmethod
+    def _seed_images():
+        """Source of truth: the committed seed (via the production reader)."""
+        from pages.views.data_loaders import _load_seed
+        out = []
+        for a in _load_seed()['news']:
+            for im in a.get('images') or []:
+                out.append((a['slug'], im))
+        return out
+
+    def test_every_seeded_image_carries_five_language_alt_translations(self):
+        for slug, im in self._seed_images():
+            with self.subTest(slug=slug, image=im['image']):
+                tr = im.get('alt_translations') or {}
+                for lang in self.LANGS:
+                    self.assertTrue(
+                        str(tr.get(lang) or '').strip(),
+                        f'{slug}/{im["image"]} 缺 alt_translations.{lang}')
+
+    def test_every_seeded_image_carries_five_language_caption_translations(self):
+        for slug, im in self._seed_images():
+            with self.subTest(slug=slug, image=im['image']):
+                tr = im.get('caption_translations') or {}
+                for lang in self.LANGS:
+                    self.assertTrue(
+                        str(tr.get(lang) or '').strip(),
+                        f'{slug}/{im["image"]} 缺 caption_translations.{lang}')
+
+    def test_french_alt_and_caption_are_translated_not_english(self):
+        """/fr/ must show the French alt/caption, not the English base."""
+        from pages.views.data_loaders import _load_seed, _normalize_news_article
+        for a in _load_seed()['news']:
+            if not a.get('images'):
+                continue
+            fr = _normalize_news_article(a, 'fr')
+            en = _normalize_news_article(a, 'en')
+            for i, im in enumerate(a['images']):
+                with self.subTest(slug=a['slug'], image=im['image']):
+                    base_alt = im.get('alt') or ''
+                    base_cap = im.get('caption') or ''
+                    fr_alt = fr['images'][i]['alt']
+                    fr_cap = fr['images'][i]['caption']
+                    # A real translation differs from English (these strings are
+                    # descriptive, not language-neutral), and falls back to the
+                    # base only when no translation exists.
+                    if base_alt:
+                        self.assertEqual(
+                            fr_alt, (im.get('alt_translations') or {}).get('fr'),
+                            f'{a["slug"]} fr alt 未取译文')
+                        self.assertNotEqual(
+                            fr_alt, base_alt,
+                            f'{a["slug"]} fr alt 仍是英文原文')
+                    if base_cap:
+                        self.assertEqual(
+                            fr_cap, (im.get('caption_translations') or {}).get('fr'),
+                            f'{a["slug"]} fr caption 未取译文')
+                        self.assertNotEqual(
+                            fr_cap, base_cap,
+                            f'{a["slug"]} fr caption 仍是英文原文')
+
+    def test_english_page_keeps_base_alt_caption(self):
+        """English must keep the original alt/caption, never a translation."""
+        from pages.views.data_loaders import _load_seed, _normalize_news_article
+        for a in _load_seed()['news']:
+            if not a.get('images'):
+                continue
+            en = _normalize_news_article(a, 'en')
+            for i, im in enumerate(a['images']):
+                with self.subTest(slug=a['slug'], image=im['image']):
+                    self.assertEqual(
+                        en['images'][i]['alt'], im.get('alt') or '',
+                        f'{a["slug"]} en alt 未回落英文 base')
+                    self.assertEqual(
+                        en['images'][i]['caption'], im.get('caption') or '',
+                        f'{a["slug"]} en caption 未回落英文 base')
+
+    def test_db_and_seed_paths_agree_on_translated_alt(self):
+        """Local dev (DB) and production (seed) must render identical figure
+        alt/caption, or one audience sees English while another sees French."""
+        from pages.views.data_loaders import _get_news_from_db, _get_news_from_json
+
+        for lang in self.LANGS:
+            seed_by_slug = {r['slug']: r for r in _get_news_from_json(lang)}
+            for db_row in _get_news_from_db(lang):
+                with self.subTest(slug=db_row['slug'], lang=lang):
+                    seed_row = seed_by_slug.get(db_row['slug'])
+                    self.assertIsNotNone(seed_row, f'{db_row["slug"]} 不在 seed')
+                    for j, db_img in enumerate(db_row['images']):
+                        with self.subTest(image=db_img['url']):
+                            seed_img = seed_row['images'][j]
+                            self.assertEqual(
+                                db_img['alt'], seed_img['alt'],
+                                f'{db_row["slug"]}.{lang} 配图 alt DB↔seed 不一致')
+                            self.assertEqual(
+                                db_img['caption'], seed_img['caption'],
+                                f'{db_row["slug"]}.{lang} 配图 caption DB↔seed 不一致')
+
+    def test_figure_placement_is_unaffected_by_localized_alt(self):
+        """The marker binds by URL basename, so translating alt must not move or
+        drop a figure. Pin the figure-block count per article against English."""
+        from pages.views.data_loaders import _get_news_from_json
+
+        en_by_slug = {r['slug']: r for r in _get_news_from_json('en')}
+        figures = 0
+        for lang in self.LANGS:
+            for row in _get_news_from_json(lang):
+                source = en_by_slug[row['slug']]
+                if not source['images']:
+                    continue
+                en_fig = len([
+                    b for b in build_article_body(
+                        source.get('content_t') or source['content'],
+                        source['images'])[0] if b['type'] != 'p'])
+                got = len([
+                    b for b in build_article_body(
+                        row.get('content_t') or row['content'],
+                        row['images'])[0] if b['type'] != 'p'])
+                with self.subTest(slug=row['slug'], lang=lang):
+                    self.assertEqual(
+                        en_fig, got,
+                        f'{row["slug"]}.{lang} 配图数量与英文不一致（本地化 alt 干扰了摆放？）')
+                    figures += en_fig
+        self.assertTrue(figures, '没有任何带图集文章被覆盖 —— 守卫空转')
+

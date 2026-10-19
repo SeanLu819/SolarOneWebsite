@@ -335,6 +335,12 @@ class NewsImage(models.Model):
     )
     alt_text = models.CharField(max_length=200, blank=True, verbose_name='Alt text')
     caption = models.CharField(max_length=250, blank=True, verbose_name='Caption')
+    # Per-language overrides for ``alt_text`` / ``caption`` (v1.10.32). The English
+    # ``alt_text`` / ``caption`` above stay the fallback; these hold the fr/es/de/ru/ar
+    # forms so a French news page shows a French figure description instead of the
+    # English one. Seed JSON is the source of truth — see ``pages/seed_sync``.
+    alt_translations = models.JSONField(default=dict, blank=True, verbose_name='Alt translations')
+    caption_translations = models.JSONField(default=dict, blank=True, verbose_name='Caption translations')
     order = models.IntegerField(default=0, verbose_name='Order')
     width = models.PositiveIntegerField(blank=True, null=True, verbose_name='Width (px)')
     height = models.PositiveIntegerField(blank=True, null=True, verbose_name='Height (px)')

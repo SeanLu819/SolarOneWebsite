@@ -4376,7 +4376,21 @@
           "caption": "SolarOne chart. Market size in 2025 and the 2034 forecast, with the years between compounded at the reported 13.40% CAGR.",
           "order": 3,
           "width": 1639,
-          "height": 880
+          "height": 880,
+          "alt_translations": {
+            "fr": "Graphique SolarOne du marché mondial de l'éclairage LED",
+            "es": "Gráfico SolarOne del mercado mundial de iluminación LED",
+            "de": "SolarOne-Diagramm des globalen LED-Beleuchtungsmarktes",
+            "ru": "Диаграмма SolarOne мирового рынка светодиодного освещения",
+            "ar": "رسم بياني من SolarOne لسوق إضاءة LED العالمي"
+          },
+          "caption_translations": {
+            "fr": "Graphique SolarOne. Taille du marché en 2025 et prévision 2034, les années intermédiaires étant composées au TCAC de 13,40 % annoncé.",
+            "es": "Gráfico SolarOne. Tamaño del mercado en 2025 y previsión para 2034, con los años intermedios compuestos al 13,40 % CAGR comunicado.",
+            "de": "SolarOne-Diagramm. Marktgröße 2025 und Prognose 2034, wobei die Zwischenjahre mit dem angegebenen CAGR von 13,40 % verzinst werden.",
+            "ru": "Диаграмма SolarOne. Объём рынка в 2025 году и прогноз на 2034-й, промежуточные годы с учётом заявленного CAGR 13,40 %.",
+            "ar": "رسم بياني من SolarOne. حجم السوق في 2025 وتوقعات 2034، مع تراكم السنوات بينهما بمعدل النمو السنوي المركب المعلن 13.40%."
+          }
         },
         {
           "image": "images/news/global-led-lighting-market-2034/chart-by-region-2025.webp",
@@ -4384,7 +4398,21 @@
           "caption": "SolarOne chart. Asia Pacific accounts for 54.40% of the 2025 market, against 21.50% for North America and 15.60% for Europe.",
           "order": 4,
           "width": 1639,
-          "height": 700
+          "height": 700,
+          "alt_translations": {
+            "fr": "Graphique à barres horizontales SolarOne du marché mondial de l'éclairage LED par région en 2025",
+            "es": "Gráfico de barras horizontal SolarOne del mercado mundial de iluminación LED por región en 2025",
+            "de": "SolarOne-Balkendiagramm des globalen LED-Beleuchtungsmarktes nach Region für 2025",
+            "ru": "Горизонтальная столбчатая диаграмма SolarOne мирового рынка светодиодного освещения по регионам за 2025 год",
+            "ar": "رسم بياني شريطي أفقي من SolarOne لسوق إضاءة LED العالمي حسب المنطقة لعام 2025"
+          },
+          "caption_translations": {
+            "fr": "Graphique SolarOne. L'Asie-Pacifique représente 54,40 % du marché 2025, contre 21,50 % pour l'Amérique du Nord et 15,60 % pour l'Europe.",
+            "es": "Gráfico SolarOne. Asia-Pacífico representa el 54,40 % del mercado de 2025, frente al 21,50 % de América del Norte y el 15,60 % de Europa.",
+            "de": "SolarOne-Diagramm. Asien-Pazifik hat 54,40 % des Marktes 2025, gegenüber 21,50 % für Nordamerika und 15,60 % für Europa.",
+            "ru": "Диаграмма SolarOne. Доля Азиатско-Тихоокеанского региона — 54,40 % рынка 2025 года, у Северной Америки — 21,50 %, у Европы — 15,60 %.",
+            "ar": "رسم بياني من SolarOne. تمثل منطقة آسيا والمحيط الهادئ 54.40% من سوق 2025، مقابل 21.50% لأمريكا الشمالية و15.60% لأوروبا."
+          }
         },
         {
           "image": "images/news/global-led-lighting-market-2034/chart-by-segment-2026.webp",
@@ -4392,7 +4420,21 @@
           "caption": "SolarOne chart. Each split uses its own denominator, so the three bars are not parts of a single whole.",
           "order": 5,
           "width": 1639,
-          "height": 700
+          "height": 700,
+          "alt_translations": {
+            "fr": "Graphique à barres horizontales SolarOne",
+            "es": "Gráfico de barras horizontal SolarOne",
+            "de": "SolarOne-Balkendiagramm",
+            "ru": "Горизонтальная столбчатая диаграмма SolarOne",
+            "ar": "رسم بياني شريطي أفقي من SolarOne"
+          },
+          "caption_translations": {
+            "fr": "Graphique SolarOne. Chaque répartition utilise son propre dénominateur, donc les trois barres ne sont pas des parts d'un même ensemble.",
+            "es": "Gráfico SolarOne. Cada división usa su propio denominador, por lo que las tres barras no son partes de un único conjunto.",
+            "de": "SolarOne-Diagramm. Jede Aufteilung verwendet ihren eigenen Nenner, daher sind die drei Balken keine Teile eines Ganzen.",
+            "ru": "Диаграмма SolarOne. Каждое деление имеет свой знаменатель, поэтому три столбца не являются частями одного целого.",
+            "ar": "رسم بياني من SolarOne. كل قسم يستخدم مقامه الخاص، لذا فالأعمدة الثلاثة ليست أجزاء من كل واحد."
+          }
         }
       ],
       "published_at": "2026-09-28T00:00:00+00:00",
@@ -4475,7 +4517,21 @@
           "image": "images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-head-work.webp",
           "alt": "SolarOne FL6M luminaires installed on the apron head-frame",
           "caption": "SolarOne FL6M luminaires mounted on the apron head-frame",
-          "order": 1
+          "order": 1,
+          "alt_translations": {
+            "fr": "Luminaires SolarOne FL6M installés sur la structure de tête de l'aire de trafic",
+            "es": "Luminarias SolarOne FL6M instaladas en la estructura superior de la plataforma",
+            "de": "SolarOne FL6M-Leuchten an der Kopftraverse des Vorfelds installiert",
+            "ru": "Светильники SolarOne FL6M, установленные на верхней ферме перрона",
+            "ar": "مصابيح SolarOne FL6M مثبتة على الهيكل العلوي للمنطقة الأمامية"
+          },
+          "caption_translations": {
+            "fr": "Luminaires SolarOne FL6M montés sur la structure de tête de l'aire de trafic",
+            "es": "Luminarias SolarOne FL6M montadas en la estructura superior de la plataforma",
+            "de": "SolarOne FL6M-Leuchten auf der Kopftraverse des Vorfelds montiert",
+            "ru": "Светильники SolarOne FL6M, смонтированные на верхней ферме перрона",
+            "ar": "مصابيح SolarOne FL6M مثبتة على الهيكل العلوي للمنطقة الأمامية"
+          }
         },
         {
           "image": "images/news/low-cct-high-cri-high-mast-led-retrofit/tianjin-binhai-high-mast-retrofit-ground-work.webp",
@@ -4483,7 +4539,21 @@
           "caption": "Warm-white light across the apron after the FL6M retrofit",
           "order": 2,
           "width": 600,
-          "height": 337
+          "height": 337,
+          "alt_translations": {
+            "fr": "Techniciens assemblant des modules de projecteurs à mât haut LED au niveau du sol",
+            "es": "Técnicos ensamblando módulos de proyectores LED de mástil alto a nivel del suelo",
+            "de": "Techniker montieren LED-Flutlichtmodule für Hochmasten auf Bodenniveau",
+            "ru": "Техники собирают модули светодиодных прожекторов на высокой мачте на уровне земли",
+            "ar": "فنيون يجمعون وحدات كشافات LED على أعمدة الإنارة العالية عند مستوى الأرض"
+          },
+          "caption_translations": {
+            "fr": "Lumière blanche chaude sur l'aire de trafic après la rénovation FL6M",
+            "es": "Luz blanca cálida sobre la plataforma tras la renovación FL6M",
+            "de": "Warmweißes Licht über dem Vorfeld nach dem FL6M-Retrofit",
+            "ru": "Тёплый белый свет над перроном после ретрофита FL6M",
+            "ar": "إضاءة بيضاء دافئة فوق المنطقة الأمامية بعد التحديث باستخدام FL6M"
+          }
         }
       ],
       "published_at": "2026-08-31T00:00:00+00:00",
