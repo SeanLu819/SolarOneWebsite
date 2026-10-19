@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.34 - 2026-10-19
+
+### fix: heading semantics on /contact/ and product detail pages (H-tag audit)
+
+From the 2026-10-19 full-site H-tag audit (`docs/h_tag_audit_2026-10-19.md`):
+
+* `/contact/`: the company name under H1 "Contact Us" was an **H3**
+  (H1 -> H3 level skip). Now an H2, sibling of "Agents & Distributors".
+  The inline style keeps the old pixel metrics — the previous H3 relied on
+  the UA default `margin-block-start: 1em` (of its 1.05rem font), so the new
+  H2 spells `margin: 1em 0 24px` explicitly.
+* `/products/<slug>/` (detail layout): "Request a Sample" is a CTA, not a
+  document section — its title moved from `<h3>` to a `<p>` with the same
+  class (all visuals come from the class), removing a non-section heading
+  from the outline.
+
+Guard: `pages/tests_heading_semantics.py` — parses rendered HTML (style /
+script / comment blocks stripped first: the product template's inline CSS
+documents the v1.10.20 heading change with literal `<h2>` examples inside a
+CSS comment, which a naive scan pairs with a far-away real `</h2>` and
+swallows the real H1). Asserts the company name is H2, no level skips on
+`/contact/` and every product page (both layouts), and the CTA title is a
+`<p>` on all 21 detail-layout products. Mutation-probed: reverting either
+fix turns 23 assertions red; restore is byte-identical.
+
+Audit correction: `product_overview.html` is **not** a dead template —
+`Product.page_layout = 'overview'` renders it for the 3 series landing
+pages (m-series, rgb-rgbw, accessory) through the product detail view.
+
 ## v1.10.33 - 2026-10-19
 
 ### fix: news body figures now bind in production (Whitenoise hash)
