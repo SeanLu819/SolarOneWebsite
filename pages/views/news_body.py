@@ -46,6 +46,25 @@ _MARKER_RE = re.compile(r'\{\{\s*figure\s*:\s*([A-Za-z0-9_.-]+)\s*\}\}')
 #: inserted. Windows-authored copy arrives with CRLF, so normalise first.
 _BLANK_LINE_RE = re.compile(r'\n\s*\n')
 
+#: Production (Whitenoise) rewrites static URLs with a hash infix —
+#: ``chart-global-market-size.bb4fc8b043bc.webp`` — while editors type the bare
+#: file name in ``{{figure:…}}`` markers. v1.10.33: without stripping that
+#: infix every marker silently unbound on Vercel (it still bound locally, where
+#: URLs carry no hash), so every figure degraded to the top grid and
+#: ``figcaption`` never rendered there.
+_HASH_INFIX_RE = re.compile(r'\.[0-9a-f]{8,}(?=\.(?:webp|jpe?g|png|avif|gif)$)')
+
+
+def _bare_name(url):
+    """File name of ``url`` with any storage hash infix removed.
+
+    ``/static/images/news/x/chart-a.bb4fc8b043bc.webp`` → ``chart-a.webp``.
+    An empty ``url`` yields ``''``. The exact (hashed) base name stays in the
+    lookup too, so a marker that *does* spell out the hashed name keeps working.
+    """
+    name = (url or '').rsplit('/', 1)[-1]
+    return _HASH_INFIX_RE.sub('', name)
+
 
 def _paragraphs(text):
     """Split ``text`` into non-empty stripped paragraphs."""
@@ -67,8 +86,7 @@ def _image_key(image):
                       image.get('file_name'), image.get('alt')):
         if candidate:
             return str(candidate)
-    url = image.get('url') or ''
-    return url.rsplit('/', 1)[-1] if url else ''
+    return _bare_name(image.get('url') or '')
 
 
 def _build_lookup(images):
@@ -82,7 +100,13 @@ def _build_lookup(images):
         url = image.get('url') or ''
         if url:
             lookup.setdefault(url, index)
-            lookup.setdefault(url.rsplit('/', 1)[-1], index)
+            base = url.rsplit('/', 1)[-1]
+            lookup.setdefault(base, index)
+            # v1.10.33: production static URLs carry a Whitenoise hash infix;
+            # markers spell the bare file name, so accept both spellings.
+            bare = _HASH_INFIX_RE.sub('', base)
+            if bare and bare != base:
+                lookup.setdefault(bare, index)
     return lookup
 
 

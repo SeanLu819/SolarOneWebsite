@@ -1881,3 +1881,72 @@ class NewsImageAltI18nTests(TestCase):
                     figures += en_fig
         self.assertTrue(figures, '没有任何带图集文章被覆盖 —— 守卫空转')
 
+
+
+class NewsFigureHashedUrlBindingTests(TestCase):
+    """Production serves static URLs with a Whitenoise hash infix —
+    ``chart-global-market-size.bb4fc8b043bc.webp`` — while ``{{figure:…}}``
+    markers spell the bare file name. Regression guard for v1.10.33: before the
+    fix every marker silently unbound on Vercel (it still bound locally, where
+    URLs carry no hash), so all figures degraded to the top grid and
+    ``figcaption`` never rendered. The lookup must accept both spellings.
+    """
+
+    HASHED_IMAGES = [
+        {'id': '', 'name': '',
+         'url': '/static/images/news/x/chart-a.bb4fc8b043bc.webp',
+         'alt': 'alt a', 'caption': 'cap a', 'width': None, 'height': None},
+        {'id': '', 'name': '',
+         'url': '/static/images/news/x/chart-b.2b70c5de3b32.webp',
+         'alt': 'alt b', 'caption': 'cap b', 'width': None, 'height': None},
+    ]
+
+    def test_markers_bind_with_whitenoise_hashed_urls(self):
+        """Bare-name markers must bind to hash-infixed URLs."""
+        from pages.views.news_body import build_article_body
+        content = ('Para one.\n\n{{figure:chart-a.webp}}\n\nPara two.\n\n'
+                   '{{figure:chart-b.webp}}\n\nPara three.')
+        blocks, unused = build_article_body(content, self.HASHED_IMAGES)
+        figs = [b for b in blocks if b['type'] == 'figure']
+        self.assertEqual(len(figs), 2, 'hash 中缀导致 marker 未绑定')
+        self.assertEqual(unused, [], 'marker 已写明的图不得落入 unplaced')
+        self.assertEqual(figs[0]['image']['caption'], 'cap a')
+
+    def test_exact_hashed_marker_still_binds(self):
+        """A marker that spells the full hashed name keeps working."""
+        from pages.views.news_body import build_article_body
+        content = 'Para one.\n\n{{figure:chart-a.bb4fc8b043bc.webp}}\n\nPara two.'
+        blocks, unused = build_article_body(content, self.HASHED_IMAGES)
+        figs = [b for b in blocks if b['type'] == 'figure']
+        self.assertEqual(len(figs), 1)
+        # chart-b has no marker: it must still land in ``unused`` so the top
+        # grid renders it instead of losing the photo.
+        self.assertEqual(unused, [1])
+
+    def test_seed_article_binds_under_hashed_urls(self):
+        """End-to-end against the real seed: inject a hash infix into every
+        image URL and every marker must still bind (production URL shape)."""
+        import re as marker_re
+        from pages.views.data_loaders import _load_seed, _normalize_news_article
+        from pages.views.news_body import build_article_body
+        figures_seen = 0
+        for a in _load_seed()['news']:
+            row = _normalize_news_article(a, 'en')
+            content = row.get('content_t') or row['content']
+            markers = marker_re.findall(
+                r'\{\{\s*figure\s*:\s*([A-Za-z0-9_.-]+)\s*\}\}', content)
+            if not markers:
+                continue
+            hashed = []
+            for im in row['images']:
+                stem, dot, ext = im['url'].rpartition('.')
+                hashed.append({**im, 'url': f'{stem}.deadbeefcafe{dot}{ext}'})
+            blocks, unused = build_article_body(content, hashed)
+            figs = [b for b in blocks if b['type'] == 'figure']
+            with self.subTest(slug=a['slug']):
+                self.assertEqual(
+                    len(figs), len(markers),
+                    f'{a["slug"]}: hash 化 URL 下 marker 未全部绑定（生产会退回顶部图集）')
+                self.assertEqual(unused, [])
+            figures_seen += len(figs)
+        self.assertTrue(figures_seen, '没有带 marker 的文章被覆盖 —— 守卫空转')

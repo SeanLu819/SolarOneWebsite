@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## v1.10.33 - 2026-10-19
+
+### fix: news body figures now bind in production (Whitenoise hash)
+
+Production serves static URLs with a Whitenoise hash infix
+(`chart-global-market-size.bb4fc8b043bc.webp`), while `{{figure:…}}` markers in
+article copy spell the bare file name. `news_body._build_lookup` matched only
+the exact base name, so **every marker silently unbound on Vercel since
+v1.10.4**: all figures degraded to the top grid, the body rendered as plain
+paragraphs, and `figcaption` never rendered. Locally (no hash) it always worked,
+which is why tests never caught it.
+
+Fix: the lookup now also accepts the de-hashed base name (`_bare_name`),
+applied to both the seed and DB paths; `_image_key`'s fallback strips the hash
+too. Markers spelling the full hashed name keep working. Guards:
+`NewsFigureHashedUrlBindingTests` (3 tests, incl. an end-to-end seed check that
+injects a hash into every image URL), verified with a mutation probe.
+
+Side effect: the figcaption translations shipped in v1.10.32 now actually
+render on production news pages.
+
 ## v1.10.32 - 2026-10-19
 
 ### i18n: news figure alt + caption now localized
