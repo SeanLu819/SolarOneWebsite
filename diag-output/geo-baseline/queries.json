@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "name": "SolarOne GEO visibility baseline query set",
+    "version": "1.1",
+    "created": "2026-10-23",
+    "owner": "Sean Lu / SolarOne",
+    "site": "https://www.solaronelighting.com",
+    "clusters": {
+      "brand": "Brand-led — does the AI know who we are at all",
+      "category": "Category-led — the buyer question with no brand in it",
+      "spec": "Spec-led — a number a buyer would search for",
+      "comparison": "Comparison — forced head-to-head with an incumbent",
+      "local": "Non-English — the regional clusters (ar / de / fr / ru / es)"
+    },
+    "competitors": [
+      "Musco",
+      "Signify",
+      "Cooper",
+      "Ephesus"
+    ],
+    "notes": [
+      "Query text is what you paste into the AI, verbatim. Do not add the brand name to a non-brand query — that is coaching.",
+      "core=true marks the 11 queries that make up one full round across all 8 platforms (88 cells). Extended queries are optional and only need the top-3 platforms.",
+      "target = the page we would want the AI to cite. Since v1.10.0 (commit a0ba31e) the three purpose-built keyword landing pages were retired: /sports-lighting/ 301s to /stadium-lighting/, /football-stadium-lights/ to /projects/football/, /tennis-court-lighting/ to /projects/tennis/. Targets below are the post-consolidation URLs, all verified 200 on 2026-10-23. Do not restore the retired paths.",
+      "Football cluster gap (2026-10-23): the original set measured stadium intent seven ways and tennis once, but football -- the buyer question behind /projects/football/ -- not at all. C5 is core (full 8 platforms); C6 tests the US \"field\" vs \"stadium\" phrasing and X3 the Musco head-to-head, both extended (top-3 platforms)."
+    ],
+    "updated": "2026-10-23"
+  },
+  "queries": [
+    {
+      "id": "B1",
+      "text": "SolarOne stadium lights",
+      "lang": "en",
+      "intent": "brand",
+      "core": true,
+      "target": "/products/vsp-xxxxw-9m-yp/",
+      "watch": [
+        "SolarOne Solutions",
+        "Solar One",
+        "Fonroche"
+      ],
+      "notes": "Disambiguation probe. If the answer describes off-grid solar street lights, the wrong SolarOne won."
+    },
+    {
+      "id": "B2",
+      "text": "SolarOne LED sports lighting manufacturer",
+      "lang": "en",
+      "intent": "brand",
+      "core": true,
+      "target": "/about/",
+      "watch": [
+        "Musco",
+        "Signify"
+      ],
+      "notes": "The entity-resolution query. Tests whether Beijing Solarone Energy Technology is the brand the AI lands on."
+    },
+    {
+      "id": "B3",
+      "text": "solaronelighting.com",
+      "lang": "en",
+      "intent": "brand",
+      "core": false,
+      "target": "/",
+      "watch": [],
+      "notes": "Bare domain. A retrieval-based AI that has the page indexed can usually describe it."
+    },
+    {
+      "id": "C1",
+      "text": "best LED stadium light manufacturers",
+      "lang": "en",
+      "intent": "category",
+      "core": true,
+      "target": "/stadium-lighting/",
+      "watch": [
+        "Musco",
+        "Signify",
+        "Cooper",
+        "Ephesus"
+      ],
+      "notes": "The highest-value category query. Whoever is listed here gets the inbound enquiry."
+    },
+    {
+      "id": "C2",
+      "text": "LED sports field lighting supplier China",
+      "lang": "en",
+      "intent": "category",
+      "core": true,
+      "target": "/stadium-lighting/",
+      "watch": [
+        "Musco",
+        "Signify"
+      ],
+      "notes": "Origin-qualified category query — our realistic entry point against incumbents."
+    },
+    {
+      "id": "C3",
+      "text": "LED high mast flood light manufacturer",
+      "lang": "en",
+      "intent": "category",
+      "core": true,
+      "target": "/products/rt590fl-s/",
+      "watch": [
+        "Cooper",
+        "Ephesus"
+      ],
+      "notes": "Second product family after stadium lights."
+    },
+    {
+      "id": "C4",
+      "text": "tennis court LED lighting supplier",
+      "lang": "en",
+      "intent": "category",
+      "core": false,
+      "target": "/projects/tennis/",
+      "watch": [
+        "Musco"
+      ],
+      "notes": "Landing-page cluster."
+    },
+    {
+      "id": "C5",
+      "text": "football stadium LED lighting supplier",
+      "lang": "en",
+      "intent": "category",
+      "core": true,
+      "target": "/projects/football/",
+      "watch": [
+        "Musco"
+      ],
+      "notes": "Football cluster, added 2026-10-23: the round-0 set had stadium (7 queries) and tennis (1) but zero football. /projects/football/'s title carries the exact term 'Football Stadium Lighting' -- this measures whether an AI actually cites it."
+    },
+    {
+      "id": "C6",
+      "text": "football field lighting manufacturer China",
+      "lang": "en",
+      "intent": "category",
+      "core": false,
+      "target": "/projects/football/",
+      "watch": [],
+      "notes": "Extended. US-leaning 'field' phrasing vs C5's 'stadium' -- tests the term split on the same target."
+    },
+    {
+      "id": "S1",
+      "text": "stadium lighting 2200 lux AFC Stadium Lighting Guidelines 2018",
+      "lang": "en",
+      "intent": "spec",
+      "core": true,
+      "target": "/projects/yuanshen-sports-centre-stadium/",
+      "watch": [],
+      "notes": "Our flagship measured figure. Grokipedia already carries these numbers WITHOUT the brand — this query tells us whether an AI connects them to us."
+    },
+    {
+      "id": "S2",
+      "text": "LED flood light 130 lm/W IP66 manufacturer",
+      "lang": "en",
+      "intent": "spec",
+      "core": false,
+      "target": "/products/m-series/",
+      "watch": [],
+      "notes": "Spec-led long tail. Low volume, high intent."
+    },
+    {
+      "id": "S3",
+      "text": "LED stadium light 1:1 replacement 1500W metal halide",
+      "lang": "en",
+      "intent": "spec",
+      "core": false,
+      "target": "/projects/multi-sport-arena-hd-broadcast/",
+      "watch": [],
+      "notes": "Retrofit angle — the question a facilities manager actually asks."
+    },
+    {
+      "id": "X1",
+      "text": "Musco vs SolarOne stadium lighting",
+      "lang": "en",
+      "intent": "comparison",
+      "core": true,
+      "target": "/stadium-lighting/",
+      "watch": [
+        "Musco"
+      ],
+      "notes": "Forced comparison. Also the fastest way to see which facts an AI has (wrongly) attributed to us."
+    },
+    {
+      "id": "X2",
+      "text": "Signify versus SolarOne sports lighting",
+      "lang": "en",
+      "intent": "comparison",
+      "core": false,
+      "target": "/stadium-lighting/",
+      "watch": [
+        "Signify"
+      ],
+      "notes": "Second incumbent."
+    },
+    {
+      "id": "X3",
+      "text": "Musco vs SolarOne football field lighting",
+      "lang": "en",
+      "intent": "comparison",
+      "core": false,
+      "target": "/projects/football/",
+      "watch": [
+        "Musco"
+      ],
+      "notes": "Extended. Football head-to-head; X1 already covers the comparison pattern on stadium."
+    },
+    {
+      "id": "L1",
+      "text": "مورد إضاءة ملاعب رياضية LED",
+      "lang": "ar",
+      "intent": "local",
+      "core": true,
+      "target": "/ar/products/vsp-xxxxw-9m-yp/",
+      "watch": [],
+      "notes": "Middle-East cluster. After A1 the FAQ is localised, but the brand still has to be findable in Arabic at all."
+    },
+    {
+      "id": "L2",
+      "text": "LED Stadionbeleuchtung Hersteller",
+      "lang": "de",
+      "intent": "local",
+      "core": true,
+      "target": "/de/stadium-lighting/",
+      "watch": [
+        "Signify"
+      ],
+      "notes": "Europe cluster."
+    },
+    {
+      "id": "L3",
+      "text": "fournisseur éclairage LED stade sportif",
+      "lang": "fr",
+      "intent": "local",
+      "core": true,
+      "target": "/fr/stadium-lighting/",
+      "watch": [
+        "Signify"
+      ],
+      "notes": "Europe cluster, second language."
+    },
+    {
+      "id": "L4",
+      "text": "производитель светодиодного освещения стадионов",
+      "lang": "ru",
+      "intent": "local",
+      "core": false,
+      "target": "/ru/stadium-lighting/",
+      "watch": [],
+      "notes": "Lowest-maintenance language — measured, not invested in."
+    },
+    {
+      "id": "L5",
+      "text": "fabricante de iluminación LED para estadios deportivos",
+      "lang": "es",
+      "intent": "local",
+      "core": false,
+      "target": "/es/stadium-lighting/",
+      "watch": [],
+      "notes": "LatAm cluster, currently deferred."
+    },
+    {
+      "id": "L6",
+      "text": "إضاءة ملاعب تتحمل درجات حرارة عالية وغبار",
+      "lang": "ar",
+      "intent": "local",
+      "core": false,
+      "target": "/ar/stadium-lighting/",
+      "watch": [],
+      "notes": "The high-ambient / dusty angle from the P1-a content work. Tests whether that content reaches an Arabic answer at all."
+    }
+  ]
+}

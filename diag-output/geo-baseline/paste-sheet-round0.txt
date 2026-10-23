@@ -1,0 +1,102 @@
+round 0 粘贴单 — 11 条核心查询（按 CSV 行序，原样粘贴，不要改动）
+
+每条查询下面的小字是判定提示，不要粘进对话框。
+
+────────────────────────────────────────────
+
+[1/11] B1  brand
+SolarOne stadium lights
+
+→ 陷阱：答成"离网太阳能路灯 / SolarOne Solutions（美国）"就是品牌混淆赢了。
+  mentioned 仍记 y（品牌名出现了），spec_ok 记 n，notes 写"混淆：SolarOne Solutions"。
+
+────────────────────────────────────────────
+
+[2/11] B2  brand
+SolarOne LED sports lighting manufacturer
+
+→ 这条最关键：考实体解析。答的是不是"北京信能阳光 / 中国体育照明制造商"。
+  中文品牌名"信能阳光"出现也算 mentioned=y。
+
+────────────────────────────────────────────
+
+[3/11] C1  category
+best LED stadium light manufacturers
+
+→ 全场最高价值的一条。不要加品牌名——加了就是诱导。
+  记 competitors_seen（这列决定声量份额，别空着）。
+
+────────────────────────────────────────────
+
+[4/11] C2  category
+LED sports field lighting supplier China
+
+→ 我们对抗头部厂商的现实入口。
+
+────────────────────────────────────────────
+
+[5/11] C3  category
+LED high mast flood light manufacturer
+
+→ 第二条产品线（RT 系列）。
+
+────────────────────────────────────────────
+
+[6/11] C5  category
+football stadium LED lighting supplier
+
+→ 足球簇主查询（2026-10-23 补：原查询集足球零覆盖）。
+  /projects/football/ 的 title 精确含 "Football Stadium Lighting"——这条测
+  AI 到底引不引它。记 competitors_seen。
+
+────────────────────────────────────────────
+
+[7/11] L1  local (ar)
+مورد إضاءة ملاعب رياضية LED
+
+→ 中东簇。问完看它用阿语答还是英文答——两者都正常，但要记 notes。
+
+────────────────────────────────────────────
+
+[8/11] L2  local (de)
+LED Stadionbeleuchtung Hersteller
+
+→ 欧洲簇。
+
+────────────────────────────────────────────
+
+[9/11] L3  local (fr)
+fournisseur éclairage LED stade sportif
+
+→ 欧洲簇第二语言。
+
+────────────────────────────────────────────
+
+[10/11] S1  spec
+stadium lighting 2200 lux AFC Stadium Lighting Guidelines 2018
+
+→ 旗舰实测数字。AI 很可能报得出 2200 lux 却不提我们——
+  这仍记 mentioned=n，notes 写"有数字无品牌"。
+
+────────────────────────────────────────────
+
+[11/11] X1  comparison
+Musco vs SolarOne stadium lighting
+
+→ 强制对比。也是最快看出 AI 把哪些（错误）事实归到我们名下的方式。
+  检索层实测：所有"top N 厂商"榜单里我们完全缺席，所以 AI 很可能说"无法比较"。
+
+────────────────────────────────────────────
+
+B1 / X1 / S1 这三类跑完第 2 次，取较差值（随机性陷阱）。
+
+────────────────────────────────────────────
+
+附：2 条扩展查询（仅 ChatGPT / Gemini / Perplexity，CSV 已预填 6 行）
+这三个平台问完 11 条后加问，结果填进 CSV 对应行即可，不计入 88 格覆盖率：
+
+  C6  football field lighting manufacturer China
+      → 美式 field 措辞（C5 用 stadium），同一个 target，测措辞分裂。
+
+  X3  Musco vs SolarOne football field lighting
+      → 足球场景的强制对比。
