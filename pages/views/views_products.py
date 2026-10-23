@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.translation import get_language, gettext as _
 from django.templatetags.static import static
-from .common import get_common_context
+from .common import _localised_faq, get_common_context
 from .i18n import (
     _get_products_sidebar,
     _resolve_active_labels,
@@ -542,7 +542,13 @@ def product_detail(request, slug):
         # and injected as one safe blob — never concatenated in the template.
         # v1.10.20: the set is chosen per product category instead of one
         # shared list — see the block comment above PRODUCT_FAQ_BY_CATEGORY.
-        faq = product_faq_for(product)
+        # A1 (2026-10-23): localise through gettext, like the landing pages
+        # already did. Until this was added the visible FAQ section *and* the
+        # FAQPage JSON-LD were English on all 24 products x 5 non-English
+        # languages — 120 pages whose only structured Q&A block was in the
+        # wrong language, which is a large part of why the Arabic/German
+        # queries came back with no SolarOne answer to quote.
+        faq = _localised_faq(product_faq_for(product), lang)
         context['product_faq'] = faq
         context['product_faq_json'] = json.dumps(
             build_product_faq_jsonld(

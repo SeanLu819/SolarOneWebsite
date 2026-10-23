@@ -258,6 +258,29 @@ class BResidualSiteConfigTranslatedTests(SimpleTestCase):
                 cfg[field], _SIDEBAR_I18N,
                 f'{field} 的英文原值不在 _SIDEBAR_I18N 里（_t 会静默回退英文）')
 
+    def test_about_disambiguation_sentence_translated(self):
+        """GEO P1-④：about_text_2 末尾的品牌消歧句必须在五语下都真实翻译。
+
+        消歧句是 GEO 交付物（AI 回答把 SolarOne 与三个同名实体串台），
+        seed 原文 + 五语译文 + DB 三处同源；这里钉住 seed 末尾句与五语
+        渲染特征子串，任一處被回改即红。
+        """
+        from pages.views.i18n import _t
+        cfg = _seed_siteconfig()
+        val = cfg['about_text_2']
+        self.assertTrue(
+            val.endswith('or SolarOne (Fonroche Lighting, France).'),
+            'about_text_2 末尾的消歧句不见了（P1-④ 交付物被回改）')
+        expect = {
+            'fr': 'à ne pas confondre', 'es': 'no debe confundirse',
+            'de': 'nicht zu verwechseln', 'ru': 'не путать',
+            'ar': 'الخلط بينها',
+        }
+        for lang, needle in expect.items():
+            self.assertIn(
+                needle, _t(val, lang),
+                f'消歧句在 {lang} 未翻译（_t 回退了英文或译文被改）')
+
 
 class BResidualRenderTests(TestCase):
     """集成层：/fr/about/ 正文与全站页脚渲染法文，且英文原串不泄漏。"""

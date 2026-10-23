@@ -5188,6 +5188,26 @@ class JsonLdValidityTests(TestCase):
             self.assertEqual(len(orgs), 1, f'{path}: Organization block missing')
             self.assertTrue(orgs[0]['logo'].startswith('http'), path)
 
+    def test_organization_disambiguating_description(self):
+        """GEO P1-③: Organization must disambiguate itself from same-name entities.
+
+        The brand string "SolarOne" is shared with at least three unrelated
+        entities (US SolarOne Solutions, NY Solar One non-profit, Fonroche's
+        2019 US acquisition). Without an explicit disambiguatingDescription,
+        retrieval-grounded AI answers conflate them — the diagnosis measured
+        the confusion on Perplexity/DeepSeek. llm.txt carries the same list
+        ("## Not to be confused with"); keep the two in sync.
+        """
+        for path in self.PAGE_PATHS:
+            for org in self._blocks_of_type(path, 'Organization'):
+                desc = org.get('disambiguatingDescription', '')
+                self.assertTrue(
+                    desc, f'{path}: Organization.disambiguatingDescription missing')
+                self.assertIn('Beijing Solarone Energy Technology', desc, path)
+                self.assertIn('SolarOne Solutions', desc, path)
+                self.assertIn('Solar One', desc, path)
+                self.assertIn('Fonroche', desc, path)
+
     def test_additional_property_field_set_is_stable(self):
         """Follow-up QA finding: `additionalProperty` is now built in Python.
 
@@ -5632,3 +5652,101 @@ class SeedSyncTranslationMergeTests(TestCase):
         self.assertEqual(
             (Path(self._tmp) / 'seed_data.json').read_text(encoding='utf-8'),
             '{ not valid json')
+
+
+class NewsGalleryTranslationExportTests(TestCase):
+    """后台保存 → seed 导出的新闻图五语译块必须 round-trip（2026-10-22）。
+
+    根因：``_news_gallery_dicts`` 导出 NewsImage 时只写
+    image/alt/caption/order/width/height，漏掉 v1.10.32 新增的
+    ``alt_translations``/``caption_translations``。DB 里译文一直在，但生产
+    只读 seed —— 10-19 一次后台保存把两篇新闻 5 图的五语译块从 seed 静默
+    剥掉（DB 无损、seed 单向丢失），tests_news_figures 15 项炸红。导出器
+    补字段后，这里钉住 round-trip：DB 有什么，seed 导出就必须有什么。
+
+    落盘隔离同 ``NewsImageSyncTests``：NewsImage 的 post_save 会把 media/
+    拷进 ``BASE_DIR/static/images/news/<slug>/``，整棵测试树必须落在临时
+    目录，否则往真 static/ 造文件。
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.media = self.root / 'media'
+        self.media.mkdir(exist_ok=True)
+        self.ctx = override_settings(
+            BASE_DIR=str(self.root),
+            MEDIA_ROOT=str(self.media),
+            STATICFILES_DIRS=[str(self.root / 'static')],
+        )
+        self.ctx.enable()
+
+    def tearDown(self):
+        self.ctx.disable()
+        self.tmp.cleanup()
+
+    # -- helpers ---------------------------------------------------------------
+
+    def _article(self, slug='qa-gallery-tr'):
+        from django.utils.timezone import now
+        from pages.models import NewsArticle
+        return NewsArticle.objects.create(
+            slug=slug, title='QA gallery tr', content='QA body',
+            published_at=now())
+
+    def _figure(self, article, fname, alt_tr=None, cap_tr=None):
+        """建一条 NewsImage，media/ 与真源 static/ 各放一份同名素材。"""
+        from pages.models import NewsImage
+        (self.media / 'news').mkdir(parents=True, exist_ok=True)
+        (self.media / 'news' / fname).write_bytes(b'\x89PNG\r\n\x1a\nQA')
+        src = self.root / 'static' / 'images' / 'news' / article.slug
+        src.mkdir(parents=True, exist_ok=True)
+        (src / fname).write_bytes(b'\x89PNG\r\n\x1a\nQA')
+        return NewsImage.objects.create(
+            article=article, image=f'news/{fname}',
+            alt_text='EN alt', caption='EN caption', order=1,
+            alt_translations=alt_tr or {}, caption_translations=cap_tr or {})
+
+    def _export(self, article):
+        from pages import seed_sync
+        # 进程级文件集合缓存：清掉，避免受其它用例执行顺序影响
+        seed_sync._static_cache = None
+        seed_sync._static_cache_base = None
+        return seed_sync._news_gallery_dicts(article)
+
+    # -- guards -----------------------------------------------------------------
+
+    def test_alt_and_caption_translations_round_trip(self):
+        """DB 里的五语译块必须原样出现在 seed 导出条目里。"""
+        article = self._article()
+        self._figure(
+            article, 'gal_tr.jpg',
+            alt_tr={'fr': 'FR-alt', 'es': 'ES-alt', 'de': 'DE-alt',
+                    'ru': 'RU-alt', 'ar': 'AR-alt'},
+            cap_tr={'fr': 'FR-cap', 'es': 'ES-cap', 'de': 'DE-cap',
+                    'ru': 'RU-cap', 'ar': 'AR-cap'})
+
+        entries = self._export(article)
+        self.assertEqual(len(entries), 1, '导出条目数不对')
+        entry = entries[0]
+        self.assertEqual(entry['alt'], 'EN alt')
+        self.assertEqual(
+            entry.get('alt_translations'),
+            {'fr': 'FR-alt', 'es': 'ES-alt', 'de': 'DE-alt',
+             'ru': 'RU-alt', 'ar': 'AR-alt'},
+            'alt_translations 没 round-trip 进 seed 导出 —— 下次后台保存会再剥一次')
+        self.assertEqual(
+            entry.get('caption_translations'),
+            {'fr': 'FR-cap', 'es': 'ES-cap', 'de': 'DE-cap',
+             'ru': 'RU-cap', 'ar': 'AR-cap'},
+            'caption_translations 没 round-trip 进 seed 导出')
+
+    def test_empty_translations_stay_out_of_seed(self):
+        """没有译文的图不得写出空键块（保持 seed 洁癖，同 width/height 惯例）。"""
+        article = self._article()
+        self._figure(article, 'gal_plain.jpg')
+
+        entries = self._export(article)
+        self.assertEqual(len(entries), 1)
+        self.assertNotIn('alt_translations', entries[0])
+        self.assertNotIn('caption_translations', entries[0])

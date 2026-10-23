@@ -74,7 +74,12 @@ Sitemap: {{ canonical_origin }}/sitemap.xml
 
 # AI summary (llm.txt convention): machine-readable overview of this site.
 # Served from public/llm.txt by build.sh.
+#
+# Locale variants (GEO regionalisation): each is a full translation, not a
+# stub, and is advertised here for the same reason the English one is — an AI
+# answering an Arabic query should be able to find the Arabic source text.
 LLM-Txt: {{ canonical_origin }}/llm.txt
+LLM-Txt: {{ canonical_origin }}/llm.ar.txt
 
 # News RSS feed (B4, SEO/GEO): an entry point for AI crawlers & aggregators.
 # Non-standard robots directive (harmless; not every crawler reads it).

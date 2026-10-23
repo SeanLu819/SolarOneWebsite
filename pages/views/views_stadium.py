@@ -34,7 +34,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.utils.translation import get_language
 
-from .common import get_common_context
+from .common import _localised_faq, get_common_context  # noqa: F401  (_localised_faq re-exported)
 from .data_loaders import get_projects, get_products
 from .related_links import PRODUCT_CATEGORY_TO_PROJECT_SPORTS
 
@@ -295,19 +295,9 @@ def stadium_lighting(request):
     return render(request, 'stadium_lighting.html', context)
 
 
-def _localised_faq(faq_list, lang):
-    """Translate a FAQ list (list of {question, answer}) through gettext.
-
-    Reuses the product FAQ's JSON-LD builder rather than writing a second one:
-    ``FAQPage.mainEntity`` is a fixed shape, and two builders for it would be
-    two places to forget ``acceptedAnswer``.
-    """
-    from django.utils.translation import gettext as _
-
-    return [
-        {'question': _(item['question']), 'answer': _(item['answer'])}
-        for item in faq_list
-    ]
+# NOTE (2026-10-23, A1): `_localised_faq` now lives in `.common` so the product
+# pages can share it. It stays re-exported from here because
+# `views_projects` imports it by this path.
 
 
 def build_landing_faq_jsonld(faq_list, entity_id=None):

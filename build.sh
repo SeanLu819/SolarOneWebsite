@@ -226,6 +226,17 @@ if [ -f llm.txt ]; then
     # /llms.txt, so copy the same source to both filenames.
     cp llm.txt public/llms.txt
     echo "  ✓ Copied llm.txt + llms.txt -> public/"
+    # P0-1 (GEO regionalisation, v1.10.36): publish per-locale variants so
+    # an AI answering in that language has native-language source text to
+    # quote. English stays canonical; variants are translations of it.
+    for L in ar; do
+        if [ -f "llm.$L.txt" ]; then
+            cp "llm.$L.txt" "public/llm.$L.txt"
+            echo "  ✓ Copied llm.$L.txt -> public/"
+        else
+            echo "  ✗ WARNING: llm.$L.txt not found - locale variant will 404."
+        fi
+    done
 else
     echo "  ✗ WARNING: repo-root llm.txt not found — /llm.txt and /llms.txt will 404."
 fi

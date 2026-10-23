@@ -182,6 +182,11 @@ def _news_gallery_dicts(article):
     paths — but each entry also carries the editor-written ``alt``/``caption``
     and the ``order``, because the news card renders a figure per image and the
     alt text is the only accessibility copy on the card.
+    The v1.10.32 ``alt_translations``/``caption_translations`` blocks
+    ride along whenever non-empty: production reads the seed, so the
+    DB->seed round-trip is the only copy that matters (2026-10-22
+    regression: dropping them silently stripped five-language alt/caption
+    from two articles on the next admin save).
     """
     entries = []
     try:
@@ -200,6 +205,10 @@ def _news_gallery_dicts(article):
                 entry['width'] = img.width
             if img.height:
                 entry['height'] = img.height
+            if img.alt_translations:
+                entry['alt_translations'] = img.alt_translations
+            if img.caption_translations:
+                entry['caption_translations'] = img.caption_translations
             entries.append(entry)
     except Exception:
         pass

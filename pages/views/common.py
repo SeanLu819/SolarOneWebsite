@@ -37,6 +37,27 @@ def _build_siteconfig_from_seed():
     return config
 
 
+def _localised_faq(faq_list, lang=None):
+    """Translate a FAQ list (list of {question, answer}) through gettext.
+
+    Shared by the sports landing pages and the product pages (A1, 2026-10-23):
+    ``FAQPage.mainEntity`` is a fixed shape, and two localisers would be two
+    places to forget one. ``lang`` is accepted for readability at the call site
+    — gettext resolves against the active language, which is the same value.
+
+    Moved out of ``views_stadium`` so ``views_products`` can import it without
+    importing a landing-page module (and so the product pages stop being the
+    only FAQ surface on the site that stays English in every non-English
+    language).
+    """
+    from django.utils.translation import gettext as _
+
+    return [
+        {'question': _(item['question']), 'answer': _(item['answer'])}
+        for item in (faq_list or [])
+    ]
+
+
 def get_common_context():
     """Get context shared across all pages"""
     config = cache.get('site_config')
