@@ -178,7 +178,10 @@ Copilot 与 ChatGPT / Perplexity 同族、冗余度最高；但 Google 收录本
 ## Part ②. Bing Webmaster Tools（10 分钟）
 
 **为什么值得做**：ChatGPT 检索 / Copilot / Meta AI 三个都继承 Bing 索引。
-我们在 Bing 目前是零存在——这不是内容问题，是压根没在 Bing 那里登记过。
+我们在 Bing 的收录状态是未知数——2026-10-24 尝试从数据中心 IP 直接探测
+`site:solaronelighting.com` 失败（Bing 返回完全无关的结果页，方法不可用），
+而反向信号是 ChatGPT 13 格 cited_own 100% 成功、说明站内内容对检索型 AI
+可达。**WMT 验证后的收录报告才是权威读数**——这正是验证的价值。
 IndexNow 已经推了 354 条 URL，但 WMT 不验证的话，你看不到收录进展，
 也没法主动提交。
 
@@ -195,6 +198,7 @@ Bing 会给三个选项：
 | 方式 | 要不要改代码/部署 | 推荐度 |
 | --- | --- | --- |
 | **CNAME（DNS 记录）** | **不用** | ✅ **选这个** |
+| 从 GSC 导入 | 不用（需已有验证过的 GSC 资产） | ✅ 若 GSC 已验证过同域名，这个更快，一键导入 |
 | XML 文件上传 | 要改代码 + 部署 | 备用 |
 | meta 标签 | 要改代码 + 部署 | 备用 |
 
