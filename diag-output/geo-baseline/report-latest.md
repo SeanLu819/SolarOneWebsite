@@ -9,16 +9,16 @@
 
 | 指标 | 值 |
 | --- | --- |
-| 已测格子 | 17 / 88（覆盖 19%） | 
-| 品牌被提及 | 13 / 17 = **76%** | 
-| 平均排名 | 2.60 | 
+| 已测格子 | 20 / 88（覆盖 23%） | 
+| 品牌被提及 | 16 / 20 = **80%** | 
+| 平均排名 | 2.85 | 
 | 引用本站域名 | 100% | 
-| 引用数据准确 | 100% | 
-| 正面/中立/负面 | 6 / 6 / 0 | 
-| 声量份额（对竞品） | 81% | 
-| **AIVO 综合分** | **80.7 / 100（良好）** | 
+| 引用数据准确 | 93% | 
+| 正面/中立/负面 | 7 / 8 / 0 | 
+| 声量份额（对竞品） | 84% | 
+| **AIVO 综合分** | **81.7 / 100（良好）** | 
 
-AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 72.9 / I 100.0 / C 81.2 / S 75.0。
+AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 75.9 / I 96.4 / C 84.2 / S 73.3。
 
 ## 分平台
 
@@ -27,7 +27,7 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 7
 | ChatGPT | bing | 13 | 92% | 2.44 | 100% | 100% | 100% | 90.1 |
 | Gemini | google | 0 | — | — | — | — | — | — | 
 | Copilot | bing | 0 | — | — | — | — | — | — | 
-| Perplexity | bing | 4 | 25% | 4.00 | — | 100% | 25% | 49.1 |
+| Perplexity | bing | 7 | 57% | 3.75 | — | 67% | 57% | 61.7 |
 | Claude | own | 0 | — | — | — | — | — | — | 
 | Grok | own | 0 | — | — | — | — | — | — | 
 | Meta AI | google | 0 | — | — | — | — | — | — | 
@@ -37,8 +37,8 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 7
 
 | 意图 | 已测 | 提及率 | 平均排名 | 引用本站 | 声量份额 | AIVO |
 | --- | --- | --- | --- | --- | --- | --- |
-| brand | 2 | 100% | — | 100% | 100% | 88.0 |
-| category | 6 | 83% | 2.40 | 100% | 83% | 88.0 |
+| brand | 3 | 100% | 1.00 | 100% | 100% | 88.7 |
+| category | 8 | 88% | 3.14 | 100% | 88% | 87.6 |
 | spec | 1 | 0% | — | — | — | 0.0 |
 | comparison | 2 | 100% | 2.00 | 100% | 100% | 91.3 |
 | local | 6 | 67% | 3.33 | 100% | 67% | 69.7 |
@@ -48,9 +48,9 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 7
 | 查询 | 意图 | 语言 | 已测 | 提及 | 最好排名 | 引用本站 |
 | --- | --- | --- | --- | --- | --- | --- |
 | B1 SolarOne stadium lights | brand | en | 1 | 1/1 | — | 1 |
-| B2 SolarOne LED sports lighting manufactu | brand | en | 1 | 1/1 | — | 1 |
-| C1 best LED stadium light manufacturers | category | en | 1 | 1/1 | 5 | 1 |
-| C2 LED sports field lighting supplier Chi | category | en | 1 | 1/1 | 1 | 1 |
+| B2 SolarOne LED sports lighting manufactu | brand | en | 2 | 2/2 | 1 | 1 |
+| C1 best LED stadium light manufacturers | category | en | 2 | 2/2 | 5 | 1 |
+| C2 LED sports field lighting supplier Chi | category | en | 2 | 2/2 | 1 | 1 |
 | C3 LED high mast flood light manufacturer | category | en | 1 | 1/1 | 2 | 1 |
 | C5 football stadium LED lighting supplier | category | en | 1 | 1/1 | 1 | 1 |
 | C6 football field lighting manufacturer C | category | en | 2 | 1/2 | 3 | 1 |

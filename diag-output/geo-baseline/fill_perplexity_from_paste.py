@@ -66,6 +66,36 @@ FILL = {
         'model_version': MV,
         'notes': '同 L2：国际四强主导；中国厂商补充句无 SolarOne',
     },
+    'B2': {
+        'mentioned': 'y',
+        'rank': '1',
+        'sentiment': 'pos',
+        'cited_own': '',
+        'spec_ok': 'n',
+        'competitors_seen': '',
+        'model_version': MV,
+        'notes': '专段正面介绍+主动消歧美国 SolarOne Solutions；2007/500+项目/50+国家/产品规格/顺义地址全对；但项目清单含站内不存在的 Karlstad Sweden 与 Paris tennis，认证清单含站内不声明的 ISO9001/RoHS/TUV；引用链接未随粘贴提供',
+    },
+    'C1': {
+        'mentioned': 'y',
+        'rank': '5',
+        'sentiment': 'neu',
+        'cited_own': '',
+        'spec_ok': 'na',
+        'competitors_seen': 'Musco;Signify;Ephesus;Schreder',
+        'model_version': MV,
+        'notes': '四强名单后附注段提及：承认产品线但明言"国际场馆验证记录不如四强"；无引用规格数字（主体为别家，spec_ok=na）',
+    },
+    'C2': {
+        'mentioned': 'y',
+        'rank': '5',
+        'sentiment': 'neu',
+        'cited_own': '',
+        'spec_ok': 'y',
+        'competitors_seen': 'CHZ Lighting;AGC Lighting;MECREE;Hishine',
+        'model_version': MV,
+        'notes': '五家表格第 5；措辞"four verified + SolarOne from earlier"置于 verified 名单外；RT410 260W/VSP 4200W/M 1280W+ 与站内一致',
+    },
 }
 
 MEASURED_COLS = ('mentioned', 'rank', 'sentiment', 'cited_own', 'spec_ok',
@@ -80,7 +110,7 @@ def main():
 
     targets = [r for r in rows
                if r['platform'] == 'Perplexity' and r['query_id'] in FILL]
-    assert len(targets) == 4, 'expected 4 Perplexity target rows, got %d' % len(targets)
+    assert len(targets) == 7, 'expected 7 Perplexity target rows, got %d' % len(targets)
     by_id = {r['query_id']: r for r in targets}
 
     changed = 0

@@ -19,6 +19,58 @@
 
 ## 逐格判定
 
+### B2 — SolarOne LED sports lighting manufacturer（core en，提及，排 1，spec_ok=n）
+
+Perplexity 给出整段品牌介绍：Beijing Solarone Energy Technology Co., Ltd.，2007 年成立，
+顺义区，50+ 国家 500+ 项目；产品线表格（RT410 260W/130lm/W/32,500+lm、VSP 至 4200W、
+RT180FS–RT420FS、High Bay 130W、M Series 80–1,280W+）；项目清单；认证与条款。
+**主动消歧**："this is a different company from SolarOne Solutions Inc. of Needham,
+Massachusetts — the US solar street-light maker acquired by France's Fonroche in 2019."
+
+- mentioned=y；rank=1；sentiment=pos（专段正面介绍）
+- spec_ok=**n** —— 与 seed/llm.txt 逐项核对后，**公司级数字和产品规格全对**
+  （2007、500+ projects、50+ countries、RT410/VSP/M 全部规格、5+ warranty、50%+
+  energy saving、顺义区新地址均在 llm.txt/contact.html 有据），**但两处站内不存在**：
+  1. 项目清单里的 "Karlstad, Sweden football court" 和 "Paris tennis court"——
+     seed 22 个项目 + llm.txt 全文零命中（站内法国项目是 Roanne 的 Halle André
+     Vacheresse 体育馆，无巴黎、无网球场、无瑞典项目）
+  2. 认证清单 "ISO9001, CE, RoHS, TUV, and UL testing"——ISO9001/RoHS/TUV 三项
+     站内从未声明（站内认证体系是 UL/DLC/GS/CE/IP66）
+- **这是本轮最重要的 GEO 风险发现**：AI 在品牌查询里会主动"补全"站内从没说过的话。
+  认证是敏感领域——它替我们声明的三项认证一旦被买家追问，我们无法兑现。
+  Perplexity 自己给这句加了 hedge（"are stated to pass"），但它确实说出口了。
+- competitors_seen 留空（答案主体是我们，末句 "compare against Musco or Signify"
+  是追问建议不是名单，与 ChatGPT B1/B2 行先例一致）
+
+### C1 — best LED stadium light manufacturers（core en，提及，排 5）
+
+主名单国际四强：Musco（Control-Link、LA28 官方指定）、Signify/Philips（ArenaVision
+Gen 3.5 FIBA 认证）、Ephesus（LumaSport+AirMesh）、Schréder（OMNIBLAST FIFA
+Quality Pro）。关于我们的表述在四强之后的附注段：
+
+> On SolarOne, which you asked about earlier — it's a Chinese manufacturer with
+> modular floodlight lines and a broadcast-focused VSP series, but the brands
+> above have deeper verified track records at major international venues.
+
+- mentioned=y；rank=5；sentiment=neu（承认产品线存在，但明言"国际场馆验证记录
+  不如四强"——客观相对劣势陈述，与 ChatGPT X1/X3 先例判定标准一致）
+- spec_ok=na（答案主体是别家，未引用我们的规格数字）
+- competitors_seen=`Musco;Signify;Ephesus;Schreder`
+
+### C2 — LED sports field lighting supplier China（core en，提及，排 5）
+
+五家供应商表格：CHZ Lighting（2013）、AGC Lighting（37,350 m² 深圳厂+越南厂）、
+MECREE、Hishine、**SolarOne**。开头措辞值得注意：
+"Here are four verified China-based suppliers with dedicated sports field lighting
+lines, **plus SolarOne from earlier**"——前四家属"verified"，我们被放在 verified
+名单之外（承接前文的定位）。
+
+- mentioned=y；rank=5；sentiment=neu
+- spec_ok=**y**：RT410 (260 W)、VSP broadcast series (4,200 W)、M-series modular
+  up to 1,280 W+、Beijing (Shunyi District) 全部与站内一致
+- competitors_seen=`CHZ Lighting;AGC Lighting;MECREE;Hishine`
+- 注意 AGC Lighting 是 ChatGPT 侧没出现过的新竞品
+
 ### C6 — football field lighting manufacturer China（extended，未提及）
 
 Perplexity 答案给出三家中国厂商表格：CHZ Lighting（FL21A 足球泛光 + 场馆仿真）、
@@ -62,7 +114,10 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
 
 | 查询 | ChatGPT（bing 族） | Perplexity（bing 族） |
 | --- | --- | --- |
-| C6 football field lighting mfr China | 提及，3/3 | **未提及** |
+| B2 品牌查询 | 提及（2007/北京/50+国家全对） | 提及，排 1，但**幻觉认证与项目** |
+| C1 best manufacturers | 提及，5/7 | 提及，排 5，"记录不如四强" |
+| C2 China suppliers | 提及，**1/3** | 提及，5/5，verified 名单外 |
+| C6 football field mfr China | 提及，3/3 | **未提及** |
 | L1 阿语 | 提及（正文乱码缺失） | 提及，4/4，规格全对 |
 | L2 德语 | 提及，3/3 | **未提及** |
 | L3 法语 | 提及，3/3 | **未提及** |
@@ -70,6 +125,7 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
 同族索引（都挂 bing）差异却极大 → Perplexity Computer 的检索源与 Bing 网页索引
 重叠度低。Perplexity 答案的厂商素材几乎全部带「项目案例」（德国体育场、葡萄牙、
 马来西亚、玻利维亚）——外域电商/目录页的案例内容在它的检索里权重远高于独立站。
+同一查询在 ChatGPT 排第 1（C2）在 Perplexity 排第 5，也是这个机制的直接体现。
 
 **行动含义（round 1 后再动手，现在记着）**：
 
@@ -79,13 +135,17 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
    CHZ/MECREE/Hishine 正是靠在那些渠道的案例内容占据它的答案
 3. 我们的 /projects/ 实测照度数据是比"供应商自报案例"更硬的素材，问题是
    Perplexity 的检索还抓不到——这又回到收录问题，不是内容问题
+4. **幻觉风险的处置**（B2 的 ISO9001/RoHS/TUV/Karlstad/Paris）：AI 替我们说的话
+   我们无法控制，但可以在站内提供**更结构化的否认/澄清素材**（如 llm.txt 里已有的
+   品牌消歧段），并监控第三方目录站——幻觉往往混合了站外陈旧内容。认证领域
+   宁可 AI 少说，不可多说。
 
-## Perplexity 平台成绩（4 格）
+## Perplexity 平台成绩（7 格）
 
 | 指标 | 值 |
 | --- | --- |
-| 提及率 | 1/4 = 25% |
-| 平均排名 | 4.00 |
-| 数据准确 | 100%（1 格可判定） |
-| 声量份额 | 25% |
-| AIVO | 49.1（较差） |
+| 提及率 | 4/7 = 57% |
+| 平均排名 | 3.75 |
+| 数据准确 | 67%（3 格可判定：L1/C2 对，B2 幻觉） |
+| 声量份额 | 57% |
+| AIVO | 61.7（一般） |

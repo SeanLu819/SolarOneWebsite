@@ -37,9 +37,9 @@ round,platform,query_id,query_text,lang,intent,mentioned,rank,sentiment,cited_ow
 0,Copilot,S1,stadium lighting 2200 lux AFC Stadium Lighting Guidelines 2018,en,spec,,,,,,,,
 0,Copilot,X1,Musco vs SolarOne stadium lighting,en,comparison,,,,,,,,
 0,Perplexity,B1,SolarOne stadium lights,en,brand,,,,,,,,
-0,Perplexity,B2,SolarOne LED sports lighting manufacturer,en,brand,,,,,,,,
-0,Perplexity,C1,best LED stadium light manufacturers,en,category,,,,,,,,
-0,Perplexity,C2,LED sports field lighting supplier China,en,category,,,,,,,,
+0,Perplexity,B2,SolarOne LED sports lighting manufacturer,en,brand,y,1,pos,,n,,"Perplexity Computer (agent task), model not shown",专段正面介绍+主动消歧美国 SolarOne Solutions；2007/500+项目/50+国家/产品规格/顺义地址全对；但项目清单含站内不存在的 Karlstad Sweden 与 Paris tennis，认证清单含站内不声明的 ISO9001/RoHS/TUV；引用链接未随粘贴提供
+0,Perplexity,C1,best LED stadium light manufacturers,en,category,y,5,neu,,na,Musco;Signify;Ephesus;Schreder,"Perplexity Computer (agent task), model not shown","四强名单后附注段提及：承认产品线但明言""国际场馆验证记录不如四强""；无引用规格数字（主体为别家，spec_ok=na）"
+0,Perplexity,C2,LED sports field lighting supplier China,en,category,y,5,neu,,y,CHZ Lighting;AGC Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown","五家表格第 5；措辞""four verified + SolarOne from earlier""置于 verified 名单外；RT410 260W/VSP 4200W/M 1280W+ 与站内一致"
 0,Perplexity,C3,LED high mast flood light manufacturer,en,category,,,,,,,,
 0,Perplexity,C5,football stadium LED lighting supplier,en,category,,,,,,,,
 0,Perplexity,C6,football field lighting manufacturer China,en,category,n,,,,,CHZ Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown",Computer agent 任务（非逐条问答）；三家中国厂商均带项目案例，未含 SolarOne
