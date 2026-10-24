@@ -1,6 +1,6 @@
 # SolarOne GEO 可见度基线报告
 
-- 生成时间：2026-10-23
+- 生成时间：2026-10-24
 - 数据轮次：0
 - 查询集：21 条（核心 11 条 / 扩展 10 条）
 - 单轮满覆盖 = 8 平台 x 11 核心查询 = 88 格
@@ -9,16 +9,16 @@
 
 | 指标 | 值 |
 | --- | --- |
-| 已测格子 | 13 / 88（覆盖 15%） | 
-| 品牌被提及 | 12 / 13 = **92%** | 
-| 平均排名 | 2.44 | 
+| 已测格子 | 17 / 88（覆盖 19%） | 
+| 品牌被提及 | 13 / 17 = **76%** | 
+| 平均排名 | 2.60 | 
 | 引用本站域名 | 100% | 
 | 引用数据准确 | 100% | 
-| 正面/中立/负面 | 6 / 5 / 0 | 
-| 声量份额（对竞品） | 100% | 
-| **AIVO 综合分** | **90.1 / 100（优秀）** | 
+| 正面/中立/负面 | 6 / 6 / 0 | 
+| 声量份额（对竞品） | 81% | 
+| **AIVO 综合分** | **80.7 / 100（良好）** | 
 
-AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 83.9 / I 100.0 / C 100.0 / S 77.3。
+AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 72.9 / I 100.0 / C 81.2 / S 75.0。
 
 ## 分平台
 
@@ -27,7 +27,7 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 8
 | ChatGPT | bing | 13 | 92% | 2.44 | 100% | 100% | 100% | 90.1 |
 | Gemini | google | 0 | — | — | — | — | — | — | 
 | Copilot | bing | 0 | — | — | — | — | — | — | 
-| Perplexity | bing | 0 | — | — | — | — | — | — | 
+| Perplexity | bing | 4 | 25% | 4.00 | — | 100% | 25% | 49.1 |
 | Claude | own | 0 | — | — | — | — | — | — | 
 | Grok | own | 0 | — | — | — | — | — | — | 
 | Meta AI | google | 0 | — | — | — | — | — | — | 
@@ -38,10 +38,10 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 8
 | 意图 | 已测 | 提及率 | 平均排名 | 引用本站 | 声量份额 | AIVO |
 | --- | --- | --- | --- | --- | --- | --- |
 | brand | 2 | 100% | — | 100% | 100% | 88.0 |
-| category | 5 | 100% | 2.40 | 100% | 100% | 96.8 |
+| category | 6 | 83% | 2.40 | 100% | 83% | 88.0 |
 | spec | 1 | 0% | — | — | — | 0.0 |
 | comparison | 2 | 100% | 2.00 | 100% | 100% | 91.3 |
-| local | 3 | 100% | 3.00 | 100% | 100% | 86.9 |
+| local | 6 | 67% | 3.33 | 100% | 67% | 69.7 |
 
 ## 分查询
 
@@ -53,10 +53,10 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 8
 | C2 LED sports field lighting supplier Chi | category | en | 1 | 1/1 | 1 | 1 |
 | C3 LED high mast flood light manufacturer | category | en | 1 | 1/1 | 2 | 1 |
 | C5 football stadium LED lighting supplier | category | en | 1 | 1/1 | 1 | 1 |
-| C6 football field lighting manufacturer C | category | en | 1 | 1/1 | 3 | 1 |
-| L1 مورد إضاءة ملاعب رياضية LED | local | ar | 1 | 1/1 | — | 1 |
-| L2 LED Stadionbeleuchtung Hersteller | local | de | 1 | 1/1 | 3 | 1 |
-| L3 fournisseur éclairage LED stade sporti | local | fr | 1 | 1/1 | 3 | 1 |
+| C6 football field lighting manufacturer C | category | en | 2 | 1/2 | 3 | 1 |
+| L1 مورد إضاءة ملاعب رياضية LED | local | ar | 2 | 2/2 | 4 | 1 |
+| L2 LED Stadionbeleuchtung Hersteller | local | de | 2 | 1/2 | 3 | 1 |
+| L3 fournisseur éclairage LED stade sporti | local | fr | 2 | 1/2 | 3 | 1 |
 | S1 stadium lighting 2200 lux AFC Stadium  | spec | en | 1 | 0/1 | — | 0 |
 | X1 Musco vs SolarOne stadium lighting | comparison | en | 1 | 1/1 | 2 | 1 |
 | X3 Musco vs SolarOne football field light | comparison | en | 1 | 1/1 | 2 | 1 |

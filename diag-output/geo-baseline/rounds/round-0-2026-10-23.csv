@@ -42,10 +42,10 @@ round,platform,query_id,query_text,lang,intent,mentioned,rank,sentiment,cited_ow
 0,Perplexity,C2,LED sports field lighting supplier China,en,category,,,,,,,,
 0,Perplexity,C3,LED high mast flood light manufacturer,en,category,,,,,,,,
 0,Perplexity,C5,football stadium LED lighting supplier,en,category,,,,,,,,
-0,Perplexity,C6,football field lighting manufacturer China,en,category,,,,,,,,
-0,Perplexity,L1,مورد إضاءة ملاعب رياضية LED,ar,local,,,,,,,,
-0,Perplexity,L2,LED Stadionbeleuchtung Hersteller,de,local,,,,,,,,
-0,Perplexity,L3,fournisseur éclairage LED stade sportif,fr,local,,,,,,,,
+0,Perplexity,C6,football field lighting manufacturer China,en,category,n,,,,,CHZ Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown",Computer agent 任务（非逐条问答）；三家中国厂商均带项目案例，未含 SolarOne
+0,Perplexity,L1,مورد إضاءة ملاعب رياضية LED,ar,local,y,4,neu,,y,CHZ Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown",规格与站内全一致（RT410 130lm/W）；排第 4/4；引用链接未随粘贴提供，cited_own 待补
+0,Perplexity,L2,LED Stadionbeleuchtung Hersteller,de,local,n,,,,,Musco;Signify;Ephesus;Schreder;CHZ Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown","国际四强主导；""中国厂商""补充句仅提 CHZ/MECREE/Hishine"
+0,Perplexity,L3,fournisseur éclairage LED stade sportif,fr,local,n,,,,,Musco;Signify;Ephesus;Schreder;CHZ Lighting;MECREE;Hishine,"Perplexity Computer (agent task), model not shown",同 L2：国际四强主导；中国厂商补充句无 SolarOne
 0,Perplexity,S1,stadium lighting 2200 lux AFC Stadium Lighting Guidelines 2018,en,spec,,,,,,,,
 0,Perplexity,X1,Musco vs SolarOne stadium lighting,en,comparison,,,,,,,,
 0,Perplexity,X3,Musco vs SolarOne football field lighting,en,comparison,,,,,,,,
