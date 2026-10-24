@@ -37,7 +37,10 @@ PLATFORMS = [
     ('Perplexity', 'bing'),
     ('Claude',     'own'),
     ('Grok',       'own'),
-    ('Meta AI',    'google'),
+    # Meta AI's web retrieval is served by Bing (Meta-Bing partnership),
+    # not Google — corrected 2026-10-24. Gemini is the only google-family
+    # platform in the set.
+    ('Meta AI',    'bing'),
     ('DeepSeek',   'own'),
 ]
 
