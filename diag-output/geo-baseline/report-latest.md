@@ -9,16 +9,16 @@
 
 | 指标 | 值 |
 | --- | --- |
-| 已测格子 | 34 / 88（覆盖 39%） | 
-| 品牌被提及 | 22 / 34 = **65%** | 
-| 平均排名 | 2.56 | 
-| 引用本站域名 | 93% | 
-| 引用数据准确 | 79% | 
-| 正面/中立/负面 | 9 / 12 / 0 | 
-| 声量份额（对竞品） | 69% | 
-| **AIVO 综合分** | **70.6 / 100（一般）** | 
+| 已测格子 | 44 / 88（覆盖 50%） | 
+| 品牌被提及 | 25 / 44 = **57%** | 
+| 平均排名 | 2.53 | 
+| 引用本站域名 | 76% | 
+| 引用数据准确 | 68% | 
+| 正面/中立/负面 | 10 / 12 / 2 | 
+| 声量份额（对竞品） | 61% | 
+| **AIVO 综合分** | **62.5 / 100（一般）** | 
 
-AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 63.7 / I 85.9 / C 68.8 / S 71.4。
+AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 57.1 / I 72.3 / C 61.0 / S 66.7。
 
 ## 分平台
 
@@ -31,34 +31,34 @@ AIVO = 可见度 40% + 基建 20% + 竞争优势 25% + 舆情 15%。本批：V 6
 | Claude | own | 0 | — | — | — | — | — | — | 
 | Grok | own | 11 | 36% | 1.50 | 50% | 67% | 40% | 46.9 |
 | Meta AI | google | 0 | — | — | — | — | — | — | 
-| DeepSeek | own | 0 | — | — | — | — | — | — | 
+| DeepSeek | own | 10 | 30% | 2.00 | 0% | 0% | 33% | 25.3 |
 
 ## 分查询意图
 
 | 意图 | 已测 | 提及率 | 平均排名 | 引用本站 | 声量份额 | AIVO |
 | --- | --- | --- | --- | --- | --- | --- |
-| brand | 6 | 100% | 1.00 | 75% | 100% | 85.2 |
-| category | 14 | 64% | 3.14 | 100% | 64% | 70.8 |
-| spec | 2 | 0% | — | — | — | 0.0 |
-| comparison | 3 | 100% | 2.00 | 100% | 100% | 91.3 |
-| local | 9 | 44% | 3.33 | 100% | 44% | 58.0 |
+| brand | 8 | 100% | 1.00 | 50% | 100% | 78.4 |
+| category | 17 | 53% | 3.14 | 100% | 53% | 64.8 |
+| spec | 3 | 0% | — | — | — | 0.0 |
+| comparison | 4 | 100% | 2.00 | 67% | 100% | 83.6 |
+| local | 12 | 33% | 3.33 | 100% | 33% | 52.1 |
 
 ## 分查询
 
 | 查询 | 意图 | 语言 | 已测 | 提及 | 最好排名 | 引用本站 |
 | --- | --- | --- | --- | --- | --- | --- |
-| B1 SolarOne stadium lights | brand | en | 3 | 3/3 | 1 | 1 |
-| B2 SolarOne LED sports lighting manufactu | brand | en | 3 | 3/3 | 1 | 2 |
-| C1 best LED stadium light manufacturers | category | en | 3 | 2/3 | 5 | 1 |
+| B1 SolarOne stadium lights | brand | en | 4 | 4/4 | 1 | 1 |
+| B2 SolarOne LED sports lighting manufactu | brand | en | 4 | 4/4 | 1 | 2 |
+| C1 best LED stadium light manufacturers | category | en | 4 | 2/4 | 5 | 1 |
 | C2 LED sports field lighting supplier Chi | category | en | 3 | 3/3 | 1 | 1 |
-| C3 LED high mast flood light manufacturer | category | en | 3 | 2/3 | 2 | 1 |
-| C5 football stadium LED lighting supplier | category | en | 3 | 1/3 | 1 | 1 |
+| C3 LED high mast flood light manufacturer | category | en | 4 | 2/4 | 2 | 1 |
+| C5 football stadium LED lighting supplier | category | en | 4 | 1/4 | 1 | 1 |
 | C6 football field lighting manufacturer C | category | en | 2 | 1/2 | 3 | 1 |
-| L1 مورد إضاءة ملاعب رياضية LED | local | ar | 3 | 2/3 | 4 | 1 |
-| L2 LED Stadionbeleuchtung Hersteller | local | de | 3 | 1/3 | 3 | 1 |
-| L3 fournisseur éclairage LED stade sporti | local | fr | 3 | 1/3 | 3 | 1 |
-| S1 stadium lighting 2200 lux AFC Stadium  | spec | en | 2 | 0/2 | — | 0 |
-| X1 Musco vs SolarOne stadium lighting | comparison | en | 2 | 2/2 | 2 | 1 |
+| L1 مورد إضاءة ملاعب رياضية LED | local | ar | 4 | 2/4 | 4 | 1 |
+| L2 LED Stadionbeleuchtung Hersteller | local | de | 4 | 1/4 | 3 | 1 |
+| L3 fournisseur éclairage LED stade sporti | local | fr | 4 | 1/4 | 3 | 1 |
+| S1 stadium lighting 2200 lux AFC Stadium  | spec | en | 3 | 0/3 | — | 0 |
+| X1 Musco vs SolarOne stadium lighting | comparison | en | 3 | 3/3 | 2 | 1 |
 | X3 Musco vs SolarOne football field light | comparison | en | 1 | 1/1 | 2 | 1 |
 
 ## 读数提醒
