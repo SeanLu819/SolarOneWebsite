@@ -2,8 +2,8 @@
 
 数据来源：用户粘贴的 Perplexity Computer 任务线程全文
 （https://www.perplexity.ai/computer/tasks/d5a72574-47c4-48bd-9a6b-fd78b5e14f77?view=thread）。
-免费额度用尽，线程共产出 8 格（B1/B2/C1/C2/C6/L1/L2/L3，其中 B1 于 2026-10-24 补帖）；
-X1/X3 用户确认无法进行（永久留空，按协议从分母剔除），C3/C5 当时未跑。
+免费额度用尽，线程共产出 10 格（B1/B2/C1/C2/C3/C5/C6/L1/L2/L3，其中 B1/C3/C5 于
+2026-10-24 补帖入库）；X1/X3 用户确认无法进行（永久留空，按协议从分母剔除），仅剩 S1 待补。
 
 ## ⚠️ 方法偏差（必读）
 
@@ -13,7 +13,7 @@ X1/X3 用户确认无法进行（永久留空，按协议从分母剔除），C3
 
 1. 检索策略不同（多步深度搜索 vs 单轮检索），跨平台可比性有折扣
 2. 它会引用自己前几步的发现（阿语轮开头即"استكمالًا لبحثنا السابق"）
-3. 免费额度限制导致只跑了 8/13 格，不是随机抽样
+3. 免费额度限制导致只跑了 10/13 格，不是随机抽样
 
 结论：本文件数据代表「Perplexity 检索层对我们的可见度」，可作 round 1 对比基准，
 但与 ChatGPT 格的横向对比只能说明趋势，不能当精确差值。
@@ -112,6 +112,46 @@ lines, **plus SolarOne from earlier**"——前四家属"verified"，我们被�
 - competitors_seen=`CHZ Lighting;AGC Lighting;MECREE;Hishine`
 - 注意 AGC Lighting 是 ChatGPT 侧没出现过的新竞品
 
+### C3 — LED high mast flood light manufacturer（core en，提及但被踢出名单，spec_ok=n）
+
+三家中国高杆厂商表格：AGC Lighting（HiMast 300/600/900 W，IP66/IK08，独立旋转模组）、
+MECREE（100–5,000 W，160 lm/W，IP66）、Hishine（Hi-Robot 模组 + Hi-Titan 300–1,500 W）。
+关于我们的只有一句剔除说明：
+
+> CHZ Lighting and SolarOne from the earlier sports-lighting shortlist
+> don't show a dedicated high-mast product line on their sites, so I left
+> them off this list.
+
+- mentioned=y（被点名）；rank 留空（不在名单内）；sentiment=neu（客观陈述语气）
+- spec_ok=**n** —— **这句是假否定，且是本轮最有业务杀伤力的发现**。
+  `grep -i 'mast' seed_data.json` 证明站内明明有整条高杆线：
+  - FL6M 480 W："built for **high-mast** and large-area sites such as
+    airports and interchange lighting"（SEO 描述："for high-mast yards,
+    aprons and airports"）
+  - FL16M 1280 W："built for the most demanding **high-mast** and stadium
+    applications"（SEO 描述："for the largest high-mast sites"）
+  - FL12M 1000 W：德语描述 "an hohen **Masten**"（高杆）
+  - 外加新闻案例 `low-cct-high-cri-high-mast-led-retrofit`：FL6M 高杆族替换
+    天津滨海国际机场机坪旧金卤灯
+  AI 对买家说"这家没有高杆产品线"——而 FL6M 480W 正好落在它列的竞品功率带
+  （300–1,500W）里，连应用场景（机场机坪）都和 MECREE 列出的完全重合。
+  **这是检索失败的直接证据**：不是内容缺失，是 Perplexity 检索没抓到站内
+  已有内容（与 `site:solaronelighting.com` 零结果同根）。与 B1/B2 的幻觉
+  互为镜像——那边是"没检索到就编"，这边是"没检索到就说没有"。
+- competitors_seen=`AGC Lighting;MECREE;Hishine;CHZ Lighting`（CHZ 同在剔除句里被点名）
+
+### C5 — football stadium LED lighting supplier（core en，未提及）
+
+三家 "verified" 中国供应商：CHZ Lighting（FL21A 足球泛光 + FL32/FL38 模组泛光，
+附照明仿真支持）、MECREE（AFL 1000/1200W + R580 1500W；自报德国足球场 48×AFL，
+105×68 m 场地 / 25 m 安装；玻利维亚 80×R580）、Hishine（Hi-Shoot；自报葡萄牙
+480W、马来西亚 320W 足球场；Hi-Titan 至 1500W）。**无 SolarOne。**
+
+- mentioned=n；competitors_seen=`CHZ Lighting;MECREE;Hishine`
+- 同查询 ChatGPT 排 **1/5**（五家短名单第 1）——同族索引差异再添一例
+- 开头 "Continuing our China sourcing" 说明它沿用自己的前序短名单，
+  我们从头到尾没进过那个名单
+
 ### C6 — football field lighting manufacturer China（extended，未提及）
 
 Perplexity 答案给出三家中国厂商表格：CHZ Lighting（FL21A 足球泛光 + 场馆仿真）、
@@ -159,6 +199,8 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
 | B2 品牌查询 | 提及（2007/北京/50+国家全对） | 提及，排 1，但**幻觉认证与项目** |
 | C1 best manufacturers | 提及，5/7 | 提及，排 5，"记录不如四强" |
 | C2 China suppliers | 提及，**1/3** | 提及，5/5，verified 名单外 |
+| C3 high mast | 提及，2/n（HISHINE 为主，我们次选） | 提及但被剔除，理由是**假否定**（站内确有 FL-M 高杆线） |
+| C5 football supplier | 提及，**1/5** | **未提及** |
 | C6 football field mfr China | 提及，3/3 | **未提及** |
 | L1 阿语 | 提及（正文乱码缺失） | 提及，4/4，规格全对 |
 | L2 德语 | 提及，3/3 | **未提及** |
@@ -185,13 +227,18 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
    SolarOne Solutions，没有把「SolarOne Lighting = Beijing Solarone Energy
    Technology = 同一法人」说死。round 1 前可在 llm.txt 增加显式同一实体声明，
    观察 AI 是否收敛为单实体画像。
+6. **C3 假否定的业务代价**（本轮新增）：买家搜 "LED high mast flood light
+   manufacturer"，AI 主动告诉他们 SolarOne 没有高杆产品线——而 FL6M/FL16M
+   正在售。收录问题的代价从"不被提及"升级为"被错误描述"。round 1 复测此
+   查询是验收索引修复的第一观测点；短期可在 llm.txt 产品清单里把 FL-M 系列
+   的高杆定位写得更显式（现在散在各产品描述里）。
 
-## Perplexity 平台成绩（8 格）
+## Perplexity 平台成绩（10 格）
 
 | 指标 | 值 |
 | --- | --- |
-| 提及率 | 5/8 = 62% |
+| 提及率 | 6/10 = 60% |
 | 平均排名 | 3.20 |
-| 数据准确 | 50%（4 格可判定：C2/L1 对，B1/B2 幻觉） |
-| 声量份额 | 62% |
-| AIVO | 63.0（一般） |
+| 数据准确 | 40%（5 格可判定：C2/L1 对，B1/B2 幻觉 + C3 假否定） |
+| 声量份额 | 60% |
+| AIVO | 57.6（较差） |
