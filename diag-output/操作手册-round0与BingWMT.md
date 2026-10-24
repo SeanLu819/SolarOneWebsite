@@ -70,7 +70,8 @@ cd diag-output/geo-baseline && cat paste-sheet-round0.txt
 `platform` / `query_id` / `query_text` / `lang` / `intent`，你只填后面 7 列。
 **ChatGPT 平台 13 格已由分享链接提取填入**（见 `chatgpt-share-evidence-2026-10-23.md`）；
 **Perplexity 10 格已完成**（B1/B2/C1/C2/C3/C5/C6/L1/L2/L3，Computer agent 任务模式，
-B1/C3/C5 于 2026-10-24 补帖；X1/X3 用户确认无法进行，仅剩 S1 待补，该平台定格 10/13，见
+B1/C3/C5 于 2026-10-24 补帖；X1/X3 用户确认无法进行、S1 原对话已删除且额度耗尽
+无法重跑（2026-10-24 确认），三格永久留空，该平台定格 10/13 收官，见
 `perplexity-computer-evidence-2026-10-24.md`）；**Grok 11 格已由分享链接提取填入**
 （model=grok-3，见 `grok-share-evidence-2026-10-24.md`）；**DeepSeek 10 格已由分享链接
 提取填入**（B1/B2/C1/C3/C5/L1/L2/L3/S1/X1，C1/L2 用户各跑两轮结果一致；model_version
