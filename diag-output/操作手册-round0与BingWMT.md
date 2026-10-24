@@ -136,26 +136,35 @@ python geo_round.py report
 
 比预估的 2–3 小时略快，因为粘贴单已经把判定提示写在旁边了。
 
-### 1.7 平台缺口处理（2026-10-23 实测：Gemini 地区封锁 + Copilot 打不开）
+### 1.7 平台缺口处理（10-23 实测缺口 + 10-24 补测顺序决定）
 
-**不用改任何文件**：CSV 里 Gemini / Copilot 的行全部留空，`report` 会自动把未测行
+**不用改任何文件**：CSV 里未测平台的行全部留空，`report` 会自动把未测行
 从分母剔除（`mentioned` 留空 = 不适用，不进任何比率，也不报错）。
 2026-10-23 已用模拟数据验证：6 平台实测 70 格 / 88 = coverage 80%，
-报告总体指标与分平台表全部正常，Gemini / Copilot 显示「0 已测」。
+报告总体指标与分平台表全部正常，未测平台显示「0 已测」。
 
-**缺口的影响比想象小**：剩下的 6 个平台仍覆盖全部三种索引族——
-Bing 族 2 个（ChatGPT、Perplexity）、Google 族 1 个（Meta AI）、
-自有族 3 个（Claude、Grok、DeepSeek）。Copilot 与 ChatGPT / Perplexity
-同族、冗余度最高；Gemini 虽是唯一 Google 族，Meta AI 仍能部分代表，
-且 Google 收录本来就要等 GSC，round 0 盲测可接受。
+**缺口的影响比想象小，但有一个结构性缺口**：已测 4 平台（ChatGPT /
+Perplexity / Grok / DeepSeek）覆盖 Bing 族 2 个、自有族 2 个，**Google 族
+为 0**。（2026-10-24 更正：本节原文把 Meta AI 记作 Google 族有误——Meta AI
+的网页检索由 Bing 提供，实为 Bing 族；Gemini 才是唯一 Google 族样本。）
+Copilot 与 ChatGPT / Perplexity 同族、冗余度最高；但 Google 收录本来就要
+等 GSC，round 0 缺 Google 族可接受，补测成本也只是一次代理。
 
 **实际工作量**：70 格（6 平台 × 11 核心 = 66，加 ChatGPT / Perplexity
 各多 C6 / X3 = 4），约 2–2.5 小时。
 
-**以后补测**：Gemini 换网络环境（代理）即可访问，Copilot 需登录微软账号。
+**补测顺序（2026-10-24 定，按障碍从低到高）**：
+
+1. **Copilot**：10-23"打不开"的真因是**需登录微软账号**（不是地区封锁），
+   国内直连无需代理。与 Part ② Bing WMT 同一个账号，一举两得。bing 族
+   第三样本。
+2. **Gemini**：地区封锁，换代理即可访问；`model_version` 列注明地区和
+   版本（如 `flash-us`），保证 round 1 可复现。Google 族唯一样本。
+3. **Meta AI**：10-24 确认国内不可用（Meta 服务被墙），需代理 + Meta
+   账号，摩擦最高排最后；搞不定就记「本轮不可达」，不硬刚。
+4. **Claude**：无法登录，记「平台不可达」。
+
 补测时直接填同一份 CSV 的对应行——已测行不用动，报告按新覆盖重算。
-若走代理访问 Gemini，在 `model_version` 列注明地区和版本（如 `flash-us`），
-保证 round 1 可复现。
 
 ---
 
