@@ -10,7 +10,7 @@ import os
 import re
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import Client, TestCase
 
 REPO_ROOT = settings.BASE_DIR
 PROJECT_COLLECTION_PAGES = (
@@ -480,3 +480,129 @@ class LlmTxtFigureProvenanceTests(TestCase):
         for name in variants:
             self.assertIn('LLM-Txt: {{ canonical_origin }}/%s' % name, robots,
                           'robots.txt does not advertise %s' % name)
+
+
+class LlmTxtEntityIdentityAndHighMastTests(TestCase):
+    """Round-0 GEO failures, pinned so the copy cannot drift back.
+
+    The 2026-10-23/24 baseline produced two opposite failures:
+
+    * Perplexity (B1) and Grok (B2) split "SolarOne Lighting" (the brand)
+      from "Beijing Solarone Energy Technology Co., Ltd." (the registered
+      name) into two "related companies". Every fact was right; the identity
+      was halved. The old copy only said the brand "is the ... brand of" the
+      company, which an assistant reads as an affiliation, not an identity.
+    * Perplexity (C3) told a buyer the site shows "no dedicated high-mast
+      product line" and dropped SolarOne from the shortlist. FL6M/FL9M/
+      FL12M/FL16M are sold as exactly that, but the Products block never
+      used the words "high-mast" at all.
+
+    Wattages are derived from `seed_data.json`, never hardcoded: seed is the
+    production source of truth and `llm.txt` is the copy, so a spec change
+    has to fail here instead of shipping a summary that contradicts the
+    published specs. (Iron rule: no expected value invented inside a guard.)
+    """
+
+    USCC = '91110116663729775X'
+    HIGH_MAST_SLUGS = ('fl6m', 'fl9m', 'fl12m', 'fl16m')
+    # "كيان واحد" — spelled in escapes: typing Arabic literals inline is how
+    # the first draft of llm.ar.txt picked up stray characters.
+    AR_ONE_ENTITY = '\u0643\u064a\u0627\u0646 \u0648\u0627\u062d\u062f'
+
+    @staticmethod
+    def _section(text, heading):
+        """Body of the one `##` section whose heading begins with `heading`."""
+        match = re.search(r'^## %s.*?$(.*?)(?=^## |\Z)' % re.escape(heading),
+                          text, re.M | re.S)
+        assert match is not None, 'section %r not found' % heading
+        return match.group(1)
+
+    @staticmethod
+    def _section_containing(text, needle):
+        """The one `##` section that mentions `needle`.
+
+        Used for the Arabic file, whose heading is Arabic: a Latin needle
+        inside the section locates it without retyping the heading.
+        """
+        lines = text.split('\n')
+        starts = [index for index, line in enumerate(lines)
+                  if line.startswith('## ')]
+        hits = []
+        for position, start in enumerate(starts):
+            end = starts[position + 1] if position + 1 < len(starts) else len(lines)
+            body = '\n'.join(lines[start:end])
+            if needle in body:
+                hits.append(body)
+        assert len(hits) == 1, (
+            'expected exactly one section mentioning %r, found %d'
+            % (needle, len(hits)))
+        return hits[0]
+
+    @staticmethod
+    def _seed_products():
+        with open(os.path.join(REPO_ROOT, 'seed_data.json'),
+                  encoding='utf-8') as handle:
+            return json.load(handle).get('products') or []
+
+    def test_who_section_declares_one_entity(self):
+        who = self._section(_read('llm.txt'), 'Who')
+        self.assertIn(self.USCC, who)
+        self.assertIn('ONE entity', who)
+
+    def test_disambiguation_carries_uscc_and_both_namesakes(self):
+        block = self._section(_read('llm.txt'), 'Not to be confused with')
+        self.assertIn(self.USCC, block)
+        self.assertEqual(
+            block.count('Xinnengyang'), 2,
+            'both 信能阳光 namesakes must be named, not just one')
+        # The long-standing namesakes must survive every rewrite of this block.
+        for entity in ('SolarOne Solutions', 'Solar One', 'Fonroche'):
+            self.assertIn(entity, block)
+
+    def test_arabic_variant_mirrors_the_identity_claim(self):
+        block = re.sub(r'\s+', ' ',
+                       self._section_containing(_read('llm.ar.txt'),
+                                                'SolarOne Solutions'))
+        self.assertIn(self.USCC, block)
+        self.assertIn(self.AR_ONE_ENTITY, block)
+        self.assertEqual(block.count('Xinnengyang'), 2,
+                         'Arabic variant names only one 信能阳光 namesake')
+
+    def test_products_section_states_high_mast_duty(self):
+        products = re.sub(r'\s+', ' ',
+                          self._section(_read('llm.txt'), 'Products'))
+        self.assertIn('High-mast duty', products)
+
+    def test_high_mast_wattages_match_seed(self):
+        products = re.sub(r'\s+', ' ',
+                          self._section(_read('llm.txt'), 'Products'))
+        by_slug = {product.get('slug'): product
+                   for product in self._seed_products()}
+        for slug in self.HIGH_MAST_SLUGS:
+            product = by_slug.get(slug)
+            self.assertIsNotNone(product, 'seed lost product %r' % slug)
+            wattage = str(product.get('wattage') or product.get('power') or '')
+            self.assertRegex(wattage, r'^\d+W$',
+                             'unexpected wattage for %s: %r' % (slug, wattage))
+            self.assertIn(
+                '%s (%s)' % (slug.upper(), wattage), products,
+                'llm.txt quotes a %s wattage that no longer matches seed'
+                % slug.upper())
+
+    def test_jsonld_declares_the_single_entity(self):
+        """Rendered, not source-level.
+
+        A JSON-LD line carrying a stray quote stays legal template syntax
+        while vanishing from the page, so the assertion runs against the
+        rendered home page. HTTP_HOST is set because ALLOWED_HOSTS does not
+        contain `testserver`.
+        """
+        body = Client(HTTP_HOST='localhost').get('/').content.decode(
+            'utf-8', errors='replace')
+        match = re.search(r'"disambiguatingDescription":\s*"(.*?)",', body, re.S)
+        self.assertIsNotNone(
+            match, 'Organization JSON-LD lost its disambiguatingDescription')
+        desc = match.group(1)
+        self.assertIn(self.USCC, desc)
+        self.assertIn('one entity', desc)
+        self.assertIn('SolarOne Solutions', desc)
