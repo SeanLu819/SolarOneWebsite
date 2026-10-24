@@ -67,8 +67,8 @@ cd diag-output/geo-baseline && cat paste-sheet-round0.txt
 打开 `rounds/round-0-2026-10-23.csv`（Excel 或 WPS 都能开），94 行已经预填好
 `platform` / `query_id` / `query_text` / `lang` / `intent`，你只填后面 7 列。
 **ChatGPT 平台 13 格已由分享链接提取填入**（见 `chatgpt-share-evidence-2026-10-23.md`）；
-**Perplexity 已完成 7 格**（B2/C1/C2/C6/L1/L2/L3，Computer agent 任务模式，
-首批粘贴被截断只收到 4 格、用户补帖后到 7 格，见
+**Perplexity 8 格已完成**（B1/B2/C1/C2/C6/L1/L2/L3，Computer agent 任务模式，
+B1 于 2026-10-24 补帖；X1/X3 用户确认无法进行、C3/C5 未跑，该平台定格 8/13，见
 `perplexity-computer-evidence-2026-10-24.md`）。其余平台仍留空待测；
 剩下的平台也可以照样分享链接我来提取：
 

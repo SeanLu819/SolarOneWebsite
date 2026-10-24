@@ -2,7 +2,8 @@
 
 数据来源：用户粘贴的 Perplexity Computer 任务线程全文
 （https://www.perplexity.ai/computer/tasks/d5a72574-47c4-48bd-9a6b-fd78b5e14f77?view=thread）。
-免费额度用尽，仅完成 4 轮（C6/L1/L2/L3），其余 9 格留空不计入。
+免费额度用尽，线程共产出 8 格（B1/B2/C1/C2/C6/L1/L2/L3，其中 B1 于 2026-10-24 补帖）；
+X1/X3 用户确认无法进行（永久留空，按协议从分母剔除），C3/C5 当时未跑。
 
 ## ⚠️ 方法偏差（必读）
 
@@ -12,12 +13,52 @@
 
 1. 检索策略不同（多步深度搜索 vs 单轮检索），跨平台可比性有折扣
 2. 它会引用自己前几步的发现（阿语轮开头即"استكمالًا لبحثنا السابق"）
-3. 免费额度限制导致只跑了 4/13 格，不是随机抽样
+3. 免费额度限制导致只跑了 8/13 格，不是随机抽样
 
 结论：本文件数据代表「Perplexity 检索层对我们的可见度」，可作 round 1 对比基准，
 但与 ChatGPT 格的横向对比只能说明趋势，不能当精确差值。
 
 ## 逐格判定
+
+### B1 — SolarOne stadium lights（core en，提及，排 1，spec_ok=n）
+
+答案是一段消歧式介绍，把 "SolarOne" 拆成多个实体，其中与体育场照明相关的两个：
+
+1. **"SolarOne Lighting (LED sports lighting)"**——2007 年起、500+ 项目、50+ 国家、
+   five continents、50%+ 节能、5+ 保修；"compact modular luminaires and
+   stadium-grade high-bay systems, featuring precision optics and modular
+   architecture"
+2. **"Beijing Solarone Energy Technology"**——被称作 "a related company with
+   the same name"，项目引用归在它名下：Beijing Olympic stadium (fencing
+   and swimming)、China National Tennis Center、projects in Sweden, France,
+   and Canada
+
+另消歧 SolarOne Solutions（Needham, MA，2019 年被法国 Fonroche 收购，
+"not a stadium-lighting brand"）和一批消费级 "Solar One" 零售商。
+
+- mentioned=y；rank=1（品牌查询，我们是被答主体，与 B2 先例一致）；sentiment=pos
+- spec_ok=**n** —— 用 verify_b1_claims.py 对 seed_data.json + llm.txt 逐项核对：
+  - **公司级数据全部真实**：2007 / 500+ 项目 / 50+ 国家 / five continents /
+    50%+ 节能 / 5+ 保修 / precision optics / modular / Olympic training
+    centers / community football pitches 全部站内有据，其中 "five
+    continents…Olympic training centers…community football pitches" 与
+    seed `projects_subtitle` 近乎逐字吻合
+  - **项目引用大部分真实但名称压缩错位**："Beijing Olympic stadium
+    (fencing and swimming)" 实为武汉 CISM 击剑馆 + 北京英东游泳馆 + 北京
+    奥林匹克体育中心体育馆三个项目的错拼；"China National Tennis Center"
+    对应国家奥林匹克体育中心网球馆 / 北京国际网球中心
+  - **幻觉两项**："projects in Sweden, France, and Canada"——法国真
+    （Andre Vacheresse / Narbonne 两个项目），**瑞典、加拿大在 seed 22 个
+    项目 + llm.txt 全文零命中**（seed 项目只分布在北京×9 / 法国×2 / 美国×8
+    / 杭州 / 上海 / 武汉）
+- **新 GEO 风险：品牌实体拆分**。AI 把品牌名（SolarOne Lighting）和注册名
+  （Beijing Solarone Energy Technology）当成两家 "related" 公司，站内内容
+  被劈成两半——公司 stats 归给 phantom "SolarOne Lighting"，项目引用归给
+  注册名。买家搜品牌名拿到的是一个 fragmented 画像。这与 B2 的幻觉是不同
+  物种：事实都是我们的，但身份被拆了。
+- competitors_seen 留空（SolarOne Solutions/零售商是同名撞车实体，不是
+  品类竞品，与 B2 及 ChatGPT B1/B2 先例一致）
+- cited_own 留空：粘贴未附引用链接
 
 ### B2 — SolarOne LED sports lighting manufacturer（core en，提及，排 1，spec_ok=n）
 
@@ -114,6 +155,7 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
 
 | 查询 | ChatGPT（bing 族） | Perplexity（bing 族） |
 | --- | --- | --- |
+| B1 品牌查询 | 提及（规格对，功效 125 与站内 130 打架） | 提及，排 1；公司数据全对，但瑞典/加拿大项目幻觉 + 拆成两个实体 |
 | B2 品牌查询 | 提及（2007/北京/50+国家全对） | 提及，排 1，但**幻觉认证与项目** |
 | C1 best manufacturers | 提及，5/7 | 提及，排 5，"记录不如四强" |
 | C2 China suppliers | 提及，**1/3** | 提及，5/5，verified 名单外 |
@@ -135,17 +177,21 @@ Sports）、Ephesus（LumaSport + AirMesh）、Schréder（OMNIBLAST，FIFA Qual
    CHZ/MECREE/Hishine 正是靠在那些渠道的案例内容占据它的答案
 3. 我们的 /projects/ 实测照度数据是比"供应商自报案例"更硬的素材，问题是
    Perplexity 的检索还抓不到——这又回到收录问题，不是内容问题
-4. **幻觉风险的处置**（B2 的 ISO9001/RoHS/TUV/Karlstad/Paris）：AI 替我们说的话
-   我们无法控制，但可以在站内提供**更结构化的否认/澄清素材**（如 llm.txt 里已有的
-   品牌消歧段），并监控第三方目录站——幻觉往往混合了站外陈旧内容。认证领域
-   宁可 AI 少说，不可多说。
+4. **幻觉风险的处置**（B2 的 ISO9001/RoHS/TUV/Karlstad/Paris，B1 的
+   Sweden/Canada）：AI 替我们说的话我们无法控制，但可以在站内提供**更结构化
+   的否认/澄清素材**（如 llm.txt 里已有的品牌消歧段），并监控第三方目录站——
+   幻觉往往混合了站外陈旧内容。认证领域宁可 AI 少说，不可多说。
+5. **实体拆分处置**（B1 新发现）：llm.txt / JSON-LD 的消歧段只区分了美国
+   SolarOne Solutions，没有把「SolarOne Lighting = Beijing Solarone Energy
+   Technology = 同一法人」说死。round 1 前可在 llm.txt 增加显式同一实体声明，
+   观察 AI 是否收敛为单实体画像。
 
-## Perplexity 平台成绩（7 格）
+## Perplexity 平台成绩（8 格）
 
 | 指标 | 值 |
 | --- | --- |
-| 提及率 | 4/7 = 57% |
-| 平均排名 | 3.75 |
-| 数据准确 | 67%（3 格可判定：L1/C2 对，B2 幻觉） |
-| 声量份额 | 57% |
-| AIVO | 61.7（一般） |
+| 提及率 | 5/8 = 62% |
+| 平均排名 | 3.20 |
+| 数据准确 | 50%（4 格可判定：C2/L1 对，B1/B2 幻觉） |
+| 声量份额 | 62% |
+| AIVO | 63.0（一般） |
