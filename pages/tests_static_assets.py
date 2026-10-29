@@ -167,14 +167,14 @@ class StaticDirListingSourceOfTruthTests(TestCase):
         from pages.views import utils
         old = 'images/projects/beijing-international-tennis-center/bitc-tennis-01.webp'
         new = 'images/projects/beijing-international-tennis-center/' \
-              'bitc-tennis-court-light-720p-01.webp'
+              'bitc-tennis-court-light-01.webp'
         src = Path(settings.BASE_DIR) / 'static' / 'images/projects' \
             / 'beijing-international-tennis-center'
         if not src.is_dir():
             self.skipTest('用例依赖目录不存在，跳过')
         # 前提：旧名已从真源删除、新名真源存在（v1.9.9 事故现场）。
         self.assertFalse((src / 'bitc-tennis-01.webp').exists(), '用例前提变化：旧名又回来了')
-        self.assertTrue((src / 'bitc-tennis-court-light-720p-01.webp').exists())
+        self.assertTrue((src / 'bitc-tennis-court-light-01.webp').exists())
         self.assertFalse(
             utils._find_static(old),
             '_find_static 被陈旧 staticfiles 快照欺骗，会拼出 404 的 URL',

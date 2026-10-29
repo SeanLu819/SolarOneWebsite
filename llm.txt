@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.10.37
+# Content source of truth: seed_data.json · Site version v1.10.38
 # Language variants: /llm.ar.txt — Arabic (Modern Standard Arabic). English is
 # the canonical source: cite the English figures, do not re-derive numbers from
 # a translation.

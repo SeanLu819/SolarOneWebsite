@@ -636,6 +636,47 @@ google-analytics.com, already permitted by connect-src.{% endcomment %}
   })();
 </script>
 
+{% comment %}图片防下载（v1.10.38）。只阻断「人」的保存操作，不碰爬取链路：
+- 拦截图片上的右键菜单与拖拽开始，并给 <img> 打 draggable="false"（含后续动态插入的图）。
+- 刻意不做的事：不阻止 <img> 请求、不改写 src/srcset/alt、不按 referer 或 robots 封禁，
+  因此 Google / Bing / AI 爬虫与 Google 图片搜索的抓取收录完全不受影响。
+- iOS 长按保存由 base.css 的 -webkit-touch-callout: none 覆盖（无 JS 也生效）。{% endcomment %}
+<script nonce="{{ request.csp_nonce }}">
+  (function () {
+    'use strict';
+    var IMG = 'IMG';
+    function isImg(el) { return !!el && el.tagName === IMG; }
+
+    document.addEventListener('contextmenu', function (e) {
+      if (isImg(e.target)) { e.preventDefault(); }
+    }, false);
+
+    document.addEventListener('dragstart', function (e) {
+      if (isImg(e.target)) { e.preventDefault(); }
+    }, false);
+
+    function mark(nodes) {
+      for (var i = 0; i < nodes.length; i++) { nodes[i].setAttribute('draggable', 'false'); }
+    }
+    mark(document.images);
+
+    // 画廊/懒加载可能在首屏后插入图片，补打标记。
+    if ('MutationObserver' in window && document.body) {
+      new MutationObserver(function (muts) {
+        for (var m = 0; m < muts.length; m++) {
+          var added = muts[m].addedNodes;
+          for (var i = 0; i < added.length; i++) {
+            var n = added[i];
+            if (!n || n.nodeType !== 1) { continue; }
+            if (n.tagName === IMG) { n.setAttribute('draggable', 'false'); }
+            if (n.querySelectorAll) { mark(n.querySelectorAll('img')); }
+          }
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+  })();
+</script>
+
 <script nonce="{{ request.csp_nonce }}" type="application/ld+json">
 {
   "@context": "https://schema.org",

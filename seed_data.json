@@ -11,9 +11,9 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
+      "image": "images/products/mseries-gs/mseries-glare-shield-01.webp",
       "banner_image": "images/products/mseries-gs/accessory-fl9m-banner-02.webp",
-      "dimension_image": "images/products/fl9m-rgbw/fl9m-gs-3d-view-540p.webp",
+      "dimension_image": "images/products/fl9m-rgbw/fl9m-gs-3d-view.webp",
       "beam_angle_image": "",
       "ordering_image": "",
       "cert_image": "",
@@ -52,9 +52,9 @@
         }
       },
       "gallery": [
-        "images/products/mseries-gs/mseries-glare-shield-720p-01.webp",
-        "images/products/accessory/mseries-glare-shield-720p-02.webp",
-        "images/products/mseries-gs/mseries-glare-shield-720p-03.webp"
+        "images/products/mseries-gs/mseries-glare-shield-01.webp",
+        "images/products/accessory/mseries-glare-shield-02.webp",
+        "images/products/mseries-gs/mseries-glare-shield-03.webp"
       ],
       "specs": [],
       "energy_data": [
@@ -313,7 +313,7 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
+      "image": "images/products/rgb-rgbw/rgbw-mseries-01.webp",
       "banner_image": "images/products/rgb-rgbw/rgbw-banner-02.webp",
       "dimension_image": "",
       "beam_angle_image": "",
@@ -349,9 +349,9 @@
         }
       },
       "gallery": [
-        "images/products/rgb-rgbw/rgbw-mseries-855p-01.webp",
-        "images/products/rgb-rgbw/rgbw-rt410-855p-01.webp",
-        "images/products/rgb-rgbw/rgbw-hbm-855p-01.webp"
+        "images/products/rgb-rgbw/rgbw-mseries-01.webp",
+        "images/products/rgb-rgbw/rgbw-rt410-01.webp",
+        "images/products/rgb-rgbw/rgbw-hbm-01.webp"
       ],
       "specs": [],
       "energy_data": [],
@@ -411,7 +411,7 @@
         }
       },
       "gallery": [
-        "images/products/accessory/mseries-glare-shield-720p-02.webp",
+        "images/products/accessory/mseries-glare-shield-02.webp",
         "images/products/accessory/rt410-glare-shield-01.webp"
       ],
       "specs": [],
@@ -431,7 +431,7 @@
       "output": "",
       "beam_angle": "",
       "protection": "",
-      "image": "images/products/fl1m/fl1m80w-floodlight-855p-01.webp",
+      "image": "images/products/fl1m/fl1m80w-floodlight-01.webp",
       "banner_image": "images/products/fl1m/fl1m-bar-1.webp",
       "dimension_image": "images/products/fl1m/fl1m-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
@@ -467,10 +467,10 @@
         }
       },
       "gallery": [
-        "images/products/fl1m/fl1m80w-floodlight-855p-01.webp",
-        "images/products/fl1m/fl1m80w-floodlight-855p-02.webp",
-        "images/products/fl1m/fl1m80w-floodlight-855p-03.webp",
-        "images/products/fl1m/fl1m80w-floodlight-855p-05.webp"
+        "images/products/fl1m/fl1m80w-floodlight-01.webp",
+        "images/products/fl1m/fl1m80w-floodlight-02.webp",
+        "images/products/fl1m/fl1m80w-floodlight-03.webp",
+        "images/products/fl1m/fl1m80w-floodlight-05.webp"
       ],
       "specs": [
         {
@@ -593,7 +593,7 @@
       "output": "40K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl4m/fl4m320w-floodlight-855p-01.webp",
+      "image": "images/products/fl4m/fl4m320w-floodlight-01.webp",
       "banner_image": "images/products/fl4m/fl4m320w-floodlight-banner-2.webp",
       "dimension_image": "images/products/fl4m/fl4m-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
@@ -629,10 +629,10 @@
         }
       },
       "gallery": [
-        "images/products/fl4m/fl4m320w-floodlight-855p-01.webp",
-        "images/products/fl4m/fl4m320w-floodlight-855p-02.webp",
-        "images/products/fl4m/fl4m320w-floodlight-855p-03.webp",
-        "images/products/fl4m/fl4m320w-floodlight-855p-05.webp"
+        "images/products/fl4m/fl4m320w-floodlight-01.webp",
+        "images/products/fl4m/fl4m320w-floodlight-02.webp",
+        "images/products/fl4m/fl4m320w-floodlight-03.webp",
+        "images/products/fl4m/fl4m320w-floodlight-05.webp"
       ],
       "specs": [
         {
@@ -755,9 +755,9 @@
       "output": "60K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl6m/fl6m480w-floodlight-855p-01.webp",
+      "image": "images/products/fl6m/fl6m480w-floodlight-01.webp",
       "banner_image": "images/products/fl6m/fl6m-bar-1.webp",
-      "dimension_image": "images/products/fl6m/fl6m-ngs-3d-view-540p.webp",
+      "dimension_image": "images/products/fl6m/fl6m-ngs-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -791,10 +791,10 @@
         }
       },
       "gallery": [
-        "images/products/fl6m/fl6m480w-floodlight-855p-01.webp",
-        "images/products/fl6m/fl6m480w-floodlight-855p-02.webp",
-        "images/products/fl6m/fl6m480w-floodlight-855p-03.webp",
-        "images/products/fl6m/fl6m480w-floodlight-855p-04.webp"
+        "images/products/fl6m/fl6m480w-floodlight-01.webp",
+        "images/products/fl6m/fl6m480w-floodlight-02.webp",
+        "images/products/fl6m/fl6m480w-floodlight-03.webp",
+        "images/products/fl6m/fl6m480w-floodlight-04.webp"
       ],
       "specs": [
         {
@@ -917,9 +917,9 @@
       "output": "90K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl9m/fl9m720w-floodlight-855p-01.webp",
+      "image": "images/products/fl9m/fl9m720w-floodlight-01.webp",
       "banner_image": "images/products/fl9m/fl9m-bar-1.webp",
-      "dimension_image": "images/products/fl9m/fl9m-ngs-3d-view-540p.webp",
+      "dimension_image": "images/products/fl9m/fl9m-ngs-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -953,10 +953,10 @@
         }
       },
       "gallery": [
-        "images/products/fl9m/fl9m720w-floodlight-855p-01.webp",
-        "images/products/fl9m/fl9m720w-floodlight-855p-02.webp",
-        "images/products/fl9m/fl9m720w-floodlight-855p-03.webp",
-        "images/products/fl9m/fl9m720w-floodlight-855p-04.webp"
+        "images/products/fl9m/fl9m720w-floodlight-01.webp",
+        "images/products/fl9m/fl9m720w-floodlight-02.webp",
+        "images/products/fl9m/fl9m720w-floodlight-03.webp",
+        "images/products/fl9m/fl9m720w-floodlight-04.webp"
       ],
       "specs": [
         {
@@ -1079,7 +1079,7 @@
       "output": "120K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl12m/fl12m1000w-floodlight-855p-01.webp",
+      "image": "images/products/fl12m/fl12m1000w-floodlight-01.webp",
       "banner_image": "images/products/fl12m/fl12m1000w-floodlight-banner-01.webp",
       "dimension_image": "images/products/fl12m/fl12m-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
@@ -1115,10 +1115,10 @@
         }
       },
       "gallery": [
-        "images/products/fl12m/fl12m1000w-floodlight-855p-01.webp",
-        "images/products/fl12m/fl12m1000w-floodlight-855p-02.webp",
-        "images/products/fl12m/fl12m1000w-floodlight-855p-03.webp",
-        "images/products/fl12m/fl12m1000w-floodlight-855p-04.webp"
+        "images/products/fl12m/fl12m1000w-floodlight-01.webp",
+        "images/products/fl12m/fl12m1000w-floodlight-02.webp",
+        "images/products/fl12m/fl12m1000w-floodlight-03.webp",
+        "images/products/fl12m/fl12m1000w-floodlight-04.webp"
       ],
       "specs": [
         {
@@ -1241,9 +1241,9 @@
       "output": "160K+ lm",
       "beam_angle": "18~50°",
       "protection": "",
-      "image": "images/products/fl16m/fl16m1280w-floodlight-855p-01.webp",
+      "image": "images/products/fl16m/fl16m1280w-floodlight-01.webp",
       "banner_image": "images/products/fl16m/fl16m-bar-01.webp",
-      "dimension_image": "images/products/fl16m/fl16m-ngs-3d-view-650p.webp",
+      "dimension_image": "images/products/fl16m/fl16m-ngs-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -1277,10 +1277,10 @@
         }
       },
       "gallery": [
-        "images/products/fl16m/fl16m1280w-floodlight-855p-01.webp",
-        "images/products/fl16m/fl16m1280w-floodlight-855p-02.webp",
-        "images/products/fl16m/fl16m1280w-floodlight-855p-03.webp",
-        "images/products/fl16m/fl16m1280w-floodlight-855p-04.webp"
+        "images/products/fl16m/fl16m1280w-floodlight-01.webp",
+        "images/products/fl16m/fl16m1280w-floodlight-02.webp",
+        "images/products/fl16m/fl16m1280w-floodlight-03.webp",
+        "images/products/fl16m/fl16m1280w-floodlight-04.webp"
       ],
       "specs": [
         {
@@ -1405,7 +1405,7 @@
       "protection": "",
       "image": "images/products/fl9m-rgbw/rgbw-9m-w.webp",
       "banner_image": "images/products/fl9m-rgbw/rgbw-bar-01.webp",
-      "dimension_image": "images/products/fl9m-rgbw/fl9m-gs-3d-view-540p.webp",
+      "dimension_image": "images/products/fl9m-rgbw/fl9m-gs-3d-view.webp",
       "beam_angle_image": "images/products/fl12m/beamangle-12183050.webp",
       "ordering_image": "",
       "cert_image": "images/products/rgb-rgbw/rgbw-interface-0-10v-dali-dmx-certification-ip66-ik08.webp",
@@ -1534,7 +1534,7 @@
       "protection": "",
       "image": "images/products/accessory/rt410-glare-shield-01.webp",
       "banner_image": "images/products/glare-shield-for-rt410/glare-shield-rt410-bar-03.webp",
-      "dimension_image": "images/products/glare-shield-for-rt410/Glare_shield_of_RT410.webp",
+      "dimension_image": "images/products/glare-shield-for-rt410/glare-shield-of-rt410.webp",
       "beam_angle_image": "",
       "ordering_image": "",
       "cert_image": "",
@@ -2773,7 +2773,7 @@
       "protection": "",
       "image": "images/products/rt600sl-t/rt600sl-street-light-01.webp",
       "banner_image": "images/products/rt600sl-t/rt600sl-t-bar-1.webp",
-      "dimension_image": "images/products/rt600sl-t/RT600SL-dimension-1.webp",
+      "dimension_image": "images/products/rt600sl-t/rt600sl-dimension-1.webp",
       "beam_angle_image": "images/products/rt600sl-t/rt600sl-beamangle70-140.webp",
       "ordering_image": "",
       "cert_image": "",
@@ -3144,7 +3144,7 @@
       "sport_type": "BASEBALL_FIELD",
       "description": "[Customer Profile]\r\nCarroll County Sports Complex is a premier community athletic facility dedicated exclusively to baseball. The complex serves as a vital training and competition hub for surrounding elementary and middle schools, as well as local youth leagues and regional tournaments.\r\n\r\n[Scope of Work]\r\nThe five baseball fields were previously equipped with outdated, high-maintenance lighting fixtures that suffered from uneven illumination and frequent bulb replacements. The facility management sought a modernized lighting upgrade that would deliver superior, glare-free visibility for fast-moving baseballs, while significantly reducing energy consumption and long-term maintenance costs for the school district.\r\n\r\n[The Solution]\r\nA total of 150 FL9M-630W Performance Series LED sports lights featuring remote-mount drivers were installed to ensure optimal thermal management and extended lifespan. Additionally, an advanced networked control system was integrated to enable seamless remote on/off operation and real-time power monitoring, streamlining facility management and maximizing operational efficiency.",
       "results": "50/30fc average illuminance, uniformity 2.0:1 / 2.5:1 — Exceeding the project specifications and NCAA standards",
-      "image": "images/projects/baseball-field-led-retrofit/ccsc-baseball-720p-01.webp",
+      "image": "images/projects/baseball-field-led-retrofit/ccsc-baseball-01.webp",
       "order": 5,
       "translations": {
         "fr": {
@@ -3179,11 +3179,11 @@
         }
       },
       "gallery": [
-        "images/projects/baseball-field-led-retrofit/ccsc-baseball-720p-01.webp",
-        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-02.webp",
-        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-03.webp",
-        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-04.webp",
-        "images/projects/baseball-field-led-retrofit/ccsc-baseball-1080p-05.webp"
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-01.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-02.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-03.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-04.webp",
+        "images/projects/baseball-field-led-retrofit/ccsc-baseball-05.webp"
       ],
       "pdf_url": "",
       "social_video_url": "",
@@ -3200,7 +3200,7 @@
       "sport_type": "TENNIS_COURTS",
       "description": "[Customer Profile]\r\nMorgan State University is Maryland’s premier public urban research university, renowned for its academic excellence and impactful community engagement.\r\n\r\n[Scope of Work]\r\nThe university sought to upgrade its athletic and campus lighting to enhance nighttime safety and support student-athletes. The project required a high-performance solution that met NCAA standards while aligning with the institution's sustainability goals.\r\n\r\n[The Solution]\r\nA customized LED lighting system was deployed across key venues, featuring precision photometric aiming for uniform, glare-free illumination. An integrated smart control platform was installed to enable remote scheduling and real-time energy monitoring, streamlining facility management and reducing operational costs.",
       "results": "over 80fc average illuminance, uniformity 1.67:1. Exceeding the project specifications and NCAA standards",
-      "image": "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-01.webp",
+      "image": "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-01.webp",
       "order": 7,
       "translations": {
         "fr": {
@@ -3230,11 +3230,11 @@
         }
       },
       "gallery": [
-        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-01.webp",
-        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-02.webp",
-        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-03.webp",
-        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-04.webp",
-        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-720p-05.webp"
+        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-01.webp",
+        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-02.webp",
+        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-03.webp",
+        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-04.webp",
+        "images/projects/morgan-state-university-tennis-courts/msu-tennis-court-05.webp"
       ],
       "pdf_url": "files/morgan_state_university_tennis_courts.pdf",
       "social_video_url": "",
@@ -3251,7 +3251,7 @@
       "sport_type": "SKI_AREA",
       "description": "[Customer Profile]\r\nSituated north of Beijing, Nanshan Ski Village has served as China’s largest and most advanced ski resort since 2001, offering top-tier equipment and amenities for skiers and snowboarders alike.\r\n\r\n[Scope of Work]\r\nThe project required a lighting system tailored for winter sports. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows on the slopes. In a high-speed sport with zero margin for error, our LED technology ensures that lighting remains a reliable constant, providing the ultimate visual clarity for skiers and snowboarders.\r\n\r\n[The Solution]\r\nThrough rigorous photometric modeling, we optimized glare control and established exact aiming coordinates for every fixture. The SolarOne Vision Smart 260W RT410 Flood Lights were effortlessly integrated into the resort's infrastructure. Our LED solution outperforms legacy metal halide systems by delivering exceptional uniformity on the slopes and in the air, while drastically reducing light pollution. Additionally, the LEDs offer a lifespan of over 100,000 hours, compared to just 18,000 hours for traditional metal halides.",
       "results": "SolarOne Vision Smart RT410 floodlights upgrade lighting at Nanshan Ski Village. Low‑glare, uniform lighting protects vision for fast‑moving skiers and snowboarders. With minimal light spill, near‑zero maintenance and long‑life LEDs, the fixtures deliver excellent visual comfort for athletes and visitors, backed by a 10‑year manufacturer’s warranty.",
-      "image": "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-01.webp",
+      "image": "images/projects/nanshan-ski-village/nanshan-ski-resort-01.webp",
       "order": 9,
       "translations": {
         "fr": {
@@ -3281,11 +3281,11 @@
         }
       },
       "gallery": [
-        "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-01.webp",
-        "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-02.webp",
-        "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-03.webp",
-        "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-04.webp",
-        "images/projects/nanshan-ski-village/nanshan-ski-resort-720p-05.webp"
+        "images/projects/nanshan-ski-village/nanshan-ski-resort-01.webp",
+        "images/projects/nanshan-ski-village/nanshan-ski-resort-02.webp",
+        "images/projects/nanshan-ski-village/nanshan-ski-resort-03.webp",
+        "images/projects/nanshan-ski-village/nanshan-ski-resort-04.webp",
+        "images/projects/nanshan-ski-village/nanshan-ski-resort-05.webp"
       ],
       "pdf_url": "files/nanshan_ski_village.pdf",
       "social_video_url": "",
@@ -3359,7 +3359,7 @@
       "sport_type": "MULTI_SPORT",
       "description": "[Customer Profile]\r\nOpened in late 2019, Narbonne Arena is a premier modular venue in southern France. Accommodating up to 5,000 attendees, it serves as a central hub for touring shows, concerts, conventions, and sporting events.\r\n\r\n[Scope of Work]\r\nThe arena required a state-of-the-art audio infrastructure to complement its modern architectural acoustics. The project demanded a highly versatile sound system capable of delivering exceptional audio clarity across diverse event configurations and modular layouts.\r\n\r\n[The Solution]\r\nInstalled by Texen, the new GEO S12 line array system features 10 strategically deployed loudspeaker clusters, including two larger 6-module arrays facing the main grandstand. The system is powered by three NXAMP4x4 amplifiers equipped with Dante cards, ensuring seamless signal routing and uncompromising audio performance.",
       "results": "",
-      "image": "images/projects/narbonne-arena/Narbonne-basketball-04.webp",
+      "image": "images/projects/narbonne-arena/narbonne-basketball-04.webp",
       "order": 13,
       "translations": {
         "fr": {
@@ -3394,11 +3394,11 @@
         }
       },
       "gallery": [
-        "images/projects/narbonne-arena/Narbonne-basketball-04.webp",
-        "images/projects/narbonne-arena/Narbonne-basketball-03.webp",
-        "images/projects/narbonne-arena/Narbonne-basketball-02.webp",
-        "images/projects/narbonne-arena/Narbonne-basketball-01.webp",
-        "images/projects/narbonne-arena/Narbonne-basketball-05.webp"
+        "images/projects/narbonne-arena/narbonne-basketball-04.webp",
+        "images/projects/narbonne-arena/narbonne-basketball-03.webp",
+        "images/projects/narbonne-arena/narbonne-basketball-02.webp",
+        "images/projects/narbonne-arena/narbonne-basketball-01.webp",
+        "images/projects/narbonne-arena/narbonne-basketball-05.webp"
       ],
       "pdf_url": "",
       "social_video_url": "",
@@ -3472,7 +3472,7 @@
       "sport_type": "TENNIS",
       "description": "[Customer Profile]\r\nBuilt in 1973, the Beijing International Club Tennis Hall holds the distinction of being China's first indoor professional tennis venue. To align with modern standards and ensure its continued development, the facility underwent a comprehensive reconstruction on its original site in 2015.\r\n\r\n[Scope of Work]\r\nThe reconstruction project required a one-for-one replacement of the existing 1000W metal halide fixtures. As tennis is a sport with virtually no margin for error, the lighting system had to provide the ultimate visual stage for athletes. Advanced glare control and uniform illumination were mandatory to eliminate distracting shadows or hot spots, ensuring that the lighting remains a reliable constant rather than an unpredictable variable during high-speed play.\r\n\r\n[The Solution]\r\nA rigorous photometric design was executed to optimize glare control and establish precise aiming coordinates for every fixture. The new LED lighting system was seamlessly integrated via a one-for-one retrofit plan, outperforming legacy metal halides by delivering exceptional uniformity both in the air and on the court, thereby guaranteeing optimal visual clarity for professional tennis.",
       "results": "SolarOne Vision Smart RT410FL‑S160W elevates lighting performance at Beijing International Tennis Club. Delivering 75% uniformity and 50% energy savings, these low‑glare luminaires ensure excellent visual comfort for athletes and coaches. Long‑life LEDs reduce part replacements with virtually no ongoing maintenance.",
-      "image": "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-01.webp",
+      "image": "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-01.webp",
       "order": 17,
       "translations": {
         "fr": {
@@ -3507,10 +3507,10 @@
         }
       },
       "gallery": [
-        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-01.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-02.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-03.webp",
-        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-720p-04.webp"
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-01.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-02.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-03.webp",
+        "images/projects/beijing-international-tennis-center/bitc-tennis-court-light-04.webp"
       ],
       "pdf_url": "files/beijing_international_tennis_center.pdf",
       "social_video_url": "",
@@ -3527,7 +3527,7 @@
       "sport_type": "ICE_ARENA",
       "description": "[Customer Profile]\r\nBuilt on the historic site of a former 1897 engine factory, the National Snow and Ice Training and Research Center served as a vital hub for the 2022 Beijing Winter Olympics. It features Asia's first CO2 ice-making speed skating hall, comprising a 400m rink and two short track rinks built to strict Olympic competition standards.\r\n\r\n[Scope of Work]\r\nAs an elite Olympic training venue, the center required a high-performance lighting system that met rigorous broadcast and training standards. The solution needed to deliver exceptional visual clarity and precise color rendering for high-speed skating, while seamlessly integrating with the venue's sustainable infrastructure.\r\n\r\n[The Solution]\r\nA total of 304 FL9M-630W High-Performance LED sports luminaires (CCT: 5000–5500K, Ra: 90) were strategically installed to ensure optimal visual conditions. Additionally, an advanced networked control system was integrated to enable remote operation and real-time power monitoring, streamlining facility management.",
       "results": "Built to meet strict tournament‑grade lighting requirements, the 400 m speed‑skating rink achieves 2000 lx average illuminance with U₀ uniformity of 0.7, satisfying HD live TV broadcast standards. Its intelligent lighting control system with interval‑lighting mode delivers an extra 50% energy savings. The complete lighting solution meets both project budget and performance expectations.",
-      "image": "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-01.webp",
+      "image": "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-01.webp",
       "order": 19,
       "translations": {
         "fr": {
@@ -3562,11 +3562,11 @@
         }
       },
       "gallery": [
-        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-01.webp",
-        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-02.webp",
-        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-03.webp",
-        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-04.webp",
-        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-720p-05.webp"
+        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-01.webp",
+        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-02.webp",
+        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-03.webp",
+        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-04.webp",
+        "images/projects/national-snow-and-ice-research-center/27factory-skating-arena-05.webp"
       ],
       "pdf_url": "files/national_snow_and_ice_research_center.pdf",
       "social_video_url": "",
@@ -3696,7 +3696,7 @@
       "sport_type": "CITY_EXPRESSWAY",
       "description": "[Customer Profile]\r\nLiuliqiao is a major traffic hub situated on Beijing’s Third Ring Road, serving as a critical artery for the city's high-volume vehicular flow.\r\n[Scope of Work]\r\nThe intersection's original lighting infrastructure consisted of nine 1000W high-pressure sodium (HPS) lamps mounted on six 35-meter high-mast poles. The facility required a comprehensive lighting upgrade to significantly reduce energy consumption and modernize the illumination quality while maintaining adequate visibility for nighttime traffic safety.\r\n[The Solution]\r\nThe project executed a strategic retrofit, replacing the legacy HPS lamps with eighteen 200W LED floodlights utilizing a 2800K color temperature. This upgrade achieved a remarkable 66.67% energy-saving rate. The optimized system now delivers an average illuminance of 33 lx with a uniformity ratio of 0.56, maintaining a maximum illuminance of 68 lx and a minimum of 23 lx to ensure safe and consistent road visibility.",
       "results": "The original nine 1000W high-pressure sodium (HPS) lamps have been replaced with eighteen 200W LED floodlights. The average illuminance is 33 lx, with a uniformity ratio of 0.56. The maximum illuminance is 68 lx, and the minimum is 23 lx.\r\nUsing a 2800K color temperature, this upgrade achieves an energy-saving rate of 66.67%.",
-      "image": "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
+      "image": "images/projects/beijing-liu-li-bridge/llq-roadway-01.webp",
       "order": 25,
       "translations": {
         "fr": {
@@ -3731,11 +3731,11 @@
         }
       },
       "gallery": [
-        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-01.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-02.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-03.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-04.webp",
-        "images/projects/beijing-liu-li-bridge/llq-roadway-1080p-05.webp"
+        "images/projects/beijing-liu-li-bridge/llq-roadway-01.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-02.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-03.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-04.webp",
+        "images/projects/beijing-liu-li-bridge/llq-roadway-05.webp"
       ],
       "pdf_url": "",
       "social_video_url": "",
@@ -3810,7 +3810,7 @@
       "sport_type": "KARTING",
       "description": "Red 1 Karting Beijing is a well-known indoor and outdoor comprehensive karting operator in Beijing, featuring China's first CIK-FIA certified international professional karting track.",
       "results": "",
-      "image": "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
+      "image": "images/projects/red-1-karting-beijing/red1-karting-01.webp",
       "order": 29,
       "translations": {
         "fr": {
@@ -3845,11 +3845,11 @@
         }
       },
       "gallery": [
-        "images/projects/red-1-karting-beijing/red1-karting-1080p-01.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-1080p-02.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-1080p-03.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-1080p-04.webp",
-        "images/projects/red-1-karting-beijing/red1-karting-1080p-05.webp"
+        "images/projects/red-1-karting-beijing/red1-karting-01.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-02.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-03.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-04.webp",
+        "images/projects/red-1-karting-beijing/red1-karting-05.webp"
       ],
       "pdf_url": "files/red_1_karting_beijing.pdf",
       "social_video_url": "",
@@ -3866,7 +3866,7 @@
       "sport_type": "AQUATICS_CENTRE",
       "description": "[Customer Profile]\r\nLocated within Beijing's National Olympic Sports Center, the Yingdong Natatorium is a landmark aquatic venue funded by Henry Fok in 1986. Spanning 44,635 square meters with 6,000 seats, it has hosted prestigious international events including the 1990 Asian Games and the 2008 Beijing Olympics.\r\n\r\n[Scope of Work]\r\nThe venue required a high-performance lighting system engineered specifically for high-definition television broadcasting. The solution needed to deliver top-tier illumination while strictly managing glare and water reflections, ensuring optimal visual clarity and color rendering for elite aquatic competitions.\r\n\r\n[The Solution]\r\nA comprehensive photometric design was executed to optimize glare control and establish precise aiming coordinates. The new LED system delivers superior uniformity both in the air and across the pool, guaranteeing flawless visual conditions for athletes and broadcast cameras while meeting stringent HD broadcasting standards.",
       "results": "Horizontal illuminance: > 2700 lux (Uniformity: 0.70)\r\nMain Camera illuminance: > 2200 lux (Uniformity: 0.60)\r\nAuxiliary Camera illuminance: > 1500 lux (Uniformity: 0.55)\r\nComplies with HD broadcasting standards.",
-      "image": "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-01.webp",
+      "image": "images/projects/yingdong-natatorium/ydyyg-swimming-pool-01.webp",
       "order": 31,
       "translations": {
         "fr": {
@@ -3901,11 +3901,11 @@
         }
       },
       "gallery": [
-        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-01.webp",
-        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-02.webp",
-        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-03.webp",
-        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-04.webp",
-        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-720p-05.webp"
+        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-01.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-02.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-03.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-04.webp",
+        "images/projects/yingdong-natatorium/ydyyg-swimming-pool-05.webp"
       ],
       "pdf_url": "",
       "social_video_url": "",
@@ -4034,7 +4034,7 @@
       "sport_type": "SOCCER_FIELD",
       "description": "The garrison forest school system utilizes remote-mounted driver enclosures, providing facility managers with simple on-site servicing without shutting down the court.",
       "results": "Over 50fc 2.0:1  — Comply with NCAA standards.",
-      "image": "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-01.webp",
+      "image": "images/projects/garrison-forest-school/garrison-forest-lacrosse-01.webp",
       "order": 37,
       "translations": {
         "fr": {
@@ -4069,11 +4069,11 @@
         }
       },
       "gallery": [
-        "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-01.webp",
-        "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-02.webp",
-        "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-03.webp",
-        "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-04.webp",
-        "images/projects/garrison-forest-school/garrison-forest-Lacrosse-1080p-05.webp"
+        "images/projects/garrison-forest-school/garrison-forest-lacrosse-01.webp",
+        "images/projects/garrison-forest-school/garrison-forest-lacrosse-02.webp",
+        "images/projects/garrison-forest-school/garrison-forest-lacrosse-03.webp",
+        "images/projects/garrison-forest-school/garrison-forest-lacrosse-04.webp",
+        "images/projects/garrison-forest-school/garrison-forest-lacrosse-05.webp"
       ],
       "pdf_url": "files/garrison_forest_school.pdf",
       "social_video_url": "",
@@ -4144,7 +4144,7 @@
       "sport_type": "TENNIS",
       "description": "[Customer Profile]\r\nPickle N Par is Long Island’s premier and only dedicated indoor pickleball facility. Renowned for its exceptional court surfaces and superb lighting, the venue provides an ideal setting for players of all levels. Featuring organized play sessions and top-tier instruction, it stands as the ultimate destination for pickleball enthusiasts in New York.\r\n\r\n[Scope of Work]\r\nIn the summer of 2019, our partners at Green Arc Energy Advisors engaged SolarOne to design an LED lighting solution for this new indoor facility. The primary objective was to deliver competition-level illumination while ensuring optimal visual comfort for both players and spectators. Our team developed a precision lighting layout and supplied high-performance fixtures to meet these exacting standards.\r\n\r\n[The Solution]\r\nThe RT400HB-100W Recreation Series high bay fixtures were selected as the perfect solution for this application. Delivering uniform, glare-free illumination, the system successfully achieved competition-grade lighting levels while maintaining exceptional visual comfort, elevating the overall playing experience.",
       "results": "",
-      "image": "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-01.webp",
+      "image": "images/projects/pickle-n-par-club/pap-pickleball-courts-01.webp",
       "order": 41,
       "translations": {
         "fr": {
@@ -4179,11 +4179,11 @@
         }
       },
       "gallery": [
-        "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-01.webp",
-        "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-02.webp",
-        "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-03.webp",
-        "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-04.webp",
-        "images/projects/pickle-n-par-club/pap-pickleball-courts-1080p-05.webp"
+        "images/projects/pickle-n-par-club/pap-pickleball-courts-01.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-courts-02.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-courts-03.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-courts-04.webp",
+        "images/projects/pickle-n-par-club/pap-pickleball-courts-05.webp"
       ],
       "pdf_url": "files/pickle_n_par_club.pdf",
       "social_video_url": "",
@@ -4200,7 +4200,7 @@
       "sport_type": "TENNIS_COURTS",
       "description": "[Customer Profile]\r\nLocated within the National Olympic Sports Center in Beijing, the Tennis Center is a premier facility featuring 20 high-standard indoor and outdoor courts. It serves as a vital training base for the Chinese National Tennis Team.\r\n\r\n[Scope of Work]\r\nThe project entailed a one-for-one LED upgrade of legacy 400W metal halide fixtures, seamlessly reusing the existing pole infrastructure. Absolute ball clarity, regardless of speed or position, is paramount for elite tennis. Delivering exceptional visibility for high-speed action requires striking contrast, calibrated illumination, and flawless court uniformity.\r\n\r\n[The Solution]\r\nThrough rigorous photometric modeling, we optimized glare control and light output, providing exact aiming directives for every fixture. The SolarOne Vision Smart 200W RT470 Flood Lights integrated effortlessly with the existing infrastructure. Our LED solution outperforms legacy metal halide systems by delivering exceptional aerial and on-court uniformity, while drastically reducing light spill and pollution.",
       "results": "",
-      "image": "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-02.webp",
+      "image": "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-02.webp",
       "order": 43,
       "translations": {
         "fr": {
@@ -4235,11 +4235,11 @@
         }
       },
       "gallery": [
-        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-01.webp",
-        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-02.webp",
-        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-03.webp",
-        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-04.webp",
-        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-1080p-05.webp"
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-01.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-02.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-03.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-04.webp",
+        "images/projects/national-olympic-sports-center-beijing-tennis-cour/bnoc-tennis-05.webp"
       ],
       "pdf_url": "files/national_olympic_sports_center_beijing_tennis_cour.pdf",
       "social_video_url": "",

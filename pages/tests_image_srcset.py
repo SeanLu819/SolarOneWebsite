@@ -174,8 +174,8 @@ class VariantLayoutTests(SimpleTestCase):
         Returning '' makes ``build_srcset`` emit nothing, the template omits the
         attribute, and the browser falls back to the working ``src``.
         """
-        for url in ('/media/products_page/VSP9M-01.webp',
-                    'media/products_page/VSP9M-01.webp',
+        for url in ('/media/products_page/vsp9m-01.webp',
+                    'media/products_page/vsp9m-01.webp',
                     'https://cdn.example.com/a.webp',
                     '//cdn.example.com/a.webp'):
             with self.subTest(url=url):
