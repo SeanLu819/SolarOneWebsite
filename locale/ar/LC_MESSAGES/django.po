@@ -1848,3 +1848,122 @@ msgstr ""
 "تُصنَّف المصابيح المضيفة بكفاءة تصل إلى 130 لومن/واط وعمر L70 يتجاوز 100,000"
 " ساعة عند 25 °م. والحاجب يغيّر اتجاه الضوء لا كمية الضوء التي ينتجها "
 "المصباح."
+
+#: pages/views/views_projects.py
+msgid ""
+"SolarOne supplied the LED lighting for %(title)s in %(location)s "
+"(%(application)s)."
+msgstr ""
+"وفّرت SolarOne إنارة LED لمشروع %(title)s في %(location)s (%(application)s)."
+
+#: pages/views/views_projects.py
+msgid "Measured on site: %(results)s"
+msgstr "القياسات في الموقع: %(results)s"
+
+#: pages/views/views_projects.py
+msgid "What lighting results were measured at %(title)s?"
+msgstr "ما هي نتائج الإضاءة التي تم قياسها في %(title)s؟"
+
+#: pages/views/views_projects.py
+msgid "Where is %(title)s and what kind of venue is it?"
+msgstr "أين يقع %(title)s وما نوع هذه المنشأة؟"
+
+#: pages/views/views_projects.py
+msgid ""
+"%(title)s is in %(location)s. Venue type: %(venue)s. Application: "
+"%(application)s."
+msgstr ""
+"يقع %(title)s في %(location)s. نوع المنشأة: %(venue)s. الاستخدام: "
+"%(application)s."
+
+#: pages/views/views_projects.py
+msgid "Which SolarOne luminaires are used at %(title)s?"
+msgstr "ما هي إنارة SolarOne المستخدمة في %(title)s؟"
+
+#: pages/views/views_projects.py
+msgid "The project uses these SolarOne luminaires: %(names)s."
+msgstr "يستخدم المشروع إنارة SolarOne التالية: %(names)s."
+
+#: pages/views/views_stadium.py
+msgid "How many masts does a stadium floodlighting package need?"
+msgstr "كم عدد الأعمدة التي تحتاجها منظومة إنارة الملعب؟"
+
+#: pages/views/views_stadium.py
+msgid ""
+"It follows from the target illuminance on the playing surface and the "
+"mounting points the structure allows, not from a fixed fixture count. The "
+"VSP series is rated 4200 W per system, so a pitch reaches its target output "
+"from fewer masts than the high-pressure-scheme it replaces. Send the venue "
+"drawing and mounting height and we return a photometric layout with the mast"
+" count."
+msgstr ""
+"يعتمد ذلك على الإضاءة المستهدفة على أرضية اللعب ونقاط التثبيت التي تسمح بها "
+"المنشأة، لا على عدد ثابت من وحدات الإنارة. قدرة سلسلة VSP تبلغ 4200 واط "
+"للمنظومة، لذا يصل الملعب إلى هدفه بعدد أعمدة أقل من منظومة الإنارة ذات الضغط"
+" العالي التي تستبدلها. أرسل لنا مخطط المنشأة وارتفاع التثبيت وسنرد بخطة "
+"ضوئية تتضمن عدد الأعمدة."
+
+#: pages/views/views_stadium.py
+msgid ""
+"Are these luminaires usable for televised matches and super-slow-motion "
+"replay?"
+msgstr "هل تناسب هذه الإنارة المباريات التلفزيونية وإعادة العرض فائقة البطء؟"
+
+#: pages/views/views_stadium.py
+msgid ""
+"Yes. Vision Strobe Protection on the VSP series keeps the output free of the"
+" low-frequency flicker that shows up as banding in super-slow-motion replay,"
+" and the asymmetric optics are aimed to keep glare out of the camera-side "
+"seating."
+msgstr ""
+"نعم. تحافظ خاصية Vision Strobe Protection في سلسلة VSP على خلو الضوء من "
+"الوميض منخفض التردد الذي يظهر على شكل نطاقات في إعادة العرض فائقة البطء، "
+"وتُوجَّه البصريات اللامتناظرة بحيث لا يصل الوهج إلى مدرجات جهة الكاميرات."
+
+#: pages/views/views_stadium.py
+msgid "What beam angles are available?"
+msgstr "ما هي زوايا الشعاع المتوفرة؟"
+
+#: pages/views/views_stadium.py
+msgid ""
+"12°, 18°, 30° and 50° from the same M Series optical platform, coded 12 / 18"
+" / 30 / 50 in the model number. The narrow angles serve the seating bowl, "
+"the wider ones the playing surface."
+msgstr ""
+"12°، 18°، 30° و50° من المنصة البصرية نفسها لسلسلة M، وترميزها 12 / 18 / 30 /"
+" 50 في رقم الطراز. الزوايا الضيقة تخدم مدرجات المشاهدين، والواسعة تخدم أرضية"
+" اللعب."
+
+#: pages/views/views_stadium.py
+msgid "What is the efficacy, lifespan and protection rating?"
+msgstr "ما هي الكفاءة الضوئية والعمر الافتراضي ودرجة الحماية؟"
+
+#: pages/views/views_stadium.py
+msgid ""
+"CRI 70~95, L70 of 100,000 hours at 25 °C, IP66 ingress protection, 10 kV "
+"surge protection, and an operating range of −40 °C to +55 °C."
+msgstr ""
+"مؤشر تجسيد اللون 70~95، وعمر L70 يبلغ 100,000 ساعة عند 25 °م، ودرجة حماية "
+"IP66، وحماية من الصدمات الكهربائية 10 ك.ف، ومدى تشغيل من −40 °م إلى +55 °م."
+
+#: pages/views/views_stadium.py
+msgid "How is the fixture powered and dimmed?"
+msgstr "كيف يتم تزويد وحدة الإنارة بالطاقة وتعتيمها؟"
+
+#: pages/views/views_stadium.py
+msgid ""
+"The remote power system pairs one AC enclosure with n LED driver enclosures,"
+" so the drivers sit away from the fixture and are reached without a ladder. "
+"Dimming is 1-10 V, DMX, DALI or Zigbee, and both 110–277 VAC and 347–480 VAC"
+" inputs are available. Enclosure dimensions follow the project, so they are "
+"quoted per order rather than fixed on this page."
+msgstr ""
+"يجمع نظام التغذية عن بُعد بين صندوق تيار متردد واحد و n من صناديق مشغلات "
+"LED، فتكون المشغلات بعيدة عن وحدة الإنارة ويمكن الوصول إليها دون سلم. "
+"التعتيم عبر 1-10 فولت أو DMX أو DALI أو Zigbee، وتتوفر مدخلات 110–277 فولت "
+"تيار متردد و347–480 فولت تيار متردد. وتُحدَّد أبعاد الصناديق حسب المشروع، "
+"لذا تُسعَّر عند الطلب بدلاً من تثبيتها في هذه الصفحة."
+
+#: pages/views/views_stadium.py
+msgid "Do you supply photometric studies for our venue?"
+msgstr "هل تقدمون دراسات ضوئية لمنشأتنا؟"

@@ -15,6 +15,8 @@ Covers:
   * The explicit ``seo_title`` override still wins over the formula.
   * The rendered project detail page carries the keyword in its <title>.
 """
+import re
+
 from django.test import Client, TestCase
 
 from pages.utils import (
@@ -126,14 +128,47 @@ class ProjectSeoTitleKeywordTests(TestCase):
         )
         self.assertEqual(project_category_keyword(''), DEFAULT_PROJECT_CATEGORY_KEYWORD)
 
-    def test_non_english_locale_falls_back_to_english_phrase(self):
-        """B8/E2 territory today: never emit an empty/English-untouched suffix."""
+    def test_non_english_locale_gets_a_localised_phrase(self):
+        """GEO (2026-10-30, C): the keyword used to be English on all five
+        non-English sites, so every project <title> outside English read as a
+        translation gap. The old assertion pinned that behaviour (``fr`` equal
+        to the English phrase); it now pins the opposite.
+
+        The phrases are curated search terms, not translations of the English
+        label — see ``PROJECT_CATEGORY_KEYWORD_I18N`` — so all that is asserted
+        here is that they exist and that they are not the English one.
+        """
+        english = PROJECT_CATEGORY_KEYWORD['FOOTBALL_FIELD']
         for lang in ('fr', 'es', 'de', 'ru', 'ar'):
-            self.assertTrue(project_category_keyword('FOOTBALL_FIELD', lang))
-        self.assertEqual(
-            project_category_keyword('FOOTBALL_FIELD', 'fr'),
-            PROJECT_CATEGORY_KEYWORD['FOOTBALL_FIELD'],
-        )
+            with self.subTest(lang=lang):
+                phrase = project_category_keyword('FOOTBALL_FIELD', lang)
+                self.assertTrue(phrase, f'{lang} has no project keyword')
+                self.assertNotEqual(
+                    english, phrase,
+                    f'{lang} project keyword is still English: {phrase!r}')
+
+    def test_every_sport_type_has_a_phrase_in_every_language(self):
+        """A gap here is not a crash — it is a silent fall back to English on
+        one page in one market, which is exactly how the bug survived so long.
+        """
+        for choice in SPORT_TYPE_CHOICES:
+            english = project_category_keyword(choice, 'en')
+            for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+                with self.subTest(sport_type=choice, lang=lang):
+                    phrase = project_category_keyword(choice, lang)
+                    self.assertTrue(phrase)
+                    self.assertNotEqual(english, phrase,
+                                        f'{lang}/{choice} fell back to English')
+
+    def test_unknown_sport_type_is_localised_too(self):
+        for lang in ('fr', 'es', 'de', 'ru', 'ar'):
+            with self.subTest(lang=lang):
+                self.assertNotEqual(
+                    DEFAULT_PROJECT_CATEGORY_KEYWORD,
+                    project_category_keyword('NOT_A_SPORT', lang))
+                self.assertNotEqual(
+                    DEFAULT_PROJECT_CATEGORY_KEYWORD,
+                    project_category_keyword('', lang))
 
 
 class ProjectSeedPathParityTests(TestCase):
@@ -206,3 +241,28 @@ class ProjectOverrideAndRenderTests(TestCase):
         content = resp.content.decode('utf-8')
         self.assertIn('LED tennis Court Lights', content)
         self.assertIn('| SolarOne', content)
+
+    def test_rendered_title_is_localised_on_every_language_site(self):
+        """The end of the chain: the <title> a German or Arabic searcher sees
+        must carry that market's phrase, not the English one. Unit-level
+        assertions on the keyword function cannot prove the page uses it."""
+        seed = _load_seed()
+        target = None
+        for item in seed['projects']:
+            if item.get('sport_type') == 'TENNIS_COURTS':
+                target = item
+                break
+        self.assertIsNotNone(target, 'seed has no tennis project')
+        english = project_category_keyword('TENNIS_COURTS', 'en')
+        client = Client()
+        for lang in ('de', 'fr', 'es', 'ru', 'ar'):
+            with self.subTest(lang=lang):
+                resp = client.get(f'/{lang}/projects/{target["slug"]}/',
+                                  HTTP_HOST='localhost')
+                self.assertEqual(resp.status_code, 200)
+                title = re.search(r'<title>(.*?)</title>',
+                                  resp.content.decode('utf-8'), re.S).group(1)
+                self.assertNotIn(english, title,
+                                 f'{lang} <title> still carries the English keyword: {title!r}')
+                self.assertIn(project_category_keyword('TENNIS_COURTS', lang), title)
+                self.assertIn('| SolarOne', title)

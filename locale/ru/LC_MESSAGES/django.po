@@ -1942,3 +1942,128 @@ msgstr ""
 "Основные светильники имеют световую отдачу до 130 лм/Вт и ресурс L70 более "
 "100 000 часов при 25 °C. Экран меняет направление света, а не количество "
 "света, которое излучает светильник."
+
+#: pages/views/views_projects.py
+msgid ""
+"SolarOne supplied the LED lighting for %(title)s in %(location)s "
+"(%(application)s)."
+msgstr ""
+"Компания SolarOne поставила светодиодное освещение для объекта %(title)s в "
+"%(location)s (%(application)s)."
+
+#: pages/views/views_projects.py
+msgid "Measured on site: %(results)s"
+msgstr "Измерено на объекте: %(results)s"
+
+#: pages/views/views_projects.py
+msgid "What lighting results were measured at %(title)s?"
+msgstr "Какие показатели освещения измерены на объекте %(title)s?"
+
+#: pages/views/views_projects.py
+msgid "Where is %(title)s and what kind of venue is it?"
+msgstr "Где находится %(title)s и что это за объект?"
+
+#: pages/views/views_projects.py
+msgid ""
+"%(title)s is in %(location)s. Venue type: %(venue)s. Application: "
+"%(application)s."
+msgstr ""
+"%(title)s находится в %(location)s. Тип объекта: %(venue)s. Назначение: "
+"%(application)s."
+
+#: pages/views/views_projects.py
+msgid "Which SolarOne luminaires are used at %(title)s?"
+msgstr "Какие светильники SolarOne используются на объекте %(title)s?"
+
+#: pages/views/views_projects.py
+msgid "The project uses these SolarOne luminaires: %(names)s."
+msgstr "В проекте используются следующие светильники SolarOne: %(names)s."
+
+#: pages/views/views_stadium.py
+msgid "How many masts does a stadium floodlighting package need?"
+msgstr "Сколько мачт требуется для прожекторной системы освещения стадиона?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"It follows from the target illuminance on the playing surface and the "
+"mounting points the structure allows, not from a fixed fixture count. The "
+"VSP series is rated 4200 W per system, so a pitch reaches its target output "
+"from fewer masts than the high-pressure-scheme it replaces. Send the venue "
+"drawing and mounting height and we return a photometric layout with the mast"
+" count."
+msgstr ""
+"Это определяется целевой освещённостью игровой поверхности и допустимыми "
+"конструкцией точками установки, а не фиксированным числом светильников. "
+"Серия VSP рассчитана на 4 200 Вт на систему, поэтому поле выходит на целевые"
+" показатели с меньшим числом мачт, чем заменяемая установка на лампах "
+"высокого давления. Пришлите план объекта и высоту установки — мы вернём "
+"фотометрический расчёт с количеством мачт."
+
+#: pages/views/views_stadium.py
+msgid ""
+"Are these luminaires usable for televised matches and super-slow-motion "
+"replay?"
+msgstr ""
+"Подходят ли эти светильники для телетрансляций и сверхзамедленных повторов?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"Yes. Vision Strobe Protection on the VSP series keeps the output free of the"
+" low-frequency flicker that shows up as banding in super-slow-motion replay,"
+" and the asymmetric optics are aimed to keep glare out of the camera-side "
+"seating."
+msgstr ""
+"Да. Функция Vision Strobe Protection в серии VSP устраняет низкочастотные "
+"пульсации, которые проявляются полосами при сверхзамедленном повторе, а "
+"асимметричная оптика направлена так, чтобы исключить блики на трибунах со "
+"стороны камер."
+
+#: pages/views/views_stadium.py
+msgid "What beam angles are available?"
+msgstr "Какие углы раскрытия луча доступны?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"12°, 18°, 30° and 50° from the same M Series optical platform, coded 12 / 18"
+" / 30 / 50 in the model number. The narrow angles serve the seating bowl, "
+"the wider ones the playing surface."
+msgstr ""
+"12°, 18°, 30° и 50° на одной оптической платформе серии M, обозначаемые как "
+"12 / 18 / 30 / 50 в номере модели. Узкие углы предназначены для чаши трибун,"
+" широкие — для игровой поверхности."
+
+#: pages/views/views_stadium.py
+msgid "What is the efficacy, lifespan and protection rating?"
+msgstr "Каковы светоотдача, срок службы и степень защиты?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"CRI 70~95, L70 of 100,000 hours at 25 °C, IP66 ingress protection, 10 kV "
+"surge protection, and an operating range of −40 °C to +55 °C."
+msgstr ""
+"CRI 70~95, ресурс L70 100 000 часов при 25 °C, степень защиты IP66, защита "
+"от импульсных перенапряжений 10 кВ и диапазон эксплуатации от −40 °C до +55 "
+"°C."
+
+#: pages/views/views_stadium.py
+msgid "How is the fixture powered and dimmed?"
+msgstr "Как осуществляется питание и диммирование светильника?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"The remote power system pairs one AC enclosure with n LED driver enclosures,"
+" so the drivers sit away from the fixture and are reached without a ladder. "
+"Dimming is 1-10 V, DMX, DALI or Zigbee, and both 110–277 VAC and 347–480 VAC"
+" inputs are available. Enclosure dimensions follow the project, so they are "
+"quoted per order rather than fixed on this page."
+msgstr ""
+"Система выносного питания объединяет один блок питания переменного тока с n "
+"блоками LED-драйверов, поэтому драйверы находятся вдали от светильника и "
+"доступны без стремянки. Диммирование — 1-10 В, DMX, DALI или Zigbee; "
+"доступны входы 110–277 В AC и 347–480 В AC. Габариты корпусов определяются "
+"проектом, поэтому они указываются в заказе, а не фиксируются на этой "
+"странице."
+
+#: pages/views/views_stadium.py
+msgid "Do you supply photometric studies for our venue?"
+msgstr "Вы предоставляете фотометрические расчёты для нашего объекта?"

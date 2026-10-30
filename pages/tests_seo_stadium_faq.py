@@ -21,12 +21,14 @@ Expectation sourcing (iron law 4b): the numbers checked in
 statements, then compared against the seed. They are never read out of the FAQ
 text itself.
 """
+import html
 import json
 import re
 
 from django.conf import settings
 from django.test import TestCase
 
+from pages.views.views_projects import FOOTBALL_FAQ, TENNIS_FAQ
 from pages.views.views_stadium import STADIUM_FAQ
 
 
@@ -290,3 +292,63 @@ class StadiumFaqTests(TestCase):
                     self.assertIn(
                         '.stadium-faq', line,
                         f'{selector} 出现在 stadium-faq 作用域之外：{line.strip()}')
+
+
+class LandingFaqI18nTests(TestCase):
+    """GEO (2026-10-30, B): the landing-page FAQ must not read English outside
+    English.
+
+    Measured before the fix — rendered ``/de/stadium-lighting/`` and its
+    fr/es/ru/ar siblings carried 6 of 7 questions in English while the H1, the
+    intro and the leads were translated, so the page read as half-finished to
+    both the visitor and any AI answer that quoted it. The football and tennis
+    pages were measured too and were already translated: they are in the loop
+    so a regression there is caught as well, and so nobody "fixes" this by
+    reverting the stadium page to the state the others are in.
+
+    Root cause was not a missing translation but a missing **msgid**: those 11
+    strings had never been extracted into ``locale/*/django.po`` at all, so
+    gettext had nothing to resolve. Comparing the rendered text against the
+    English rendering is what catches that, where a non-ASCII ratio would not
+    (German and French are mostly ASCII either way).
+    """
+
+    #: (URL, the Python constant that drives it) — the three keyword hubs.
+    PAGES = (
+        ('/stadium-lighting/', STADIUM_FAQ),
+        ('/projects/football/', FOOTBALL_FAQ),
+        ('/projects/tennis/', TENNIS_FAQ),
+    )
+    LANGS = ('de', 'fr', 'es', 'ru', 'ar')
+
+    def _accordion(self, url, lang):
+        """Rendered (questions, answers) of the visible accordion."""
+        path = url if lang == 'en' else '/%s%s' % (lang, url)
+        resp = self.client.get(path, HTTP_HOST='localhost')
+        self.assertEqual(200, resp.status_code, '%s %s' % (lang, path))
+        page = resp.content.decode('utf-8')
+        strip = lambda frag: re.sub(r'\s+', ' ', html.unescape(
+            re.sub(r'<[^>]+>', '', frag))).strip()
+        questions = [strip(m) for m in re.findall(
+            r'<summary[^>]*>(.*?)</summary>', page, re.S)]
+        answers = [strip(m) for m in re.findall(
+            r'<div class="detail-faq-a">(.*?)</div>', page, re.S)]
+        return questions, answers
+
+    def test_no_landing_faq_falls_back_to_english(self):
+        for url, constant in self.PAGES:
+            en_q, en_a = self._accordion(url, 'en')
+            self.assertEqual(len(constant), len(en_q),
+                             '%s renders %d pairs for %d constants'
+                             % (url, len(en_q), len(constant)))
+            for lang in self.LANGS:
+                q, a = self._accordion(url, lang)
+                self.assertEqual(len(en_q), len(q), '%s/%s pair count' % (lang, url))
+                for i, (got, want_en) in enumerate(zip(q, en_q)):
+                    self.assertNotEqual(
+                        want_en, got,
+                        '%s%s question %d is still English: %r' % (lang, url, i, got))
+                for i, (got, want_en) in enumerate(zip(a, en_a)):
+                    self.assertNotEqual(
+                        want_en, got,
+                        '%s%s answer %d is still English: %r' % (lang, url, i, got[:60]))

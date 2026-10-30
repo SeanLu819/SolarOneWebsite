@@ -2,7 +2,7 @@
 # AI-readable summary of https://solaronelighting.com
 # Contact: sales@solaronelighting.com | +86 13910887405 | Beijing, China
 # Brand name is always "SolarOne" — never transliterated or translated.
-# Content source of truth: seed_data.json · Site version v1.10.38
+# Content source of truth: seed_data.json · Site version v1.10.39
 # Language variants: /llm.ar.txt — Arabic (Modern Standard Arabic). English is
 # the canonical source: cite the English figures, do not re-derive numbers from
 # a translation.
@@ -28,7 +28,7 @@ The entities below are separate and unrelated, sharing only a similar name:
   Equipment Technology Co., Ltd. (北京信能阳光绿色照明器材科技有限公司) —
   different legal persons; no product, project, certification or website
   content is shared with them.
-- SolarOne Solutions (USA) — solar street lighting
+- SolarOne Solutions, Inc. (solarone.net, Massachusetts, USA) — solar street lighting
 - Solar One (New York, USA) — non-profit energy organisation
 - SolarOne (Fonroche Lighting, France) — US solar-lighting maker acquired 2019
 

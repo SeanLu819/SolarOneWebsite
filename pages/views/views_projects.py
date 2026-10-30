@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.conf import settings
 from django.shortcuts import redirect, render
@@ -414,6 +415,132 @@ def projects_tennis(request):
     return projects_landing(request, 'tennis')
 
 
+# ---------------------------------------------------------------------------
+# GEO (2026-10-30, A): a quotable sentence + a page-level FAQPage per project
+#
+# An AI answer that cites a page lifts a *sentence*, not a template. These two
+# builders turn data the project already carries into text that can stand on
+# its own: the brand, the venue, the place and the measured numbers in one
+# line, plus two or three Q&A answerable from the same data. Nothing is
+# invented: a project with no measured results gets no results pair, and a
+# project with no linked luminaires gets no product pair.
+#
+# Every slot is already-localised data: title / location / results carry
+# per-language translations, the venue and application labels go through
+# gettext, and product names go through their own translation channel. The
+# frames are gettext msgids with named placeholders, translated in all six
+# languages (locale/*/LC_MESSAGES/django.po).
+#
+#: A real sentence boundary: ". " followed by a capital, a digit or an opening
+#: quote. Splitting on every "." would cut a measurement in half, because the
+#: numbers arrive as "2200 lux avg., U0=0.8, Ra>80".
+_SENTENCE_BOUNDARY = re.compile(r'(?<=[.!?])\s+(?=[A-Z0-9(\u201c"])')
+
+
+def _scrub_flat(text):
+    """One clean line of project prose: seeded CJK markers off, runs collapsed."""
+    from pages.utils import scrub_project_markers
+
+    return re.sub(r'\s+', ' ', scrub_project_markers((text or '').strip())).strip()
+
+
+def _first_sentence(text, limit=260):
+    """The quotable unit for the GEO lead line.
+
+    ``results`` runs to 390 characters, so the lead cannot take the whole
+    field; but it must not stop at the first "." either (see
+    ``_SENTENCE_BOUNDARY``). Falls back to a clean cut before ``limit``.
+    """
+    t = _scrub_flat(text)
+    if not t:
+        return ''
+    m = _SENTENCE_BOUNDARY.search(t)
+    if m and m.start() >= 25:
+        head = t[:m.start()].strip()
+        return head if head.endswith(('.', '!', '?')) else head + '.'
+    if len(t) <= limit:
+        return t if t.endswith(('.', '!', '?')) else t + '.'
+    cut = t[:limit]
+    for sep in ('; ', ' \u2014 ', ', '):
+        idx = cut.rfind(sep)
+        if idx > 80:
+            return cut[:idx].rstrip(' ,;-\u2014') + '.'
+    return cut.rsplit(' ', 1)[0].rstrip(' ,;-\u2014') + '.'
+
+
+def _project_citable_sentence(project, venue_label, sport_label):
+    """One self-contained sentence an AI answer can lift verbatim.
+
+    Brand + venue + place + the measured number, in that order: the four things
+    a citation needs and the four things this page alone can attest. Empty when
+    the project has no title, so no page ever ships a half-built sentence.
+    """
+    title = _scrub_flat(getattr(project, 'title_t', ''))
+    location = _scrub_flat(getattr(project, 'location_t', ''))
+    if not title:
+        return ''
+    sentence = _(
+        'SolarOne supplied the LED lighting for %(title)s in %(location)s'
+        ' (%(application)s).'
+    ) % {
+        'title': title,
+        'location': location,
+        'application': (sport_label or venue_label or '').strip(),
+    }
+    results = _first_sentence(getattr(project, 'results_t', ''))
+    if results:
+        sentence += ' ' + _('Measured on site: %(results)s') % {'results': results}
+    return sentence
+
+
+def _project_faq(project, venue_label, sport_label, related):
+    """Two or three Q&A built from what this project page actually states.
+
+    Deliberately data-derived rather than a constant list: 22 projects cannot
+    share six canned answers, and a canned answer that contradicts the page is
+    worse than no FAQ (a structured-data lie). Pairs drop out when their data
+    is missing instead of being padded with boilerplate.
+    """
+    title = _scrub_flat(getattr(project, 'title_t', ''))
+    location = _scrub_flat(getattr(project, 'location_t', ''))
+    if not title:
+        return []
+
+    faq = []
+    results = _scrub_flat(getattr(project, 'results_t', ''))
+    if results:
+        faq.append({
+            'question': _('What lighting results were measured at %(title)s?')
+                        % {'title': title},
+            'answer': results,
+        })
+
+    faq.append({
+        'question': _('Where is %(title)s and what kind of venue is it?')
+                    % {'title': title},
+        'answer': _(
+            '%(title)s is in %(location)s. Venue type: %(venue)s.'
+            ' Application: %(application)s.'
+        ) % {
+            'title': title,
+            'location': location,
+            'venue': (venue_label or '').strip(),
+            'application': (sport_label or '').strip(),
+        },
+    })
+
+    names = [_scrub_flat(getattr(p, 'name_t', '')) for p in (related or [])]
+    names = [n for n in names if n]
+    if names:
+        faq.append({
+            'question': _('Which SolarOne luminaires are used at %(title)s?')
+                        % {'title': title},
+            'answer': _('The project uses these SolarOne luminaires: %(names)s.')
+                      % {'names': ', '.join(names)},
+        })
+    return faq
+
+
 def project_detail(request, slug):
     """Project detail page with backend-managed text and image carousel."""
     context = get_common_context()
@@ -448,6 +575,25 @@ def project_detail(request, slug):
         # B2: cross-link to products whose category matches this
         # project's sport/venue type (breaks the content islands).
         context['related_products'] = related_products_for_project(project, lang)
+
+        # GEO (2026-10-30, A): the quotable lead sentence and a page-level
+        # FAQPage. Both are built here, in Python, from data this page
+        # already states, and the JSON-LD is dumped with json.dumps so the
+        # template only has to inject it whole (JSON-LD iron law).
+        from .views_products import build_product_faq_jsonld
+
+        faq = _project_faq(project, active_venue_type_label,
+                           active_sport_type_label, context['related_products'])
+        context['citable_sentence'] = _project_citable_sentence(
+            project, active_venue_type_label, active_sport_type_label)
+        context['faq_items'] = faq
+        context['faq_json'] = json.dumps(
+            build_product_faq_jsonld(
+                faq,
+                entity_id='%s%s#faq' % (settings.CANONICAL_ORIGIN, request.path),
+            ),
+            ensure_ascii=False,
+        ) if faq else ''
 
     else:
         # S2: an unresolvable slug may simply be a page that was renamed. Only

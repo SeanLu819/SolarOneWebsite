@@ -1931,3 +1931,129 @@ msgstr ""
 "Die Trägerleuchten sind mit bis zu 130 lm/W und einer L70-Lebensdauer von "
 "über 100 000 Stunden bei 25 °C spezifiziert. Ein Blendschutz verändert die "
 "Richtung des Lichts, nicht die Lichtmenge, die die Leuchte erzeugt."
+
+#: pages/views/views_projects.py
+msgid ""
+"SolarOne supplied the LED lighting for %(title)s in %(location)s "
+"(%(application)s)."
+msgstr ""
+"SolarOne hat die LED-Beleuchtung für %(title)s in %(location)s geliefert "
+"(%(application)s)."
+
+#: pages/views/views_projects.py
+msgid "Measured on site: %(results)s"
+msgstr "Vor Ort gemessen: %(results)s"
+
+#: pages/views/views_projects.py
+msgid "What lighting results were measured at %(title)s?"
+msgstr "Welche Lichtwerte wurden bei %(title)s gemessen?"
+
+#: pages/views/views_projects.py
+msgid "Where is %(title)s and what kind of venue is it?"
+msgstr "Wo liegt %(title)s und um welche Art von Anlage handelt es sich?"
+
+#: pages/views/views_projects.py
+msgid ""
+"%(title)s is in %(location)s. Venue type: %(venue)s. Application: "
+"%(application)s."
+msgstr ""
+"%(title)s liegt in %(location)s. Anlagentyp: %(venue)s. Anwendung: "
+"%(application)s."
+
+#: pages/views/views_projects.py
+msgid "Which SolarOne luminaires are used at %(title)s?"
+msgstr "Welche SolarOne-Leuchten werden bei %(title)s eingesetzt?"
+
+#: pages/views/views_projects.py
+msgid "The project uses these SolarOne luminaires: %(names)s."
+msgstr "Das Projekt setzt diese SolarOne-Leuchten ein: %(names)s."
+
+#: pages/views/views_stadium.py
+msgid "How many masts does a stadium floodlighting package need?"
+msgstr "Wie viele Masten braucht eine Stadion-Flutlichtanlage?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"It follows from the target illuminance on the playing surface and the "
+"mounting points the structure allows, not from a fixed fixture count. The "
+"VSP series is rated 4200 W per system, so a pitch reaches its target output "
+"from fewer masts than the high-pressure-scheme it replaces. Send the venue "
+"drawing and mounting height and we return a photometric layout with the mast"
+" count."
+msgstr ""
+"Das ergibt sich aus der geforderten Beleuchtungsstärke auf der Spielfläche "
+"und den Montagepunkten, die die Konstruktion zulässt — nicht aus einer "
+"festen Leuchtenzahl. Die VSP-Serie ist mit 4 200 W pro System ausgelegt, "
+"deshalb erreicht ein Spielfeld die Zielwerte mit weniger Masten als die "
+"Hochdruckanlage, die sie ersetzt. Senden Sie uns die Zeichnung der Anlage "
+"und die Montagehöhe, dann erhalten Sie einen photometrischen Plan inklusive "
+"Mastzahl."
+
+#: pages/views/views_stadium.py
+msgid ""
+"Are these luminaires usable for televised matches and super-slow-motion "
+"replay?"
+msgstr ""
+"Sind diese Leuchten für Fernsehübertragungen und Superzeitlupe geeignet?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"Yes. Vision Strobe Protection on the VSP series keeps the output free of the"
+" low-frequency flicker that shows up as banding in super-slow-motion replay,"
+" and the asymmetric optics are aimed to keep glare out of the camera-side "
+"seating."
+msgstr ""
+"Ja. Die Vision Strobe Protection der VSP-Serie hält den Lichtstrom frei von "
+"niederfrequentem Flimmern, das in der Superzeitlupe als Streifenbildung "
+"sichtbar wird, und die asymmetrische Optik ist so gerichtet, dass keine "
+"Blendung auf die kameraseitigen Tribünen fällt."
+
+#: pages/views/views_stadium.py
+msgid "What beam angles are available?"
+msgstr "Welche Abstrahlwinkel sind verfügbar?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"12°, 18°, 30° and 50° from the same M Series optical platform, coded 12 / 18"
+" / 30 / 50 in the model number. The narrow angles serve the seating bowl, "
+"the wider ones the playing surface."
+msgstr ""
+"12°, 18°, 30° und 50° aus derselben optischen Plattform der M-Serie, kodiert"
+" als 12 / 18 / 30 / 50 in der Modellbezeichnung. Die engen Winkel versorgen "
+"den Zuschauerring, die weiten die Spielfläche."
+
+#: pages/views/views_stadium.py
+msgid "What is the efficacy, lifespan and protection rating?"
+msgstr "Wie hoch sind Lichtausbeute, Lebensdauer und Schutzart?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"CRI 70~95, L70 of 100,000 hours at 25 °C, IP66 ingress protection, 10 kV "
+"surge protection, and an operating range of −40 °C to +55 °C."
+msgstr ""
+"CRI 70~95, L70 von 100 000 Stunden bei 25 °C, Schutzart IP66, "
+"Überspannungsschutz 10 kV und ein Betriebstemperaturbereich von −40 °C bis "
+"+55 °C."
+
+#: pages/views/views_stadium.py
+msgid "How is the fixture powered and dimmed?"
+msgstr "Wie werden die Leuchten versorgt und gedimmt?"
+
+#: pages/views/views_stadium.py
+msgid ""
+"The remote power system pairs one AC enclosure with n LED driver enclosures,"
+" so the drivers sit away from the fixture and are reached without a ladder. "
+"Dimming is 1-10 V, DMX, DALI or Zigbee, and both 110–277 VAC and 347–480 VAC"
+" inputs are available. Enclosure dimensions follow the project, so they are "
+"quoted per order rather than fixed on this page."
+msgstr ""
+"Das Remote-Power-System kombiniert ein AC-Gehäuse mit n LED-Treibergehäusen,"
+" sodass die Treiber entfernt von der Leuchte sitzen und ohne Leiter "
+"erreichbar sind. Gedimmt wird über 1–10 V, DMX, DALI oder Zigbee; Eingänge "
+"für 110–277 VAC und 347–480 VAC sind verfügbar. Die Gehäuseabmessungen "
+"richten sich nach dem Projekt und werden daher auftragsbezogen angeboten "
+"statt hier festgeschrieben."
+
+#: pages/views/views_stadium.py
+msgid "Do you supply photometric studies for our venue?"
+msgstr "Liefern Sie photometrische Berechnungen für unsere Anlage?"

@@ -1227,17 +1227,19 @@
       max-height: 240px;
     }
   }
-  /* Stadium landing page FAQ (v1.10.24). product_detail.html carries its own
-     inline copy of these rules; this is the same visual language applied to a
-     second page. Scoped under .stadium-faq so nothing else inherits it, and the
-     values are copied verbatim from the product page rather than restyled, so
-     the two FAQ blocks cannot drift apart visually. */
-  .stadium-faq {
+  /* Stadium landing page FAQ (v1.10.24), reused by the project-detail FAQ
+     (GEO 2026-10-30) through the :is() group below. product_detail.html
+     carries its own inline copy of these rules; this is the same visual
+     language applied to a third page. Scoped under those two class names so
+     nothing else inherits it, and the values are copied verbatim from the
+     product page rather than restyled, so the FAQ blocks cannot drift apart
+     visually. */
+  :is(.stadium-faq, .project-faq) {
     margin-top: 0;
     padding-top: 32px;
     border-top: 1px solid var(--line);
   }
-  .stadium-faq .detail-faq-label {
+  :is(.stadium-faq, .project-faq) .detail-faq-label {
     display: block;
     font-family: var(--ff-mono);
     font-size: 13px;
@@ -1246,7 +1248,7 @@
     color: var(--accent);
     margin-bottom: 8px;
   }
-  .stadium-faq .detail-faq-title {
+  :is(.stadium-faq, .project-faq) .detail-faq-title {
     font-family: var(--ff-display);
     font-size: 1.6rem;
     font-weight: 600;
@@ -1254,19 +1256,19 @@
     letter-spacing: -0.02em;
     margin: 0 0 24px;
   }
-  .stadium-faq .detail-faq-list {
+  :is(.stadium-faq, .project-faq) .detail-faq-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
-  .stadium-faq .detail-faq-item {
+  :is(.stadium-faq, .project-faq) .detail-faq-item {
     border: 1px solid var(--line);
     border-radius: 12px;
     background: var(--bg-soft);
     padding: 0;
     overflow: hidden;
   }
-  .stadium-faq .detail-faq-q {
+  :is(.stadium-faq, .project-faq) .detail-faq-q {
     list-style: none;
     cursor: pointer;
     padding: 16px 20px;
@@ -1279,8 +1281,8 @@
     justify-content: space-between;
     gap: 16px;
   }
-  .stadium-faq .detail-faq-q::-webkit-details-marker { display: none; }
-  .stadium-faq .detail-faq-q::after {
+  :is(.stadium-faq, .project-faq) .detail-faq-q::-webkit-details-marker { display: none; }
+  :is(.stadium-faq, .project-faq) .detail-faq-q::after {
     content: "+";
     font-size: 1.4rem;
     line-height: 1;
@@ -1288,17 +1290,17 @@
     flex-shrink: 0;
     transition: transform 0.2s;
   }
-  .stadium-faq .detail-faq-item[open] > .detail-faq-q::after {
+  :is(.stadium-faq, .project-faq) .detail-faq-item[open] > .detail-faq-q::after {
     transform: rotate(45deg);
   }
-  .stadium-faq .detail-faq-a {
+  :is(.stadium-faq, .project-faq) .detail-faq-a {
     padding: 0 20px 18px;
     font-size: 0.98rem;
     line-height: 1.7;
     color: var(--ink-soft);
   }
-  .stadium-faq .detail-faq-a p { margin: 0 0 8px; }
-  .stadium-faq .detail-faq-a p:last-child { margin-bottom: 0; }
+  :is(.stadium-faq, .project-faq) .detail-faq-a p { margin: 0 0 8px; }
+  :is(.stadium-faq, .project-faq) .detail-faq-a p:last-child { margin-bottom: 0; }
   .product-card-specs {
     display: flex;
     gap: 0;

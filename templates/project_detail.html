@@ -18,6 +18,16 @@
 {% include "includes/breadcrumb_jsonld.html" with section="projects" leaf_name=project.title_t|escapejs leaf_url=request.path %}
 {% endif %}
 
+{% comment %}GEO (2026-10-30, A): FAQPage for this project. Built in Python with
+   json.dumps and injected whole — the JSON-LD iron law. The Q&A are derived
+   from this page's own data, so the structured data can never disagree with
+   the visible accordion below it.{% endcomment %}
+{% if faq_json %}
+<script nonce="{{ request.csp_nonce }}" type="application/ld+json">
+{{ faq_json|safe }}
+</script>
+{% endif %}
+
 <!-- Project detail page with sidebar and carousel -->
 <section class="page-with-sidebar" style="padding: 100px 0 80px;">
   <div class="container">
@@ -56,6 +66,13 @@
         <div class="detail-hero">
           <span style="font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 12px;">{{ project.location_t }}</span>
           <h1 class="section-title" style="margin-bottom: 16px; font-size: 20px;">{{ project.title_t }}</h1>
+          {% if citable_sentence %}
+          {% comment %}GEO (2026-10-30, A): one self-contained sentence — brand +
+             venue + place + the measured number — so an AI answer can lift this
+             page verbatim instead of paraphrasing it into anonymity. Built in
+             the view from data this page already states; never authored here.{% endcomment %}
+          <p class="project-citable">{{ citable_sentence }}</p>
+          {% endif %}
         </div>
 
         <!-- Full-width carousel -->
@@ -148,6 +165,23 @@
           <div class="detail-results full-width-result">
             <span class="detail-results-label">{% trans "Project Results" %}</span>
             <div class="detail-results-text">{{ project.results_t|nl2para }}</div>
+          </div>
+          {% endif %}
+
+          {% comment %}GEO (2026-10-30, A): the visible half of the FAQPage above.
+             A FAQPage whose answers cannot be read on the page is a
+             structured-data lie, so every pair is rendered here too.{% endcomment %}
+          {% if faq_items %}
+          <div class="detail-faq project-faq">
+            <h2 class="detail-faq-label">{% trans "Frequently Asked Questions" %}</h2>
+            <div class="detail-faq-list">
+              {% for faq in faq_items %}
+              <details class="detail-faq-item">
+                <summary class="detail-faq-q"><bdi>{{ faq.question }}</bdi></summary>
+                <div class="detail-faq-a">{{ faq.answer|linebreaks }}</div>
+              </details>
+              {% endfor %}
+            </div>
           </div>
           {% endif %}
 
@@ -251,6 +285,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* GEO (2026-10-30, A): the quotable lead sentence. Sized and ruled as a
+     single readable line because that is the unit an AI answer lifts — it has
+     to survive being read on its own, outside this page. */
+  .project-citable {
+    max-width: 68ch;
+    margin: 0 0 4px;
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--ink);
   }
 
   /* Text content below image */
@@ -602,7 +649,8 @@
   "@type": "Article",
   "@id": "{{ canonical_origin }}{{ request.path }}#article",
   "headline": "{{ project.title_t|escapejs }}",
-  "description": "{{ project.description_t|default:''|descrub|escapejs }}",
+  "description": "{{ project.description_t|default:''|descrub|escapejs }}",{% if citable_sentence %}
+  "abstract": "{{ citable_sentence|escapejs }}",{% endif %}
   "image": "{{ canonical_origin }}{{ project.image_url|default:'' }}",
   "url": "{{ canonical_origin }}{{ request.path }}",
   "publisher": {

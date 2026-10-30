@@ -333,17 +333,159 @@ def _seo_keyword(obj, lang='en'):
     return CATEGORY_KEYWORD.get(cat, '')
 
 
-def project_category_keyword(sport_type, lang='en'):
-    """English SEO keyword phrase for a project's ``sport_type``.
+#: Per-language search phrases for the project <title> keyword — the same
+#: arrangement ``CATEGORY_KEYWORD_I18N`` uses on the product side, and the fix
+#: for a measured GEO gap (2026-10-30, C): every /de/, /fr/, /es/, /ru/ and
+#: /ar/ project page carried an ENGLISH keyword between the em-dash and the
+#: brand, because the function below returned the same value in both branches
+#: of its language test.
+#:
+#: These are **search phrases, not translations of the English label**. German
+#: queries are compound nouns ("LED-Fußballstadionbeleuchtung"), French and
+#: Spanish are noun phrases, Russian and Arabic reorder the words. A literal
+#: translation of "LED football Stadium Lights" would be a phrase nobody types,
+#: which is worth exactly the zero searches it would win.
+PROJECT_CATEGORY_KEYWORD_I18N = {
+    'FOOTBALL_FIELD': {
+        'de': 'LED-Fußballstadionbeleuchtung',
+        'fr': 'Éclairage LED pour stades de football',
+        'es': 'Iluminación LED para estadios de fútbol',
+        'ru': 'Светодиодное освещение футбольных стадионов',
+        'ar': 'إنارة LED لملاعب كرة القدم',
+    },
+    'SOCCER_FIELD': {
+        'de': 'LED-Fußballfeldbeleuchtung',
+        'fr': 'Éclairage LED pour terrains de football',
+        'es': 'Iluminación LED para campos de fútbol',
+        'ru': 'Светодиодное освещение футбольных полей',
+        'ar': 'إنارة LED لملاعب كرة القدم',
+    },
+    'BASEBALL_FIELD': {
+        'de': 'LED-Baseballfeldbeleuchtung',
+        'fr': 'Éclairage LED pour terrains de baseball',
+        'es': 'Iluminación LED para campos de béisbol',
+        'ru': 'Светодиодное освещение бейсбольных полей',
+        'ar': 'إنارة LED لملاعب البيسبول',
+    },
+    'TENNIS_COURTS': {
+        'de': 'LED-Tennisplatzbeleuchtung',
+        'fr': 'Éclairage LED pour courts de tennis',
+        'es': 'Iluminación LED para pistas de tenis',
+        'ru': 'Светодиодное освещение теннисных кортов',
+        'ar': 'إنارة LED لملاعب التنس',
+    },
+    'TENNIS': {
+        'de': 'LED-Tennisplatzbeleuchtung',
+        'fr': 'Éclairage LED pour courts de tennis',
+        'es': 'Iluminación LED para pistas de tenis',
+        'ru': 'Светодиодное освещение теннисных кортов',
+        'ar': 'إنارة LED لملاعب التنس',
+    },
+    'SKI_AREA': {
+        'de': 'LED-Skipistenbeleuchtung',
+        'fr': 'Éclairage LED pour domaines skiables',
+        'es': 'Iluminación LED para estaciones de esquí',
+        'ru': 'Светодиодное освещение горнолыжных трасс',
+        'ar': 'إنارة LED لمناطق التزلج',
+    },
+    'KARTING': {
+        'de': 'LED-Kartbahnbeleuchtung',
+        'fr': 'Éclairage LED pour pistes de karting',
+        'es': 'Iluminación LED para circuitos de karting',
+        'ru': 'Светодиодное освещение картинговых трасс',
+        'ar': 'إنارة LED لحلبات الكارتينغ',
+    },
+    'BASKETBALL': {
+        'de': 'LED-Basketballfeldbeleuchtung',
+        'fr': 'Éclairage LED pour terrains de basketball',
+        'es': 'Iluminación LED para canchas de baloncesto',
+        'ru': 'Светодиодное освещение баскетбольных площадок',
+        'ar': 'إنارة LED لملاعب كرة السلة',
+    },
+    'VELODROME': {
+        'de': 'LED-Radrennbahnbeleuchtung',
+        'fr': 'Éclairage LED pour vélodromes',
+        'es': 'Iluminación LED para velódromos',
+        'ru': 'Светодиодное освещение велотреков',
+        'ar': 'إنارة LED لمضمار الدراجات',
+    },
+    'MULTI_SPORT': {
+        'de': 'LED-Multisporthallenbeleuchtung',
+        'fr': 'Éclairage LED pour arènes multisports',
+        'es': 'Iluminación LED para arenas multideportivas',
+        'ru': 'Светодиодное освещение многофункциональных арен',
+        'ar': 'إنارة LED للصالات متعددة الرياضات',
+    },
+    'FENCING': {
+        'de': 'LED-Fechtarenenbeleuchtung',
+        'fr': "Éclairage LED pour salles d'escrime",
+        'es': 'Iluminación LED para salas de esgrima',
+        'ru': 'Светодиодное освещение залов для фехтования',
+        'ar': 'إنارة LED لصالات المبارزة',
+    },
+    'AQUATICS_CENTRE': {
+        'de': 'LED-Schwimmhallenbeleuchtung',
+        'fr': 'Éclairage LED pour centres aquatiques',
+        'es': 'Iluminación LED para centros acuáticos',
+        'ru': 'Светодиодное освещение водных центров',
+        'ar': 'إنارة LED لمراكز الألعاب المائية',
+    },
+    'AIRPORT': {
+        'de': 'LED-Flughafenbeleuchtung',
+        'fr': 'Éclairage LED pour zones aéroportuaires',
+        'es': 'Iluminación LED para zonas aeroportuarias',
+        'ru': 'Светодиодное освещение территорий аэропортов',
+        'ar': 'إنارة LED لمناطق المطار',
+    },
+    'ICE_ARENA': {
+        'de': 'LED-Eishallenbeleuchtung',
+        'fr': 'Éclairage LED pour patinoires',
+        'es': 'Iluminación LED para pistas de hielo',
+        'ru': 'Светодиодное освещение ледовых арен',
+        'ar': 'إنارة LED لحلبات الجليد',
+    },
+    'CITY_EXPRESSWAY': {
+        'de': 'LED-Straßenbeleuchtung',
+        'fr': 'Éclairage LED routier',
+        'es': 'Iluminación LED vial',
+        'ru': 'Светодиодное дорожное освещение',
+        'ar': 'إنارة LED للطرق',
+    },
+    'OTHER': {
+        'de': 'LED-Beleuchtung',
+        'fr': 'Éclairage LED',
+        'es': 'Iluminación LED',
+        'ru': 'Светодиодное освещение',
+        'ar': 'إنارة LED',
+    },
+    #: Unknown/blank ``sport_type`` — keeps the middle segment non-empty and
+    #: non-English for the same reason as ``DEFAULT_PROJECT_CATEGORY_KEYWORD``.
+    '_DEFAULT': {
+        'de': 'LED-Beleuchtung',
+        'fr': 'Éclairage LED',
+        'es': 'Iluminación LED',
+        'ru': 'Светодиодное освещение',
+        'ar': 'إنارة LED',
+    },
+}
 
-    Mirrors ``_seo_keyword`` for the product side: English gets the mapped
-    phrase, any other locale falls back to it (per-language phrasing is B8/E2).
-    Unknown/blank ``sport_type`` collapses to ``DEFAULT_PROJECT_CATEGORY_KEYWORD``
-    so the formula never emits an empty middle segment.
+
+def project_category_keyword(sport_type, lang='en'):
+    """SEO keyword phrase for a project's ``sport_type``, in ``lang``.
+
+    Mirrors ``_seo_keyword`` for the product side, including its i18n source:
+    English takes the mapped phrase, any other locale takes
+    ``PROJECT_CATEGORY_KEYWORD_I18N`` (a curated per-market search phrase, not
+    a translation of the English label). Unknown/blank ``sport_type`` collapses
+    to the default so the formula never emits an empty middle segment — and
+    never an English one outside English.
     """
+    phrase = PROJECT_CATEGORY_KEYWORD.get(sport_type, DEFAULT_PROJECT_CATEGORY_KEYWORD)
     if lang and lang != 'en':
-        return PROJECT_CATEGORY_KEYWORD.get(sport_type, DEFAULT_PROJECT_CATEGORY_KEYWORD)
-    return PROJECT_CATEGORY_KEYWORD.get(sport_type, DEFAULT_PROJECT_CATEGORY_KEYWORD)
+        table = PROJECT_CATEGORY_KEYWORD_I18N.get(sport_type) or \
+            PROJECT_CATEGORY_KEYWORD_I18N['_DEFAULT']
+        return table.get(lang) or phrase
+    return phrase
 
 
 #: Hard budget for the English project ``<title>``. Google truncates the tail
