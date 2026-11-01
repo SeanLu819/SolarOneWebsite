@@ -93,7 +93,11 @@ INDEXNOW_KEY_FILE = '%s.txt' % INDEXNOW_KEY
 # third-party request is made). Set via env (Vercel: GA4_MEASUREMENT_ID).
 GA4_MEASUREMENT_ID = os.environ.get('GA4_MEASUREMENT_ID', '')
 # Google Search Console verification meta tag content (from GSC). Empty = omit.
-GSC_VERIFICATION_CODE = os.environ.get('GSC_VERIFICATION_CODE', '')
+# v1.10.40: GSC ownership verified for solaronelighting.com — value is public
+# (it is emitted in <head>), so a non-empty default keeps Vercel deploys working
+# without a separate env var. Env override still wins if set.
+GSC_VERIFICATION_CODE = os.environ.get(
+    'GSC_VERIFICATION_CODE', 'u4juYDk2UaI-ZL9ALdHl7Zls74BpI364XdEvUOLQ8JQ')
 
 # #4 (v1.6.1): tighten ALLOWED_HOSTS — drop the bare `.vercel.app` wildcard that
 # let ANY *.vercel.app host (incl. attacker-controlled) be accepted, an SEO/canonical
@@ -519,4 +523,4 @@ CONTACT_RATE_WINDOW = int(os.environ.get('CONTACT_RATE_WINDOW', '600'))  # windo
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Application version (displayed in admin)
-APP_VERSION = '1.10.39'
+APP_VERSION = '1.10.40'
