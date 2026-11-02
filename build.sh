@@ -46,11 +46,16 @@ set +e
 INSTALL_SUCCESS=0
 if command -v uv &> /dev/null; then
     echo "  Using uv..."
-    # Install into the system Python (Vercel Lambda runs on system Python, no
-    # venv). --system avoids "No virtual environment found"; --break-system-packages
-    # is required on PEP 668 externally-managed runtimes and is a harmless no-op
-    # elsewhere. The pip fallback below stays as a safety net.
-    uv pip install --system --break-system-packages -r requirements.txt 2>&1 | tail -10
+    # Install into the SAME interpreter `python` resolves to on PATH (the Vercel
+    # runtime, e.g. 3.12). Without --python, `uv pip install --system` scans the
+    # system for ANY interpreter and can latch onto an unrelated one (e.g.
+    # /usr/bin/python 3.9) whose `requires-python` (>=3.12 from django==6.0.8) is
+    # unsatisfied -> a spurious "error: No solution found" that only the pip
+    # fallback below saves us from. Pinning --python keeps uv on the real runtime
+    # so it succeeds cleanly. --break-system-packages is required on PEP 668
+    # externally-managed runtimes (harmless elsewhere). The pip fallback stays as
+    # a safety net.
+    uv pip install --python "$(command -v python)" --system --break-system-packages -r requirements.txt 2>&1 | tail -10
     INSTALL_SUCCESS=$?
 fi
 
